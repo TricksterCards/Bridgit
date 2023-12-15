@@ -1,0 +1,22 @@
+% Cleaned by CleanPBN on 11/29/2023 at 11:52 AM
+[Event "Balancing all pass"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KT84.A42.J83.KQJ A65.T6.AT6.76532 J932.J875.K42.T8 Q7.KQ93.Q975.A94"]
+[Declarer "W"]
+[Contract "1N"]
+[Auction "N"]
+1C Pass Pass 1NT
+Pass Pass Pass
+
+[Event "Balancing, Stayman by Advancer"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KT84.A42.J83.KQJ A652.T6.AK6.7653 J93.J875.T42.T82 Q7.KQ93.Q975.A94"]
+[Declarer "W"]
+[Contract "2NT"]
+[Auction "N"]
+1C Pass Pass 1NT
+Pass 2C Pass 2H
+Pass 2NT Pass Pass
+Pass

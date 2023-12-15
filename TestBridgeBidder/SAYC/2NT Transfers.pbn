@@ -1,0 +1,43 @@
+% Cleaned by CleanPBN on 11/29/2023 at 11:52 AM
+[Event "2NT - Transfer to Spades, Signoff"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:J54.AKJ.AQJ.KQT4 KQ7.954.K642.765 T9832.QT2.T8.832 A6.8763.9753.AJ9"]
+[Declarer "N"]
+[Contract "3S"]
+[Auction "N"]
+2NT Pass 3H Pass
+3S Pass Pass Pass
+
+[Event "2NT - Transfer to Hearts, Game, Play in Hearts"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AJ2.KQJ.J986.AKJ Q863.862.KQT.543 KT4.AT943.53.876 975.75.A742.QT92"]
+[Declarer "N"]
+[Contract "4H"]
+[Auction "N"]
+2NT Pass 3D Pass
+3H Pass 3NT Pass
+4H Pass Pass Pass
+
+[Event "2NT, Transfer to Hearts, Game in 3NT"]
+[Dealer "S"]
+[Vulnerable "None"]
+[Deal "S:A97.87654.87.A95 542.QJT.KT62.642 QJ86.AK.AQJ.QJ73 KT3.932.9543.KT8"]
+[Declarer "N"]
+[Contract "3NT"]
+[Auction "S"]
+Pass Pass 2NT Pass
+3D Pass 3H Pass
+3NT Pass Pass Pass
+
+[Event "2NT, Transfer to spades, Force game with 6 spades"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:Q4.KJT7.AKQJ.KQ7 T76.A84.543.AT86 KJ9852.Q96.96.93 A3.532.T872.J542"]
+[Declarer "N"]
+[Contract "4S"]
+[Auction "N"]
+2NT Pass 3H Pass
+3S Pass 4S Pass
+Pass Pass

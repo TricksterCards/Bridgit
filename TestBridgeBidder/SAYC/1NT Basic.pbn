@@ -1,0 +1,80 @@
+% Cleaned by CleanPBN on 11/29/2023 at 11:52 AM
+[Event "1NT Opening - All Pass"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K43.QJ3.AK32.Q85 QJT9.K98.JT9.AJ4 765.752.654.T932 A82.AT64.Q87.K76"]
+[Declarer "N"]
+[Contract "1NT"]
+[Auction "N"]
+1NT Pass Pass Pass
+
+[Event "1NT Opening, Invite to game, Invitation refused"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K43.QJ3.AK32.Q85 Q96.T942.QJ.K763 JT7.A85.T754.A92 A852.K76.986.JT4"]
+[Declarer "N"]
+[Contract "2NT"]
+[Auction "N"]
+1NT Pass 2NT Pass
+Pass Pass
+
+[Event "1NT, Invite, Show Major, Play in 4S"]
+[Dealer "S"]
+[Vulnerable "None"]
+[Deal "S:A873.KQ4.T98.972 K5.952.Q543.QT43 QT964.A76.AK2.A6 J2.JT83.J76.KJ85"]
+[Declarer "N"]
+[Contract "4S"]
+[Auction "S"]
+Pass Pass 1NT Pass
+2NT Pass 3S Pass
+4S Pass Pass Pass
+
+[Event "1NT, Sign-off at Game"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:Q654.842.Q9.QJT7 AK.J9763.KJ8.K82 J832.KT.AT5.9653 T97.AQ5.76432.A4"]
+[Declarer "N"]
+[Contract "3NT"]
+[Auction "W"]
+Pass 1NT Pass 3NT
+Pass Pass Pass
+
+[Event "1NT, Invite Game, Accept"]
+[Dealer "S"]
+[Vulnerable "None"]
+[Deal "S:J98.A53.J874.Q82 T742.Q76.T63.AJ9 AQ6.KJT4.A92.KT6 K53.982.KQ5.7543"]
+[Auction "S"]
+Pass Pass 1NT Pass
+2NT Pass 3NT Pass
+Pass Pass
+
+[Event "1NT, Invite, Show Hearts, Play in 3N"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AK.J7643.KQ8.KT8 J975.K98.652.AJ5 832.AQ.JT93.Q764 QT64.T52.A74.932"]
+[Declarer "N"]
+[Contract "3NT"]
+[Auction "N"]
+1NT Pass 2NT Pass
+3H Pass 3NT Pass
+Pass Pass
+
+[Event "1NT overcall - Basic"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:JT7.QJT75.QT.AQJ A62.AK8.A632.T72 983.42.J984.9863 KQ54.963.K75.K54"]
+[Declarer "E"]
+[Contract "3NT"]
+[Auction "N"]
+1H 1NT Pass 3NT
+Pass Pass Pass
+
+[Event "Simple Overcall by Opponents"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AJ64.T42.KQ8.AQT Q.AQ8653.AJ5.J75 T75.J97.732.9862 K9832.K.T964.K43"]
+[Declarer "E"]
+[Contract "2H"]
+[Auction "N"]
+1NT 2H Pass Pass
+Pass

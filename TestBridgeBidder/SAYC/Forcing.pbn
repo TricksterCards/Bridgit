@@ -1,0 +1,48 @@
+% Cleaned by CleanPBN on 12/4/2023 at 9:15 PM
+[Event "Trickster Cards: Forcing 1"]
+[Date "2023.11.29"]
+[West "Jewell"]
+[North "Deena"]
+[East "Rowland"]
+[South "Tony"]
+[Dealer "N"]
+[Vulnerable "NS"]
+[Deal "N:6.QJ983.JT743.T2 J8.K7652.62.KJ97 AKQ93..AK9.AQ543 T7542.AT4.Q85.86"]
+[Auction "N"]
+Pass Pass 2C Pass
+2D Pass 2S Pass
+3H Pass 3NT Pass
+Pass Pass
+
+[Event "Trickster Cards: Forcing reverse"]
+[Date "2023.11.29"]
+[West "Vincent"]
+[North "Lisa"]
+[East "Rachel"]
+[South "Tester 0"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:Q43.J76432.5.AT3 A95.T9.KQT76.654 KJ6.K.A942.KQJ98 T872.AQ85.J83.72"]
+[Declarer "S"]
+[Contract "3C"]
+[Auction "N"]
+Pass Pass 1C Pass
+1H Pass 2D Pass
+3C Pass Pass Pass
+
+[Event "Trickster Cards: 1NT Transfer Slam Invite Refused"]
+[Date "2023.11.30"]
+[West "Violet"]
+[North "Cecilia"]
+[East "Lauretta"]
+[South "Tony"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:QT6.42.KJ53.K872 972.AK875.Q4.AQ4 83.T963.T87.J963 AKJ54.QJ.A962.T5"]
+[Declarer "N"]
+[Contract "5S"]
+[Auction "W"]
+Pass 1NT Pass 2H
+Pass 2S Pass 4NT
+Pass 5S Pass Pass
+Pass

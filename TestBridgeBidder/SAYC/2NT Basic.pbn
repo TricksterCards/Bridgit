@@ -1,0 +1,20 @@
+% Cleaned by CleanPBN on 11/29/2023 at 11:52 AM
+[Event "Open 2NT - Pass Out"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AKJ7.QJ2.KQJ.KJT 852.T53.732.AQ82 643.K984.T84.943 QT9.A76.A965.765"]
+[Declarer "N"]
+[Contract "2NT"]
+[Auction "N"]
+2NT Pass Pass Pass
+
+[Event "2NT - 3NT - No 4-card major"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:KT72.75.J85.KT87 AQJ.AKQJ9.962.QJ 854.862.AT4.A432 963.T43.KQ73.965"]
+[Declarer "N"]
+[Contract "3NT"]
+[Auction "W"]
+Pass 2NT Pass 3NT
+Pass Pass Pass
+
