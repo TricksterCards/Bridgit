@@ -9,11 +9,26 @@ namespace BridgeBidding
 
 	public static class BridgeBidder
 	{
-		public static string SuggestBid(string deal, string vul, string auction, string nsSystem = "SAYC", string ewSystem = "SAYC")
+		/// <summary>
+		/// Suggests the next bid in the auction given a specified hand in a deal.  Where applicable, strings
+		/// adhere to the Portable Bridge Notation (PBN) format.
+		/// </summary>
+		/// <param name="deal">Deal string in PBN format of D:h1 h2 h3 h4 where D: is the direction of the
+		/// dealer, and h1-4 are full hands in PBN format or "-" to indicate unknown hands.  The hand for the next to act
+		/// must be known.</param>
+		/// <param name="vulnerable">One of "None", "All", "NS" or "EW"</param>
+		/// <param name="auction">Can be null to or empty string to indicate no auction.  Otherwise contains
+		/// a space separated string compatible with the PBN auction format.</param>
+		/// <param name="nsSystem">For future use.  Must be "SAYC"</param>
+		/// <param name="ewSystem">For future use.  Must be "SAYC"</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException"></exception>
+		/// <exception cref="ArgumentNullException"></exception>
+		public static string SuggestBid(string deal, string vulnerable, string auction, string nsSystem = "SAYC", string ewSystem = "SAYC")
 		{
 			Direction dealer;
 			var hands = ParseDeal(deal, out dealer);
-			var vulPairs = ParseVul(vul);
+			var vulPairs = ParseVulnerable(vulnerable);
 			var bidHistory = ParseAuction(auction);
 
 			// For now we will only allow SAYC bidding system.
@@ -41,10 +56,13 @@ namespace BridgeBidding
 		}
 
 
-		public static HashSet<Pair> ParseVul(string vul)
+		public static HashSet<Pair> ParseVulnerable(string vulnerable)
 		{
+			if (vulnerable == null)
+				throw new ArgumentNullException("vulnerable");
+
 			var vulPairs = new HashSet<Pair>();
-            switch (vul)
+            switch (vulnerable)
             {
                 case "None":
                     break;
@@ -59,22 +77,23 @@ namespace BridgeBidding
 					vulPairs.Add(Pair.EastWest);
 					break;
                 default:
-                    throw new ArgumentException($"Invalid vulnerablity parameter value {vul}");
+                    throw new ArgumentException($"Invalid vulnerablity parameter value {vulnerable}");
 
             }
 			return vulPairs;
         }
 
+		// null is allowed for the auction string - returns an empty array of Calls.
 		private static Call[] ParseAuction(string auction)
 		{
 			var bidHistory = new List<Call>();
-			if (auction == null) {
-				throw new ArgumentNullException("auction");
-			}
-			var calls = auction.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (var call in calls)
+			if (auction != null) 
 			{
-				bidHistory.Add(Call.FromString(call));
+				var calls = auction.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+				foreach (var call in calls)
+				{
+					bidHistory.Add(Call.FromString(call));
+				}
 			}
 			return bidHistory.ToArray();
 		}
@@ -95,31 +114,13 @@ namespace BridgeBidding
 			return (Direction)(((int)direction + 1) % 4);
 		}
 
-/*
-		public static Direction ParseDirection(string direction)
-		{
-			Direction d;
-			if (direction == null)
-			{
-				throw new ArgumentNullException("directionString");
-			}
-			if (StringToDirection.TryGetValue(direction.ToUpper(), out d))
-			{
-				return d;
-			};
-			throw new ArgumentException($"{direction} is not a valid direction string value");
-		}
-*/
+
 		private static Dictionary<string, Direction> StringToDirection = new Dictionary<string, Direction>
 		{
 			{ "N",     Direction.North },
-			{ "NORTH", Direction.North },
 			{ "E",     Direction.East  },
-			{ "EAST",  Direction.East  },
 			{ "S",     Direction.South },
-			{ "SOUTH", Direction.South },
 			{ "W",     Direction.West  },
-			{ "WEST",  Direction.West  }
 		};
 
 		// PBN defines deal import as D:(hand1) (hand2) (hand3) (hand4)
@@ -137,7 +138,7 @@ namespace BridgeBidding
 			}
 			if (deal.Substring(1, 1) != ":" || !StringToDirection.TryGetValue(deal.Substring(0,1).ToUpper(), out dealer))
 			{
-				throw new ArgumentException("dealer specifier invalid");
+				throw new ArgumentException($"Dealer prefix {deal.Substring(0, 2)} is invalid");
 			};
           	var hands = new Dictionary<Direction, Hand>();
             var handStrings = deal.Substring(2).Split(' ');

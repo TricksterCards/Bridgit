@@ -38,6 +38,8 @@ namespace BridgeBidding
                 case PointType.Suit:
                     if (GetSuit(_trumpSuit, call) is Suit suit)
                     {
+                        // TODO: What suit has not been agreed upon?  Then starting points??
+                        // BUGBUG
                         if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].LongHand == ps)
                         {
                             points = hs.Suits[suit].LongHandPoints;
