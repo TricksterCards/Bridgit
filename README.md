@@ -39,6 +39,6 @@ Create and clone a fork of this repository from which to submit pull requests. I
 
 After installing the requirements and cloning this repository, open the cloned folder in Visual Studio Code. This will open a solution with 2 projects: BridgeBidder and TestBridgeBidder. You should be prompted to install the "C# Dev Kit" extension; do so to enable the integrated test runner. Then look for the "Solution Explorer" below the list of open files. Right-click on the solution or a contained project to choose to build it.
 
-## Testing
+### Testing
 
 Unit testing is done using the TestBridgeBidder project. These are the tests that will run automatically against any pull requests. You can use the Testing tab (with a beaker icon) in Visual Studio Code to run the full suite or individual tests on your own machine. Tests are automatically generated from PBN files under the TestBridgeBidder/SAYC folder. Simply add new PBN content to an existing `*.pbn` file or add new `*.pbn` files to add new tests. Test names are derived from the file name and `[Event]` tag in the PBN.
