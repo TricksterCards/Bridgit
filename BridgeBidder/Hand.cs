@@ -1,22 +1,52 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace BridgeBidding
 {
-	public class Hand : List<Card>
+	public class Hand : HashSet<Card>
 	{
 		public Hand() { }
 
 
-	
-		public static Hand FromTricksterFormat(string tricksterHand)
+		public static Hand ParsePbnFormat(string handString, bool requireFullHand = true)
 		{
-			var hand = new Hand();
-			for (int i = 0; i < tricksterHand.Length; i += 2)
+			if (handString == null)
 			{
-				Card card = Card.FromTricksterFormat(tricksterHand.Substring(i, 2));
-				hand.Add(card);
+				throw new ArgumentNullException("handString");
 			}
+			if (handString == "-") 
+			{
+				return null;
+			}
+
+			Suit[] pbnSuits = { Suit.Spades, Suit.Hearts, Suit.Diamonds, Suit.Clubs };
+
+			var suits = handString.Split('.');
+			if (suits.Length != pbnSuits.Length)
+			{
+				throw new ArgumentException("handString does not contain four suits");
+			}
+			Hand hand = new Hand();			
+			for (var i = 0; i < suits.Length; i++)
+				foreach (var rankChar in suits[i])
+				{
+					var card = new Card(Card.ParseRank(rankChar), pbnSuits[i]);
+					if (hand.Contains(card))
+					{
+						throw new ArgumentException($"Duplicate card {card} in {handString}");
+					}
+					hand.Add(card);
+				}
+		
+			if (requireFullHand && hand.Count != 13)
+			{
+				throw new ArgumentException($"hand {handString} does not contains {hand.Count} cards.  Should have 13.");
+			}
+
 			return hand;
 		}
 

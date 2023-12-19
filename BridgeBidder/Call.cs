@@ -65,8 +65,21 @@ namespace BridgeBidding
             if (str == "X") { return Double; }
             if (str == "XX") { return Call.Redouble; }
             int level = int.Parse(str.Substring(0, 1));
-            var strain = SymbolToStrain[str.Substring(1)];
+            var strain = ParseStrain(str.Substring(1));
             return new Bid(level, strain);
+        }
+
+        static private Strain ParseStrain(string strainString)
+        {
+            switch (strainString) {
+                case "C":   return Strain.Clubs;
+                case "D":   return Strain.Diamonds;
+                case "H":   return Strain.Hearts;
+                case "S":   return Strain.Spades;
+                case "NT":  return Strain.NoTrump;
+                default:
+                    throw new ArgumentException($"Strain {strainString} not recognized.");
+            }
         }
 
         public bool Equals(Call other)
@@ -75,39 +88,16 @@ namespace BridgeBidding
         }
 
 
-        // TODO: I am sure this exists somewhere else...  Find it
-
-
-        public static Dictionary<string, Strain> SymbolToStrain = new Dictionary<string, Strain>
-        {
-            {  "♣",  Strain.Clubs    },
-            {  "♦",  Strain.Diamonds },
-            {  "♥",  Strain.Hearts   },
-            {  "♠",  Strain.Spades   },
-            {  "NT", Strain.NoTrump  }
-        };
-
 
 
         public static Dictionary<Strain, string> StrainToSymbol = new Dictionary<Strain, string>
         {
-            { Strain.Clubs,    "♣" },
-            { Strain.Diamonds, "♦" },
-            { Strain.Hearts,   "♥" },
-            { Strain.Spades,   "♠" },
+            { Strain.Clubs,    "C" },
+            { Strain.Diamonds, "D" },
+            { Strain.Hearts,   "H" },
+            { Strain.Spades,   "S" },
             { Strain.NoTrump,  "NT" }
         };
-        /* - Think this is just a simple cast now...
-        public static Dictionary<Suit, int> SuitToInt = new Dictionary<Suit, int>
-        {
-            { Suit.Clubs,    0 },
-            { Suit.Diamonds, 1 },
-            { Suit.Hearts,   2 },
-            { Suit.Spades,   3 }
-        };
-        */
-
-
     }
 
     public class Pass : Call
@@ -145,16 +135,15 @@ namespace BridgeBidding
         public Suit? Suit => StrainToSuit(Strain);
 
 
-        public Bid(int level, Suit suit) : base((level - 1) * 5 + (int)suit + 3)
-        {
-            Debug.Assert(level >= 1 && level <= 7);
-            this.Level = level;
-            this.Strain = SuitToStrain(suit);
-        }
+        public Bid(int level, Suit suit) : this(level, SuitToStrain(suit))
+        { }
 
         public Bid(int level, Strain strain) : base((level - 1) * 5 + (int)strain + 3)
         {
-            Debug.Assert(level >= 1 && level <= 7);
+            if (level < 1 || level > 7)
+            {
+                throw new ArgumentException($"Bid level {level} is invalid.  Must be 1 through 7.");
+            }
             this.Level = level;
             this.Strain = strain;
         }

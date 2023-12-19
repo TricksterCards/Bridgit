@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 namespace BridgeBidding
 {
@@ -12,12 +13,15 @@ namespace BridgeBidding
 	{
 		public static Suit[] Suits = { Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades };
 
-		public static Card FromTricksterFormat(string cardString)
+
+		public static Rank ParseRank(char rankString)
 		{
-			Debug.Assert(cardString.Length == 2);
-			var rank = StringToRank[cardString.Substring(0, 1)];
-			var suit = StringToSuit[cardString.Substring(1, 1)];
-			return new Card(rank, suit);
+			Rank rank;
+			if (StringToRank.TryGetValue(rankString, out rank))
+			{
+				return rank;
+			}
+			throw new ArgumentException($"rank {rankString} is invalid character");
 		}
 
 		public Rank Rank { get; private set; }
@@ -49,21 +53,21 @@ namespace BridgeBidding
 			{ "S", Suit.Spades   }
 		};
 
-		public static Dictionary<string, Rank> StringToRank = new Dictionary<string, Rank>
+		public static Dictionary<char, Rank> StringToRank = new Dictionary<char, Rank>
 		{
-			{ "2", Rank.Two },
-			{ "3", Rank.Three },
-			{ "4", Rank.Four },
-			{ "5", Rank.Five },
-			{ "6", Rank.Six },
-			{ "7", Rank.Seven },
-			{ "8", Rank.Eight },
-			{ "9", Rank.Nine },
-			{ "T", Rank.Ten },
-			{ "J", Rank.Jack },
-			{ "Q", Rank.Queen },
-			{ "K", Rank.King },
-			{ "A", Rank.Ace }
+			{ '2', Rank.Two },
+			{ '3', Rank.Three },
+			{ '4', Rank.Four },
+			{ '5', Rank.Five },
+			{ '6', Rank.Six },
+			{ '7', Rank.Seven },
+			{ '8', Rank.Eight },
+			{ '9', Rank.Nine },
+			{ 'T', Rank.Ten },
+			{ 'J', Rank.Jack },
+			{ 'Q', Rank.Queen },
+			{ 'K', Rank.King },
+			{ 'A', Rank.Ace }
 		};
 		public static Dictionary<string, Suit> SymbolToSuit = new Dictionary<string, Suit>
 		{

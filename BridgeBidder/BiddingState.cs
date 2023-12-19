@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 
@@ -39,6 +40,7 @@ namespace BridgeBidding
 
         public PositionState Opener { get; private set; }
 
+/*
         public static bool IsVulnerable(string vul, Direction direction)
         {
             switch (vul)
@@ -61,6 +63,7 @@ namespace BridgeBidding
             }
 
         }
+        */
 
         /*
         private static Dictionary<string, string> HACK_Conventions = new Dictionary<string, string>()
@@ -80,28 +83,26 @@ namespace BridgeBidding
         };
         */
 
-        public BiddingState(Hand[] hands, Direction dealer, string vul /* Dictionary<string, string> conventions = null TODO: Add as parameter*/)
+        public BiddingState(Dictionary<Direction, Hand> hands, Direction dealer, HashSet<Pair> vulPairs, IBiddingSystem nsSystem, IBiddingSystem ewSystem)
         {
             this.Positions = new Dictionary<Direction, PositionState>();
             this.Conventions = new Dictionary<string, Call>();
             this.Contract = new Contract();
-            Debug.Assert(hands.Length == 4);
+            Debug.Assert(hands.Count == 4);
             var d = dealer;
-            // TODO: Bidding system should be a parameter for each pair...  For now both are standard american
-            IBiddingSystem biddingSystem = new StandardAmerican();
-            var ns = new PairState(Pair.NorthSouth, biddingSystem);
-            var ew = new PairState(Pair.EastWest, biddingSystem);
-            for (int seat = 1; seat <= hands.Length; seat++)
+            var ns = new PairState(Pair.NorthSouth, nsSystem, vulPairs);
+            var ew = new PairState(Pair.EastWest, ewSystem, vulPairs);
+            for (int seat = 1; seat <= hands.Count; seat++)
             {
                 PairState pairState = (d == Direction.North || d == Direction.South) ? ns : ew;
-                this.Positions[d] = new PositionState(this, pairState, d, seat, IsVulnerable(vul, d), hands[seat - 1]);
+                this.Positions[d] = new PositionState(this, pairState, d, seat, hands[d]);
                 d = BridgeBidder.LeftHandOpponent(d);
             }
             this.Dealer = Positions[dealer];
             this.NextToAct = Dealer;
 
 
-
+            /*
             // Hack for now.  TODO: Fill in this dictionary properly...
             Conventions["Stayman1NTOpen"] = Call.Double;
             Conventions["Transfer1NTOpen"] = Call.Double;
@@ -112,7 +113,7 @@ namespace BridgeBidding
             Conventions["Transfer1NTOvercall"] = null;
             Conventions["Stayman1NTBalancing"] = Call.Double;
             Conventions["Transfer1NTBalancing"] = null;
-            /*
+            
             foreach (var convention in HACK_Conventions)
             {
                 if (convention.Value == null)
@@ -130,18 +131,21 @@ namespace BridgeBidding
             */
         }
 
-
-
-        public string SuggestBid(string[] history)
+        public void ReplayAuction(Call[] history)
         {
-            if (history != null)
+            foreach (var call in history)
             {
-                foreach (var call in history)
-                {
-                    var bids = GetBidsForNextToAct();
-                    var choice = bids.GetBidRuleSet(Call.FromString(call));
-                    MakeCall(choice);
-                }
+                var bids = GetBidsForNextToAct();
+                var choice = bids.GetBidRuleSet(call);
+                MakeCall(choice);
+            }
+        }
+
+        public Call SuggestBid()
+        {
+            if (!NextToAct.HasHand)
+            {
+                throw new Exception($"{NextToAct.Direction} does not have a known hand so SuggestBid makes no sense.");
             }
             var choices = GetBidsForNextToAct();
             var chosenCall = choices.BestCall;
@@ -151,7 +155,7 @@ namespace BridgeBidding
                 // TODO: Log something here...
             }
             MakeCall(choices.GetBidRuleSet(chosenCall));
-            return chosenCall.ToString();
+            return chosenCall;
         }
 
 

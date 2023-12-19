@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace TestBridgeBidder
@@ -7,15 +8,14 @@ namespace TestBridgeBidder
     public class PBN
     {
         public const string Sides = "NESW";
-        public const string SuitLetters = "SHDC";
-        public const string UnknownCard = "0U";
 
         public static PBNTest[] ImportTests(string text)
         {
             var tests = new List<PBNTest>();
             var dealerSeat = 0;
-            var hands = new List<string>();
-            var history = new List<string>();
+            string deal = null;
+            var knownHands = new HashSet<int>();
+            string vulnerable = "None"; // If tag is missing we will assume no vul
             var tags = TokenizeTags(text);
             var name = "";
 
@@ -23,33 +23,35 @@ namespace TestBridgeBidder
             {
                 switch (tag.Name)
                 {
+                    case "Vulnerable":
+                        vulnerable = tag.Description;
+                        break;
                     case "Event":
                         name = tag.Description;
                         break;
                     case "Deal":
                         dealerSeat = Sides.IndexOf(tag.Description.Substring(0, 1).ToUpper());
-                        hands = ImportHands(dealerSeat, tag.Description);
-                        history = new List<string>();
+                        deal = tag.Description;
+                        knownHands = DetermineKnownHands(dealerSeat, deal.Substring(2));
                         break;
                     case "Auction":
                     {
-                        dealerSeat = Sides.IndexOf(tag.Description.ToUpper());
-                        var bids = ImportBids(tag.Data);
-                        history = new List<string>();
+                        var bids = ImportAuction(tag.Data);
+                        var history = new List<string>();
                         for (var i = 0; i < bids.Count; i++)
                         {
                             var bid = bids[i];
                             var seat = (dealerSeat + i) % 4;
-                            var hand = hands[seat];
                             var seatName = Sides[seat];
                             var bidNumber = 1 + i / 4;
-                            if (!IsUnknownHand(hand))
+                            if (knownHands.Contains(seat))
                             {
                                 tests.Add(
                                     new PBNTest
                                     {
-                                        History = history.ToArray(),
-                                        Hand = hand,
+                                        Auction = string.Join(" ", history),
+                                        Deal = deal,
+                                        Vulnerable = vulnerable,
                                         Bid = bid,
                                         Name = $"{name} (Seat {seatName}, Bid {bidNumber})"
                                     }
@@ -66,63 +68,36 @@ namespace TestBridgeBidder
             return tests.ToArray();
         }
 
-        private static List<string> ImportBids(List<string> bidLines)
-        {
-            return string.Join(" ", bidLines)
-                .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(bid => bid.Replace('S', '♠').Replace('H', '♥').Replace('D', '♦').Replace('C', '♣'))
-                .ToList();
-        }
 
-        private static List<string> ImportHands(int dealerSeat, string handsString)
+        private static HashSet<int> DetermineKnownHands(int dealerSeat, string hands)
         {
-            var hands = new List<string> { "", "", "", "" };
-            var handStrings = handsString.Substring(2).Split(' ');
+            var knownHands = new HashSet<int>();
+            var handStrings = hands.Split(' ');
             for (var i = 0; i < handStrings.Length; i++)
             {
                 var seat = (dealerSeat + i) % 4;
                 var handString = handStrings[i];
-                if (handString == "-")
+                if (handString != "-")
                 {
-                    hands[seat] = string.Join("", Enumerable.Repeat(UnknownCard, 13));
-                    continue;
-                }
-
-                var hand = "";
-                var suits = handString.Split('.');
-
-                for (var j = 0; j < suits.Length; j++)
-                    foreach (var card in suits[j])
-                        hand += $"{card}{SuitLetters[j]}";
-
-                hands[seat] = hand;
-            }
-
-            // validate known hands are of the correct length with no shared cards
-            var knownHands = hands.Where(h => !IsUnknownHand(h));
-            foreach (var hand in knownHands)
-            {
-                if (hand.Length != 13 * 2)
-                    throw new ArgumentException($"Hand without exactly 13 cards found in '{handsString}'");
-
-                if (hands.Count(h => h == hand) > 1)
-                    throw new ArgumentException($"Multiple identical hands found in '{handsString}'");
-
-                for (var i = 0; i < hand.Length; i+=2)
-                {
-                    var card = hand.Substring(i, 2);
-                    if (knownHands.Any(h => h != hand && h.Contains(card)))
-                        throw new ArgumentException($"Multiple hands with {card} found in '{handsString}'");
+                    // Do some basic validation on hands.  Exhaustive tests should be done by the robot code
+                    // but better to find broken PBN data here.  Just check for 4 suits & correct length (13+3).
+                    if (handString.Length != 16)
+                        throw new ArgumentException($"Hand without exactly 13 cards found in '{handString}'");
+                    if (handString.Split('.').Length != 4)
+                        throw new ArgumentException($"Hand {handString} does not contain 4 suits.");
+                    knownHands.Add(seat);
                 }
             }
-
-            return hands;
+            return knownHands;
         }
 
-        private static bool IsUnknownHand(string hand)
+        private static List<string> ImportAuction(List<string> bidLines)
         {
-            return hand.Substring(0, 2) == UnknownCard;
+            return string.Join(" ", bidLines)
+                .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .ToList();
         }
+
 
         private static List<PBNTag> TokenizeTags(string text)
         {

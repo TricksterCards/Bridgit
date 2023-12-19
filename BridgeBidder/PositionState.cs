@@ -21,6 +21,8 @@ namespace BridgeBidding
 
 		private HandSummary _privateHandSummary;
 
+		public bool HasHand => _privateHandSummary != null;
+
 		private List<BidRuleSet> _bids;
 
 		public PairState PairState { get; private set; }
@@ -35,7 +37,11 @@ namespace BridgeBidding
 		public Direction Direction { get; }
 
 		public int Seat { get; }
-		public bool Vulnerable { get; }
+		public bool Vulnerable { 
+			get {
+				return PairState.Vulnerable;
+			}
+		 }
 
 		public bool IsOurContract
 		{
@@ -70,14 +76,13 @@ namespace BridgeBidding
 		// TODO: Potentially LHO Interferred...  Maybe just in 
 
 
-		public PositionState(BiddingState biddingState, PairState pairState, Direction direction, int seat, bool vulnerable, Hand hand)
+		public PositionState(BiddingState biddingState, PairState pairState, Direction direction, int seat, Hand hand)
 		{
 			Debug.Assert(seat >= 1 && seat <= 4);
 			this.BiddingState = biddingState;
 			this.Direction = direction;
 			this.Seat = seat;
 			this.Role = PositionRole.Opener;    // Best start for any position.  Will change with time.
-			this.Vulnerable = vulnerable;
 			this.PublicHandSummary = new HandSummary();
 			this.PairState = pairState;
 			this._bids = new List<BidRuleSet>();
