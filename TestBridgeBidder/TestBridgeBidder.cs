@@ -42,12 +42,7 @@ namespace TestBridgeBidder
         [DynamicData(nameof(SAYCTestData), DynamicDataDisplayName=nameof(GetSAYCTestDataDisplayName))]
         public void RunSAYCTests(PBNTest test)
         {
-            //var vul = test.Vulnerable;
-
-            // TODO: ** HUGE MYSTERY *** HOW DO WE EVER GET HERE WITH Vulnerable == NULL?
-            // I can not figure out the code path that does this.
-            var vul = test.Vulnerable == null ? "None" : test.Vulnerable;
-            var suggestion = BridgeBidder.SuggestBid(test.Deal, vul, test.Auction);
+            var suggestion = BridgeBidder.SuggestBid(test.Deal, test.Vulnerable, test.Auction);
 
             Assert.AreEqual(test.Bid, suggestion);
         }
