@@ -137,8 +137,9 @@ namespace BridgeBidding
 
 
 		// THIS IS AN INTERNAL FUNCITON:
-		public Call MakeBid(BidRuleSet bidGroup)
+		public void MakeCall(BidRuleSet bidGroup)
 		{
+			BiddingState.Contract.ValidateCall(bidGroup.Call, this);
             if (!bidGroup.Call.Equals(Call.Pass) && !this._roleAssigned)
 			{
 				if (Role == PositionRole.Opener)
@@ -162,18 +163,7 @@ namespace BridgeBidding
 			{
 				BiddingState.UpdateStateFromFirstBid();
 			}
-			/*
-			Debug.WriteLine($"   Points shown {PublicHandSummary.StartingPoints}");
-			foreach (var suit in BasicBidding.BasicSuits)
-			{
-				var shape = PublicHandSummary.Suits[suit].Shape;
-				if (shape.Min > 0 || shape.Max < 13)
-				{
-					Debug.WriteLine($"   {suit} shape {shape.Min} -> {shape.Max}");
-				}
-			}
-			*/
-			return bidGroup.Call;
+			BiddingState.Contract.MakeCall(bidGroup.Call, this);
 		}
 
 		private void AssignRole(PositionRole role)

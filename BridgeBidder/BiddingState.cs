@@ -147,6 +147,10 @@ namespace BridgeBidding
             {
                 throw new Exception($"{NextToAct.Direction} does not have a known hand so SuggestBid makes no sense.");
             }
+            if (Contract.AuctionComplete)
+            {
+                throw new AuctionException(Call.Pass, NextToAct, Contract, "Auction is final.  No more bids can be made");
+            }
             var choices = GetBidsForNextToAct();
             var chosenCall = choices.BestCall;
             if (chosenCall == null)
@@ -161,13 +165,12 @@ namespace BridgeBidding
 
         private void MakeCall(BidRuleSet bidRuleSet)
         {
+            NextToAct.MakeCall(bidRuleSet);
             if (this.OpeningBid == null && bidRuleSet.Call is Bid bid)
             {
                 this.OpeningBid = bid;
                 this.Opener = NextToAct;
             }
-            NextToAct.MakeBid(bidRuleSet);
-            Contract.MakeCall(bidRuleSet.Call, NextToAct);
             NextToAct = NextToAct.LeftHandOpponent;
         }
 

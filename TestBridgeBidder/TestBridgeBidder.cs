@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Authentication;
 using BridgeBidding;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -87,5 +88,18 @@ namespace TestBridgeBidder
         {
             var suggestion = BridgeBidder.SuggestBid(deal, vulnerable, auction);  
         }
+
+        [TestMethod]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H 1D")]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass X")]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass 2H Pass Pass Pass Pass")]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass XX")]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H 7NT X XX Pass")]
+        [ExpectedException(typeof(AuctionException))]
+        public void TestInvalidAuction(string deal, string vulnerable, string auction)
+        {
+            var suggestion = BridgeBidder.SuggestBid(deal, vulnerable, auction);  
+        }
+
     }
 }
