@@ -71,6 +71,8 @@ namespace BridgeBidding
 
         static private Strain ParseStrain(string strainString)
         {
+            if (null == strainString)
+                throw new ArgumentNullException("strainString");
             switch (strainString) {
                 case "C":   return Strain.Clubs;
                 case "D":   return Strain.Diamonds;
