@@ -72,7 +72,7 @@ Pass Pass Pass
 [Event "Simple Overcall by Opponents"]
 [Dealer "N"]
 [Vulnerable "None"]
-[Deal "N:AJ64.T42.KQ8.AQT Q.AQ8653.AJ5.J75 T75.J97.732.9862 K9832.K.T964.K43"]
+[Deal "N:AJ64.T42.KQ8.AQT Q.AQ8653.AJ5.J75 T75.KJ9.732.9862 K9832.7.T964.K43"]
 [Declarer "E"]
 [Contract "2H"]
 [Auction "N"]
