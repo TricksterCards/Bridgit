@@ -90,11 +90,11 @@ namespace TestBridgeBidder
         }
 
         [TestMethod]
-        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H 1D")]
-        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass X")]
-        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass 2H Pass Pass Pass Pass")]
-        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass XX")]
-        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H 7NT X XX Pass")]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H 1D", DisplayName = "Can't bid lower than current contract")]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass X", DisplayName = "Can't double your partner")]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass 2H Pass Pass Pass Pass", DisplayName = "Too may passes")]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass XX", DisplayName = "Can't redouble if not doubled")]
+        [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H 7NT X XX Pass", DisplayName = "7NT XX ends auction")]
         [ExpectedException(typeof(AuctionException))]
         public void TestInvalidAuction(string deal, string vulnerable, string auction)
         {
