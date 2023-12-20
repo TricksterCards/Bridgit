@@ -42,10 +42,10 @@ namespace TestBridgeBidder
                         {
                             var bid = bids[i];
                             var seat = (dealerSeat + i) % 4;
-                            var seatName = Sides[seat];
-                            var bidNumber = 1 + i / 4;
                             if (knownHands.Contains(seat))
                             {
+                                var bidNumber = 1 + i / 4;
+                                var seatName = Sides[seat];
                                 tests.Add(
                                     new PBNTest
                                     {
