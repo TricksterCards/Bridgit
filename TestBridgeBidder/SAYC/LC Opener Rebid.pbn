@@ -1,0 +1,92 @@
+[Event "Larry Cohen: Opener Rebid A"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:Q32.AJ3.K72.A542 - - -"]
+[Auction "N"]
+1C Pass 1H Pass
+1NT Pass Pass Pass
+
+[Event "Larry Cohen: Opener Rebid B"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K82.A2.T87.AJ432 - - -"]
+[Auction "N"]
+1C Pass 1H Pass
+1NT Pass Pass Pass
+
+[Event "Larry Cohen: Opener Rebid C"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:976.AQ542.AQ6.AQ - - -"]
+[Auction "N"]
+1H Pass 1S Pass
+2NT Pass Pass Pass
+
+[Event "Larry Cohen: Opener Rebid D"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:A2.KQ2.AKJ62.J96 - - -"]
+[Auction "N"]
+1D Pass 1S Pass
+2NT Pass Pass Pass
+
+[Event "Larry Cohen: Opener Rebid E"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:J.K65.A2.AKQ9865 - - -"]
+[Auction "N"]
+1C Pass 1S Pass
+3NT Pass Pass Pass
+
+
+[Event "Larry Cohen: Opener Rebid F"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:QJ82.AJ3.K72.Q52 - - -"]
+[Auction "N"]
+1C Pass 1D Pass
+1S Pass 1NT Pass
+Pass Pass
+
+
+[Event "Larry Cohen: Opener Rebid G"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KJ82.AJ72.T7.K32 - - -"]
+[Auction "N"]
+1C Pass 1D Pass
+1H Pass 1NT Pass
+Pass Pass
+
+
+[Event "Larry Cohen: Opener Rebid H"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:J986.2.AQ6.AQ875 - - -"]
+[Auction "N"]
+1C Pass 1D Pass
+1S Pass 1NT Pass
+Pass Pass
+
+% TODO: These last two tests (I and J) may be WRONG.  Perhaps skip 1S in modern bidding...
+% Need to check with Larry
+
+[Event "Larry Cohen: Opener Rebid I"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:J986.87.AQJ6.AQ5 - - -"]
+[Auction "N"]
+1D Pass 1H Pass
+1S Pass 1NT Pass
+Pass Pass
+
+[Event "Larry Cohen: Opener Rebid J"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:QJ54.KJ2.AKJ7.KJ - - -"]
+[Auction "N"]
+1D Pass 1H Pass
+1S Pass 1NT Pass
+2NT Pass 3NT Pass
+Pass Pass
+
