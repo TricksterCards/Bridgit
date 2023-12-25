@@ -116,13 +116,11 @@ namespace BridgeBidding
 		public bool ForcedToBid
 		{
 			get
-			{
-				/*
+			{		
 				return (Partner._bids.Count > 0 &&
-						Partner._bids.Last().BidForce == BidRule.BidForce.Forcing &&
-						RightHandOpponent._bids.Last() is Call.Pass);
-				*/
-				throw new NotImplementedException();
+						Partner._bids.Last().BidForce == BidForce.Forcing &&
+						!RightHandOpponent._bids.Last().Equals(Call.Pass));
+	
 			}
 		
 		}

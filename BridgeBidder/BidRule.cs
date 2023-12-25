@@ -2,11 +2,11 @@
 
 namespace BridgeBidding
 {
+    public enum BidForce { Nonforcing, Invitational, Forcing, Signoff }
 
 
     public class BidRule
 	{
-        public enum BidForce { Nonforcing, Invitational, Forcing, Signoff }
 
         public Call Call { get; }
 

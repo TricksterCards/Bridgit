@@ -8,11 +8,21 @@ namespace BridgeBidding
         protected Suit? _suit;
         protected int _min;
         bool _desiredValue;
+        bool _useContractSuit;
         public PairHasMinShape(Suit? suit, int min, bool desiredValue)
         {
             this._suit = suit;
             this._min = min;
             this._desiredValue = desiredValue;
+            this._useContractSuit = false;
+        }
+
+        public PairHasMinShape(int min, bool desiredValue)
+        {
+            this._suit = null;
+            this._min = min;
+            this._desiredValue = desiredValue;
+            this._useContractSuit = true;
         }
 
         // When do we conform? When our maxiumu length + partner's minimum are >= the desired min.
@@ -21,7 +31,19 @@ namespace BridgeBidding
         // partner has not shown any shape then it's just our shape that matter....
         public override bool Conforms(Call call, PositionState ps, HandSummary hs)
         {
-            if (GetSuit(_suit, call) is Suit suit)
+            Suit? s = null;
+            if (_useContractSuit)
+            {
+                if (ps.BiddingState.Contract.IsOurs(ps)) {
+                    s = ps.BiddingState.Contract.Bid.Suit;
+                }
+                if (s == null) return false;    
+            }
+            else 
+            { 
+                s = GetSuit(_suit, call); 
+            }
+            if (s is Suit suit)
             {
                 (int Min, int Max) shape = hs.Suits[suit].GetShape();
                 (int Min, int Max) partnerShape = ps.Partner.PublicHandSummary.Suits[suit].GetShape();

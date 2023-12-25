@@ -130,6 +130,7 @@ namespace BridgeBidding
 				Signoff(4, Suit.Spades, Fit(), ShowsTrump()),
 				Forcing(4, Suit.Clubs, Fit(), ShowsTrump()),
 				Forcing(4, Suit.Diamonds, Fit(), ShowsTrump()),
+                Signoff(3, Strain.NoTrump)
 			});
             return bids;
         }

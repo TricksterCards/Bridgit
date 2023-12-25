@@ -1,4 +1,5 @@
-﻿using static BridgeBidding.BidRule;
+﻿using System.Runtime.InteropServices;
+using static BridgeBidding.BidRule;
 
 namespace BridgeBidding
 {
@@ -7,28 +8,6 @@ namespace BridgeBidding
 
     public abstract class Bidder
 	{
-
-
-
-
-		// Convention rules..
-		//	public static ConventionRule ConventionRule(params Constraint[] constraints)
-		//	{
-		//		return new ConventionRule(constraints);
-		//	}
-
-
-		// TODO: ANYTHING THAT USED TO REFER TO THIS NEEDS TO USE A FACTORY...
-		//	public static RedirectRule Redirect(PrescribeBidRules redirectTo)
-		//	{
-		//		return Redirect(redirectTo, new Constraint[0]);
-		//	}
-
-		//	public static RedirectRule Redirect(PrescribeBidRules redirectTo, params Constraint[] constraints)
-		//	{
-		//		return new RedirectRule(this, redirectTo, constraints);
-		//	}
-
 		// TODO: Is there ever a place for constraints on this???  Dont know...
 		public static BidRule DefaultPartnerBids(Call goodThrough, BidRulesFactory brf)
 		{
@@ -212,64 +191,8 @@ namespace BridgeBidding
 		}
 
 
-        /*
-		public static Constraint DidBid(bool desired = true)
-		{
-			return new BidHistory(0, Call.Bid, 0, false, null, desired);
-		}
-
-		
-		public static Constraint BidAtLevel(int level, bool desired = true)
-		{
-			return new BidHistory(0, Call.Bid, level, false, null, desired);
-		}
-
-		public static Constraint BidAtLevel(params int[] levels)
-		{
-			Constraint constraint = null;
-			foreach (var level in levels)
-			{
-				Constraint levelConstraint = BidAtLevel(level);
-				if (constraint == null)
-				{
-					constraint = levelConstraint;
-				}
-				else
-				{
-					constraint = Or(constraint, levelConstraint);
-				}
-			}
-			return constraint;
-		}
-		
-
-        public static Constraint DidDouble(bool desired = true)
-		{
-			return new BidHistory(0, Call.Double, 0, false, null, desired);
-		}
 
 
-		public static Constraint Passed(bool desired = true)
-		{
-			return new BidHistory(0, Call.Pass, 0, false, null, desired);
-		}
-		*/
-
-		//	public static Constraint PartnerBid(Suit suit, bool desired = true)
-		//		{ return new PositionProxy(PositionProxy.RelativePosition.Partner, new BidHistory(suit, desired)); }
-		//		public static Constraint PartnerBid(int level, Suit suit, bool desired = true)
-		//		{ return new PositionProxy(PositionProxy.RelativePosition.Partner, new BidHistory(level, suit, desired)); }
-
-		//	public static Constraint PartnerShape(int count)
-		//	{
-		//		return PartnerShape(null, count, count);
-		//	}
-
-
-		//	public static Constraint PartnerShape(Suit? suit, int min, int max)
-		//	{
-		//		return new PositionProxy(PositionProxy.RelativePosition.Partner, new HasShape(suit, min, max));
-		//	}
 
 		public static Constraint Partner(Constraint constraint)
 		{
@@ -311,20 +234,8 @@ namespace BridgeBidding
 		public static Constraint And(params Constraint[] constraints)
 		{
 			return new ConstraintGroup(constraints);
-			/*
-			if (constraints.Length > 0 || constraints[0] is IShowsState)
-			{
-				return new CompositeShowsState(CompositeConstraint.Operation.And, constraints);
-			}
-			return new CompositeConstraint(CompositeConstraint.Operation.And, constraints);
-			*/
 		}
-/*
-		public static Constraint Or(params Constraint[] constraints)
-		{
-			return new CompositeConstraint(CompositeConstraint.Operation.Or, constraints);
-		}
-*/
+
         public static Constraint ExcellentSuit(Suit? suit = null)
         { return new ShowsQuality(suit, SuitQuality.Excellent, SuitQuality.Solid); }
 
@@ -444,10 +355,13 @@ namespace BridgeBidding
 			return And(new TakeoutSuit(suit), CueBid(false));
 		}
 
-		// TOOD: These are temporary for now.  But need to think them through.  
+
+		// TODO: Needs to be a version of this that does not check for explicitly
+		// "shown" to make stayman work.
+
 		public static Constraint Fit(int count = 8, Suit? suit = null, bool desiredValue = true)
 		{
-			return new PairShowsMinShape(suit, count, desiredValue);
+			return And(Partner(HasShownSuit(suit, eitherPartner: true)), new PairShowsMinShape(suit, count, desiredValue));
 		}
 
 		public static Constraint Fit(Suit suit, bool desiredValue = true)
@@ -460,7 +374,20 @@ namespace BridgeBidding
 			return Fit(8, null, desiredValue);
 		}
 
+		public static Constraint Reverse(bool desiredValue = true)
+		{
+			return And(IsReverse(desiredValue), new ShowsReverseShape());
+		}
 
+		public static StaticConstraint IsReverse(bool desiredValue = true)
+		{
+			return new IsReverseBid(desiredValue);
+		}
+
+		public static StaticConstraint ForcedToBid(bool desiredValue = true)
+		{
+			return new ForcedToBid(desiredValue);
+		}
 
 		public static Constraint PairPoints((int Min, int Max) range)
 		{
@@ -525,9 +452,9 @@ namespace BridgeBidding
 			return new ShowsSuit(false, suits);
 		}
 
-		public static Constraint HasShownSuit(Suit? suit = null)
+		public static Constraint HasShownSuit(Suit? suit = null, bool eitherPartner = false)
 		{
-			return new HasShownSuit(suit);
+			return new HasShownSuit(suit, eitherPartner);
 		}
 
 		public static Constraint ShowsSuit()
@@ -563,7 +490,7 @@ namespace BridgeBidding
 		// THE FOLLOWING CONSTRAINTS ARE GROUPS OF CONSTRAINTS
         public static Constraint RaisePartner(Suit? suit = null, int raise = 1, int fit = 8)
         {
-            return And(Fit(fit, suit), Partner(HasShownSuit(suit)), Jump(raise - 1), ShowsTrump(suit));
+            return And(Fit(fit, suit), Jump(raise - 1), ShowsTrump(suit));
         }
         public static Constraint RaisePartner(int level)
         {

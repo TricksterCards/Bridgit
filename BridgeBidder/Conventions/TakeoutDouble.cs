@@ -122,8 +122,8 @@ namespace BridgeBidding
 
 
                 // TODO: Clean this up... For now just majors...  Clean up range...
-                Signoff(4, Suit.Hearts, Fit(), Partner(HasShownSuit()), PairPoints((25, 30))),
-                Signoff(4, Suit.Spades, Fit(), Partner(HasShownSuit()), PairPoints((25, 30))),
+                Signoff(4, Suit.Hearts, Fit(), PairPoints((25, 30))),
+                Signoff(4, Suit.Spades, Fit(), PairPoints((25, 30))),
 
                 // CANT BE - Invitational(2, Suit.Clubs, RaisePartner(), Points(MediumTakeout)),
                 Invitational(2, Suit.Diamonds, RaisePartner(), DummyPoints(MediumTakeout)),

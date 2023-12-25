@@ -98,9 +98,12 @@ namespace BridgeBidding
 
 				Signoff(4, Strain.Spades, NTD.RR.Game, Partner(LastBid(2, Strain.Spades)), Shape(6,11)),
 
+				Invitational(4, Strain.NoTrump, NTD.RR.InviteSlam, Partner(LastBid(2, Strain.Hearts)), Shape(Suit.Hearts, 5)),
+				Invitational(4, Strain.NoTrump, NTD.RR.InviteSlam, Partner(LastBid(2, Strain.Spades)), Shape(Suit.Spades, 5)),
 
+				// TODO: What about slam invite with 6+ of major.  Bid 5M?
+				// TODO:  Grand slame, etc...
 				Signoff(Call.Pass, NTD.RR.LessThanInvite)
-            // TODO: SLAM BIDDING.  REMEMBER RANGES NEED TO BE DIFFERENT IF SUPER ACCEPTED...
             };
 		}
 
@@ -138,6 +141,17 @@ namespace BridgeBidding
 
                 // Didn't fine a suit to play in, so bid game if we have the points...
                 Signoff(3, Strain.NoTrump,  NTD.OR.AcceptInvite),
+
+				Signoff(5, Strain.Hearts, Partner(LastBid(4, Strain.NoTrump)), Fit(), NTD.OR.DontAcceptInvite),
+				Signoff(5, Strain.Spades, Partner(LastBid(4, Strain.NoTrump)), Fit(), NTD.OR.DontAcceptInvite),
+
+
+				Signoff(6, Strain.Hearts, Partner(LastBid(4, Strain.NoTrump)), Fit(), NTD.OR.AcceptInvite),
+				Signoff(6, Strain.Spades, Partner(LastBid(4, Strain.NoTrump)), Fit(), NTD.OR.AcceptInvite),
+
+				// Because this is lower priority it will only happen if there is not a fit
+				// so bid 6NT if partner invited to slam with 4NT
+				Signoff(6, Strain.NoTrump, Partner(LastBid(4, Strain.NoTrump)), NTD.OR.AcceptInvite),
 
 
                 // TODO: SLAM BIDDING...

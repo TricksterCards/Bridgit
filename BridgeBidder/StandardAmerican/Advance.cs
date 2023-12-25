@@ -30,9 +30,9 @@ namespace BridgeBidding
                                         // Weak jumps to game are highter priority than simple raises.
                     // Fill this out better but for now just go on law of total trump, jumping if weak.  
                     Nonforcing(4, Strain.Clubs, Jump(1, 2), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump()),
-                    Nonforcing(4, Strain.Diamonds, Jump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump()),
+                    Nonforcing(4, Strain.Diamonds, Break(true, "4D Weak"), Jump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump()),
                     Nonforcing(4, Strain.Hearts, Jump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump()),
-                    Nonforcing(4, Strain.Spades, Break(false, "4SWeek"), Jump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump()),
+                    Nonforcing(4, Strain.Spades, Jump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump()),
 
 
                     // If we have support for partner

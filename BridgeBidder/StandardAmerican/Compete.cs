@@ -72,6 +72,7 @@ namespace BridgeBidding
                 Nonforcing(6, Strain.Spades, Shape(12)),
 
             });
+            bids.AddRange(ForcedBid.Bids(ps));
             return bids;
         }
 

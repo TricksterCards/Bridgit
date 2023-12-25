@@ -5,15 +5,21 @@ namespace BridgeBidding
     public class HasShownSuit : StaticConstraint
     {
         Suit? _suit;
-        public HasShownSuit(Suit? suit)
+        bool _eitherPartner;
+        public HasShownSuit(Suit? suit, bool eitherPartner)
         {
             this._suit = suit;
+            this._eitherPartner = eitherPartner;
         }
         public override bool Conforms(Call call, PositionState ps)
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
-                return ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].LongHand == ps;
+                var strain = Call.SuitToStrain(suit);
+                if (_eitherPartner) {
+                    return ps.PairState.Agreements.Strains[strain].Shown;
+                }
+                return ps.PairState.Agreements.Strains[strain].LongHand == ps;
             }
             Debug.Fail("No suit for call in HasShownSuit constraint.");
             return false;

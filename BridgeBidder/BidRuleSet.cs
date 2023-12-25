@@ -19,7 +19,7 @@ namespace BridgeBidding
 			public PairAgreements PairAgreements;
 		}
         public Call Call { get; }
-		public BidRule.BidForce BidForce { get; }
+		public BidForce BidForce { get; private set; }
 
 		private PartnerChoicesXXX _partnerChoices;
 
@@ -31,7 +31,7 @@ namespace BridgeBidding
 
        
 
-		public BidRuleSet(Call call, BidRule.BidForce bidForce) 
+		public BidRuleSet(Call call, BidForce bidForce) 
         {
             this.Call = call;
 			this.BidForce = bidForce;
@@ -45,7 +45,13 @@ namespace BridgeBidding
 			Debug.Assert(rule.Call.Equals(this.Call));
 			if (rule.Force != this.BidForce)
 			{
-				//Debug.WriteLine($"Rule force for {this.Call} created {this.BidForce} but new rule {rule.Force}");
+				// TODO: Need to do something about this.  For now if
+				// either is forcing then we will say it is forcing.
+				if (this.BidForce != BidForce.Forcing &&
+				    rule.Force == BidForce.Forcing) 
+				{
+					this.BidForce = rule.Force;
+				}
 			}
 			if (rule is PartnerBidRule partnerBids)
 			{

@@ -24,6 +24,7 @@ namespace BridgeBidding
 		/// <returns></returns>
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="AuctionException"></exception> 
 		public static string SuggestBid(string deal, string vulnerable, string auction, string nsSystem = "SAYC", string ewSystem = "SAYC")
 		{
 			Direction dealer;

@@ -394,6 +394,16 @@ namespace BridgeBidding
         {
             var bids = new List<BidRule>
             {
+             /// TODO: MORE PASSING MORE OFTEN...   Signoff(Call.Pass, Points(MinimumHand), ForcedToBid(false), )
+                Signoff(2, Strain.Clubs, Fit(), ForcedToBid(), Points(MinimumHand)),
+                Signoff(2, Strain.Diamonds, Fit(), ForcedToBid(), Points(MinimumHand)),
+                Signoff(2, Strain.Hearts, Fit(), ForcedToBid(), Points(MinimumHand)),
+                Signoff(2, Strain.Spades, Fit(), ForcedToBid(), Points(MinimumHand)),
+
+                Signoff(3, Strain.Clubs, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
+                Signoff(3, Strain.Diamonds, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
+                Signoff(3, Strain.Hearts, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
+                Signoff(3, Strain.Spades, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
 
                 Nonforcing(2, Suit.Clubs, Shape(6, 11), Points(MinimumHand)),
                 Nonforcing(2, Suit.Diamonds, Shape(6, 11), Points(MinimumHand)),

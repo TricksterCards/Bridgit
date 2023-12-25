@@ -71,6 +71,9 @@ namespace BridgeBidding
                     return LongHand.Partner;
                 }
             }
+            public bool Shown {
+                get { return LongHand != null; }
+            }
             public SuitAgreements(PairAgreements pairAgreements, Strain strain)
             {
                 this._pairAgreements = pairAgreements;

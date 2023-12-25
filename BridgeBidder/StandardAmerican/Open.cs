@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 
 namespace BridgeBidding
@@ -16,6 +17,7 @@ namespace BridgeBidding
         public static (int, int) Minimum = (13, 16);
         public static (int, int) Medium = (17, 18);
         public static (int, int) Maximum = (19, 21);
+		public static (int, int) MediumOrBetter = (17, 21);
 
 
 		public static (int, int) PairGameInvite = (23, 24);
@@ -106,6 +108,16 @@ namespace BridgeBidding
 				Nonforcing(3, Strain.Diamonds, Fit(), ShowsTrump(), Points(Medium)),
 				Nonforcing(3, Strain.Hearts, Fit(), ShowsTrump(), Points(Medium)),
 				Nonforcing(3, Strain.Spades, Fit(), ShowsTrump(), Points(Medium)),
+
+
+				// With a big hand we need to make a forcing bid.  Reverse if possible.
+				Forcing(2, Strain.Diamonds, Reverse(), Points(MediumOrBetter)),
+				Forcing(2, Strain.Hearts, Reverse(), Points(MediumOrBetter)),
+				Forcing(2, Strain.Spades, Reverse(), Points(MediumOrBetter)),
+
+				Forcing(3, Strain.Diamonds, Jump(0), Reverse(), Points(Maximum)),
+				Forcing(3, Strain.Hearts, Jump(0), Reverse(), Points(Maximum)),
+				Forcing(3, Strain.Spades, Jump(0), Reverse(), Points(Maximum)),
 
 				// TODO: What about minors.  This is bad. Think we want to fall through to 3NT...
                 //Nonforcing(4, Strain.Clubs, DefaultPriority + 10, Fit(), ShowsTrump(), Points(MediumOpener)),
