@@ -14,7 +14,7 @@ namespace BridgeBidding
 
             public ShowState(PairAgreements startState = null)
             {
-                PairAgreements = startState == null ? new PairAgreements() : new PairAgreements(startState);
+                PairAgreements = new PairAgreements(startState);
                 this.Strains = new Dictionary<Strain, SuitAgreements.ShowState>();
                 foreach (Strain strain in Enum.GetValues(typeof(Strain)))
                 {
@@ -74,17 +74,12 @@ namespace BridgeBidding
             public bool Shown {
                 get { return LongHand != null; }
             }
-            public SuitAgreements(PairAgreements pairAgreements, Strain strain)
-            {
-                this._pairAgreements = pairAgreements;
-                this._strain = strain;
-                this.LongHand = null;   // This sets Dummy too...
-            }
+  
             public SuitAgreements(PairAgreements pairAgreements, Strain strain, SuitAgreements other)
             {
                 this._pairAgreements = pairAgreements;
                 this._strain = strain;
-                this.LongHand = other.LongHand;
+                this.LongHand = other == null ? null : other.LongHand;
             }
 
             public bool Equals(SuitAgreements other)
@@ -128,23 +123,15 @@ namespace BridgeBidding
         }
 
         public Dictionary<Strain, SuitAgreements> Strains { get; }
-        public PairAgreements()
-        {
-            this.AgreedStrain = null;
-            this.Strains = new Dictionary<Strain, SuitAgreements>();
-            foreach (Strain strain in Enum.GetValues(typeof(Strain)))
-            {
-                this.Strains[strain] = new SuitAgreements(this, strain);
-            }
 
-        }
-        public PairAgreements(PairAgreements other)
+
+        public PairAgreements(PairAgreements other = null)
         {
-            this.AgreedStrain = other.AgreedStrain;
+            this.AgreedStrain = other == null ? null : other.AgreedStrain;
             this.Strains = new Dictionary<Strain, SuitAgreements>();
             foreach (Strain strain in Enum.GetValues(typeof(Strain)))
             {
-                this.Strains[strain] = new SuitAgreements(this, strain, other.Strains[strain]);
+                this.Strains[strain] = new SuitAgreements(this, strain, other == null ? null : other.Strains[strain]);
 
             }
         }

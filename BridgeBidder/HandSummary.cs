@@ -1,93 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
-//using static Trickster.Bots.InterpretedBid;
 
 namespace BridgeBidding
 {
-    public abstract class State
-	{
-        public enum CombineRule
-        {
-            Show,       // If left or right is null the use other.  If both non-null then use smallest min, largest max
-            CommonOnly, // If either left or right is null, result is null.  Otherwise smallest min, largest max
-            Merge,      // If either left or right is null then use other.  If both non-null then use largest min, smallest max
-        }
-
-        protected static (int Min, int Max)? CombineRange((int Min, int Max)? a, (int Min, int Max)? b, CombineRule cr)
-        {
-            if (a != null && b != null)
-            {
-                (int Min, int Max) rangeA = ((int Min, int Max))a;
-                (int Min, int Max) rangeB = ((int Min, int Max))b;
-                if (cr == CombineRule.Merge)
-                {
-                    return (Math.Max(rangeA.Min, rangeB.Min), Math.Min(rangeA.Max, rangeB.Max));
-                }
-                return (Math.Min(rangeA.Min, rangeB.Min), Math.Max(rangeA.Max, rangeB.Max));
-            }
-            // If we are only merging common properties then if either is null, the result is null
-            if (cr == CombineRule.CommonOnly)
-            {
-                return null;
-            }
-            return (a == null) ? b : a;
-        }
-
-
-
-        protected static bool? CombineBool(bool? b1, bool? b2, CombineRule cr)
-        {
-            if (b1 == null)
-            {
-                return (cr == CombineRule.CommonOnly) ? null : b2;
-            }
-            if (b2 == null)
-            {
-                return (cr == CombineRule.CommonOnly) ? null : b1;
-            }
-            // TODO: Is this right?  We know nothing if conflicting information?  Seems reasonable...
-            return b1;
-        }
-
-        protected static int? CombineInt(int? i1, int? i2, CombineRule cr)
-        {
-            if (i1 == null)
-            {
-                return (cr == CombineRule.CommonOnly) ? null : i2;
-            }
-            if (i2 == null)
-            {
-                return (cr == CombineRule.CommonOnly) ? null : i1;
-            }
-            // TODO: Is this right?  We know nothing if conflicting information?  Seems reasonable...
-            return i1;
-        }
-
-		protected static HashSet<int> CombineIntSet(HashSet<int> s1, HashSet<int> s2, CombineRule cr)
-		{
-			if (s1 == null)
-			{
-				return (cr == CombineRule.CommonOnly) ? null : s2;
-			}
-			if (s2 == null)
-			{
-				return (cr == CombineRule.CommonOnly) ? null: s1;
-			}
-			if (cr == CombineRule.Merge)
-			{
-				return new HashSet<int>(s1.Intersect(s2));
-			}
-			return new HashSet<int>(s1.Union(s2));
-		}
-
-    }
-
     public class HandSummary: State, IEquatable<HandSummary>
 	{
-
-
 		public class ShowState
 		{
 			public HandSummary HandSummary { get; private set; }
@@ -229,6 +149,16 @@ namespace BridgeBidding
 				if (Shape == null) return (0, 13);
 				return ((int Min, int Max))Shape;
 			}
+
+			internal void TrimShape(int claimed)
+			{
+				var shape = GetShape();
+				if (shape.Max + claimed - shape.Min > 13)
+				{
+					var newMax = 13 - claimed + shape.Min;
+					Shape = (shape.Min, newMax);
+				}
+			}
 /*
 			public (int Min, int Max) GetDummyPoints()
 			{
@@ -303,46 +233,19 @@ namespace BridgeBidding
 				this.Stopped = CombineBool(this.Stopped, other.Stopped, cr);
 				this.KeyCards = CombineIntSet(this.KeyCards, other.KeyCards, cr);
 				this.RuleOf9Points = CombineInt(this.RuleOf9Points, other.RuleOf9Points, cr);
-				/*
-                if (this.Keycards == null)
-                { 
-                    this.Keycards = (cr == CombineRule.CommonOnly) ? null : other.Keycards;
-                }
-                else
-                {
-					if (other.Keycards == null)
-					{
-						if (cr == CombineRule.CommonOnly) { this.Keycards = null; }
-					}
-					else
-					{
-						// TODO: What is the right thing here?  Both are non-null.  Do they have to be the same?
-						// if they are not then what to do
-                        Debug.Assert(this.Keycards == other.Keycards);
-                    }
-                }
-				*/
             }
 
-/*
-            internal void Intersect(SuitSummary other)
-            {
-                this.Shape = IntersectRange(this.Shape, other.Shape);
-                this.DummyPoints = IntersectRange(this.DummyPoints, other.DummyPoints);
-                this.LongHandPoints = IntersectRange(this.LongHandPoints, other.LongHandPoints);
-                this._quality = IntersectRange(this._quality, other._quality);
-				this.HaveQueen = IntersectBool(this.HaveQueen, other.HaveQueen);
-				this.Stopped = IntersectBool(this.Stopped, other.Stopped);
-            }
-*/
+
             public bool Equals(SuitSummary other)
             {
                 return (this.Shape == other.Shape &&
 					    this.DummyPoints == other.DummyPoints &&
 						this.LongHandPoints == other.LongHandPoints &&
 						this._quality == other._quality &&
+						this.HaveQueen == other.HaveQueen &&
+						this.Stopped == other.Stopped &&
+						this.KeyCards == other.KeyCards &&
 						this.RuleOf9Points == other.RuleOf9Points);
-				// TODO: HaveQueen??? Stopped???
             }
         }
 
@@ -443,59 +346,28 @@ namespace BridgeBidding
 			this.IsFlat = CombineBool(this.IsFlat, other.IsFlat, cr);
 			this.CountAces = CombineIntSet(this.CountAces, other.CountAces, cr);
 			this.CountKings = CombineIntSet(this.CountKings, other.CountKings, cr);
-			foreach (Suit suit in Enum.GetValues(typeof(Suit)))
+			foreach (Suit suit in Card.Suits)
 			{
 				this.Suits[suit].Combine(other.Suits[suit], cr);
 			}
+			TrimShape();
 		}
 
 
-		// TODO: Probably move this to hand evaluation???  Not sure where it should live...
+		
 		public void TrimShape()
 		{
-			/* -- Move this to hand evaluation??  I think so...
+			
 			int claimed = 0;
-			foreach (var suit in BasicBidding.BasicSuits)
+			foreach (var suit in Card.Suits)
 			{
 				claimed += Suits[suit].GetShape().Min;
 			}
-			foreach (var suit in BasicBidding.BasicSuits)
+			foreach (var suit in Card.Suits)
 			{
-				var shape = Suits[suit].GetShape();
-				if (shape.Max + claimed - shape.Min > 13)
-				{
-					var newMax = 13 - claimed + shape.Min;
-					Suits[suit].Shape = (shape.Min, newMax);
-				}
-			}
-			*/
-		}
-
-/*
-		private static bool? IntersectBool(bool? b1, bool? b2)
-		{ 
-			return (b1 == null || b2 == null || b1 != b2) ? null : b1;
-		}
-
-		private static int? IntersectInt(int? v1, int? v2)
-		{
-			return (v1 == null || v2 == null || v1 != v2) ? null : v1;
-		}
-
-		public void Intersect(HandSummary other)
-		{
-			this.HighCardPoints = IntersectRange(this.HighCardPoints, other.HighCardPoints);
-			this.StartingPoints = IntersectRange(this.StartingPoints, other.StartingPoints);
-			this.IsBalanced = IntersectBool(this.IsBalanced, other.IsBalanced);
-			this.IsFlat = IntersectBool(this.IsFlat, other.IsFlat);
-			this.CountAces = IntersectInt(this.CountAces, other.CountAces);
-			this.CountKings = IntersectInt(this.CountKings, other.CountKings);
-			foreach (var suit in BasicBidding.Strains)
-			{
-				this.Suits[suit].Intersect(other.Suits[suit]);
+				Suits[suit].TrimShape(claimed);
 			}
 		}
-*/
 
 		private static bool EqualIntSet(HashSet<int> s1, HashSet<int> s2)
 		{
@@ -506,6 +378,7 @@ namespace BridgeBidding
 			if (s2 == null) return false;
 			return s1.SetEquals(s2);
 		}
+
         public bool Equals(HandSummary other)
         {
 			if (this.Points != other.Points ||
