@@ -32,18 +32,4 @@ namespace BridgeBidding
             return false;
         }
     }
-
-    // TODO: Maybe move this...
-    internal class ContractIsAgreedStrain : StaticConstraint
-    {
-        public override bool Conforms(Call call, PositionState ps)
-        {
-            if (ps.BiddingState.Contract.Bid is Bid contractBid)
-            {
-                return ps.BiddingState.Contract.IsOurs(ps) && 
-                    contractBid.Strain == ps.PairState.Agreements.AgreedStrain;
-            }
-            return false;
-        }
-    }
 }

@@ -196,6 +196,21 @@ namespace BridgeBidding
 			return new StaticConstraint((call, ps) => ps.IsOpponentsContract); 
 		}
 
+
+		public static StaticConstraint AgreedStrain(params Strain[] strains)
+		{
+			return new AgreedStrain(strains);
+		}
+
+		public static StaticConstraint ContractIsAgreedStrain()
+		{
+			return new StaticConstraint((call, ps) =>  
+					(ps.BiddingState.Contract.Bid is Bid contractBid &&
+                    ps.BiddingState.Contract.IsOurs(ps) && 
+                    contractBid.Strain == ps.PairState.Agreements.AgreedStrain));
+		}
+
+
 		// ************************************  DYNAMIC CONSTRAINTS ***
 
 		public static DynamicConstraint HighCardPoints(int min, int max)
@@ -333,20 +348,12 @@ namespace BridgeBidding
 			return new ShowsTrump(Call.SuitToStrain(trumpSuit));
 		}
 
-		public static Constraint AgreedStrain(params Strain[] strains)
-		{
-			return new AgreedStrain(strains);
-		}
 
 		public static Constraint AgreedAnySuit()
 		{
 			return AgreedStrain(Strain.Clubs, Strain.Diamonds, Strain.Hearts, Strain.Spades);
 		}
 
-		public static Constraint ContractIsAgreedStrain()
-		{
-			return new ContractIsAgreedStrain();
-		}
 
 
 
@@ -425,12 +432,6 @@ namespace BridgeBidding
 			return new PairShowsPoints(range.Min, range.Max);
 		}
 
-		// For this to be true, the partner must have shown the suit, AND this position must have 
-		// at least minSupport cards in support
-		//	public Constraint CanSupport(bool desiredValue = true, int minSupport = 3)
-		//		{ 
-		//			throw new NotImplementedException(); 
-		//	}
 
 		public static Constraint OppsStopped(bool desired = true)
 		{
