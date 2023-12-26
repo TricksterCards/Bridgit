@@ -213,20 +213,20 @@ namespace BridgeBidding
 		}
 
 
-	//	public bool IsOpponent(PositionState other)
-	//	{
-	//		return (other.PairState != this.PairState);
-	//	}
+        public bool IsOpenerReverseBid(Call call)
+        {
+            return  (this.Role == PositionRole.Opener &&
+                     this.BiddingState.OpeningBid is Bid openingBid &&
+                    call is Bid thisBid &&
+					// TODO: Should this only be for 2-level bids??
+                    thisBid.Level > openingBid.Level &&
+                    thisBid.Strain != Strain.NoTrump && 
+                    openingBid.Strain != Strain.NoTrump &&
+                    thisBid.Suit > openingBid.Suit &&
+                    !this.PairState.Agreements.Strains[thisBid.Strain].Shown);
+        }
 
-		/* -- TODO: Seems unused...
-		internal (HandSummary, PairAgreements) Update(IShowsState showsState, Bid bid)
-		{
-			var hs = new HandSummary(this.PublicHandSummary);
-			var bs = new PairAgreements(this.PairAgreements);
-			showsState.Update(bid, this, hs, bs);
-			return (hs, bs);
-		}
-		*/
+
 
 
 		public bool PrivateHandConforms(BidRule rule)

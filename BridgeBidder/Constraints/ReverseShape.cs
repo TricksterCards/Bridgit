@@ -21,7 +21,7 @@ namespace BridgeBidding
 
         public override bool Conforms(Call call, PositionState ps, HandSummary hs)
         {
-            if (IsReverseBid.IsOpenerReverseBid(call, ps))
+            if (ps.IsOpenerReverseBid(call))
             {
                 if (OpenSuit(ps) is Suit openSuit &&
                     BidSuit(call) is Suit bidSuit)

@@ -27,8 +27,7 @@ namespace BridgeBidding
 
 		public override bool Conforms(Call call, PositionState ps)
 		{
-			var pos = GetPosition(ps);
-			return _constraint.Conforms(call, pos);
+			return _constraint.Conforms(call, GetPosition(ps));
 		}
 	}
 }

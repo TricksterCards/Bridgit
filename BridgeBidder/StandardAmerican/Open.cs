@@ -92,7 +92,6 @@ namespace BridgeBidding
 			{
 				DefaultPartnerBids(Bid.Double, Respond.Rebid),
 
-				//Nonforcing(1, Strain.Diamonds, Shape(4, 11)),
 				Nonforcing(1, Strain.Hearts, Shape(4)),
 				Nonforcing(1, Strain.Spades, Shape(4)),
 

@@ -168,7 +168,7 @@ namespace BridgeBidding
                     {
                         PartnerBids(1, Strain.NoTrump, Call.Double, ConventionalResponses),
                         // TODO: Perhaps more rules here for balancing but for now this is fine -- Balanced() is not necessary
-                        Nonforcing(1, Strain.NoTrump, NTD.OR.Open, PassEndsAuction(true))
+                        Nonforcing(1, Strain.NoTrump, NTD.OR.Open, PassEndsAuction())
                     };
 				}
                 else if (NTD.OpenType == "Overcall1NT")
@@ -176,7 +176,7 @@ namespace BridgeBidding
                     return new BidRule[]
                     {
                         PartnerBids(1, Strain.NoTrump, Call.Double, ConventionalResponses),
-                        Nonforcing(1, Strain.NoTrump, NTD.OR.Open, Balanced(), OppsStopped(), PassEndsAuction(false))
+                        Nonforcing(1, Strain.NoTrump, NTD.OR.Open, Balanced(), OppsStopped(), Not(PassEndsAuction()))
                     };
                 }
 			}

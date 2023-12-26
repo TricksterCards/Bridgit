@@ -1,4 +1,6 @@
-﻿namespace BridgeBidding
+﻿using System;
+
+namespace BridgeBidding
 {
 
 
@@ -27,9 +29,19 @@
 
     }
 
-    public abstract class StaticConstraint: Constraint
+    public class StaticConstraint: Constraint
     {
-        public abstract bool Conforms(Call call, PositionState ps);
+        Func<Call, PositionState, bool> _eval;
+
+        public StaticConstraint(Func<Call, PositionState, bool> eval = null)
+        {
+            _eval = eval != null ? eval : (call, ps) => true;
+        }
+
+        public virtual bool Conforms(Call call, PositionState ps)
+        {
+            return _eval(call, ps);
+        }
     }
 
     public abstract class DynamicConstraint: Constraint

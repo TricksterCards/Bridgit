@@ -82,7 +82,7 @@ namespace BridgeBidding
                 // TODO: Rebid 6+ card suit if appropriate
                 // TODO: Bid some level of NT if appropriate...
 
-                Signoff(3, Strain.NoTrump, OppsStopped(), OppsStopped(), PairPoints((25, 30)) )
+                Signoff(3, Strain.NoTrump, OppsStopped(), PairPoints((25, 30)) )
 
             };
         }

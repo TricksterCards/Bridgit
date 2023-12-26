@@ -268,9 +268,9 @@ namespace BridgeBidding
             {
                 // TODO: Artificial inquiry 2NT...
                 Signoff(4, Suit.Hearts, Fit(), RuleOf17()),
-                Signoff(4, Suit.Hearts, Fit(10), PassEndsAuction(false)),
+                Signoff(4, Suit.Hearts, Fit(10), Not(PassEndsAuction())),
                 Signoff(4, Suit.Spades, Fit(), RuleOf17()),
-                Signoff(4, Suit.Spades, Fit(10), PassEndsAuction(false)),
+                Signoff(4, Suit.Spades, Fit(10), Not(PassEndsAuction())),
 				// TODO: Pass???
 
 				// TODO: NT Bids

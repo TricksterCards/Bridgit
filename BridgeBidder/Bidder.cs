@@ -138,22 +138,89 @@ namespace BridgeBidding
 			return new BidRule(call, force, constraints);
 		}
 
-		public static Constraint HighCardPoints(int min, int max)
-		{ return new ShowsPoints(null, min, max, HasPoints.PointType.HighCard); }
-		public static Constraint HighCardPoints((int min, int max) range)
+
+		// ************************************************************ STATIC CONSTRAINTS ***
+
+		public static StaticConstraint LastBid(int level, Suit suit, bool desired = true)
+		{
+			return new BidHistory(0, new Bid(level, suit), desired);
+		}
+		public static StaticConstraint LastBid(int level, Strain strain, bool desired = true)
+		{
+			return new BidHistory(0, new Bid(level, strain), desired);
+		}
+
+		public static StaticConstraint Rebid(bool desired = true)
+		{
+			return new BidHistory(0, null, desired);
+		}
+
+		public static StaticConstraint Role(PositionRole role, int round = 0, bool desiredValue = true)
+		{
+			return new Role(role, round, desiredValue);
+		}
+
+		public static StaticConstraint Jump(params int[] jumpLevels)
+		{
+			return new JumpBid(jumpLevels);
+		}
+
+		public static StaticConstraint IsReverse(bool desiredValue = true)
+		{
+			return new StaticConstraint((call, ps) => ps.IsOpenerReverseBid(call));
+		}
+
+		public static StaticConstraint ForcedToBid()
+		{
+			return new StaticConstraint((call, ps) => ps.ForcedToBid);
+		}
+
+		public static StaticConstraint Not(StaticConstraint c)
+		{
+			return new StaticConstraint((call, ps) => !c.Conforms(call, ps));
+		}
+
+		public static StaticConstraint Partner(Constraint constraint)
+		{
+			return new PositionProxy(PositionProxy.RelativePosition.Partner, constraint);
+		}
+
+		public static StaticConstraint PassEndsAuction()
+		{
+			return new StaticConstraint((call, ps) => ps.BiddingState.Contract.PassEndsAuction);
+		}
+
+		public static StaticConstraint BidAvailable(int level, Suit suit, bool desiredValue = true)
+		{ 
+			return new BidAvailable(level, suit, desiredValue);
+	 	}
+
+		public static StaticConstraint OppsContract()
+		{ 
+			return new StaticConstraint((call, ps) => ps.IsOpponentsContract); 
+		}
+
+		// ************************************  DYNAMIC CONSTRAINTS ***
+
+		public static DynamicConstraint HighCardPoints(int min, int max)
+		{
+			 return new ShowsPoints(null, min, max, HasPoints.PointType.HighCard); 
+		
+		}
+		public static DynamicConstraint HighCardPoints((int min, int max) range)
 		{
 			return HighCardPoints(range.min, range.max);
 		}
 
-		public static Constraint Points(int min, int max)
+		public static DynamicConstraint Points(int min, int max)
 		{
 			return new ShowsPoints(null, min, max, HasPoints.PointType.Starting);
 		}
 
-		public static Constraint Points((int min, int max) range) {
+		public static DynamicConstraint Points((int min, int max) range) {
 			return Points(range.min, range.max); }
 
-		public static Constraint DummyPoints(int min, int max)
+		public static DynamicConstraint DummyPoints(int min, int max)
 		{
 			// TODO: Rename this??? SuitPoints???  
 			return new ShowsPoints(null, min, max, HasPoints.PointType.Suit);
@@ -176,28 +243,7 @@ namespace BridgeBidding
 		public static Constraint Balanced(bool desired = true) { return new ShowsBalanced(desired); }
 		public static Constraint Flat(bool desired = true) { return new ShowsFlat(desired); }
 
-		public static StaticConstraint LastBid(int level, Suit suit, bool desired = true)
-		{
-			return new BidHistory(0, new Bid(level, suit), desired);
-		}
-		public static StaticConstraint LastBid(int level, Strain strain, bool desired = true)
-		{
-			return new BidHistory(0, new Bid(level, strain), desired);
-		}
 
-		public static StaticConstraint Rebid(bool desired = true)
-		{
-			return new BidHistory(0, null, desired);
-		}
-
-
-
-
-
-		public static Constraint Partner(Constraint constraint)
-		{
-			return new PositionProxy(PositionProxy.RelativePosition.Partner, constraint);
-		}
 
 		public static Constraint RHO(Constraint constraint)
 		{
@@ -276,15 +322,7 @@ namespace BridgeBidding
 		}
 
 
-		public static Constraint Role(PositionRole role, int round = 0, bool desiredValue = true)
-		{
-			return new Role(role, round, desiredValue);
-		}
 
-		public static Constraint BidRound(int round)
-		{
-			return new BidRound(round);
-		}
 
 		
 
@@ -314,10 +352,7 @@ namespace BridgeBidding
 			return new ContractIsAgreedStrain();
 		}
 
-		public static Constraint Jump(params int[] jumpLevels)
-		{
-			return new JumpBid(jumpLevels);
-		}
+
 
 		public static Constraint Aces(params int[] count)
 		{
@@ -379,16 +414,6 @@ namespace BridgeBidding
 			return And(IsReverse(desiredValue), new ShowsReverseShape());
 		}
 
-		public static StaticConstraint IsReverse(bool desiredValue = true)
-		{
-			return new IsReverseBid(desiredValue);
-		}
-
-		public static StaticConstraint ForcedToBid(bool desiredValue = true)
-		{
-			return new ForcedToBid(desiredValue);
-		}
-
 		public static Constraint PairPoints((int Min, int Max) range)
 		{
 			return PairPoints(null, range);
@@ -418,14 +443,6 @@ namespace BridgeBidding
 		}
 
 
-
-		public static Constraint PassEndsAuction(bool desiredValue = true)
-		{
-			return new PassEndsAuction(desiredValue);
-		}
-
-		public static Constraint BidAvailable(int level, Suit suit, bool desiredValue = true)
-		{ return new BidAvailable(level, suit, desiredValue); }
 
 
 		public static Constraint RuleOf17(Suit? suit = null)
@@ -466,14 +483,7 @@ namespace BridgeBidding
 			return new ShowsSuit(false, null);
 		}
 
-		public static Constraint OppsContract(bool desired = true)
-		{ 
-			return new OppsContract(desired); 
-		}
-		public static StaticConstraint OppsContract(int level)
-		{
-			return new OppsContract(true, level);
-		}
+	
 
 		public static DynamicConstraint RuleOf9()
 		{
