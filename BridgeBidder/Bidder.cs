@@ -155,10 +155,6 @@ namespace BridgeBidding
 			return new BidHistory(0, null, desired);
 		}
 
-		public static StaticConstraint Role(PositionRole role, int round = 0, bool desiredValue = true)
-		{
-			return new Role(role, round, desiredValue);
-		}
 
 		public static StaticConstraint Jump(params int[] jumpLevels)
 		{
