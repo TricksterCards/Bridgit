@@ -186,9 +186,9 @@ namespace BridgeBidding
 			return new StaticConstraint((call, ps) => ps.BiddingState.Contract.PassEndsAuction);
 		}
 
-		public static StaticConstraint BidAvailable(int level, Suit suit, bool desiredValue = true)
+		public static StaticConstraint BidAvailable(int level, Suit suit)
 		{ 
-			return new BidAvailable(level, suit, desiredValue);
+			return new StaticConstraint((call, ps) => ps.IsValidNextCall(new Bid(level, suit)));
 	 	}
 
 		public static StaticConstraint OppsContract()
