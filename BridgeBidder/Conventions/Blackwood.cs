@@ -21,8 +21,8 @@ namespace BridgeBidding
 			}
 			if (strain != null && Call.StrainToSuit((Strain)strain) is Suit suit)
 			{
-				bids.Add(Forcing(4, Strain.NoTrump, ShowsTrump(suit), PairPoints(suit, SlamOrBetter)));
-				bids.Add(PartnerBids(4, Strain.NoTrump, Call.Double, RespondAces));
+				bids.Add(Forcing(Bid.FourNoTrump, ShowsTrump(suit), PairPoints(suit, SlamOrBetter)));
+				bids.Add(PartnerBids(Bid.FourNoTrump, Call.Double, RespondAces));
 				// TODO: Add DOPI and DEPO but for now just ignore double and punt on interference...
 			}
 			return bids;
@@ -32,10 +32,10 @@ namespace BridgeBidding
 			return new BidRule[]
 			{
 				DefaultPartnerBids(goodThrough: Call.Double, PlaceContract),
-				Forcing(5, Strain.Clubs, ShowsNoSuit(), Aces(0, 4)),
-				Forcing(5, Strain.Diamonds, ShowsNoSuit(), Aces(1)),
-				Forcing(5, Strain.Hearts, ShowsNoSuit(), Aces(2)),
-				Forcing(5, Strain.Spades, ShowsNoSuit(), Aces(3)),
+				Forcing(Bid.FiveClubs, ShowsNoSuit(), Aces(0, 4)),
+				Forcing(Bid.FiveDiamonds, ShowsNoSuit(), Aces(1)),
+				Forcing(Bid.FiveHearts, ShowsNoSuit(), Aces(2)),
+				Forcing(Bid.FiveSpades, ShowsNoSuit(), Aces(3)),
 			};
 		}
 		// TODO: There needs to be somewhere that we ask for kings...
@@ -45,23 +45,23 @@ namespace BridgeBidding
 			// Otherwise 
 			return new BidRule[]
 			{
-				PartnerBids(5, Strain.NoTrump, Call.Double, RespondKings),
-				Forcing(5, Strain.NoTrump, PairAces(4), PairPoints(GrandSlam)),
+				PartnerBids(Bid.FiveNoTrump, Call.Double, RespondKings),
+				Forcing(Bid.FiveNoTrump, PairAces(4), PairPoints(GrandSlam)),
 
-				Signoff(6, Strain.Clubs, AgreedStrain(), PairPoints(SlamOrBetter), PairAces(3, 4)),
-				Signoff(6, Strain.Diamonds, AgreedStrain(), PairPoints(SlamOrBetter), PairAces(3, 4)),
-				Signoff(6, Strain.Hearts, AgreedStrain(), PairPoints(SlamOrBetter), PairAces(3, 4)),
-				Signoff(6, Strain.Spades, AgreedStrain(), PairPoints(SlamOrBetter), PairAces(3, 4)),
+				Signoff(Bid.SixClubs, AgreedStrain(), PairPoints(SlamOrBetter), PairAces(3, 4)),
+				Signoff(Bid.SixDiamonds, AgreedStrain(), PairPoints(SlamOrBetter), PairAces(3, 4)),
+				Signoff(Bid.SixHearts, AgreedStrain(), PairPoints(SlamOrBetter), PairAces(3, 4)),
+				Signoff(Bid.SixSpades, AgreedStrain(), PairPoints(SlamOrBetter), PairAces(3, 4)),
 
 				Signoff(Call.Pass, ContractIsAgreedStrain(), PairAces(0, 1, 2)),
 
-                Signoff(5, Strain.Diamonds, AgreedStrain(), PairAces(0, 1, 2)),
-                Signoff(5, Strain.Hearts, AgreedStrain(), PairAces(0, 1, 2)),
-                Signoff(5, Strain.Spades, AgreedStrain(), PairAces(0, 1, 2)),
+                Signoff(Bid.FiveDiamonds, AgreedStrain(), PairAces(0, 1, 2)),
+                Signoff(Bid.FiveHearts, AgreedStrain(), PairAces(0, 1, 2)),
+                Signoff(Bid.FiveSpades, AgreedStrain(), PairAces(0, 1, 2)),
 
-                Signoff(6, Strain.Clubs,  Jump(0), AgreedStrain()),
-                Signoff(6, Strain.Diamonds, Jump(0), AgreedStrain()),
-                Signoff(6, Strain.Hearts, Jump(0), AgreedStrain()),
+                Signoff(Bid.SixClubs,  Jump(0), AgreedStrain()),
+                Signoff(Bid.SixDiamonds, Jump(0), AgreedStrain()),
+                Signoff(Bid.SixHearts, Jump(0), AgreedStrain()),
             };
 		}
 
@@ -70,10 +70,10 @@ namespace BridgeBidding
 			return new BidRule[]
 			{
 				DefaultPartnerBids(goodThrough: Call.Double, TryGrandSlam),
-				Forcing(6, Strain.Clubs, ShowsNoSuit(), Kings(0, 4)),
-				Forcing(6, Strain.Diamonds, ShowsNoSuit(), Kings(1)),
-				Forcing(6, Strain.Hearts, ShowsNoSuit(), Kings(2)),
-				Forcing(6, Strain.Spades, ShowsNoSuit(), Kings(3)),
+				Forcing(Bid.SixClubs, ShowsNoSuit(), Kings(0, 4)),
+				Forcing(Bid.SixDiamonds, ShowsNoSuit(), Kings(1)),
+				Forcing(Bid.SixHearts, ShowsNoSuit(), Kings(2)),
+				Forcing(Bid.SixSpades, ShowsNoSuit(), Kings(3)),
 			};
 		}
 
@@ -81,21 +81,21 @@ namespace BridgeBidding
 		{
 			return new BidRule[]
 			{
-				Signoff(7, Strain.Clubs, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),
-				Signoff(7, Strain.Diamonds, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),
-				Signoff(7, Strain.Hearts, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),
-				Signoff(7, Strain.Spades, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),
+				Signoff(Bid.SevenClubs, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),
+				Signoff(Bid.SevenDiamonds, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),
+				Signoff(Bid.SevenHearts, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),
+				Signoff(Bid.SevenSpades, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),
 
 				Signoff(Call.Pass, ContractIsAgreedStrain()),
 
-				Signoff(6, Strain.Diamonds, AgreedStrain()),
-				Signoff(6, Strain.Hearts, AgreedStrain()),
-				Signoff(6, Strain.Spades, AgreedStrain()),
+				Signoff(Bid.SixDiamonds, AgreedStrain()),
+				Signoff(Bid.SixHearts, AgreedStrain()),
+				Signoff(Bid.SixSpades, AgreedStrain()),
 
 				// We may have no choice but to go to 7.  Perhaps bid 6NT?  Otherwise gotta go 7 clubs->hearts
-				Signoff(7, Strain.Clubs, AgreedStrain()),
-				Signoff(7, Strain.Diamonds, AgreedStrain()),
-				Signoff(7, Strain.Hearts, AgreedStrain())
+				Signoff(Bid.SevenClubs, AgreedStrain()),
+				Signoff(Bid.SevenDiamonds, AgreedStrain()),
+				Signoff(Bid.SevenHearts, AgreedStrain())
 			};
 		}
 

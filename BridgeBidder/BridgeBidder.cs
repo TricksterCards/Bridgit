@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace BridgeBidding
 {
@@ -19,13 +21,13 @@ namespace BridgeBidding
 		/// <param name="vulnerable">One of "None", "All", "NS" or "EW"</param>
 		/// <param name="auction">Can be null to or empty string to indicate no auction.  Otherwise contains
 		/// a space separated string compatible with the PBN auction format.</param>
-		/// <param name="nsSystem">For future use.  Must be "SAYC"</param>
-		/// <param name="ewSystem">For future use.  Must be "SAYC"</param>
+		/// <param name="bidSystemNS">For future use.</param>
+		/// <param name="bidSysttemEW">For future use.</param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="AuctionException"></exception> 
-		public static string SuggestBid(string deal, string vulnerable, string auction, string nsSystem = "SAYC", string ewSystem = "SAYC")
+		public static string SuggestBid(string deal, string vulnerable, string auction, string bidSystemNS = "TwoOverOneGameForce", string bidSystemEW = "TwoOverOneGameForce")
 		{
 			Direction dealer;
 			var hands = ParseDeal(deal, out dealer);
@@ -33,15 +35,18 @@ namespace BridgeBidding
 			var bidHistory = ParseAuction(auction);
 
 			// For now we will only allow SAYC bidding system.
-            if (nsSystem != "SAYC" || ewSystem != "SAYC")
+            if (bidSystemNS != "TwoOverOneGameForce" || bidSystemEW != "TwoOverOneGameForce")
             {
-                throw new ArgumentException("Bidding system is limited to SAYC");
+                throw new ArgumentException("Bidding system is limited to 2/1");
             }
-            IBiddingSystem sayc = new StandardAmerican();
+            IBiddingSystem twoOverOne = new TwoOverOneGameForce();
 
-			var biddingState = new BiddingState(hands, dealer, vulPairs, sayc, sayc);
+			var biddingState = new BiddingState(hands, dealer, vulPairs, twoOverOne, twoOverOne);
 			biddingState.ReplayAuction(bidHistory);
 			var bid = biddingState.SuggestBid();
+
+
+			Debug.WriteLine(biddingState.NextToAct.RightHandOpponent.PublicHandSummary.ToString());
 
 			return bid.ToString();
 		}
@@ -156,14 +161,26 @@ namespace BridgeBidding
 
 			int totalExpected = 0;
 			var allCards = new HashSet<Card>();
-			foreach (Hand hand in hands.Values)
+			foreach (var hand in hands)
 			{
-				if (hand != null) 
+				if (hand.Value != null) 
 				{
-					allCards.UnionWith(hand);
+					allCards.UnionWith(hand.Value);
 					totalExpected += 13;
 					if (allCards.Count < totalExpected)
 					{
+						foreach (var otherHand in hands)
+						{
+							if (otherHand.Key != hand.Key && otherHand.Value != null)
+							{
+								var dup = otherHand.Value.Intersect(hand.Value);
+								if (dup.Count() > 0)
+								{
+									throw new ArgumentException($"{dup.First()} duplicated in {hand.Key} and {otherHand.Key}");
+								}
+							}
+						}
+						// Throw a useful excpetion to help debug problems with 
 						throw new ArgumentException($"One or more duplicated cards in {deal}");
 					}
 				}

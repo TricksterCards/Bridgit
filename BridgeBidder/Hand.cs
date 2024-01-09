@@ -68,7 +68,6 @@ namespace BridgeBidding
 				highCardPoints += this.Count(c => (c.Rank == Rank.King && c.Suit == suit)) * 3;
 				highCardPoints += this.Count(c => (c.Rank == Rank.Queen && c.Suit == suit)) * 2;
 				highCardPoints += this.Count(c => (c.Rank == Rank.Jack && c.Suit == suit));
-
 			}
 			return highCardPoints;
 		}

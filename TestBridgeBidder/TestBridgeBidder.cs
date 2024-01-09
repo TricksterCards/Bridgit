@@ -21,15 +21,22 @@ namespace TestBridgeBidder
                 var files = Directory.GetFiles(Path.Combine(dir, "SAYC"), "*.pbn");
                 foreach (var file in files)
                 {
-                    var filename = Path.GetFileName(file);
-                    var text = File.ReadAllText(file);
-                    var tests = PBN.ImportTests(text);
-
-                    foreach (var test in tests)
+                    try
                     {
-                        test.Name = $"{filename}: {test.Name}";
+                        var filename = Path.GetFileName(file);
+                        var text = File.ReadAllText(file);
+                        var tests = PBN.ImportTests(text);
+
+                        foreach (var test in tests)
+                        {
+                            test.Name = $"{filename}: {test.Name}";
+                            result.Add(test);
+                        }
+                    } catch (Exception e)
+                    {
+                        var test = new PBNTest { LoadError = e, Name = Path.GetFileName(file) };
                         result.Add(test);
-                    }
+                    } 
                 }
                 return result.Select(r => new object[] { r }).ToArray();
             }
@@ -44,9 +51,16 @@ namespace TestBridgeBidder
         [DynamicData(nameof(SAYCTestData), DynamicDataDisplayName=nameof(GetSAYCTestDataDisplayName))]
         public void RunSAYCTests(PBNTest test)
         {
-            var suggestion = BridgeBidder.SuggestBid(test.Deal, test.Vulnerable, test.Auction);
+            if (test.LoadError != null)
+            {
+                Assert.Fail($"File {test.Name} failed due to excpetion {test.LoadError.Message}");
+            } 
+            else 
+            {
+                var suggestion = BridgeBidder.SuggestBid(test.Deal, test.Vulnerable, test.Auction);
 
-            Assert.AreEqual(test.Bid, suggestion);
+                Assert.AreEqual(test.Bid, suggestion);
+            }
         }
 
         // All subsequent tests are variations of this basic hand.  Various changes are made
@@ -64,7 +78,7 @@ namespace TestBridgeBidder
             Assert.AreEqual(expected, suggestion);
         }
 
-        // Now similar tests with invalid null arguments
+        // Now similar tests with invalid null arguments 
         // Invalid parameter tests
         [TestMethod]
         [DataRow(null, "NS", "")]
@@ -100,6 +114,6 @@ namespace TestBridgeBidder
         {
             var suggestion = BridgeBidder.SuggestBid(deal, vulnerable, auction);  
         }
-
     }
 }
+  

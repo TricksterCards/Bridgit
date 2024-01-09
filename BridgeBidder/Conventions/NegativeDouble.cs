@@ -33,7 +33,7 @@ namespace BridgeBidding
                 else if (overcallSuit == Suit.Hearts)
                 {
                     bids.Add(Forcing(Call.Double, Points(Respond1Level), Shape(Suit.Spades, 4), ShowsSuit(Suit.Spades)));
-                    bids.Add(Forcing(1, Suit.Spades, Points(Respond1Level), Shape(5, 11)));
+                    bids.Add(Forcing(Bid.OneSpade, Points(Respond1Level), Shape(5, 11)));
                 }
                 else if (openSuit == Suit.Hearts)   // If this is the case we opened 1H and 1S overcall
                 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
@@ -397,7 +398,26 @@ namespace BridgeBidding
 			return true;
         }
 
-
+		public static string RangeToString(string name, (int min, int max)? r)
+		{
+			if (r != null)
+			{
+                (int Min, int Max) range = ((int Min, int Max))r;
+				return $"{name}: {range.Min}-{range.Max}\n";
+			}
+			return "";
+		}
+        public override string ToString()
+        {
+            string s = "";
+			s += RangeToString("Points", Points);
+			s += RangeToString("HCP", HighCardPoints);
+			foreach (var suit in Card.Suits)
+			{
+				s += RangeToString(suit.ToString(), Suits[suit].Shape);
+			}
+			return s;
+        }
     }
 
 	

@@ -1,0 +1,16 @@
+[Event "Deal M"]
+[Dealer "S"]
+[Vulnerable "All"]
+[Deal "S:KQJT84.AK.T54.T3 5.QJT92.A87.7542 A97.543.Q96.AQJ8 632.876.KJ32.K96"]
+[Auction "S"]
+1S Pass 2C Pass
+2S Pass 4S Pass Pass Pass
+
+[Event "Deal N"]
+[Dealer "S"]
+[Vulnerable "All"]
+[Deal "S:KQJT84.A6.A4.732 5.KQJT2.T8732.T5 A97.543.Q96.AQ86 632.987.KJ5.KJ94"]
+[Auction "S"]
+1S Pass 2C Pass
+2S Pass 4S Pass Pass Pass
+

@@ -1,0 +1,179 @@
+[Event "Open 1C - 2D 3C"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K543.QJ32.A8.Q85 - - -"]
+[Auction "N"]
+1C Pass Pass Pass
+
+[Event "Open 1C - 3D 3C"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K43.QJ32.A83.Q85 - - -"]
+[Auction "N"]
+1C 
+
+[Event "Open 1C - 3D / 4C"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K43.Q32.A83.QJ85 - - -"]
+[Auction "N"]
+1C 
+
+[Event "Open 1D - 3D / 2C"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K432.QJ32.A83.QJ - - -"]
+[Auction "N"]
+1D 
+
+[Event "Open 1D - 4D / 1C"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K432.QJ32.AQ83.Q - - -"]
+[Auction "N"]
+1D 
+
+[Event "Open 1H - 4-5-2-2"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K432.AQJ32.83.QJ - - -"]
+[Auction "N"]
+1H
+
+[Event "Open 1S - 5-4-2-2"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AK432.QJ32.83.QJ - - -"]
+[Auction "N"]
+1S
+
+[Event "Open 1S - 5-5-1-2"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AK432.KQJ32.8.QJ - - -"]
+[Auction "N"]
+1S
+
+[Event "Open hand in 3rd seat we won't in 4th"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - K3.QJ32.A983.Q85 -"]
+[Auction "N"]
+Pass Pass 1D
+
+[Event "Dont open in 4th seat - rule of 15"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - - K3.QJ32.A983.Q85"]
+[Auction "N"]
+Pass Pass Pass Pass
+
+[Event "Open in 4th seat - rule of 15"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - - K983.QJ32.A3.Q85"]
+[Auction "N"]
+Pass Pass Pass 1C
+
+[Event "Open in 4th seat - 2 Diamonds strong"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - - 83.QJ32.AKT743.Q"]
+[Auction "N"]
+Pass Pass Pass 2D
+
+[Event "Open in 4th seat - 2 H strong"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - - QJ32.AKT743.83.Q"]
+[Auction "N"]
+Pass Pass Pass 2H
+
+[Event "Open in 4th seat - 2 S strong"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - - AKT743.QJ32.83.Q"]
+[Auction "N"]
+Pass Pass Pass 2S
+
+[Event "6H, 5S minimum - bid spades first"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AT743.KQJ832.83. - - -"]
+[Auction "N"]
+1S
+
+[Event "6H, 5S can reverse - bid hearts first"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AKJ43.KQJ832.83. - - -"]
+[Auction "N"]
+1H
+
+[Event "5C, 4D minimum - bid diamonds first"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:82.Q5.AT74.KQJ83 - - -"]
+[Auction "N"]
+1D
+
+[Event "5C, 4D can reverse - bid clubs first"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:82.Q5.AK74.AKQ83 - - -"]
+[Auction "N"]
+1C
+
+
+
+[Event "Solid suit Clubs"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:...AKQJT98765432 - - -"]
+[Auction "N"]
+7C
+
+[Event "Solid suit Diamonds"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:..AKQJT98765432. - - -"]
+[Auction "N"]
+7D
+
+[Event "Solid suit Hearts"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:.AKQJT98765432.. - - -"]
+[Auction "N"]
+7H
+
+[Event "Solid suit Spades"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AKQJT98765432... - - -"]
+[Auction "N"]
+7S
+
+
+[Event "12-card suit Spades, no outside aces"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AKQJT9876543.Q.. - - -"]
+[Auction "N"]
+6S
+
+[Event "12-card suit Spades, missing trump A, outisde A"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KQJT98765432..A. - - -"]
+[Auction "N"]
+6S
+
+[Event "12-card solid suit Spades, outside A"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AQJT98765432..A. - - -"]
+[Auction "N"]
+7S
+
+

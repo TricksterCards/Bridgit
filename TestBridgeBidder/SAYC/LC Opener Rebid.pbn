@@ -1,4 +1,4 @@
-[Event "Larry Cohen: Opener Rebid A"]
+[Event "Opener Rebid A"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:Q32.AJ3.K72.A542 - - -"]
@@ -6,7 +6,7 @@
 1C Pass 1H Pass
 1NT Pass Pass Pass
 
-[Event "Larry Cohen: Opener Rebid B"]
+[Event "Opener Rebid B"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:K82.A2.T87.AJ432 - - -"]
@@ -14,7 +14,7 @@
 1C Pass 1H Pass
 1NT Pass Pass Pass
 
-[Event "Larry Cohen: Opener Rebid C"]
+[Event "Opener Rebid C"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:976.AQ542.AQ6.AQ - - -"]
@@ -22,7 +22,7 @@
 1H Pass 1S Pass
 2NT Pass Pass Pass
 
-[Event "Larry Cohen: Opener Rebid D"]
+[Event "Opener Rebid D"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:A2.KQ2.AKJ62.J96 - - -"]
@@ -30,7 +30,7 @@
 1D Pass 1S Pass
 2NT Pass Pass Pass
 
-[Event "Larry Cohen: Opener Rebid E"]
+[Event "Opener Rebid E"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:J.K65.A2.AKQ9865 - - -"]
@@ -39,7 +39,7 @@
 3NT Pass Pass Pass
 
 
-[Event "Larry Cohen: Opener Rebid F"]
+[Event "Opener Rebid F"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:QJ82.AJ3.K72.Q52 - - -"]
@@ -49,7 +49,7 @@
 Pass Pass
 
 
-[Event "Larry Cohen: Opener Rebid G"]
+[Event "Opener Rebid G"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:KJ82.AJ72.T7.K32 - - -"]
@@ -59,19 +59,19 @@ Pass Pass
 Pass Pass
 
 
-[Event "Larry Cohen: Opener Rebid H"]
+[Event "Opener Rebid H"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:J986.2.AQ6.AQ875 - - -"]
 [Auction "N"]
 1C Pass 1D Pass
 1S Pass 1NT Pass
-Pass Pass
+2D Pass Pass Pass
 
 % TODO: These last two tests (I and J) may be WRONG.  Perhaps skip 1S in modern bidding...
 % Need to check with Larry
 
-[Event "Larry Cohen: Opener Rebid I"]
+[Event "Opener Rebid I"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:J986.87.AQJ6.AQ5 - - -"]
@@ -80,7 +80,7 @@ Pass Pass
 1S Pass 1NT Pass
 Pass Pass
 
-[Event "Larry Cohen: Opener Rebid J"]
+[Event "Opener Rebid J"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:QJ54.KJ2.AKJ7.KJ - - -"]
@@ -89,4 +89,136 @@ Pass Pass
 1S Pass 1NT Pass
 2NT Pass 3NT Pass
 Pass Pass
+
+[Event "Opener Rebid K"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KJ82.AK3.872.Q52 - - -"]
+[Auction "N"]
+1C Pass 1S Pass
+2S Pass Pass Pass
+
+[Event "Opener Rebid L"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KJ82.AJ72.7.K732 - - -"]
+[Auction "N"]
+1C Pass 1H Pass
+2H Pass Pass Pass
+
+
+[Event "Opener Rebid M"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:J986.AQ87.AQ6.AJ - - -"]
+[Auction "N"]
+1D Pass 1H Pass
+3H Pass Pass Pass
+
+
+[Event "Opener Rebid N"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KQJ8.A2.A8.KQ876 - - -"]
+[Auction "N"]
+1C Pass 1S Pass
+4S Pass Pass Pass
+
+% NOTE: TODO: THIS AUCTION INVOLVES OPENER SPLINTER.  NOT IMPLEMENTED YET
+[Event "Opener Rebid O"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AK65.KJ52.AKJ2.8 - - -"]
+[Auction "N"]
+1D Pass 1S Pass
+4C Pass Pass Pass
+
+
+[Event "Opener Rebid P"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KQJ32.AQJ7.A2.74 - - -"]
+[Auction "N"]
+1S Pass 1NT Pass
+2H Pass Pass Pass
+
+
+[Event "Opener Rebid Q"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:Q7.AKQT7.AKJ87.3 - - -"]
+[Auction "N"]
+1H Pass 1S Pass
+3D 
+
+[Event "Opener Rebid R"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:6.AQJ8.K876.K875 - - -"]
+[Auction "N"]
+1D Pass 1S Pass
+2C
+
+[Event "Opener Rebid S"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:K2.2.AQJ2.AQJ653 - - -"]
+[Auction "N"]
+1C Pass 1H Pass
+2D
+
+[Event "Opener Rebid T"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KJ87.AKQ87.4.AJ2 - - -"]
+[Auction "N"]
+1H Pass 1NT Pass
+2S 
+
+[Event "Opener Rebid U"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KQ32.3.AKJ.AJ932 - - -"]
+[Auction "N"]
+1C Pass 1S Pass
+4H Pass 4S Pass
+Pass Pass
+
+[Event "Opener Rebid V"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:QJ9832.3.AKQ2.K3 - - -"]
+[Auction "N"]
+1S Pass 1NT
+
+[Event "Opener Rebid W"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KQJT97.A7.QT87.3 - - -"]
+[Auction "N"]
+1S Pass 1NT
+
+[Event "Opener Rebid X"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:6.AKQJ87.K876.K5 - - -"]
+[Auction "N"]
+1H Pass 1S
+
+[Event "Opener Rebid Y"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KQ82.3.AQ5.AJ432 - - -"]
+[Auction "N"]
+1C Pass 1H
+
+[Event "Opener Rebid Z"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:32.AQJ52.AK862.6 - - -"]
+[Auction "N"]
+1H Pass 1S
+
+
+
 

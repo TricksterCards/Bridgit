@@ -156,8 +156,8 @@ namespace BridgeBidding
             {
                 return new BidRule[]
                 {
-                    PartnerBids(1, Strain.NoTrump, Call.Double, ConventionalResponses),
-                    Nonforcing(1, Strain.NoTrump, NTD.OR.Open, Balanced())
+                    PartnerBids(Bid.OneNoTrump, Call.Double, ConventionalResponses),
+                    Nonforcing(Bid.OneNoTrump, NTD.OR.Open, Balanced())
                 };
             }
             if (ps.Role == PositionRole.Overcaller && ps.RoleRound == 1)
@@ -166,17 +166,17 @@ namespace BridgeBidding
 				{
                     return new BidRule[]
                     {
-                        PartnerBids(1, Strain.NoTrump, Call.Double, ConventionalResponses),
+                        PartnerBids(Bid.OneNoTrump, Call.Double, ConventionalResponses),
                         // TODO: Perhaps more rules here for balancing but for now this is fine -- Balanced() is not necessary
-                        Nonforcing(1, Strain.NoTrump, NTD.OR.Open, PassEndsAuction())
+                        Nonforcing(Bid.OneNoTrump, NTD.OR.Open, PassEndsAuction())
                     };
 				}
                 else if (NTD.OpenType == "Overcall1NT")
                 {
                     return new BidRule[]
                     {
-                        PartnerBids(1, Strain.NoTrump, Call.Double, ConventionalResponses),
-                        Nonforcing(1, Strain.NoTrump, NTD.OR.Open, Balanced(), OppsStopped(), Not(PassEndsAuction()))
+                        PartnerBids(Bid.OneNoTrump, Call.Double, ConventionalResponses),
+                        Nonforcing(Bid.OneNoTrump, NTD.OR.Open, Balanced(), OppsStopped(), Not(PassEndsAuction()))
                     };
                 }
 			}
@@ -246,21 +246,21 @@ namespace BridgeBidding
             {
 
                 DefaultPartnerBids(Bid.Pass, OpenerRebid),
-                Signoff(2, Strain.Clubs, Shape(5, 11), NTD.RR.LessThanInvite),
-                Signoff(2, Strain.Diamonds, Shape(5, 11), NTD.RR.LessThanInvite),
-                Signoff(2, Strain.Hearts, Shape(5, 11), NTD.RR.LessThanInvite),
-                Signoff(2, Strain.Spades, Shape(5, 11), NTD.RR.LessThanInvite),
+                Signoff(Bid.TwoClubs, Shape(5, 11), NTD.RR.LessThanInvite),
+                Signoff(Bid.TwoDiamonds, Shape(5, 11), NTD.RR.LessThanInvite),
+                Signoff(Bid.TwoHearts, Shape(5, 11), NTD.RR.LessThanInvite),
+                Signoff(Bid.TwoSpades, Shape(5, 11), NTD.RR.LessThanInvite),
 
-                Invitational(2, Strain.NoTrump, NTD.RR.InviteGame, LongestMajor(4)),
+                Invitational(Bid.TwoNoTrump, NTD.RR.InviteGame, LongestMajor(4)),
                 // TODO: These natural bids are not exactly right....
-                Forcing(3, Strain.Hearts, NTD.RR.GameOrBetter, Shape(5, 11)),
-                Forcing(3, Strain.Spades, NTD.RR.GameOrBetter, Shape(5, 11)),
-                Signoff(3, Strain.NoTrump, NTD.RR.Game, LongestMajor(4)),
+                Forcing(Bid.ThreeHearts, NTD.RR.GameOrBetter, Shape(5, 11)),
+                Forcing(Bid.ThreeSpades, NTD.RR.GameOrBetter, Shape(5, 11)),
+                Signoff(Bid.ThreeNoTrump, NTD.RR.Game, LongestMajor(4)),
 
-                Invitational(4, Strain.NoTrump, NTD.RR.InviteSlam), // TODO: Any shape stuff here???
+                Invitational(Bid.FourNoTrump, NTD.RR.InviteSlam), // TODO: Any shape stuff here???
 
-                Signoff(6, Strain.NoTrump, Flat(), NTD.RR.SmallSlam),
-                Signoff(6, Strain.NoTrump, Balanced(), Shape(Suit.Hearts, 2, 3), Shape(Suit.Spades, 2, 3), NTD.RR.SmallSlam),
+                Signoff(Bid.SixNoTrump, Flat(), NTD.RR.SmallSlam),
+                Signoff(Bid.SixNoTrump, Balanced(), Shape(Suit.Hearts, 2, 3), Shape(Suit.Spades, 2, 3), NTD.RR.SmallSlam),
 
                 Signoff(Bid.Pass, NTD.RR.LessThanInvite),
 
@@ -274,21 +274,21 @@ namespace BridgeBidding
             {
                 DefaultPartnerBids(Bid.Pass, ResponderRebid),
 
-                Signoff(Call.Pass, NTD.OR.DontAcceptInvite, Partner(LastBid(2, Strain.NoTrump))),
-                Signoff(Call.Pass, Partner(LastBid(2, Strain.Clubs))),
-                Signoff(Call.Pass, Partner(LastBid(2, Strain.Diamonds))),
-                Signoff(Call.Pass, Partner(LastBid(2, Strain.Hearts))),
-                Signoff(Call.Pass, Partner(LastBid(2, Strain.Spades))),
+                Signoff(Call.Pass, NTD.OR.DontAcceptInvite, Partner(LastBid(Bid.TwoNoTrump))),
+                Signoff(Call.Pass, Partner(LastBid(Bid.TwoClubs))),
+                Signoff(Call.Pass, Partner(LastBid(Bid.TwoDiamonds))),
+                Signoff(Call.Pass, Partner(LastBid(Bid.TwoHearts))),
+                Signoff(Call.Pass, Partner(LastBid(Bid.TwoSpades))),
 
-                Forcing(3, Strain.Hearts, Partner(LastBid(2, Strain.NoTrump)), NTD.OR.AcceptInvite, Shape(5)),
-                Forcing(3, Strain.Spades, Partner(LastBid(2, Strain.NoTrump)), NTD.OR.AcceptInvite, Shape(5)),
+                Forcing(Bid.ThreeHearts, Partner(LastBid(Bid.TwoNoTrump)), NTD.OR.AcceptInvite, Shape(5)),
+                Forcing(Bid.ThreeSpades, Partner(LastBid(Bid.TwoNoTrump)), NTD.OR.AcceptInvite, Shape(5)),
 
-                Signoff(3, Strain.NoTrump, NTD.OR.AcceptInvite, Partner(LastBid(2, Strain.NoTrump))),
-                Signoff(3, Strain.NoTrump, Partner(LastBid(3, Strain.Hearts)), Shape(Suit.Hearts, 0, 2)),
-                Signoff(3, Strain.NoTrump, Partner(LastBid(3, Suit.Spades)), Shape(Suit.Spades, 0, 2)),
+                Signoff(Bid.ThreeNoTrump, NTD.OR.AcceptInvite, Partner(LastBid(Bid.TwoNoTrump))),
+                Signoff(Bid.ThreeNoTrump, Partner(LastBid(Bid.ThreeHearts)), Shape(Suit.Hearts, 0, 2)),
+                Signoff(Bid.ThreeNoTrump, Partner(LastBid(3, Suit.Spades)), Shape(Suit.Spades, 0, 2)),
 
-                Nonforcing(4, Strain.Hearts, Partner(LastBid(3, Strain.Hearts)), Shape(3, 5)),
-                Nonforcing(4, Strain.Spades, Partner(LastBid(3, Strain.Spades)), Shape(3, 5))
+                Nonforcing(Bid.FourHearts, Partner(LastBid(Bid.ThreeHearts)), Shape(3, 5)),
+                Nonforcing(Bid.FourSpades, Partner(LastBid(Bid.ThreeSpades)), Shape(3, 5))
             };
         }
         private IEnumerable<BidRule> ResponderRebid(PositionState _)
@@ -296,12 +296,12 @@ namespace BridgeBidding
             return new BidRule[]
             {
                 // TODO: Ideally this would be "Parther(ShowsShape(Hearts, 5)" Better than lastbid...
-                Signoff(3, Strain.NoTrump, Partner(LastBid(3, Strain.Hearts)), Shape(Suit.Hearts, 0, 2)),
-                Signoff(3, Strain.NoTrump, Partner(LastBid(3, Strain.Spades)), Shape(Suit.Spades, 0, 2)),
+                Signoff(Bid.ThreeNoTrump, Partner(LastBid(Bid.ThreeHearts)), Shape(Suit.Hearts, 0, 2)),
+                Signoff(Bid.ThreeNoTrump, Partner(LastBid(Bid.ThreeSpades)), Shape(Suit.Spades, 0, 2)),
 
 
-                Nonforcing(4, Strain.Hearts, Partner(LastBid(3, Strain.Hearts)), Shape(3, 4)),
-                Nonforcing(4, Strain.Spades, Partner(LastBid(3, Strain.Spades)), Shape(3, 4))
+                Nonforcing(Bid.FourHearts, Partner(LastBid(Bid.ThreeHearts)), Shape(3, 4)),
+                Nonforcing(Bid.FourSpades, Partner(LastBid(Bid.ThreeSpades)), Shape(3, 4))
 
             };
         }

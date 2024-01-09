@@ -21,8 +21,8 @@ namespace BridgeBidding
 			return new BidRule[]
 			{
                 // TODO: Systems on/off through here --- just like 1NT.....
-                PartnerBids(3, Strain.NoTrump, Bid.Double, Respond),
-				Nonforcing(3, Strain.NoTrump, OpenPoints, Balanced())
+                PartnerBids(Bid.ThreeNoTrump, Bid.Double, Respond),
+				Nonforcing(Bid.ThreeNoTrump, OpenPoints, Balanced())
 			};
 		}
 
@@ -52,8 +52,8 @@ namespace BridgeBidding
 			return new BidRule[]
 			{
 			     // TODO: Perhaps bid BestSuit() of all the signoff suits... 
-             	Signoff(4, Suit.Hearts, NTB.RespondNoSlam, Shape(5, 11)),
-				Signoff(4, Suit.Spades, NTB.RespondNoSlam, Shape(5, 11)),
+             	Signoff(Bid.FourHearts, NTB.RespondNoSlam, Shape(5, 11)),
+				Signoff(Bid.FourSpades, NTB.RespondNoSlam, Shape(5, 11)),
 
 				Signoff(Bid.Pass, NTB.RespondNoSlam),
 			};

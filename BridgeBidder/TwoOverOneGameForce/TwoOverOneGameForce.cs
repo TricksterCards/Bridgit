@@ -1,7 +1,7 @@
 ﻿namespace BridgeBidding
 {
 
-    public class StandardAmerican : Bidder, IBiddingSystem
+    public class TwoOverOneGameForce : Bidder, IBiddingSystem
     {
 
         public BidChoices GetBidChoices(PositionState ps)
@@ -21,7 +21,8 @@
         }
 
 
-
+		public static (int, int) PairGameInvite = (23, 24);
+		public static (int, int) PairGame = (25, 31);
 
 
         // TODO: This is not a great name.  Not exactly right.  Fix later.....

@@ -1,5 +1,6 @@
-﻿using System.Runtime.InteropServices;
-using static BridgeBidding.BidRule;
+﻿using System.Linq;
+
+//using static BridgeBidding.BidRule;
 
 namespace BridgeBidding
 {
@@ -8,7 +9,6 @@ namespace BridgeBidding
 
     public abstract class Bidder
 	{
-		// TODO: Is there ever a place for constraints on this???  Dont know...
 		public static BidRule DefaultPartnerBids(Call goodThrough, BidRulesFactory brf)
 		{
 			return DefaultPartnerBids(goodThrough, (ps) => { return new BidChoices(ps, brf); });
@@ -16,56 +16,25 @@ namespace BridgeBidding
 
         public static BidRule DefaultPartnerBids(Call goodThrough, BidChoicesFactory bcf)
         {
-            return _PartnerBids(null, goodThrough, bcf, new Constraint[0]);
+            return _PartnerBids(null, goodThrough, bcf, new StaticConstraint[0]);
         }
 
+	
 
-        public static BidRule PartnerBids(int level, Strain strain, Call goodThrough, BidRulesFactory partnerBidsFactory)
+		public static BidRule PartnerBids(Call call, Call goodThrough, BidRulesFactory brf, params StaticConstraint[] constraints)
 		{
-			return PartnerBids(level, strain, goodThrough, partnerBidsFactory, new Constraint[0]);
-		}
-
-		public static BidRule PartnerBids(int level, Strain strain, Call goodThrough, BidRulesFactory brf, params Constraint[] constraints)
-		{
-			return _PartnerBids(new Bid(level, strain), goodThrough, (ps) => { return new BidChoices(ps, brf); }, constraints);
-		}
-
-		public static BidRule PartnerBids(int level, Strain strain, Call goodThrough, BidChoicesFactory choicesFactory)
-		{
-			return _PartnerBids(new Bid(level, strain), goodThrough, choicesFactory, new Constraint[0]);
-		}
-
-		public static BidRule PartnerBids(int level, Strain strain, Bid goodThrough, BidChoicesFactory choicesFactory, params Constraint[] constraints)
-		{
-			return _PartnerBids(new Bid(level, strain), goodThrough, choicesFactory, constraints);
-		}
-
-		public static BidRule PartnerBids(Call call, Call goodThrough, BidRulesFactory brf)
-		{
-			return _PartnerBids(call, goodThrough, (ps) => { return new BidChoices(ps, brf); }, new Constraint[0]);
+			return _PartnerBids(call, goodThrough, (ps) => { return new BidChoices(ps, brf); }, constraints);
 		}
 		public static BidRule PartnerBids(Call call, Call goodThrough, BidChoicesFactory choicesFactory)
 		{
-			return _PartnerBids(call, goodThrough, choicesFactory, new Constraint[0]);
+			return _PartnerBids(call, goodThrough, choicesFactory, new StaticConstraint[0]);
 		}
-		private static BidRule _PartnerBids(Call call, Call goodThrough, BidChoicesFactory choicesFactory, params Constraint[] constraints)
+
+		private static BidRule _PartnerBids(Call call, Call goodThrough, BidChoicesFactory choicesFactory, params StaticConstraint[] constraints)
 		{
 			return new PartnerBidRule(call, goodThrough, choicesFactory, constraints);
 		}
 
-
-
-		public static BidRule Forcing(int level, Suit suit, params Constraint[] constraints)
-		{
-			return Rule(level, suit, BidForce.Forcing, constraints);
-		}
-
-		public static BidRule Forcing(int level, Strain strain, params Constraint[] constraints)
-		{
-			return Rule(level, strain, BidForce.Forcing, constraints);
-		}
-
-		// TODO: Add other flavors of this, but for now this works.
 		public static BidRule Forcing(Call call, params Constraint[] constraints)
 		{
 			return Rule(call, BidForce.Forcing, constraints);
@@ -73,14 +42,7 @@ namespace BridgeBidding
 
 
 		// TODO: Need a non-forcing BidMessage...
-		public static BidRule Nonforcing(int level, Suit suit, params Constraint[] constraints)
-		{
-			return Rule(level, suit, BidForce.Nonforcing, constraints);
-		}
-		public static BidRule Nonforcing(int level, Strain strain, params Constraint[] constraints)
-		{
-			return Rule(level, strain, BidForce.Nonforcing, constraints);
-		}
+
 
 		public static BidRule Nonforcing(Call call, params Constraint[] constraints)
 		{
@@ -89,47 +51,15 @@ namespace BridgeBidding
 
 
 
-		public static BidRule Invitational(int level, Suit suit, params Constraint[] constraints)
-		{
-			return Rule(level, suit, BidForce.Invitational, constraints);
-		}
-		public static BidRule Invitational(int level, Strain strain, params Constraint[] constraints)
-		{
-			return Rule(level, strain, BidForce.Invitational, constraints);
-		}
-
 		public static BidRule Invitational(Call call, params Constraint[] constraints)
 		{
 			return Rule(call, BidForce.Invitational, constraints);
 		}
 	
 
-		public static BidRule Signoff(int level, Suit suit, params Constraint[] constraints)
-		{
-			return Rule(level, suit, BidForce.Signoff, constraints);
-		}
-
-		public static BidRule Signoff(int level, Strain strain, params Constraint[] constraints)
-		{
-			return Rule(level, strain, BidForce.Signoff, constraints);
-		}
-
 		public static BidRule Signoff(Call call, params Constraint[] constraints)
 		{
 			return Rule(call, BidForce.Signoff, constraints);
-		}
-
-
-		public static BidRule Rule(int level, Suit suit, BidForce force, params Constraint[] constraints)
-		{
-			return Rule(new Bid(level, suit), force, constraints);
-		}
-
-
-
-		public static BidRule Rule(int level, Strain strain, BidForce force, params Constraint[] constraints)
-		{
-			return Rule(new Bid(level, strain), force, constraints);
 		}
 
 
@@ -141,6 +71,14 @@ namespace BridgeBidding
 
 		// ************************************************************ STATIC CONSTRAINTS ***
 
+		public static StaticConstraint Seat(params int[] seats)
+		{
+			return new StaticConstraint((call, ps) => seats.Contains(ps.Seat));
+		}
+		public static StaticConstraint LastBid(Call call)
+		{
+			return new BidHistory(0, call, true);
+		}
 		public static StaticConstraint LastBid(int level, Suit suit, bool desired = true)
 		{
 			return new BidHistory(0, new Bid(level, suit), desired);
@@ -149,6 +87,11 @@ namespace BridgeBidding
 		{
 			return new BidHistory(0, new Bid(level, strain), desired);
 		}
+		public static StaticConstraint OpeningBid(Bid bid)
+		{
+			return new StaticConstraint((call, ps) => ps.BiddingState.OpeningBid == bid);
+		}
+
 
 		public static StaticConstraint Rebid(bool desired = true)
 		{
@@ -212,7 +155,10 @@ namespace BridgeBidding
 
 
 		// ************************************  DYNAMIC CONSTRAINTS ***
-
+		public static DynamicConstraint PassIn4thSeat()
+		{
+			return new PassIn4thSeat();
+		}
 		public static DynamicConstraint HighCardPoints(int min, int max)
 		{
 			 return new ShowsPoints(null, min, max, HasPoints.PointType.HighCard); 
@@ -319,7 +265,10 @@ namespace BridgeBidding
 
 		public static Constraint LongerOrEqual(Suit longer, Suit shorter) { return new ShowsBetterSuit(longer, shorter, longer, true); }
 
-
+		public static DynamicConstraint LongestSuit(Suit? suit = null)
+		{
+			return new ShowsLongestSuit(suit);
+		}
 
 		public static Constraint DummyPoints(Suit trumpSuit, (int min, int max) range)
 		{
@@ -487,10 +436,6 @@ namespace BridgeBidding
 			return new RuleOf9();
 		}
 
-		public static Constraint ConventionOn(string convention)
-		{
-			return new ConventionOn(convention);
-		}
 
 
 

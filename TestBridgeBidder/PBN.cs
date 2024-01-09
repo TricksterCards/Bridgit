@@ -79,12 +79,7 @@ namespace TestBridgeBidder
                 var handString = handStrings[i];
                 if (handString != "-")
                 {
-                    // Do some basic validation on hands.  Exhaustive tests should be done by the robot code
-                    // but better to find broken PBN data here.  Just check for 4 suits & correct length (13+3).
-                    if (handString.Length != 16)
-                        throw new ArgumentException($"Hand without exactly 13 cards found in '{handString}'");
-                    if (handString.Split('.').Length != 4)
-                        throw new ArgumentException($"Hand {handString} does not contain 4 suits.");
+                    // Do no validation on hands.  Should be caught by bidder code.
                     knownHands.Add(seat);
                 }
             }

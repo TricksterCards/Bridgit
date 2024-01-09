@@ -1,0 +1,53 @@
+[Event "5 Clubs, 4 Diamonds, Min"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:75.AK.5432.KQ543 - - -"]
+[Auction "N"]
+1D Pass 1NT Pass
+2C
+
+[Event "5 Clubs, 4 Diamonds, Medium+"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:75.AK.AK32.KQ543 - - -"]
+[Auction "N"]
+1C Pass 1NT Pass
+2D
+
+
+[Event "6 Clubs, 5 Hearts, Min"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:75.AK743..QJ5432 - - -"]
+[Auction "N"]
+1H Pass 1S Pass
+2C
+
+[Event "6 Clubs, 5 Hearts, Medium"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:75.AK743..AKJ432 - - -"]
+[Auction "N"]
+1C Pass 1S Pass
+2H
+
+
+[Event "6 Diamonds, 5 Spades, Min"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AK743.7.QJ5432.5 - - -"]
+[Auction "N"]
+1D Pass 1H Pass
+1S Pass 1NT Pass
+2S
+
+
+[Event "6 Diamonds, 5 Spades, Medium"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AK743.7.AKJ532.5 - - -"]
+[Auction "N"]
+1D Pass 1H Pass
+1S Pass 1NT Pass
+3S
+

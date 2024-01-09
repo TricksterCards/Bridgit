@@ -17,8 +17,8 @@ namespace BridgeBidding
 			if (ps.Partner.LastCall is Call partnerCall && partnerCall is Bid partnerBid &&
 				partnerBid.Strain == Strain.NoTrump && (partnerBid.Level <= 3))
 			{
-				bids.Add(PartnerBids(4, Strain.Clubs, Call.Double, RespondAces));
-				bids.Add(Forcing(4, Strain.Clubs, PairPoints(SlamOrBetter)));
+				bids.Add(PartnerBids(Bid.FourClubs, Call.Double, RespondAces));
+				bids.Add(Forcing(Bid.FourClubs, PairPoints(SlamOrBetter)));
 			}
 			return bids;
 		}
@@ -27,10 +27,10 @@ namespace BridgeBidding
 			return new BidRule[]
 			{
 				DefaultPartnerBids(goodThrough: Call.Double, PlaceContract),
-				Forcing(4, Strain.Diamonds, ShowsNoSuit(), Aces(0, 4)),
-				Forcing(4, Strain.Hearts, ShowsNoSuit(), Aces(1)),
-				Forcing(4, Strain.Spades, ShowsNoSuit(), Aces(2)),
-				Forcing(4, Strain.NoTrump, ShowsNoSuit(), Aces(3)),
+				Forcing(Bid.FourDiamonds, ShowsNoSuit(), Aces(0, 4)),
+				Forcing(Bid.FourHearts, ShowsNoSuit(), Aces(1)),
+				Forcing(Bid.FourSpades, ShowsNoSuit(), Aces(2)),
+				Forcing(Bid.FourNoTrump, ShowsNoSuit(), Aces(3)),
 			};
 		}
 		// TODO: There needs to be somewhere that we ask for kings...
@@ -39,9 +39,9 @@ namespace BridgeBidding
 			// TODO: Need to ask about kings..... 
 			return new BidRule[]
 			{
-				Signoff(7, Strain.NoTrump, PairPoints(GrandSlam), PairAces(4)),
-				Signoff(6, Strain.NoTrump, PairAces(3, 4)),
-				Signoff(4, Strain.NoTrump, PairAces(0, 1, 2))
+				Signoff(Bid.SevenNoTrump, PairPoints(GrandSlam), PairAces(4)),
+				Signoff(Bid.SixNoTrump, PairAces(3, 4)),
+				Signoff(Bid.FourNoTrump, PairAces(0, 1, 2))
 			};
 		}
 

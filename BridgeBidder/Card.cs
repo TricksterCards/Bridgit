@@ -41,18 +41,6 @@ namespace BridgeBidding
 		}
 
 
-		public static Dictionary<string, Suit> StringToSuit = new Dictionary<string, Suit>
-		{
-			{ "♣", Suit.Clubs    },
-			{ "C", Suit.Clubs    },
-			{ "♦", Suit.Diamonds },
-			{ "D", Suit.Diamonds },
-			{ "♥", Suit.Hearts   },
-			{ "H", Suit.Hearts   },
-			{ "♠", Suit.Spades   },
-			{ "S", Suit.Spades   }
-		};
-
 		public static Dictionary<char, Rank> StringToRank = new Dictionary<char, Rank>
 		{
 			{ '2', Rank.Two },
@@ -69,22 +57,34 @@ namespace BridgeBidding
 			{ 'K', Rank.King },
 			{ 'A', Rank.Ace }
 		};
-		public static Dictionary<string, Suit> SymbolToSuit = new Dictionary<string, Suit>
+
+        public override string ToString()
+        {
+            return $"{RankToSymbol[Rank]}{SuitToSymbol[Suit]}";
+		}
+		public static Dictionary<Rank, string> RankToSymbol = new Dictionary<Rank, string>
 		{
-			{  "♣",  Suit.Clubs    },
-			{  "♦",  Suit.Diamonds },
-			{  "♥",  Suit.Hearts   },
-			{  "♠",  Suit.Spades   }
+			{ Rank.Two,   "2" },
+			{ Rank.Three, "3" },
+			{ Rank.Four,  "4" },
+			{ Rank.Five,  "5" },
+			{ Rank.Six,   "6"},
+		    { Rank.Seven, "7" },
+			{ Rank.Eight, "8" },
+			{ Rank.Nine,  "9" },
+			{ Rank.Ten,   "T" },
+			{ Rank.Jack,  "J" },
+			{ Rank.Queen, "Q" },
+			{ Rank.King,  "K" },
+			{ Rank.Ace,   "A" }
 		};
 
-
-
-		public static Dictionary<Suit, string> SuitToSymbol = new Dictionary<Suit, string>
+        public static Dictionary<Suit, string> SuitToSymbol = new Dictionary<Suit, string>
 		{
-			{ Suit.Clubs,    "♣" },
-			{ Suit.Diamonds, "♦" },
-			{ Suit.Hearts,   "♥" },
-			{ Suit.Spades,   "♠" }
+			{ Suit.Clubs,    "C" },
+			{ Suit.Diamonds, "D" },
+			{ Suit.Hearts,   "H" },
+			{ Suit.Spades,   "S" }
 		};
 
 	}

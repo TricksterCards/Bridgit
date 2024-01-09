@@ -139,7 +139,8 @@ namespace BridgeBidding
 
 		public int Jump(Bid bid)
 		{
-			return (bid == null) ? bid.Level - 1 : bid.JumpOver(Bid);
+			
+			return (this.Bid == null) ? bid.Level - 1 : bid.JumpOver(Bid);
 		}
 
 		public bool PassEndsAuction { get { return this.CallsRemaining == 1; } }

@@ -54,21 +54,7 @@ namespace BridgeBidding
             }
         }
     }
-    /*
-    public class ChoicesFromRules
-    {
-        public BidChoicesFactory Factory { get { return this.Choices; } }
-        private BidRulesFactory _rulesFactory;
-        public ChoicesFromRules(BidRulesFactory rulesFactory)
-        {
-            _rulesFactory = rulesFactory;
-        }
-        private BidChoices Choices(PositionState ps)
-        {
-           return new BidChoices(ps, _rulesFactory);
-        }
-    }
-    */
+
 
     public delegate BidChoices BidChoicesFactory(PositionState ps);
     public class BidChoices

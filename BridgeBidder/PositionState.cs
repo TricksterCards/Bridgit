@@ -215,18 +215,28 @@ namespace BridgeBidding
 
         public bool IsOpenerReverseBid(Call call)
         {
-            return  (this.Role == PositionRole.Opener &&
-                     this.BiddingState.OpeningBid is Bid openingBid &&
-                    call is Bid thisBid &&
-					// TODO: Should this only be for 2-level bids??
-                    thisBid.Level > openingBid.Level &&
+			// TODO: For now only 2-level bids are considered a reverse
+			// When in competition, perhaps allow reverses at higher levels...
+            return (this.Role == PositionRole.Opener &&
+                    this.BiddingState.OpeningBid is Bid openingBid &&
+                	call is Bid thisBid &&
+                    thisBid.Level == 2 &&
                     thisBid.Strain != Strain.NoTrump && 
                     openingBid.Strain != Strain.NoTrump &&
                     thisBid.Suit > openingBid.Suit &&
                     !this.PairState.Agreements.Strains[thisBid.Strain].Shown);
         }
 
-
+		public bool IsOpenerJumpShift(Call call)
+		{
+			return (this.Role == PositionRole.Opener &&
+                    this.BiddingState.OpeningBid is Bid openingBid &&
+                    call is Bid thisBid &&
+                    thisBid.Strain != Strain.NoTrump && 
+                    openingBid.Strain != Strain.NoTrump &&
+                    thisBid.JumpOver(openingBid) == 1 &&
+                    !this.PairState.Agreements.Strains[thisBid.Strain].Shown);
+		}
 
 
 		public bool PrivateHandConforms(BidRule rule)
