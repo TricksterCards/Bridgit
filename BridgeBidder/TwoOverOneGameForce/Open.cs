@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 
@@ -51,10 +52,10 @@ namespace BridgeBidding
 				DefaultPartnerBids(Call.Double, Respond.OppsDoubled),
                 DefaultPartnerBids(Bid.TwoNoTrump, Respond.OppsOvercalled),
 
-                PartnerBids(Bid.OneClub, Call.Pass, Respond.OneClub),
-				PartnerBids(Bid.OneDiamond, Call.Pass, Respond.Diamond),
-				PartnerBids(Bid.OneHeart, Call.Pass, Respond.Heart),
-				PartnerBids(Bid.OneSpade, Call.Pass, Respond.Spade),
+                PartnerBids(Bid.OneClub,    Call.Pass, Respond.OneClub),
+				PartnerBids(Bid.OneDiamond, Call.Pass, Respond.OneDiamond),
+				PartnerBids(Bid.OneHeart,   Call.Pass, Respond.OneHeart),
+				PartnerBids(Bid.OneSpade,   Call.Pass, Respond.OneSpade),
 
 				// 2-level opening in 4th seat is strong, like a 1 level
 				// TODO: Rename this function - sometimes opens 2-level
@@ -94,6 +95,7 @@ namespace BridgeBidding
 		// These rules should not be added in 4th seat - weak opens make no sense
 		public static IEnumerable<BidRule> OpenSuitWeak(PositionState ps)
 		{
+			Debug.Assert(ps.Seat != 4);
 			return new BidRule[]
 			{
 				DefaultPartnerBids(Bid.FourHearts, Respond.WeakOpen),

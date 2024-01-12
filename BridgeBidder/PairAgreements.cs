@@ -4,6 +4,10 @@ using System.Collections.Generic;
 namespace BridgeBidding
 {
 
+    // TODO: Add IsGameForcingAuction to this.  I think only a bidruie that is game forcing
+    // should be able to set this, so there will be no merging of state.  If that is the case
+    // then should it be in this class or in PairState?
+    /// </summary>
 
     public class PairAgreements: State, IEquatable<PairAgreements>
     {

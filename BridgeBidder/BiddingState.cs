@@ -145,7 +145,7 @@ namespace BridgeBidding
         {
             if (!NextToAct.HasHand)
             {
-                throw new Exception($"{NextToAct.Direction} does not have a known hand so SuggestBid makes no sense.");
+                throw new AuctionException(Call.Pass, NextToAct, Contract, $"{NextToAct.Direction} does not have a known hand so can not suggest a bid.");
             }
             if (Contract.AuctionComplete)
             {

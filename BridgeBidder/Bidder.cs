@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 
 //using static BridgeBidding.BidRule;
 
@@ -37,9 +39,19 @@ namespace BridgeBidding
 
 		public static BidRule Forcing(Call call, params Constraint[] constraints)
 		{
-			return Rule(call, BidForce.Forcing, constraints);
+			return Rule(call, BidForce.Forcing1Round, constraints);
 		}
 
+		public static BidRule Semiforcing(Call call, params Constraint[] constraints)
+		{
+			// TODO: What do do about semi-forcing?  
+			return Rule(call, BidForce.Nonforcing, constraints);
+		}
+
+		public static BidRule ForcingToGame(Call call, params Constraint[] constraints)
+		{
+			return Rule(call, BidForce.ForcingToGame, constraints);
+		}
 
 		// TODO: Need a non-forcing BidMessage...
 
@@ -429,7 +441,10 @@ namespace BridgeBidding
 			return new ShowsSuit(false, null);
 		}
 
-	
+		public static DynamicConstraint BetterMinor(Suit? suit = null)
+		{
+			return new BetterMinor(suit);
+		}
 
 		public static DynamicConstraint RuleOf9()
 		{
@@ -452,6 +467,7 @@ namespace BridgeBidding
 		{
 			return RaisePartner(suit, 1);
 		}
+
 
     }
 };

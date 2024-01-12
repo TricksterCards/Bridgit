@@ -2,7 +2,7 @@
 
 namespace BridgeBidding
 {
-    public enum BidForce { Nonforcing, Invitational, Forcing, Signoff }
+    public enum BidForce { Nonforcing, Invitational, Forcing1Round, ForcingToGame, Signoff }
 
 
     public class BidRule

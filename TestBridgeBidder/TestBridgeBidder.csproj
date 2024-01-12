@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <None Update="SAYC\*.pbn" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="TwoOverOneGameForce\*.pbn" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

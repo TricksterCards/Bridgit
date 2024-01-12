@@ -9,7 +9,7 @@ namespace BridgeBidding
 		{
 			var bids = new List<BidRule>()
 			{
-				DefaultPartnerBids(Bid.Double, Respond.Rebid),
+				DefaultPartnerBids(Bid.Double, RespondBid2.Rebid),
 
 
 				// Responder bid a major suits and we have a fit.  Support at appropriate level.
@@ -85,12 +85,27 @@ namespace BridgeBidding
 			return bids;
 		}
 
-		public static IEnumerable<BidRule> ResponderBidNT(PositionState ps, int level)
+		public static IEnumerable<BidRule> OneNTOverMajorOpen(PositionState ps)
 		{
 			return ResponderChangedSuits(ps);
 			// TODO: Do something more here
 		}
 
+
+		public static IEnumerable<BidRule> OneNTOverMinorOpen(PositionState ps)
+		{
+			return ResponderChangedSuits(ps);
+		}
+
+		public static IEnumerable<BidRule> TwoNTOverMinorOpen(PositionState ps)
+		{
+			return ResponderChangedSuits(ps);
+		}
+
+		public static IEnumerable<BidRule> ThreeNTOverClubOpen(PositionState ps)
+		{
+			return ResponderChangedSuits(ps);
+		}
 
 		public static IEnumerable<BidRule> ResponderRaisedMinor(PositionState ps)
 		{
@@ -103,8 +118,9 @@ namespace BridgeBidding
 			// TODO: Help suit raises?
 			var bids = new List<BidRule>()
 			{
-				PartnerBids(Bid.ThreeHearts, Bid.FourDiamonds, Respond.OpenerInvitedGame),
-				PartnerBids(Bid.ThreeSpades, Bid.FourHearts, Respond.OpenerInvitedGame),
+				// TODO: These are not reall game invitations...
+				PartnerBids(Bid.ThreeHearts, Bid.FourDiamonds, RespondBid2.OpenerInvitedGame),
+				PartnerBids(Bid.ThreeSpades, Bid.FourHearts, RespondBid2.OpenerInvitedGame),
 
 				// TODO: Game invitation shoudl always be help suit...  At least if that convention
 				// is in use.  

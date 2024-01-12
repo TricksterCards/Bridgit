@@ -14,12 +14,16 @@ namespace BridgeBidding
 
         public bool Vulnerable { get; private set;}
 
+        // TODO: Is this part of the pair agreements?? 
+        public bool InGameForcingAuction { get; set; }
+
         public PairState(Pair pair, IBiddingSystem biddingSystem, HashSet<Pair> vulPairs)
         {
             this.Pair = pair;
             this.Agreements = new PairAgreements();
             this.BiddingSystem = biddingSystem;
             this.Vulnerable = vulPairs.Contains(pair);
+            this.InGameForcingAuction = false;
         }
 
     }

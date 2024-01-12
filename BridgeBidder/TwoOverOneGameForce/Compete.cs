@@ -27,12 +27,6 @@ namespace BridgeBidding
             bids.AddRange(Gerber.InitiateConvention(ps));
             bids.AddRange(new BidRule[]
             {
-                // Stilly buy highest priority bids for any hand...
-                Nonforcing(Bid.SevenClubs, Shape(13)),
-                Nonforcing(Bid.SevenDiamonds, Shape(13)),
-                Nonforcing(Bid.SevenHearts, Shape(13)),
-                Nonforcing(Bid.SevenSpades, Shape(13)),
-
 
              //   Nonforcing(Call.Pass, 0),    // TOD   aO: What points?  This is the last gasp attempt here...
 

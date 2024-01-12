@@ -117,8 +117,9 @@ namespace BridgeBidding
 		{
 			get
 			{		
-				return (Partner._bids.Count > 0 &&
-						Partner._bids.Last().BidForce == BidForce.Forcing &&
+				return ((PairState.InGameForcingAuction || 
+						(Partner._bids.Count > 0 &&
+						Partner._bids.Last().BidForce == BidForce.Forcing1Round)) &&
 						!RightHandOpponent._bids.Last().Equals(Call.Pass));
 	
 			}
@@ -155,6 +156,10 @@ namespace BridgeBidding
 				}
 			}
 			_bids.Add(bidGroup);
+			if (bidGroup.BidForce == BidForce.ForcingToGame)
+			{
+				PairState.InGameForcingAuction = true;
+			}
 			// Now we prune any rules that do not 
 
 			if (RepeatUpdatesUntilStable(bidGroup))

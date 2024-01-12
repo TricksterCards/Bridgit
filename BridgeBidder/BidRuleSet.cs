@@ -47,8 +47,8 @@ namespace BridgeBidding
 			{
 				// TODO: Need to do something about this.  For now if
 				// either is forcing then we will say it is forcing.
-				if (this.BidForce != BidForce.Forcing &&
-				    rule.Force == BidForce.Forcing) 
+				if (this.BidForce != BidForce.Forcing1Round &&
+				    rule.Force == BidForce.Forcing1Round) 
 				{
 					this.BidForce = rule.Force;
 				}
