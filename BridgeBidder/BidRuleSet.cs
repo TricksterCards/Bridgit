@@ -21,21 +21,23 @@ namespace BridgeBidding
         public Call Call { get; }
 		public BidForce BidForce { get; private set; }
 
-		private PartnerChoicesXXX _partnerChoices;
+		private PartnerBidRule _partnerBidRule = null;
+
+	//	private PartnerChoicesXXX _partnerChoices;
 
 
         private List<RuleInfo> _ruleInfo = new List<RuleInfo>();
 
         public bool HasRules {  get {  return _ruleInfo.Count > 0; } }
 
-
+		public BidRuleGroup Parent { get; }
        
 
-		public BidRuleSet(Call call, BidForce bidForce) 
+		public BidRuleSet(BidRuleGroup parent, Call call, BidForce bidForce) 
         {
+			this.Parent = parent;
             this.Call = call;
 			this.BidForce = bidForce;
-			this._partnerChoices = new PartnerChoicesXXX();
             this._ruleInfo = new List<RuleInfo>();
         }
 
@@ -53,9 +55,10 @@ namespace BridgeBidding
 					this.BidForce = rule.Force;
 				}
 			}
-			if (rule is PartnerBidRule partnerBids)
+			if (rule is PartnerBidRule partnerBidRule)
 			{
-				_partnerChoices.AddFactory(partnerBids.GoodThrough, partnerBids.PartnerBidFactory);
+				Debug.Assert(_partnerBidRule == null);
+				_partnerBidRule = partnerBidRule;
 			}
 			else
 			{
@@ -64,14 +67,17 @@ namespace BridgeBidding
 	    }
 
 
-		public void MergePartnerChoices(PartnerChoicesXXX defaults)
+		public BidChoicesFactory GetBidsFactory()
 		{
-			_partnerChoices.Merge(defaults);
-		}
-
-		public BidChoicesFactory GetBidsFactory(PositionState ps)
-		{
-			return _partnerChoices.GetPartnerBidsFactory(ps);
+			if (_partnerBidRule != null)
+			{
+				return _partnerBidRule.PartnerBids;
+			}
+			if (!this.Call.Equals(Call.Pass) && Parent.DefaultPartnerBidRule != null)
+			{
+				return Parent.DefaultPartnerBidRule.PartnerBids;
+			}
+			return null;		// TODO: Maybe always return default here... Clean up
 		}
 
         //

@@ -67,6 +67,7 @@ namespace BridgeBidding
 
             });
             bids.AddRange(ForcedBid.Bids(ps));
+            bids.AddRange(new BidRule[] { Nonforcing(Call.Pass)});
             return bids;
         }
 

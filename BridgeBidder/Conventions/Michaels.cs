@@ -8,18 +8,19 @@
         {
             return new BidRule[]
              {
+                // TODO: Response with interference???  Lots of work here...
                 // TODO: Need some minimum points...
-                PartnerBids(Bid.TwoClubs, Bid.Pass, RespondMajors),
+                PartnerBids(Bid.TwoClubs, RespondMajors),
                 Forcing(Bid.TwoClubs, CueBid(), Shape(Suit.Hearts, 5), Shape(Suit.Spades, 5), ShowsSuits(Suit.Hearts, Suit.Spades)),
 
-                PartnerBids(Bid.TwoDiamonds, Bid.Pass, RespondMajors),
+                PartnerBids(Bid.TwoDiamonds, RespondMajors),
                 Forcing(Bid.TwoDiamonds, CueBid(), Shape(Suit.Hearts, 5), Shape(Suit.Spades, 5), ShowsSuits(Suit.Hearts, Suit.Spades)),
 
-                PartnerBids(Bid.TwoHearts, Bid.Pass, (PositionState _) => { return ResopondMajorMinor(Suit.Spades); }),
+                PartnerBids(Bid.TwoHearts, (PositionState _) => { return ResopondMajorMinor(Suit.Spades); }),
                 Forcing(Bid.TwoHearts, CueBid(), Shape(Suit.Spades, 5), Shape(Suit.Clubs, 5), ShowsSuits(Suit.Spades, Suit.Clubs)),
                 Forcing(Bid.TwoHearts, CueBid(), Shape(Suit.Spades, 5), Shape(Suit.Diamonds, 5), ShowsSuits(Suit.Spades, Suit.Diamonds)),
 
-                PartnerBids(Bid.TwoSpades, Bid.Pass, (PositionState _) => { return ResopondMajorMinor(Suit.Hearts); }),
+                PartnerBids(Bid.TwoSpades, (PositionState _) => { return ResopondMajorMinor(Suit.Hearts); }),
                 Forcing(Bid.TwoSpades, CueBid(), Shape(Suit.Hearts, 5), Shape(Suit.Clubs, 5), ShowsSuits(Suit.Hearts, Suit.Clubs)),
                 Forcing(Bid.TwoSpades, CueBid(), Shape(Suit.Hearts, 5), Shape(Suit.Diamonds, 5), ShowsSuits(Suit.Hearts, Suit.Diamonds)),
 

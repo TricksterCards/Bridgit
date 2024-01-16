@@ -11,30 +11,34 @@ namespace BridgeBidding
 
     public abstract class Bidder
 	{
-		public static BidRule DefaultPartnerBids(Call goodThrough, BidRulesFactory brf)
+		public static BidRule PartnerBids(BidRulesFactory brf)
 		{
-			return DefaultPartnerBids(goodThrough, (ps) => { return new BidChoices(ps, brf); });
+			return PartnerBids(BidChoices.FromBidRulesFactory(brf));
 		}
 
-        public static BidRule DefaultPartnerBids(Call goodThrough, BidChoicesFactory bcf)
+        public static BidRule PartnerBids(BidChoicesFactory bcf)
         {
-            return _PartnerBids(null, goodThrough, bcf, new StaticConstraint[0]);
+            return _PartnerBids(null, bcf, new StaticConstraint[0]);
         }
 
 	
 
-		public static BidRule PartnerBids(Call call, Call goodThrough, BidRulesFactory brf, params StaticConstraint[] constraints)
+		public static BidRule PartnerBids(Call call, BidRulesFactory brf, params StaticConstraint[] constraints)
 		{
-			return _PartnerBids(call, goodThrough, (ps) => { return new BidChoices(ps, brf); }, constraints);
+			Debug.Assert(call != null);
+			return _PartnerBids(call, BidChoices.FromBidRulesFactory(brf), constraints);
 		}
-		public static BidRule PartnerBids(Call call, Call goodThrough, BidChoicesFactory choicesFactory)
+		public static BidRule PartnerBids(Call call, BidChoicesFactory choicesFactory)
 		{
-			return _PartnerBids(call, goodThrough, choicesFactory, new StaticConstraint[0]);
+			Debug.Assert(call != null);
+			return _PartnerBids(call, choicesFactory, new StaticConstraint[0]);
 		}
 
-		private static BidRule _PartnerBids(Call call, Call goodThrough, BidChoicesFactory choicesFactory, params StaticConstraint[] constraints)
+		private static BidRule _PartnerBids(Call call,
+											BidChoicesFactory choicesFactory, 
+											params StaticConstraint[] constraints)
 		{
-			return new PartnerBidRule(call, goodThrough, choicesFactory, constraints);
+			return new PartnerBidRule(call, choicesFactory, constraints);
 		}
 
 		public static BidRule Forcing(Call call, params Constraint[] constraints)
@@ -192,7 +196,7 @@ namespace BridgeBidding
 		public static DynamicConstraint DummyPoints(int min, int max)
 		{
 			// TODO: Rename this??? SuitPoints???  
-			return new ShowsPoints(null, min, max, HasPoints.PointType.Suit);
+			return new ShowsPoints(null, min, max, HasPoints.PointType.Dummy);
 		}
 		public static Constraint DummyPoints((int min, int max) range)
 		{
@@ -202,7 +206,7 @@ namespace BridgeBidding
 		public static Constraint DummyPoints(Suit? trumpSuit, (int min, int max) range)
 		{
 			// TODO: Rename this too????  SuitPoints
-			return new ShowsPoints(trumpSuit, range.min, range.max, HasPoints.PointType.Suit);
+			return new ShowsPoints(trumpSuit, range.min, range.max, HasPoints.PointType.Dummy);
 		}
 
 		public static Constraint Shape(int min) { return new ShowsShape(null, min, min); }
@@ -214,7 +218,7 @@ namespace BridgeBidding
 
 
 
-		public static Constraint RHO(Constraint constraint)
+		public static StaticConstraint RHO(Constraint constraint)
 		{
 			return new PositionProxy(PositionProxy.RelativePosition.RightHandOpponent, constraint);
 		}
@@ -284,8 +288,7 @@ namespace BridgeBidding
 
 		public static Constraint DummyPoints(Suit trumpSuit, (int min, int max) range)
 		{
-			// TODO: Perhaps rename this to SuitPoints?  Maybe not?  Really should determine long hand or not.  Think this through
-			return new ShowsPoints(trumpSuit, range.min, range.max, HasPoints.PointType.Suit);
+			return new ShowsPoints(trumpSuit, range.min, range.max, HasPoints.PointType.Dummy);
 		}
 
 		public static Constraint LongestMajor(int max)
@@ -426,6 +429,8 @@ namespace BridgeBidding
 		{
 			return new ShowsSuit(false, suits);
 		}
+
+
 
 		public static Constraint HasShownSuit(Suit? suit = null, bool eitherPartner = false)
 		{

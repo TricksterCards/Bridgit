@@ -27,7 +27,7 @@ namespace BridgeBidding
 			return new BidRule[]
 			{
                 // TODO: Systems on/off through here --- just like 1NT.....
-                PartnerBids(Bid.TwoNoTrump, Bid.Double, Respond),
+                PartnerBids(Bid.TwoNoTrump, Respond),
 				Nonforcing(Bid.TwoNoTrump, OpenPoints, Balanced())
 			};
 		}

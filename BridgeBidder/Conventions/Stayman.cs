@@ -16,12 +16,23 @@ namespace BridgeBidding
 
 		private IEnumerable<BidRule> Initiate(PositionState ps)
 		{
-            // If there is a bid then it can only be 2C..
-            Bid bidStayman = Bid.TwoClubs;
 
-            Call call = ps.RightHandOpponent.GetBidHistory(0).Equals(bidStayman) ? Bid.Double : bidStayman;
+            // If there is a bid then it can only be 2C..
+            Call call = Bid.TwoClubs;
+            if (ps.RHO.Bid is Bid rhoBid)
+            {
+                if (call.Equals(rhoBid))
+                {
+                    call = Call.Double; // Stolen bid
+                }
+                else 
+                {
+                    // TODO: Make sure calling code never calls this when it cant generate rules 
+                    throw new System.Exception("INVALID STATE HERE...");
+                }
+            }
             return new BidRule[] {
-                PartnerBids(call, Call.Double, Answer),
+                PartnerBids(call, Answer),
                 Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), Flat(false), ShowsSuit(Suit.Hearts)),
                 Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Spades, 4), Shape(Suit.Hearts, 0, 4), Flat(false), ShowsSuit(Suit.Spades)),
                 Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5), ShowsSuits(Suit.Hearts, Suit.Spades)),
@@ -37,9 +48,9 @@ namespace BridgeBidding
 		{
             return new BidRule[] {
 
-                PartnerBids(Bid.TwoDiamonds, Call.Double, RespondTo2D),
-				PartnerBids(Bid.TwoHearts, Call.Double, p => RespondTo2M(p, Suit.Hearts)),
-				PartnerBids(Bid.TwoSpades, Call.Double, p => RespondTo2M(p, Suit.Spades)),
+                PartnerBids(Bid.TwoDiamonds, RespondTo2D),
+				PartnerBids(Bid.TwoHearts,   p => RespondTo2M(p, Suit.Hearts)),
+				PartnerBids(Bid.TwoSpades,   p => RespondTo2M(p, Suit.Spades)),
 
 				// TODO: Deal with interferenceDefaultPartnerBids(goodThrough: Bid.Double, Explain),
 
@@ -58,19 +69,19 @@ namespace BridgeBidding
                 // TODO: Points 0-7 defined as garbage range...
                 Signoff(Call.Pass, NTD.RR.LessThanInvite),
 
-                PartnerBids(Bid.ThreeHearts, Call.Double, p => GameNewMajor(p, Suit.Hearts)),
-                PartnerBids(Bid.ThreeSpades, Call.Double, p => GameNewMajor(p, Suit.Spades)),
+                PartnerBids(Bid.ThreeHearts, p => GameNewMajor(p, Suit.Hearts)),
+                PartnerBids(Bid.ThreeSpades, p => GameNewMajor(p, Suit.Spades)),
                 // If we have a 5 card suit and want to go to game then show that suit.
                 Forcing(Bid.ThreeSpades, NTD.RR.GameOrBetter, Shape(5)),
 				Forcing(Bid.ThreeHearts, NTD.RR.GameOrBetter, Shape(5)),
 
                 // These show invitational 5/4
-                PartnerBids(Bid.TwoHearts, Call.Double, p => PlaceConractNewMajor(p, Suit.Hearts)),
-				PartnerBids(Bid.TwoSpades, Call.Double, p => PlaceConractNewMajor(p, Suit.Spades)),
+                PartnerBids(Bid.TwoHearts,  p => PlaceConractNewMajor(p, Suit.Hearts)),
+				PartnerBids(Bid.TwoSpades,  p => PlaceConractNewMajor(p, Suit.Spades)),
 				Invitational(Bid.TwoHearts, NTD.RR.InviteGame, Shape(5)),
 				Invitational(Bid.TwoSpades, NTD.RR.InviteGame, Shape(5)),
 
-                PartnerBids(Bid.TwoNoTrump, Call.Double, PlaceContract2NTInvite),
+                PartnerBids(Bid.TwoNoTrump, PlaceContract2NTInvite),
 				Invitational(Bid.TwoNoTrump, ShowsTrump(), NTD.RR.InviteGame),
 
                 Signoff(Bid.ThreeNoTrump, ShowsTrump(), NTD.RR.Game),
@@ -90,13 +101,13 @@ namespace BridgeBidding
                 Signoff(Call.Pass, NTD.RR.LessThanInvite),
 
                 Signoff(new Bid(4, major), Shape(4, 5), NTD.RR.GameAsDummy, ShowsTrump()),
-                PartnerBids(new Bid(3, major), Call.Double, p => PlaceContractMajorInvite(p, major)),
+                PartnerBids(new Bid(3, major), p => PlaceContractMajorInvite(p, major)),
                 Invitational(new Bid(3, major), Shape(4, 5), NTD.RR.InviteAsDummy, ShowsTrump()),
 
-                PartnerBids(Bid.ThreeNoTrump, Call.Double, CheckOpenerSpadeGame),
+                PartnerBids(Bid.ThreeNoTrump, CheckOpenerSpadeGame),
                 Signoff(Bid.ThreeNoTrump, NTD.RR.Game, Shape(major, 0, 3)),
 
-				PartnerBids(Bid.TwoNoTrump, Call.Double, PlaceContract2NTInvite),
+				PartnerBids(Bid.TwoNoTrump, PlaceContract2NTInvite),
 				Invitational(Bid.TwoNoTrump, NTD.RR.InviteGame, Shape(major, 0, 3))
 			};
 		}
@@ -178,14 +189,16 @@ namespace BridgeBidding
         {
             return new BidRule[]
             {
-				PartnerBids(Bid.ThreeSpades, Bid.Double, CheckSpadeGame),
+				PartnerBids(Bid.ThreeSpades, CheckSpadeGame),
                 // This is possible to know we have a fit if partner bid stayman, we respond hearts,
-                Nonforcing(Bid.ThreeSpades, Break(false, "3NT"), NTD.OR.DontAcceptInvite, Fit(), ShowsTrump()),
+                Nonforcing(Bid.ThreeSpades, NTD.OR.DontAcceptInvite, Fit(), ShowsTrump()),
 
 
                 Signoff(Bid.FourSpades, NTD.OR.AcceptInvite, Fit(), ShowsTrump()),
 
-                Signoff(Bid.ThreeNoTrump, NTD.OR.AcceptInvite)
+                Signoff(Bid.ThreeNoTrump, NTD.OR.AcceptInvite),
+
+                Signoff(Call.Pass, NTD.OR.DontAcceptInvite)
 			};
 
         }
@@ -195,6 +208,7 @@ namespace BridgeBidding
 			return new BidRule[]
             {
 				Signoff(new Bid(4, major), NTD.OR.AcceptInvite, Fit(), ShowsTrump()),
+                Signoff(Call.Pass, NTD.OR.DontAcceptInvite)
             };
 
 		}
@@ -239,7 +253,8 @@ namespace BridgeBidding
 		public IEnumerable<BidRule> CheckSpadeGame(PositionState _)
         {
             return new BidRule[] {
-                Signoff(Bid.FourSpades, ShowsTrump(), NTD.RR.GameAsDummy, Shape(4, 5))
+                Signoff(Bid.FourSpades, ShowsTrump(), NTD.RR.GameAsDummy, Shape(4, 5)),
+                Signoff(Call.Pass)
             };
 		}
 	}
@@ -264,7 +279,7 @@ namespace BridgeBidding
 
             Call call = ps.RightHandOpponent.GetBidHistory(0).Equals(bidStayman) ? Bid.Double : bidStayman;
             return new BidRule[] {
-                PartnerBids(call, Bid.Double, Answer),
+                PartnerBids(call, Answer),
                 Forcing(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Flat(false)),
                 Forcing(call, NTB.RespondGame, Shape(Suit.Spades, 4), Flat(false)),
                 Forcing(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
@@ -276,7 +291,7 @@ namespace BridgeBidding
         public IEnumerable<BidRule> Answer(PositionState _)
         {
             return new BidRule[] {
-                DefaultPartnerBids(Call.Double, ResponderRebid),
+                PartnerBids(ResponderRebid),
 
                 Forcing(Bid.ThreeDiamonds, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
 
@@ -289,7 +304,8 @@ namespace BridgeBidding
         public static IEnumerable<BidRule> ResponderRebid(PositionState _)
         {
             return new BidRule[] {
-                DefaultPartnerBids(Call.Double, OpenerRebid),
+                PartnerBids(Bid.ThreeHearts, OpenerRebid),
+                PartnerBids(Bid.ThreeSpades, OpenerRebid),
 
                 Forcing(Bid.ThreeHearts, Shape(5), Partner(LastBid(Bid.ThreeDiamonds))),
                 Forcing(Bid.ThreeSpades, Shape(5), Partner(LastBid(Bid.ThreeDiamonds))),
@@ -305,7 +321,7 @@ namespace BridgeBidding
             return new BidRule[] {
                 Signoff(Bid.ThreeNoTrump, Fit(Suit.Hearts, false), Fit(Suit.Spades, false)),
                 Signoff(Bid.FourHearts, Fit()),
-                Signoff(Bid.FourSpades, Fit())
+                Signoff(Bid.FourSpades, Fit()),
             };
         }
     }

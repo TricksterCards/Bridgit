@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace BridgeBidding
 {
@@ -114,14 +115,13 @@ namespace BridgeBidding
 
 	public class PartnerBidRule : BidRule
 	{
-		public BidChoicesFactory PartnerBidFactory { get; private set; }
-		public Call GoodThrough { get; private set; }
+		public BidChoicesFactory PartnerBids{ get; private set; }
 
-        public PartnerBidRule(Call call, Call goodThrough, BidChoicesFactory partnerBids, params Constraint[] constraints) :
+        public PartnerBidRule(Call call, BidChoicesFactory partnerBids, params Constraint[] constraints) :
 			base(call, BidForce.Nonforcing, constraints)
         {
-            this.PartnerBidFactory = partnerBids;
-			this.GoodThrough = goodThrough;
+			Debug.Assert(partnerBids != null);
+            this.PartnerBids = partnerBids;
         }
     }
 

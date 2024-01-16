@@ -33,6 +33,18 @@ namespace BridgeBidding
 
 		public HandSummary PublicHandSummary { get; private set; }
 
+		public bool Passed => _bids.Count == 0 || _bids.Last().Call.Equals(Call.Pass);
+
+		public bool Doubled => _bids.Count > 0 && _bids.Last().Call.Equals(Call.Double);
+
+		public Bid Bid 
+		{
+			get 
+			{
+				if (_bids.Count == 0) return null;
+				return _bids.Last().Call as Bid;
+			}
+		}
 
 		public Direction Direction { get; }
 
@@ -72,6 +84,8 @@ namespace BridgeBidding
 		public PositionState RightHandOpponent => BiddingState.Positions[OffsetDirection(3)];
 		public PositionState LeftHandOpponent => BiddingState.Positions[OffsetDirection(1)];
 
+
+		public PositionState RHO => RightHandOpponent;
 
 		// TODO: Potentially LHO Interferred...  Maybe just in 
 
@@ -127,10 +141,10 @@ namespace BridgeBidding
 		}
 		
 		public BidChoices GetBidChoices()
-		{
-			BidChoicesFactory bidFactory = Partner._bids.Count > 0 ? Partner._bids.Last().GetBidsFactory(Partner) : null;
-			if (bidFactory == null) { bidFactory = PairState.BiddingSystem.GetBidChoices; }
-			return bidFactory(this);
+		{ 
+			BidChoicesFactory bidFactory = Partner._bids.Count > 0 ? Partner._bids.Last().GetBidsFactory() : null;
+			if (bidFactory != null) return bidFactory(this);
+			return PairState.BiddingSystem.GetBidChoices(this);
 		}
 	
 

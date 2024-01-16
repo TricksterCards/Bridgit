@@ -41,7 +41,7 @@ namespace BridgeBidding
 			{
             	choices.AddRules(OpenSuitWeak);
 			}
-            choices.AddRules(new BidRule[] { Nonforcing(Bid.Pass, Points(DontOpen)) });
+            choices.AddPassRule(Points(DontOpen));
             return choices;
         }
 
@@ -49,19 +49,16 @@ namespace BridgeBidding
 		{
 			return new List<BidRule>
 			{
-				DefaultPartnerBids(Call.Double, Respond.OppsDoubled),
-                DefaultPartnerBids(Bid.TwoNoTrump, Respond.OppsOvercalled),
-
-                PartnerBids(Bid.OneClub,    Call.Pass, Respond.OneClub),
-				PartnerBids(Bid.OneDiamond, Call.Pass, Respond.OneDiamond),
-				PartnerBids(Bid.OneHeart,   Call.Pass, Respond.OneHeart),
-				PartnerBids(Bid.OneSpade,   Call.Pass, Respond.OneSpade),
+                PartnerBids(Bid.OneClub,    Respond.OneClub),
+				PartnerBids(Bid.OneDiamond, Respond.OneDiamond),
+				PartnerBids(Bid.OneHeart,   Respond.OneHeart),
+				PartnerBids(Bid.OneSpade,   Respond.OneSpade),
 
 				// 2-level opening in 4th seat is strong, like a 1 level
 				// TODO: Rename this function - sometimes opens 2-level
-				PartnerBids(Bid.TwoDiamonds, Call.Pass, Respond.ForthSeat2Open, Seat(4)),
-				PartnerBids(Bid.TwoHearts,   Call.Pass, Respond.ForthSeat2Open, Seat(4)),
-				PartnerBids(Bid.TwoSpades,   Call.Pass, Respond.ForthSeat2Open, Seat(4)),
+				PartnerBids(Bid.TwoDiamonds, Respond.ForthSeat2Open, Seat(4)),
+				PartnerBids(Bid.TwoHearts,   Respond.ForthSeat2Open, Seat(4)),
+				PartnerBids(Bid.TwoSpades,   Respond.ForthSeat2Open, Seat(4)),
 
 				Nonforcing(Bid.TwoSpades,   Seat(4), Shape(6, 10), GoodSuit(), Points(ForthSeatOpen2)),
 				Nonforcing(Bid.TwoHearts,   Seat(4), Shape(6, 10), GoodSuit(), Points(ForthSeatOpen2)),
@@ -98,7 +95,7 @@ namespace BridgeBidding
 			Debug.Assert(ps.Seat != 4);
 			return new BidRule[]
 			{
-				DefaultPartnerBids(Bid.FourHearts, Respond.WeakOpen),
+				PartnerBids(Respond.WeakOpen),
 
 				// 2C can not be bid since strong opening.  Take care of great 6-card suits by bidding 3C
 				Nonforcing(Bid.TwoDiamonds, Points(Weak), Shape(6), GoodSuit()),

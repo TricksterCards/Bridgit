@@ -16,8 +16,7 @@ namespace BridgeBidding
 		private IEnumerable<BidRule> Initiate(PositionState _)
 		{
 			return new BidRule[] {
-				DefaultPartnerBids(Bid.Pass, AcceptTransfer),
-				DefaultPartnerBids(Bid.Double, AcceptAfterX),
+				PartnerBids(AcceptTransfer),
 				// For weak hands, transfer to longest major.
 				// For invitational hands, 5/5 transfer to hearts then bid spades
 				// For game-going hands 5/5 transfer to spades then bid 3H
@@ -30,36 +29,41 @@ namespace BridgeBidding
 				Forcing(Bid.TwoHearts, NTD.RR.GameOrBetter, Shape(Suit.Spades, 5, 11), ShowsSuit(Suit.Spades)),
 
 				// TODO: Solid long minors are lots of tricks.  Need logic for those....
-
+				// TODO: 4-way transfers...
 				Forcing(Bid.TwoSpades, NTD.RR.LessThanInvite, Shape(Suit.Clubs, 6, 11)),
 				Forcing(Bid.TwoSpades, NTD.RR.LessThanInvite, Shape(Suit.Diamonds, 6, 11))
 			};
 		}
 
-		private IEnumerable<BidRule> AcceptTransfer(PositionState _)
+		private BidChoices AcceptTransfer(PositionState ps)
 		{
-			return new BidRule[] {
-				DefaultPartnerBids(Bid.Double, ExplainTransfer),
+			if (ps.RHO.Bid != null) {
+				// TOOD: Better interferrence....
+				return ps.PairState.BiddingSystem.GetBidChoices(ps);	
+			}
+			var choices = new BidChoices(ps);
+			if (ps.RHO.Doubled) {
+				choices.AddRules(new BidRule[] {
+					PartnerBids(Call.Pass, OpenerShowsTwo),	// Explicit Pass rule here
+
+					Nonforcing(Call.Pass, Partner(LastBid(2, Suit.Diamonds)), Shape(Suit.Hearts, 0, 2)),
+					Nonforcing(Call.Pass, Partner(LastBid(2, Suit.Hearts)), Shape(Suit.Spades, 0, 2)),
+				});
+			}
+			choices.AddRules(new BidRule[] {
+				PartnerBids(ExplainTransfer),
+
 				Nonforcing(Bid.ThreeHearts, ShowsTrump(), Partner(LastBid(2, Suit.Diamonds)), NTD.OR.SuperAccept, Shape(4, 5)),
 				Nonforcing(Bid.ThreeSpades, ShowsTrump(), Partner(LastBid(2, Suit.Hearts)), NTD.OR.SuperAccept, Shape(4, 5)),
 
 				Nonforcing(Bid.TwoHearts, Partner(LastBid(2, Suit.Diamonds))),
 				Nonforcing(Bid.TwoSpades, Partner(LastBid(2, Suit.Hearts))),
+
 				Nonforcing(Bid.ThreeClubs, Partner(LastBid(2, Suit.Spades)))
-			};
+			});
+			return choices;
 		}
 
-		private IEnumerable<BidRule> AcceptAfterX(PositionState ps)
-		{
-
-			var bids = new List<BidRule> {
-				 PartnerBids(Call.Pass, Call.Pass, OpenerShowsTwo),
-				Nonforcing(Call.Pass, Partner(LastBid(2, Suit.Diamonds)), Shape(Suit.Hearts, 0, 2)),
-				Nonforcing(Call.Pass, Partner(LastBid(2, Suit.Hearts)), Shape(Suit.Spades, 0, 2)),
-			};
-			bids.AddRange(AcceptTransfer(ps));
-			return bids;
-		}
 
 		private IEnumerable<BidRule> OpenerShowsTwo(PositionState ps)
 		{
@@ -71,7 +75,7 @@ namespace BridgeBidding
 		private IEnumerable<BidRule> ExplainTransfer(PositionState _)
 		{
 			return new BidRule[] {
-				DefaultPartnerBids(Bid.Double, OpenerRebid),
+				PartnerBids(OpenerRebid),
 
 				// This can happen if we are 5/5 with invitational hand. Show Spades
 				// TODDO: Higher prioiryt than other bids.  Seems reasonable...
@@ -111,13 +115,13 @@ namespace BridgeBidding
 		private IEnumerable<BidRule> OpenerRebid(PositionState _)
 		{
 			return new BidRule[] {
+				PartnerBids(Bid.ThreeHearts, PlaceGameContract, LastBid(Bid.TwoSpades)),
+				PartnerBids(Bid.ThreeSpades, PlaceGameContract, LastBid(Bid.TwoHearts)),
+
 				// TODO: Make lower priority???  
 				Signoff(Bid.Pass, LastBid(Bid.ThreeClubs), Partner(LastBid(Bid.ThreeDiamonds))),
 
-
 				// If we have a 5 card suit then show it if invited.  
-				PartnerBids(Bid.ThreeHearts, Call.Double, PlaceGameContract, LastBid(Bid.TwoSpades)),
-				PartnerBids(Bid.ThreeSpades, Call.Double, PlaceGameContract, LastBid(Bid.TwoHearts)),
 				Forcing(Bid.ThreeHearts, NTD.OR.AcceptInvite, LastBid(Bid.TwoSpades), Shape(5), Shape(Suit.Spades, 2)),
 				Forcing(Bid.ThreeSpades, NTD.OR.AcceptInvite, LastBid(Bid.TwoHearts), Shape(5), Shape(Suit.Hearts, 2)),
 
@@ -159,8 +163,9 @@ namespace BridgeBidding
                 // I Think here we will just defer to competative bidding.  Then ranges don't matter.  We just look for 
                 // shown values and shapes.  By this point everything is pretty clear.  The only thing is do we have a shown
                 // fit or is it a known fit.  Perhaps competative bidding can handle this...  
-
-                Signoff(Call.Pass, NTD.OR.DontAcceptInvite)
+				
+			
+                Signoff(Call.Pass)
 
 			};
 		}
@@ -191,7 +196,7 @@ namespace BridgeBidding
 		public IEnumerable<BidRule> InitiateConvention(PositionState _)
 		{
 			return new BidRule[] {
-				DefaultPartnerBids(Bid.Double, AcceptTransfer),
+				PartnerBids(AcceptTransfer),
 				// TODO: Need to deal with 5/5 invite, etc.  For now just basic transfers work
 				Forcing(Bid.ThreeDiamonds, Shape(Suit.Hearts, 5, 11), Better(Suit.Hearts, Suit.Spades)),
 
@@ -201,8 +206,9 @@ namespace BridgeBidding
 		}
 		private IEnumerable<BidRule> AcceptTransfer(PositionState _)
 		{
+			// TODO: INTERFERRENCE.  DOUBLE...
 			return new BidRule[] {
-				DefaultPartnerBids(Bid.Double, ExplainTransfer),
+				PartnerBids(ExplainTransfer),
 
 				Nonforcing(Bid.ThreeHearts, Partner(LastBid(Bid.ThreeDiamonds))),
 				Nonforcing(Bid.ThreeSpades, Partner(LastBid(Bid.ThreeHearts)))
@@ -212,7 +218,7 @@ namespace BridgeBidding
 		private IEnumerable<BidRule> ExplainTransfer(PositionState _)
 		{
 			return new BidRule[] {
-				DefaultPartnerBids(Bid.Double, PlaceContract),
+				PartnerBids(PlaceContract),
 				Signoff(Bid.Pass, NTB.RespondNoGame),
 
 				Nonforcing(Bid.ThreeNoTrump, NTB.RespondGame, Partner(LastBid(Bid.ThreeHearts)), Shape(Suit.Hearts, 5)),
@@ -247,8 +253,9 @@ namespace BridgeBidding
 		{
 			return new BidRule[]
 			{
-				PartnerBids(Bid.FourDiamonds, Call.Double, p => AcceptTransfer(p, Strain.Hearts)),
-				PartnerBids(Bid.FourHearts, Call.Double, p => AcceptTransfer(p, Strain.Spades)),
+				PartnerBids(Bid.FourDiamonds, p => AcceptTransfer(p, Strain.Hearts)),
+				PartnerBids(Bid.FourHearts, p => AcceptTransfer(p, Strain.Spades)),
+
 				Forcing(Bid.FourDiamonds, Shape(Suit.Hearts, 5, 11)),
 				Forcing(Bid.FourHearts, Shape(Suit.Spades, 5, 11)),
 			};
@@ -258,7 +265,7 @@ namespace BridgeBidding
 		{
 			return new BidRule[]
 			{
-				Invitational(new Bid(4, strain))
+				Nonforcing(new Bid(4, strain))
 			};
 		}
 

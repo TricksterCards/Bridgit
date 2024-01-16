@@ -15,7 +15,7 @@ namespace BridgeBidding
         {
             var bids = new List<BidRule>
             {
-                DefaultPartnerBids(Call.Double, OpenBid3.ThirdBid),
+                PartnerBids(OpenBid3.ThirdBid),
 
                 // Opener could have bid 1S.  Support at the right level...
                 Nonforcing(Bid.TwoSpades, RaisePartner(), Points(MinimumHand)),

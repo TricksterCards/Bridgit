@@ -17,7 +17,7 @@ namespace BridgeBidding
 			return new BidRule[]
             {
                 // DefaultPartnerBids...
-                PartnerBids(Bid.TwoNoTrump, Call.Pass, OpenerRebid),
+                PartnerBids(Bid.TwoNoTrump, OpenerRebid),
                 Forcing(Bid.TwoNoTrump, Fit(Suit.Hearts), Shape(Suit.Hearts, 4, 10), DummyPoints(RespondPoints)),
                 Forcing(Bid.TwoNoTrump, Fit(Suit.Spades), Shape(Suit.Spades, 4, 10), DummyPoints(RespondPoints))
             };

@@ -135,9 +135,8 @@ namespace BridgeBidding
         {
             foreach (var call in history)
             {
-                var bids = GetBidsForNextToAct();
-                var choice = bids.GetBidRuleSet(call);
-                MakeCall(choice);
+                Contract.ValidateCall(call, NextToAct);
+                MakeCall(call, GetBidsForNextToAct());
             }
         }
 
@@ -152,21 +151,23 @@ namespace BridgeBidding
                 throw new AuctionException(Call.Pass, NextToAct, Contract, "Auction is final.  No more bids can be made");
             }
             var choices = GetBidsForNextToAct();
-            var chosenCall = choices.BestCall;
+            var chosenCall = choices.BestCall != null ? choices.BestCall.Call : null;
             if (chosenCall == null)
             {
-                chosenCall = Call.Pass;
-                // TODO: Log something here...
+                throw new Exception("No BestCall for auction.");
             }
-            MakeCall(choices.GetBidRuleSet(chosenCall));
+            MakeCall(chosenCall, choices);
             return chosenCall;
         }
 
 
-        private void MakeCall(BidRuleSet bidRuleSet)
+        private void MakeCall(Call call, BidChoices choices)
         {
-            NextToAct.MakeCall(bidRuleSet);
-            if (this.OpeningBid == null && bidRuleSet.Call is Bid bid)
+            Debug.Assert(Contract.IsValid(call, NextToAct));
+            //  Now get the rule set from the choices...
+            var ruleSet = choices.GetBidRuleSet(call);
+            NextToAct.MakeCall(ruleSet);
+            if (this.OpeningBid == null && call is Bid bid)
             {
                 this.OpeningBid = bid;
                 this.Opener = NextToAct;

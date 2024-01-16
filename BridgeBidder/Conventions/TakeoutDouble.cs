@@ -32,7 +32,7 @@ namespace BridgeBidding
         {
             var bids = new List<BidRule>
             {
-                PartnerBids(Call.Double, Call.Pass, Respond),
+                PartnerBids(Call.Double, Respond),
                 Forcing(Bid.Double, Points(StrongTakeout))
 			};
 
@@ -74,7 +74,7 @@ namespace BridgeBidding
             var choices = new BidChoices(ps);
             choices.AddRules(new BidRule[]
             {
-                DefaultPartnerBids(goodThrough: Bid.FourHearts, DoublerRebid),
+                PartnerBids(DoublerRebid),
 
                 Signoff(Call.Pass, RuleOf9()),
                 // TODO: FOR NOW WE WILL JUST BID AT THE NEXT LEVEL REGARDLESS OF POINTS...
@@ -102,7 +102,9 @@ namespace BridgeBidding
                 Signoff(Bid.FourHearts, TakeoutSuit(), Points(GameLevel)),
                 Signoff(Bid.FourSpades, TakeoutSuit(), Points(GameLevel)),
 
-                Signoff(Bid.ThreeNoTrump, Balanced(), OppsStopped(), Points(Game3NT))
+                Signoff(Bid.ThreeNoTrump, Balanced(), OppsStopped(), Points(Game3NT)),
+
+                Nonforcing(Call.Pass, Not(RHO(LastBid(Call.Pass))))
             }) ;
             // Many strong bids can be done with pure competition.
             // TODO: Think through this - is this really what we want?
@@ -118,7 +120,7 @@ namespace BridgeBidding
             return new BidRule[]
             {
      
-                DefaultPartnerBids(Call.Double, AdvancerRebid),
+                PartnerBids(AdvancerRebid),
 
 
                 // TODO: Clean this up... For now just majors...  Clean up range...

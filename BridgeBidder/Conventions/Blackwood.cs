@@ -22,7 +22,7 @@ namespace BridgeBidding
 			if (strain != null && Call.StrainToSuit((Strain)strain) is Suit suit)
 			{
 				bids.Add(Forcing(Bid.FourNoTrump, ShowsTrump(suit), PairPoints(suit, SlamOrBetter)));
-				bids.Add(PartnerBids(Bid.FourNoTrump, Call.Double, RespondAces));
+				bids.Add(PartnerBids(Bid.FourNoTrump, RespondAces));
 				// TODO: Add DOPI and DEPO but for now just ignore double and punt on interference...
 			}
 			return bids;
@@ -31,7 +31,7 @@ namespace BridgeBidding
 		{
 			return new BidRule[]
 			{
-				DefaultPartnerBids(goodThrough: Call.Double, PlaceContract),
+				PartnerBids(PlaceContract),
 				Forcing(Bid.FiveClubs, ShowsNoSuit(), Aces(0, 4)),
 				Forcing(Bid.FiveDiamonds, ShowsNoSuit(), Aces(1)),
 				Forcing(Bid.FiveHearts, ShowsNoSuit(), Aces(2)),
@@ -45,7 +45,7 @@ namespace BridgeBidding
 			// Otherwise 
 			return new BidRule[]
 			{
-				PartnerBids(Bid.FiveNoTrump, Call.Double, RespondKings),
+				PartnerBids(Bid.FiveNoTrump, RespondKings),
 				Forcing(Bid.FiveNoTrump, PairAces(4), PairPoints(GrandSlam)),
 
 				Signoff(Bid.SixClubs, AgreedStrain(), PairPoints(SlamOrBetter), PairAces(3, 4)),
@@ -69,7 +69,7 @@ namespace BridgeBidding
 		{
 			return new BidRule[]
 			{
-				DefaultPartnerBids(goodThrough: Call.Double, TryGrandSlam),
+				PartnerBids(TryGrandSlam),
 				Forcing(Bid.SixClubs, ShowsNoSuit(), Kings(0, 4)),
 				Forcing(Bid.SixDiamonds, ShowsNoSuit(), Kings(1)),
 				Forcing(Bid.SixHearts, ShowsNoSuit(), Kings(2)),

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BridgeBidding
 {
@@ -21,38 +22,54 @@ namespace BridgeBidding
 
         {
             return new BidRule[] {
-                // TODO: Interference here...
-                DefaultPartnerBids(Call.Pass, Respond),
+                PartnerBids(Bid.TwoClubs, Respond),
+
+                // TODO: Other reasons for 2-club opening...
                 Forcing(Bid.TwoClubs, Points(StrongOpenRange), ShowsNoSuit())
             };
     
         }
 
-        private static IEnumerable<BidRule> Respond(PositionState _)
+        private static BidChoices Respond(PositionState ps)
         {
-            return new BidRule[] {
-                DefaultPartnerBids(Bid.Pass, OpenerRebidPositiveResponse),
-                Forcing(Bid.TwoHearts, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
-                Forcing(Bid.TwoSpades, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
-                Forcing(Bid.TwoNoTrump, Points(PositiveResponse), Balanced()),
-                Forcing(Bid.ThreeClubs, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
-                Forcing(Bid.ThreeDiamonds, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+            var choices = new BidChoices(ps);
+            if (ps.RHO.Passed) {
+                choices.AddRules(new BidRule[] {
+                    PartnerBids(OpenerRebidPositiveResponse),
+                    PartnerBids(Bid.TwoDiamonds, OpenerRebidWaiting), 
 
-                PartnerBids(Bid.TwoDiamonds, Bid.Pass, OpenerRebidWaiting), 
-                // TODO: Interference...
-                Forcing(Bid.TwoDiamonds, Points(Waiting), ShowsNoSuit()),
+                    Forcing(Bid.TwoHearts, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+                    Forcing(Bid.TwoSpades, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+                    Forcing(Bid.TwoNoTrump, Points(PositiveResponse), Balanced()),
+                    Forcing(Bid.ThreeClubs, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+                    Forcing(Bid.ThreeDiamonds, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
 
-            };
+                    Forcing(Bid.TwoDiamonds, Points(Waiting), ShowsNoSuit()),
+                });
+            }
+            else if (ps.RHO.Doubled)
+            {
+                // TODO: Redouble is SOS, what about suit?
+                throw new NotImplementedException();
+            }
+            else
+            {
+                // TODO: What here??? Larry???
+                throw new NotImplementedException();
+            }
+            return choices;
         }
 
         private static IEnumerable<BidRule> OpenerRebidWaiting(PositionState ps)
         {
+            
             var bids = new List<BidRule>();
             bids.AddRange(TwoNoTrump.After2COpen.Bids(ps));
             bids.AddRange(ThreeNoTrump.After2COpen.Bids(ps));
             bids.AddRange(new BidRule[]
             {
-                DefaultPartnerBids(Bid.Pass, Responder2ndBid),
+                PartnerBids(Responder2ndBid),
+
                 Forcing(Bid.TwoHearts, Shape(5, 11)),
                 Forcing(Bid.TwoSpades, Shape(5, 11)),
                 Forcing(Bid.ThreeClubs, Shape(5, 11)),
@@ -69,7 +86,7 @@ namespace BridgeBidding
             bids.AddRange(new BidRule[]
             {
                 // Highest priority is to support responder's suit...
-                DefaultPartnerBids(Bid.Pass, Responder2ndBid),
+                PartnerBids(Responder2ndBid),
 
                 Forcing(Bid.ThreeHearts, Fit(), ShowsTrump()),
                 Forcing(Bid.ThreeSpades, Fit(), ShowsTrump()),
@@ -96,15 +113,15 @@ namespace BridgeBidding
             choices.AddRules(Blackwood.InitiateConvention);
             choices.AddRules(new BidRule[]
             {
-                DefaultPartnerBids(Bid.Pass, OpenerPlaceContract),
+                PartnerBids(OpenerPlaceContract),
                 Forcing(Bid.ThreeHearts, Fit(), ShowsTrump()),
                 Forcing(Bid.ThreeSpades, Fit(), ShowsTrump()),
                 Forcing(Bid.FourClubs, Fit(), ShowsTrump()),
                 Forcing(Bid.FourDiamonds, Fit(), ShowsTrump()),
 
                 // Now show a bust hand by bidding cheapest minor with less 0-4 points
-                PartnerBids(Bid.ThreeClubs, Call.Double, PartnerIsBust),
-                PartnerBids(Bid.ThreeDiamonds, Call.Double, PartnerIsBust, Partner(LastBid(Bid.ThreeClubs))),
+                PartnerBids(Bid.ThreeClubs, PartnerIsBust),
+                PartnerBids(Bid.ThreeDiamonds, PartnerIsBust, Partner(LastBid(Bid.ThreeClubs))),
                 Forcing(Bid.ThreeClubs, ShowsNoSuit(), Points(RespondBust)),
                 Forcing(Bid.ThreeDiamonds, Partner(LastBid(Bid.ThreeClubs)), ShowsNoSuit(), Points(RespondBust)),
 
@@ -130,7 +147,8 @@ namespace BridgeBidding
 				Signoff(Bid.FourSpades, Fit(), ShowsTrump()),
 				Forcing(Bid.FourClubs, Fit(), ShowsTrump()),
 				Forcing(Bid.FourDiamonds, Fit(), ShowsTrump()),
-                Signoff(Bid.ThreeNoTrump)
+                Signoff(Bid.ThreeNoTrump),
+                Signoff(Call.Pass)  // If we get here then we are already in game...
 			});
             return bids;
         }

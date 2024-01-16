@@ -1,9 +1,15 @@
-﻿namespace BridgeBidding
+﻿using System.Diagnostics;
+using System.Linq;
+
+namespace BridgeBidding
 {
     public class ShowsSuit : DynamicConstraint, IShowsState
     {
         private Suit[] _suits;
         private bool _showBidSuit;
+
+        // NOTE: It is OK for both showBidSuit to be false and suits to be null.  This indicates
+        // that the rule does not show any suit.
         public ShowsSuit(bool showBidSuit, params Suit[] suits)
         {
             this._showBidSuit = showBidSuit;

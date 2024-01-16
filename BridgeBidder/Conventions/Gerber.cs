@@ -17,7 +17,7 @@ namespace BridgeBidding
 			if (ps.Partner.LastCall is Call partnerCall && partnerCall is Bid partnerBid &&
 				partnerBid.Strain == Strain.NoTrump && (partnerBid.Level <= 3))
 			{
-				bids.Add(PartnerBids(Bid.FourClubs, Call.Double, RespondAces));
+				bids.Add(PartnerBids(Bid.FourClubs, RespondAces));
 				bids.Add(Forcing(Bid.FourClubs, PairPoints(SlamOrBetter)));
 			}
 			return bids;
@@ -26,7 +26,8 @@ namespace BridgeBidding
 		{
 			return new BidRule[]
 			{
-				DefaultPartnerBids(goodThrough: Call.Double, PlaceContract),
+				PartnerBids(PlaceContract),
+				
 				Forcing(Bid.FourDiamonds, ShowsNoSuit(), Aces(0, 4)),
 				Forcing(Bid.FourHearts, ShowsNoSuit(), Aces(1)),
 				Forcing(Bid.FourSpades, ShowsNoSuit(), Aces(2)),

@@ -11,7 +11,9 @@ namespace BridgeBidding
         protected Suit? _trumpSuit;
         protected PointType _pointType;
 
-        public enum PointType { HighCard, Starting, Suit }
+        // TODO: Add concept of "Suit" points, and perhaps idea of "best points" if the pair 
+        // have a known fit.  Not exactly sure.  Maybe just a pair points problem.
+        public enum PointType { HighCard, Starting, Dummy }
 
 
         public HasPoints(Suit? trumpSuit, int min, int max, PointType pointType)
@@ -35,19 +37,12 @@ namespace BridgeBidding
                 case PointType.Starting:
                     points = hs.StartingPoints;
                     break;
-                case PointType.Suit:
+                case PointType.Dummy:
+                    
                     if (GetSuit(_trumpSuit, call) is Suit suit)
                     {
-                        // TODO: What suit has not been agreed upon?  Then starting points??
-                        // BUGBUG
-                        if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].LongHand == ps)
-                        {
-                            points = hs.Suits[suit].LongHandPoints;
-                        }
-                        else if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].Dummy == ps)
-                        {
-                            points = hs.Suits[suit].DummyPoints;
-                        }
+                        points = hs.Suits[suit].DummyPoints;
+
                     }
                     break;
             }
@@ -83,22 +78,11 @@ namespace BridgeBidding
                 case PointType.Starting:
                     showHand.ShowStartingPoints(_min, _max);
                     break;
-                case PointType.Suit:
+                case PointType.Dummy:
                     if (GetSuit(_trumpSuit, call) is Suit suit)
                     {
-                        if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].LongHand == ps)
-                        {
-                            showHand.Suits[suit].ShowLongHandPoints(_min, _max);
-
-                        }
-                        else if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].Dummy == ps)
-                        {
-                            showHand.Suits[suit].ShowDummyPoints(_min, _max);
-                        }
-                        else
-                        {
-                            showHand.ShowStartingPoints(_min, _max);
-                        }
+            
+                        showHand.Suits[suit].ShowDummyPoints(_min, _max);
                     }
                     else
                     {
@@ -111,5 +95,18 @@ namespace BridgeBidding
             }
         }
     }
+
+/*  --- THIS IS THE CODE SNIPPET FOR "SUIT" POINTS
+                        if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].LongHand == ps)
+                        {
+                            points = hs.Suits[suit].LongHandPoints;
+                        }
+                        else if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].Dummy == ps)
+                        {
+                            points = hs.Suits[suit].DummyPoints;
+                        }
+
+*/
+
 
 }

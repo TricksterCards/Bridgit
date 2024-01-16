@@ -2,6 +2,8 @@
 {
     public interface IBiddingSystem
     {
-        BidChoices GetBidChoices(PositionState positionState);
+
+        BidChoices GetBidChoices(PositionState positionState);  
     }
+
 }

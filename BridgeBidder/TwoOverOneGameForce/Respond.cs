@@ -27,10 +27,10 @@ namespace BridgeBidding
         static protected (int, int) WeakJumpRaise = (0, 8); // TODO: Consider HCP vs DummyPoints...  For now this works.
         static protected (int, int) MinimumHand = (6, 10);
         static protected (int, int) MediumHand = (11, 13);
-        static protected (int, int) ResponderRedouble = (10, 40);
-        static protected (int, int) ResponderRedoubleHCP = (10, 40);
 
-        
+        static protected (int, int) RespondRedouble = (10, 40);
+        static protected (int, int) RespondX1Level = (6, 9);
+        static protected (int, int) RespondXJump = (0, 6);      
 
 
         //  ***** UPDATED TO 2/1 BETWEEN HERE AND NEXT ******** LINE
@@ -45,13 +45,16 @@ namespace BridgeBidding
     
 
 
-        public static IEnumerable<BidRule> WeakJumpShift(PositionState ps, params Suit[] suits)
+        public static IEnumerable<BidRule> WeakJumpShift(Suit openSuit)
         {
             var bids = new List<BidRule>();
-            foreach (var suit in suits)
+            foreach (var suit in Card.Suits)
             {
-                bids.Add(Signoff(new Bid (2, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentSuit()));
-                bids.Add(Signoff(new Bid (3, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentSuit()));
+                if (suit != openSuit)
+                {
+                    bids.Add(Signoff(new Bid (2, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentSuit()));
+                    bids.Add(Signoff(new Bid (3, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentSuit()));
+                }
             }
             return bids;
         }
@@ -60,17 +63,19 @@ namespace BridgeBidding
 
         public static BidChoices OneClub(PositionState ps)
         {
+            if (!ps.RHO.Passed)
+                return OppsInterferred(ps, Suit.Clubs);
+            // TODO: Passed hand different bids...
             var choices = new BidChoices(ps);
-            // TODO: Need to do different bids if passed hand....
+            choices.AddRules(SolidSuit.Bids);
             choices.AddRules(new BidRule[]
             {
-				DefaultPartnerBids(Call.Pass, OpenBid2.ResponderChangedSuits),
-				PartnerBids(Bid.TwoClubs,   Call.Pass, OpenBid2.ResponderRaisedMinor),
-				PartnerBids(Bid.ThreeClubs, Call.Pass, OpenBid2.ResponderRaisedMinor),
-				PartnerBids(Bid.FourClubs,  Call.Pass, OpenBid2.ResponderRaisedMinor),
-                PartnerBids(Bid.FiveClubs,  Call.Pass, OpenBid2.ResponderRaisedMinor),
+				PartnerBids(OpenBid2.ResponderChangedSuits),
+				PartnerBids(Bid.TwoClubs,   OpenBid2.ResponderRaisedMinor),
+				PartnerBids(Bid.ThreeClubs, OpenBid2.ResponderRaisedMinor),
+				PartnerBids(Bid.FourClubs,  OpenBid2.ResponderRaisedMinor),
+                PartnerBids(Bid.FiveClubs,  OpenBid2.ResponderRaisedMinor),
 
-                // Bids
 				Forcing(Bid.OneDiamond, Points(Respond1Level), Shape(5, 10), LongestMajor(3)),
 
                 Forcing(Bid.OneHeart, Points(Respond1Level), Shape(4), Shape(Suit.Spades, 0, 4)),
@@ -80,16 +85,13 @@ namespace BridgeBidding
 
                 // TODO: Inverted minors...
                 Invitational(Bid.TwoClubs, ShowsTrump(), Points(Raise1), Shape(5), LongestMajor(3)),
-
-				Invitational(Bid.ThreeClubs, ShowsTrump(), Points(LimitRaise), Shape(5), LongestMajor(3)),
-                
+				Invitational(Bid.ThreeClubs, ShowsTrump(), Points(LimitRaise), Shape(5), LongestMajor(3)),                
                 Signoff(Bid.FiveClubs, ShowsTrump(), Points(Weak5Level), Shape(7, 10)),
-
                 Signoff(Bid.FourClubs, ShowsTrump(), Points(Weak4Level), Shape(6)),
             });
             choices.AddRules(NoTrumpResponsesToMinor(Suit.Clubs));
-            choices.AddRules(WeakJumpShift(ps, Suit.Diamonds, Suit.Hearts, Suit.Spades));
-            choices.AddRules(SolidSuit.Bids(ps));
+            choices.AddRules(WeakJumpShift(Suit.Clubs));
+
             choices.AddRules(new BidRule[] {  Signoff(Bid.Pass, Points(RespondPass))});
             return choices;
         }
@@ -98,16 +100,18 @@ namespace BridgeBidding
         // Responses to 1 Diamond open.  No interference
         public static BidChoices OneDiamond(PositionState ps)
         {
+            if (!ps.RHO.Passed)
+                return OppsInterferred(ps, Suit.Diamonds);
             var choices = new BidChoices(ps);
             // TODO: Need to do different bids if passed hand....
-            choices.AddRules(SolidSuit.Bids(ps));
+            choices.AddRules(SolidSuit.Bids);
             choices.AddRules(new BidRule[]
             {
-				DefaultPartnerBids(Call.Pass, OpenBid2.ResponderChangedSuits),
-				PartnerBids(Bid.TwoDiamonds,   Call.Pass, OpenBid2.ResponderRaisedMinor),
-				PartnerBids(Bid.ThreeDiamonds, Call.Pass, OpenBid2.ResponderRaisedMinor),
-				PartnerBids(Bid.FourDiamonds,  Call.Pass, OpenBid2.ResponderRaisedMinor),
-				PartnerBids(Bid.FiveDiamonds,  Call.Pass, OpenBid2.ResponderRaisedMinor),
+				PartnerBids(OpenBid2.ResponderChangedSuits),
+				PartnerBids(Bid.TwoDiamonds,   OpenBid2.ResponderRaisedMinor),
+				PartnerBids(Bid.ThreeDiamonds, OpenBid2.ResponderRaisedMinor),
+				PartnerBids(Bid.FourDiamonds,  OpenBid2.ResponderRaisedMinor),
+				PartnerBids(Bid.FiveDiamonds,  OpenBid2.ResponderRaisedMinor),
 
                 // 2/1 game force is the highet priority if we can make it.  It is OK to bid this
                 // with game going values even if we have a 4 card major.
@@ -129,7 +133,7 @@ namespace BridgeBidding
 
             });
             choices.AddRules(NoTrumpResponsesToMinor(Suit.Diamonds));
-            choices.AddRules(WeakJumpShift(ps, Suit.Clubs, Suit.Hearts, Suit.Spades));
+            choices.AddRules(WeakJumpShift(Suit.Diamonds));
             choices.AddRules(new BidRule[] {  Signoff(Bid.Pass, Points(RespondPass))});
             return choices;
         }
@@ -138,16 +142,19 @@ namespace BridgeBidding
         // Responses to 1 Heart open.  No interference
         public static BidChoices OneHeart(PositionState ps)
         {
+            if (!ps.RHO.Passed)
+                return OppsInterferred(ps, Suit.Hearts);
+
             var choices = new BidChoices(ps);
             // TODO: Need to do different bids if passed hand....
-            choices.AddRules(SolidSuit.Bids(ps));
+            choices.AddRules(SolidSuit.Bids);
             choices.AddRules(Jacoby2NT.InitiateConvention);
             choices.AddRules(new BidRule[]
             {
-				DefaultPartnerBids(Call.Pass, OpenBid2.ResponderChangedSuits),
-				PartnerBids(Bid.TwoHearts,   Call.Pass, OpenBid2.ResponderRaisedMajor),
-				PartnerBids(Bid.ThreeHearts, Call.Pass, OpenBid2.ResponderRaisedMajor),
-				PartnerBids(Bid.FourHearts,  Call.Pass, OpenBid2.ResponderRaisedMajor),
+				PartnerBids(OpenBid2.ResponderChangedSuits),
+				PartnerBids(Bid.TwoHearts,   OpenBid2.ResponderRaisedMajor),
+				PartnerBids(Bid.ThreeHearts, OpenBid2.ResponderRaisedMajor),
+				PartnerBids(Bid.FourHearts,  OpenBid2.ResponderRaisedMajor),
 
                 // 2/1 game force is the highet priority if we can make it.  It is OK to bid this
                 // with game going values even if we have 4 spades.
@@ -164,10 +171,10 @@ namespace BridgeBidding
                 // NOTE: Medium hand with 3-card support will be handled with 1NT followed by raise...
                 Signoff(Bid.FourHearts, Points(Weak4Level), Shape(5, 10)),
 
-                PartnerBids(Bid.OneNoTrump, Call.Pass, OpenBid2.OneNTOverMajorOpen),
+                PartnerBids(Bid.OneNoTrump, OpenBid2.OneNTOverMajorOpen),
                 Semiforcing(Bid.OneNoTrump, Points(Respond1NTOverMajor), Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
             });
-            choices.AddRules(WeakJumpShift(ps, Suit.Clubs, Suit.Diamonds, Suit.Spades));
+            choices.AddRules(WeakJumpShift(Suit.Hearts));
 
             choices.AddRules(new BidRule[] {  Signoff(Bid.Pass, Points(RespondPass))});
             return choices;
@@ -176,16 +183,20 @@ namespace BridgeBidding
         // Responses to 1 Spade open.  No interference
         public static BidChoices OneSpade(PositionState ps)
         {
+            if (!ps.RHO.Passed)
+                return OppsInterferred(ps, Suit.Spades);
+
             var choices = new BidChoices(ps);
             // TODO: Need to do different bids if passed hand....
-            choices.AddRules(SolidSuit.Bids(ps));
+            choices.AddRules(SolidSuit.Bids);
             choices.AddRules(Jacoby2NT.InitiateConvention);
             choices.AddRules(new BidRule[]
             {
-				DefaultPartnerBids(Call.Pass, OpenBid2.ResponderChangedSuits),
-				PartnerBids(Bid.TwoSpades,   Call.Pass, OpenBid2.ResponderRaisedMajor),
-				PartnerBids(Bid.ThreeSpades, Call.Pass, OpenBid2.ResponderRaisedMajor),
-				PartnerBids(Bid.FourSpades,  Call.Pass, OpenBid2.ResponderRaisedMajor),
+				PartnerBids(OpenBid2.ResponderChangedSuits),
+
+				PartnerBids(Bid.TwoSpades,   OpenBid2.ResponderRaisedMajor),
+				PartnerBids(Bid.ThreeSpades, OpenBid2.ResponderRaisedMajor),
+				PartnerBids(Bid.FourSpades,  OpenBid2.ResponderRaisedMajor),
 
                 // 2/1 game force is the highet priority if we can make it.  It is OK to bid this
                 // with game going values even if we have 4 spades.
@@ -201,10 +212,10 @@ namespace BridgeBidding
                 // NOTE: Medium hand with 3-card support will be handled with 1NT followed by raise...
                 Signoff(Bid.FourSpades, Points(Weak4Level), Shape(5, 10)),
             
-                PartnerBids(Bid.OneNoTrump, Call.Pass, OpenBid2.OneNTOverMajorOpen),
+                PartnerBids(Bid.OneNoTrump, OpenBid2.OneNTOverMajorOpen),
                 Semiforcing(Bid.OneNoTrump, Points(Respond1NTOverMajor), Shape(Suit.Spades, 0, 3)),
             });
-            choices.AddRules(WeakJumpShift(ps, Suit.Clubs, Suit.Diamonds, Suit.Hearts));
+            choices.AddRules(WeakJumpShift(Suit.Spades));
             choices.AddRules(new BidRule[] {  Signoff(Bid.Pass, Points(RespondPass))});
             return choices;
         }
@@ -217,7 +228,7 @@ namespace BridgeBidding
             if (minor == Suit.Clubs) rule.AddConstraint(Shape(Suit.Diamonds, 0, 4));
             return new BidRule[]
             {
-                PartnerBids(bid, Bid.Double, partnerBids),
+                PartnerBids(bid, partnerBids),
                 rule
             };
         }
@@ -233,6 +244,16 @@ namespace BridgeBidding
             }
             return bids;
         }
+
+
+        private static BidChoices OppsInterferred(PositionState ps, Suit openSuit)
+        {
+            if (ps.RHO.Doubled)
+                return OppsDoubled(ps, openSuit);
+            else
+                return OppsOvercalled(ps, openSuit, ps.RHO.Bid);
+        }
+ 
 
 
 
@@ -300,17 +321,18 @@ namespace BridgeBidding
 
 				// TODO: NT Bids
 				// TODO: Minor bids???
+                
+                Signoff(Call.Pass)
+
 			};
         }
 
 
         // TODO: THIS IS SUPER HACKED NOW TO JUST 
-        public static BidChoices OppsOvercalled(PositionState ps)
+        public static BidChoices OppsOvercalled(PositionState ps, Suit openSuit, Bid rhoBid)
         {
             var choices = new BidChoices(ps);
-            // TODO:  Need to do better thann this for bid rules.
-            choices.DefaultPartnerBids.AddFactory(Call.Double, (p) => { return new BidChoices(p, Compete.CompBids); });
-
+            choices.AddRules(SolidSuit.Bids);
             choices.AddRules(NegativeDouble.InitiateConvention);
             choices.AddRules(new BidRule[]
             {
@@ -357,7 +379,7 @@ namespace BridgeBidding
 				Signoff(Bid.FourHearts, RaisePartner(raise: 3, fit: 10), DummyPoints(Weak4Level)),
                 Signoff(Bid.FourSpades, RaisePartner(raise: 3, fit: 10), DummyPoints(Weak4Level)),
 
-                Signoff(Bid.Pass, Points(RespondPass)),
+                Signoff(Bid.Pass),  // May have enought points to respond but no good call, so can't specify points.
 
             });
             // TODO: Need to have opponents stopped?  Maybe those bids go higher up ...
@@ -366,14 +388,15 @@ namespace BridgeBidding
             return choices;
         }
 
-        static protected (int, int) RespondRedouble = (10, 40);
-        static protected (int, int) RespondX1Level = (6, 9);
-        static protected (int, int) RespondXJump = (0, 6);
+
         
 
-        public static IEnumerable<BidRule> OppsDoubled(PositionState ps)
+        public static BidChoices OppsDoubled(PositionState ps, Suit openSuit)
         {
-            var bids = new List<BidRule>
+            var choices = new BidChoices(ps);
+            choices.AddRules(SolidSuit.Bids);
+            choices.AddRules(WeakJumpShift(openSuit));
+            choices.AddRules(new BidRule[] 
             {
                 Forcing(Call.Redouble, Points(RespondRedouble)),
 				// TODO: Here we need to make all bids reflect that they are less than 10 points...
@@ -408,11 +431,13 @@ namespace BridgeBidding
 				// TODO: Perhaps higer priority than raise of a minor???
                 Nonforcing(Bid.OneNoTrump, Points(RespondX1Level)),
 
+                // TODO: Is this correct about RespondPass points?  Are there scenerios where you just don't have
+                // the right shape, but do have enought points?  I guess we'd always bid 1NT
                 Signoff(Bid.Pass, Points(RespondPass))
 
-            };
+            });
 
-            return bids;
+            return choices;
         }
 
     }

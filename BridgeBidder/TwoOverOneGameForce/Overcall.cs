@@ -25,8 +25,7 @@ namespace BridgeBidding
         {
             return new BidRule[] {
                 // TODO: What is the level of interference we can take
-                DefaultPartnerBids(Bid.FourNoTrump, Advance.FirstBid), 
-
+                PartnerBids(Advance.FirstBid), 
 
                 // Weak overcall takes precedence if good suit and low points
 				Nonforcing(Bid.TwoDiamonds, Jump(1), CueBid(false), Points(OvercallWeak2Level), Shape(6), GoodSuit()),
@@ -48,8 +47,6 @@ namespace BridgeBidding
                 Nonforcing(Bid.OneSpade, Points(Overcall1Level), Shape(5), GoodSuit()),
 
 
-                // TODO: NT Overcall needs to have suit stopped...
-
                 Nonforcing(Bid.TwoClubs, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
                 Nonforcing(Bid.TwoDiamonds, Jump(0), CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
                 Nonforcing(Bid.TwoHearts, Jump(0), CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
@@ -68,7 +65,7 @@ namespace BridgeBidding
         public static IEnumerable<BidRule> Rebid(PositionState _)
         {
             return new BidRule[] {
-                DefaultPartnerBids(new Bid(4, Suit.Hearts), Advance.Rebid),
+                PartnerBids(Advance.Rebid),
 
                 Nonforcing(Bid.TwoHearts, Rebid(false), Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump()),
                 Nonforcing(Bid.TwoSpades, Rebid(false), Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump()),

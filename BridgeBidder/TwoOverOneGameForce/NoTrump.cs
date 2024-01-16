@@ -156,7 +156,7 @@ namespace BridgeBidding
             {
                 return new BidRule[]
                 {
-                    PartnerBids(Bid.OneNoTrump, Call.Double, ConventionalResponses),
+                    PartnerBids(Bid.OneNoTrump, ConventionalResponses),
                     Nonforcing(Bid.OneNoTrump, NTD.OR.Open, Balanced())
                 };
             }
@@ -166,7 +166,7 @@ namespace BridgeBidding
 				{
                     return new BidRule[]
                     {
-                        PartnerBids(Bid.OneNoTrump, Call.Double, ConventionalResponses),
+                        PartnerBids(Bid.OneNoTrump, ConventionalResponses),
                         // TODO: Perhaps more rules here for balancing but for now this is fine -- Balanced() is not necessary
                         Nonforcing(Bid.OneNoTrump, NTD.OR.Open, PassEndsAuction())
                     };
@@ -175,7 +175,7 @@ namespace BridgeBidding
                 {
                     return new BidRule[]
                     {
-                        PartnerBids(Bid.OneNoTrump, Call.Double, ConventionalResponses),
+                        PartnerBids(Bid.OneNoTrump, ConventionalResponses),
                         Nonforcing(Bid.OneNoTrump, NTD.OR.Open, Balanced(), OppsStopped(), Not(PassEndsAuction()))
                     };
                 }
@@ -184,13 +184,21 @@ namespace BridgeBidding
 		}
 
 
-        // If this 
+
         private BidChoices ConventionalResponses(PositionState ps)
         {
+
+            if (ps.RHO.Bid is Bid rhoBid && !rhoBid.Equals(Bid.TwoClubs))
+            {
+                // TODO: Handle interfererence better than this...
+                return ps.PairState.BiddingSystem.GetBidChoices(ps);
+            }
+            // TODO: Interferrence?  Probably do something globally here...
             var choices = new BidChoices(ps);
             choices.AddRules(StaymanBidder.InitiateConvention(NTD));
             choices.AddRules(TransferBidder.InitiateConvention(NTD));
-            choices.AddRules(Gerber.InitiateConvention(ps));
+            choices.AddRules(Gerber.InitiateConvention);
+            // TODO: Should this actually happen? Natural probs never...
             choices.AddRules(Natural1NT.Respond(NTD));
             return choices;
         }
@@ -244,8 +252,9 @@ namespace BridgeBidding
         {
             return new BidRule[]
             {
+                PartnerBids(OpenerRebid),
+                PartnerBids(Bid.FourNoTrump, Compete.CompBids), // TODO: Handle slam invite better???  Maybe this is ok?
 
-                DefaultPartnerBids(Bid.Pass, OpenerRebid),
                 Signoff(Bid.TwoClubs, Shape(5, 11), NTD.RR.LessThanInvite),
                 Signoff(Bid.TwoDiamonds, Shape(5, 11), NTD.RR.LessThanInvite),
                 Signoff(Bid.TwoHearts, Shape(5, 11), NTD.RR.LessThanInvite),
@@ -272,8 +281,9 @@ namespace BridgeBidding
         {
             return new BidRule[]
             {
-                DefaultPartnerBids(Bid.Pass, ResponderRebid),
+                PartnerBids(ResponderRebid),
 
+                Signoff(Call.Pass, Partner(LastBid(Bid.ThreeNoTrump))),
                 Signoff(Call.Pass, NTD.OR.DontAcceptInvite, Partner(LastBid(Bid.TwoNoTrump))),
                 Signoff(Call.Pass, Partner(LastBid(Bid.TwoClubs))),
                 Signoff(Call.Pass, Partner(LastBid(Bid.TwoDiamonds))),
@@ -301,8 +311,9 @@ namespace BridgeBidding
 
 
                 Nonforcing(Bid.FourHearts, Partner(LastBid(Bid.ThreeHearts)), Shape(3, 4)),
-                Nonforcing(Bid.FourSpades, Partner(LastBid(Bid.ThreeSpades)), Shape(3, 4))
+                Nonforcing(Bid.FourSpades, Partner(LastBid(Bid.ThreeSpades)), Shape(3, 4)),
 
+                Signoff(Call.Pass)
             };
         }
     }

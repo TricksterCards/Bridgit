@@ -9,7 +9,7 @@ namespace BridgeBidding
 		{
 			var bids = new List<BidRule>()
 			{
-				DefaultPartnerBids(Bid.Double, RespondBid2.Rebid),
+				PartnerBids(RespondBid2.Rebid),
 
 
 				// Responder bid a major suits and we have a fit.  Support at appropriate level.
@@ -119,8 +119,8 @@ namespace BridgeBidding
 			var bids = new List<BidRule>()
 			{
 				// TODO: These are not reall game invitations...
-				PartnerBids(Bid.ThreeHearts, Bid.FourDiamonds, RespondBid2.OpenerInvitedGame),
-				PartnerBids(Bid.ThreeSpades, Bid.FourHearts, RespondBid2.OpenerInvitedGame),
+				PartnerBids(Bid.ThreeHearts, RespondBid2.OpenerInvitedGame),
+				PartnerBids(Bid.ThreeSpades, RespondBid2.OpenerInvitedGame),
 
 				// TODO: Game invitation shoudl always be help suit...  At least if that convention
 				// is in use.  

@@ -18,14 +18,13 @@ namespace BridgeBidding
 
         public static IEnumerable<BidRule> FirstBid(PositionState ps)
         {
-            if (ps.Partner.LastCall is Bid partnerBid)
+            if (ps.Partner.LastCall is Bid partnerBid &&
+                partnerBid.Suit is Suit partnerSuit)
             {
-                // NOTE: We only shold get here when a suit has been bid.  NoTrump overcalls have different logic.
-                Suit partnerSuit = (Suit)partnerBid.Suit;
                 var bids = new List<BidRule>
                 {
                     // TODO: What is the level of interference we can take
-                    DefaultPartnerBids(Bid.FourNoTrump, Overcall.Rebid),
+                    PartnerBids(Overcall.Rebid),
 
                                         // Weak jumps to game are highter priority than simple raises.
                     // Fill this out better but for now just go on law of total trump, jumping if weak.  
@@ -88,8 +87,11 @@ namespace BridgeBidding
                 // TODO: Should this be higher priority?
                 // TODO: Are there situations where 4NT is not blackwood.  Overcall 4D advanace 4NT?
                 bids.AddRange(Blackwood.InitiateConvention(ps));
+                bids.Add(Nonforcing(Call.Pass));
                 return bids;
             }
+            // TODO: Throw?  What?  Perhaps a new exception that just reverts
+            // to competition if bidders fail but stop in debug mode...
             Debug.Fail("Partner.LastCall is not a bid.  How in the world did we get here?");
             return new BidRule[0];
         }
