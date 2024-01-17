@@ -151,7 +151,7 @@ namespace BridgeBidding
                 throw new AuctionException(Call.Pass, NextToAct, Contract, "Auction is final.  No more bids can be made");
             }
             var choices = GetBidsForNextToAct();
-            var chosenCall = choices.BestCall != null ? choices.BestCall.Call : null;
+            var chosenCall = choices.BestCall != null ? choices.BestCall : null;
             if (chosenCall == null)
             {
                 throw new Exception("No BestCall for auction.");

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace BridgeBidding
@@ -117,12 +118,26 @@ namespace BridgeBidding
 	{
 		public BidChoicesFactory PartnerBids{ get; private set; }
 
-        public PartnerBidRule(Call call, BidChoicesFactory partnerBids, params Constraint[] constraints) :
+        public PartnerBidRule(Call call, BidChoicesFactory partnerBids, params StaticConstraint[] constraints) :
 			base(call, BidForce.Nonforcing, constraints)
         {
 			Debug.Assert(partnerBids != null);
             this.PartnerBids = partnerBids;
         }
     }
+
+	public class BidAnnotation : BidRule
+	{
+		public enum AnnotationType { Alert, Announce }
+		public string Text { get; }
+
+		public AnnotationType Type { get; }
+		public BidAnnotation(Call call, AnnotationType type, string text, params StaticConstraint[] constraints) :
+			base(call, BidForce.Nonforcing, constraints)
+		{
+			this.Type = type;
+			this.Text = text;
+		}
+	}
 
 }

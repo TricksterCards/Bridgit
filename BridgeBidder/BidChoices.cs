@@ -2,7 +2,9 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using static BridgeBidding.BidRule;
 
 namespace BridgeBidding
@@ -13,100 +15,35 @@ namespace BridgeBidding
     public delegate BidChoices BidChoicesFactory(PositionState ps);
 
 
-/*
-    public class BidChoiceFactories : IBidder
+
+
+    public class BidRuleGroup : Dictionary<Call, BidRuleSet>
     {
-        private BidChoices _parent;
-        private Call? _call;
-        private BidChoicesFactory _bidChoicesFactory;
-        private BidChoicesCompetativeFacotry _bidChoicesCompetativeFactory;
+       // private Dictionary<Call, BidRuleSet> RuleSets = new Dictionary<Call, BidRuleSet>();
+        public PartnerBidRule PartnerBidRule  { get; private set; }
+        public Call BestCall = null;
 
-        public BidChoiceFactories(BidChoices parent, Call? call, BidChoicesFactory bcf, BidChoicesCompetativeFacotry bccf)
+
+
+        public static BidRuleGroup Create(PositionState ps, HashSet<Call> existingCalls, IEnumerable<BidRule> rules)
         {
-            _parent = parent;
-            _call = call;
-            _bidChoicesFactory = bcf;
-            _bidChoicesCompetativeFactory = bccf;
-        }
-        public BidChoices GetBidChoices(PositionState ps)
-        {   
-            if (_bidChoicesFactory is BidChoicesFactory bcf)
-                return bcf(ps);
-            return _parent.GetBidder(_call).GetBidChoices(ps);
+            var group = new BidRuleGroup();
+            group.AddRules(ps, existingCalls, rules);
+            return group;
         }
 
-        public BidChoices GetBidChoices(PositionState ps, Call lhoCall)
-        {
-            if (_bidChoicesFactory is BidChoicesFactory bcf)
-                return bcf(ps);
-            return _parent.GetBidder(_call).GetBidChoices(ps);        }
-    }
+        private BidRuleGroup() {}
+
+    //    public bool Contains(Call call) => _choices.ContainsKey(call);
+
+    //    public IEnumerable<Call> Calls => _choices.Keys;
 
 
-    public class PartnerChoicesXXX
-    {
-        private SortedList<Call, BidChoicesFactory> _choices;
+      //  public BidRuleSet GetBidRuleSet(Call call) => _choices[call];
 
-        public PartnerChoicesXXX()
-        {
-            _choices = new SortedList<Call, BidChoicesFactory>();
-        }
-
-        public void AddFactory(Call goodThrough, BidChoicesFactory partnerFactory)
-        {
-            _choices.Add(goodThrough, partnerFactory);
-        }
-
-        public BidChoicesFactory GetPartnerBidsFactory(PositionState ps)
-        {
-            var lhoBid = ps.LeftHandOpponent.GetBidHistory(0);
-            foreach (KeyValuePair<Call, BidChoicesFactory> choice in _choices)
-            {
-                if (choice.Key.CompareTo(lhoBid) >= 0) return choice.Value;
-            }
-            return null;
-        }
-
-
-        public void Merge(PartnerChoicesXXX other)
-        {
-            if (_choices.Count == 0)
-            {
-                _choices = other._choices;  // TODO: Should I copy this???
-            }
-            else
-            {
-                Call highestGoodThrough = _choices.Last().Key;
-                foreach (KeyValuePair<Call, BidChoicesFactory> choice in other._choices)
-                {
-                    if (highestGoodThrough.CompareTo(choice.Key) < 0)
-                    {
-                        AddFactory(choice.Key, choice.Value);
-                    }
-                }
-            }
-        }
-    }
-*/
-
-    public class BidRuleGroup 
-    {
-        private Dictionary<Call, BidRuleSet> _choices;
-        public PartnerBidRule DefaultPartnerBidRule  { get; private set; }
-        private BidChoices Parent { get;}
-
-        public BidRuleGroup(BidChoices parent)
-        {
-            Parent = parent;
-            _choices = new Dictionary<Call, BidRuleSet>();
-
-        }
-
-        public bool Contains(Call call) => _choices.ContainsKey(call);
-
-        public BidRuleSet GetBidRuleSet(Call call) => _choices[call];
-
-        public IEnumerable<Call> AddRules(PositionState ps, IEnumerable<BidRule> rules)
+        public void AddRules(PositionState ps, 
+                            HashSet<Call> existingCalls,
+                            IEnumerable<BidRule> rules)
         {
             foreach (var rule in rules)
             {
@@ -116,8 +53,8 @@ namespace BridgeBidding
                     {
                         if (rule.SatisifiesStaticConstraints(ps))
                         {
-                            Debug.Assert(DefaultPartnerBidRule == null);
-                            DefaultPartnerBidRule = partnerBids;
+                            Debug.Assert(PartnerBidRule == null);
+                            PartnerBidRule = partnerBids;
                         }
                     }
                     else
@@ -128,56 +65,52 @@ namespace BridgeBidding
                 }
                 else
                 {
-                    if (ps.IsValidNextCall(rule.Call))
+                    if (ps.IsValidNextCall(rule.Call) && !existingCalls.Contains(rule.Call))
                     {
                         if (rule.SatisifiesStaticConstraints(ps))
                         {
-                            if (!_choices.ContainsKey(rule.Call))
+                            if (!this.ContainsKey(rule.Call))
                             {
-                                _choices[rule.Call] = new BidRuleSet(this, rule.Call, rule.Force);
+                                this[rule.Call] = new BidRuleSet(this, rule.Call, rule.Force);
                             }
-                            // TODO: This is an ugly way to do this.. Hack side-effect.  Clean it up
-                            _choices[rule.Call].AddRule(rule);
-                            if (Parent.BestCall == null && !(rule is PartnerBidRule) && ps.PrivateHandConforms(rule))
+                            this[rule.Call].AddRule(rule);
+
+                            if (BestCall == null && 
+                               !((rule is PartnerBidRule) || (rule is BidAnnotation)) && 
+                               ps.PrivateHandConforms(rule))
                             {
-                                Parent.BestCall = _choices[rule.Call];
+                                BestCall = rule.Call;
                             }
                         }
                     }
                 }
             }
-            var added = _choices.Keys;  // We are going to modify keys inside the loop so initialize enumerator ourside of loop
-            foreach (var call in added)
+            var calls = Keys;  // We are going to modify keys inside the loop so initialize enumerator ourside of loop
+            foreach (var call in calls)
             {
-                if (!_choices[call].HasRules)
+                if (!this[call].HasRules)
                 {
-                    _choices.Remove(call);
+                    Debug.Assert(call != BestCall);
+                    this.Remove(call);
                 }
-            }
-            return _choices.Keys;
+           }
         }
 
     }
 
     
 
-    public class BidChoices : Bidder // Inherit from bidder so can use static functions...
+    public class BidChoices 
     {
-
-
-        // TODO: Protected set.  Group a sub-class
-        public BidRuleSet BestCall  { get; set; }
-
+        private BidRuleGroup _bestCallGroup = null;
         private PositionState _ps;
 
-        private List<BidRuleGroup> _bidGroups;
+        private List<BidRuleGroup> _bidGroups = new List<BidRuleGroup>();
 
-        private HashSet<Call> _definedCalls = new HashSet<Call>();
-      //  private Dictionary<Call, BidRuleSet> _choices;
+        public HashSet<Call> Calls = new HashSet<Call>();
 
-  //      public PartnerChoicesXXX DefaultPartnerBids { get; private set; }
-
-
+        public Call BestCall => _bestCallGroup == null ? null : _bestCallGroup.BestCall;
+      
         public static BidChoicesFactory FromBidRulesFactory(BidRulesFactory bidRules)
         {
             return (ps) => {
@@ -191,10 +124,7 @@ namespace BridgeBidding
 
         public BidChoices(PositionState ps)
         {
-         //   BestCall = null;
             _ps = ps;
-       //     _choices = new Dictionary<Call, BidRuleSet>();
-            _bidGroups = new List<BidRuleGroup>();
         }
 
 
@@ -213,20 +143,23 @@ namespace BridgeBidding
 
         public BidRuleSet GetBidRuleSet(Call call)
         {
-            if (_definedCalls.Contains(call))
+            // This is a small optimization to avoid searching groups if the BestCall has been selected
+            if (call == BestCall)
+                return _bestCallGroup[call];
+
+            if (Calls.Contains(call))
             {
                 foreach (var group in _bidGroups)
                 {
-                    if (group.Contains(call))
+                    if (group.ContainsKey(call))
                     {
-                        return group.GetBidRuleSet(call);
+                        return group[call];
                     }
                 }
                 Debug.Fail("Should never get here.");
             }
-            var newGroup = new BidRuleGroup(this);
-            newGroup.AddRules(_ps, new BidRule[] { Nonforcing(call) });
-            return newGroup.GetBidRuleSet(call);
+            var fakeGroup = BidRuleGroup.Create(_ps, Calls, new BidRule[] { Bidder.Nonforcing(call) });
+            return fakeGroup[call];
         }
 
         public void AddRules(BidRulesFactory factory)
@@ -236,15 +169,17 @@ namespace BridgeBidding
 
         public void AddRules(IEnumerable<BidRule> rules)
         {
-            var group = new BidRuleGroup(this);
+            var group = BidRuleGroup.Create(_ps, Calls, rules);
             _bidGroups.Add(group);
-            _definedCalls.UnionWith(group.AddRules(_ps, rules));
+            Calls.UnionWith(group.Keys);
+            if (_bestCallGroup == null && group.BestCall != null)
+                _bestCallGroup = group;
         }
 
         // Method for adding a stand-alone pass rule.
         public void AddPassRule(params Constraint[] constraints)
         {
-            AddRules(new BidRule[] { Nonforcing(Call.Pass, constraints) });
+            AddRules(new BidRule[] { Bidder.Nonforcing(Call.Pass, constraints) });
         }
 
     }

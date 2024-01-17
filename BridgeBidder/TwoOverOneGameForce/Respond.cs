@@ -216,7 +216,7 @@ namespace BridgeBidding
                 Semiforcing(Bid.OneNoTrump, Points(Respond1NTOverMajor), Shape(Suit.Spades, 0, 3)),
             });
             choices.AddRules(WeakJumpShift(Suit.Spades));
-            choices.AddRules(new BidRule[] {  Signoff(Bid.Pass, Points(RespondPass))});
+            choices.AddPassRule(Points(RespondPass));
             return choices;
         }
 
@@ -334,6 +334,7 @@ namespace BridgeBidding
             var choices = new BidChoices(ps);
             choices.AddRules(SolidSuit.Bids);
             choices.AddRules(NegativeDouble.InitiateConvention);
+            choices.AddRules(WeakJumpShift(openSuit));
             choices.AddRules(new BidRule[]
             {
                 Forcing(Bid.OneHeart, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
@@ -345,16 +346,9 @@ namespace BridgeBidding
                 // TODO: Perhaps show new 5+ card suit forcing here?  Only if not passed.
 
 				// Now cuebid raises are next in priority - RaisePartner calls ShowTrump()
-                Forcing(Bid.TwoDiamonds, CueBid(), RaisePartner(Suit.Clubs), DummyPoints(Suit.Clubs, LimitRaiseOrBetter)),
-
-                Forcing(Bid.TwoHearts, CueBid(), RaisePartner(Suit.Clubs), DummyPoints(Suit.Clubs, LimitRaiseOrBetter)),
-                Forcing(Bid.TwoHearts, CueBid(), RaisePartner(Suit.Diamonds), DummyPoints(Suit.Diamonds, LimitRaiseOrBetter)),
-
-
-                Forcing(Bid.TwoSpades, CueBid(), RaisePartner(Suit.Clubs), DummyPoints(Suit.Clubs, LimitRaiseOrBetter)),
-                Forcing(Bid.TwoSpades, CueBid(), RaisePartner(Suit.Diamonds), DummyPoints(Suit.Diamonds, LimitRaiseOrBetter)),
-                Forcing(Bid.TwoSpades, CueBid(), RaisePartner(Suit.Hearts), DummyPoints(Suit.Hearts, LimitRaiseOrBetter)),
-
+                Forcing(Bid.TwoDiamonds, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Forcing(Bid.TwoHearts, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Forcing(Bid.TwoSpades, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
 
                 // TODO: Weak jumps here take precedence over simple raise
                
@@ -395,7 +389,7 @@ namespace BridgeBidding
         {
             var choices = new BidChoices(ps);
             choices.AddRules(SolidSuit.Bids);
-            choices.AddRules(WeakJumpShift(openSuit));
+          // TODO: Maybe we want this???  choices.AddRules(WeakJumpShift(openSuit));
             choices.AddRules(new BidRule[] 
             {
                 Forcing(Call.Redouble, Points(RespondRedouble)),
@@ -410,13 +404,10 @@ namespace BridgeBidding
                 Nonforcing(Bid.OneDiamond, Shape(4, 11), Points(RespondX1Level)),
 
                 //
-                // If we have a good fie but a week hand then time to jump.
+                // If we have a good fit but a week hand then time to jump.
                 //
-                Nonforcing(Bid.ThreeClubs,    Partner(HasShownSuit()), Fit(9), ShowsTrump(), Points(RespondXJump)),
-                Nonforcing(Bid.ThreeDiamonds, Partner(HasShownSuit()), Fit(9), ShowsTrump(), Points(RespondXJump)),
-                Nonforcing(Bid.ThreeHearts,   Partner(HasShownSuit()), Fit(9), ShowsTrump(), Points(RespondXJump)),
-                Nonforcing(Bid.ThreeSpades,   Partner(HasShownSuit()), Fit(9), ShowsTrump(), Points(RespondXJump)),
-
+                Nonforcing(new Bid(3, openSuit), Fit(9), ShowsTrump(), Points(RespondXJump)),
+                
                 Nonforcing(Bid.TwoClubs, Partner(HasShownSuit()), Fit(), Points(RespondX1Level)),
                 Nonforcing(Bid.TwoClubs, Shape(5, 11), Points(RespondX1Level)),
 

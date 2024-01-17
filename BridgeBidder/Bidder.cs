@@ -84,6 +84,14 @@ namespace BridgeBidding
 			return new BidRule(call, force, constraints);
 		}
 
+		public static BidRule Alert(Call call, string text, params StaticConstraint[] constraints)
+		{
+			return new BidAnnotation(call, BidAnnotation.AnnotationType.Alert, text, constraints);
+		}
+		public static BidRule Announce(Call call, string text, params StaticConstraint[] constraints)
+		{
+			return new BidAnnotation(call, BidAnnotation.AnnotationType.Announce, text, constraints);
+		}
 
 		// ************************************************************ STATIC CONSTRAINTS ***
 

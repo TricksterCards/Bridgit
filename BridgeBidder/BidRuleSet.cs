@@ -20,6 +20,7 @@ namespace BridgeBidding
 		}
         public Call Call { get; }
 		public BidForce BidForce { get; private set; }
+		public List<BidAnnotation> Annotations = new List<BidAnnotation>();
 
 		private PartnerBidRule _partnerBidRule = null;
 
@@ -60,6 +61,10 @@ namespace BridgeBidding
 				Debug.Assert(_partnerBidRule == null);
 				_partnerBidRule = partnerBidRule;
 			}
+			else if (rule is BidAnnotation bidAnnotation)
+			{
+				Annotations.Add(bidAnnotation);
+			}
 			else
 			{
 				_ruleInfo.Add(new RuleInfo(rule));
@@ -73,9 +78,9 @@ namespace BridgeBidding
 			{
 				return _partnerBidRule.PartnerBids;
 			}
-			if (!this.Call.Equals(Call.Pass) && Parent.DefaultPartnerBidRule != null)
+			if (!this.Call.Equals(Call.Pass) && Parent.PartnerBidRule != null)
 			{
-				return Parent.DefaultPartnerBidRule.PartnerBids;
+				return Parent.PartnerBidRule.PartnerBids;
 			}
 			return null;		// TODO: Maybe always return default here... Clean up
 		}
