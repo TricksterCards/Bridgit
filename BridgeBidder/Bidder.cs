@@ -273,6 +273,12 @@ namespace BridgeBidding
 		public static Constraint DecentSuit(Suit? suit = null)
 		{ return new ShowsQuality(suit, SuitQuality.Decent, SuitQuality.Solid); }
 
+		public static DynamicConstraint SuitLosers(int min, int max, Suit? suit = null)
+		{
+			return new ShowsLosers(false, suit, min, max);
+		}
+
+
 		public static Constraint Better(Suit better, Suit worse) { return new ShowsBetterSuit(better, worse, worse, false); }
 
 		public static Constraint BetterOrEqual(Suit better, Suit worse) { return new ShowsBetterSuit(better, worse, better, false); }
@@ -303,6 +309,7 @@ namespace BridgeBidding
 		{
 			return And(Shape(Suit.Hearts, 0, max), Shape(Suit.Spades, 0, max));
 		}
+
 
 
 

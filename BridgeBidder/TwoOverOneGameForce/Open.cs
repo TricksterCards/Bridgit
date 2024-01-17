@@ -27,6 +27,7 @@ namespace BridgeBidding
 		public static (int, int) LessThanJumpShift = (12, 18);
 		public static (int, int) JumpShift = (19, 21);
 
+		public static (int, int) ThirdSeat4CardMajor = (8, 12);
 
 
         public static new BidChoices GetBidChoices(PositionState ps)
@@ -67,6 +68,10 @@ namespace BridgeBidding
 				// In 4th seat we want to pass if the Rule of 15 does not apply.
 				Nonforcing(Call.Pass, Seat(4), PassIn4thSeat()),
 
+				// Higher priority pre-emptive 3rd seat bids of good major
+				Nonforcing(Bid.OneHeart, Seat(3), Shape(4), SuitLosers(0, 1), Points(ThirdSeat4CardMajor)),
+				Nonforcing(Bid.OneSpade, Break(false, "4-card spade"), Seat(3), Shape(4), SuitLosers(0, 1), Points(ThirdSeat4CardMajor)),
+
 				// Special case 5 clubs and 4 diamonds with mimimum hand.  Bid diamonds to avoid reverse
 				Nonforcing(Bid.OneDiamond, Points(Minimum), Shape(Suit.Clubs, 5), Shape(Suit.Diamonds, 4)),
 
@@ -86,6 +91,11 @@ namespace BridgeBidding
 				Nonforcing(Bid.OneHeart, Points(OneLevel), Shape(5, 10), LongerThan(Suit.Spades)),
 
 				Nonforcing(Bid.OneSpade, Points(OneLevel), Shape(5, 10), LongerOrEqualTo(Suit.Hearts)),
+
+				
+				// 3rd seat will open weak hands.
+				// TODO: Add logic here...
+				
 			};
 		}
 

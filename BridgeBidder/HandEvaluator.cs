@@ -52,7 +52,7 @@ namespace BridgeBidding
 				case 5:
 				case 6:
 				case 7:
-					q = (hand.IsGoodSuit(suit)) ? SuitQuality.Good : SuitQuality.Decent; break;
+					q = hand.IsGoodSuit(suit) ? SuitQuality.Good : SuitQuality.Decent; break;
 				default:
 					q = SuitQuality.Poor;
 					break;
@@ -62,11 +62,13 @@ namespace BridgeBidding
 		public static void Evaluate(Hand hand, HandSummary.ShowState hs)
 		{
 			var hcp = hand.HighCardPoints();
+			var losers = hand.Losers();
 			hs.ShowHighCardPoints(hcp, hcp);
 			var startPoints = hcp + hand.LengthPoints(); 
 			hs.ShowStartingPoints(startPoints, startPoints);
             hs.ShowNoTrumpDummyPoints(startPoints, startPoints);
             hs.ShowNoTrumpLongHandPoints(startPoints, startPoints);
+			hs.ShowLosers(losers, losers);
             var counts = hand.CountsBySuit();
 			hs.ShowIsBalanced(hand.IsBalanced);
 			hs.ShowIsFlat(hand.Is4333);
@@ -79,10 +81,12 @@ namespace BridgeBidding
 				var dp = hcp + AudreyDummyPoints(hand, suit);
 				var c = counts[suit];
 				var q = Quality(hand, suit);
+				var ltc = hand.Losers(suit);
 				hs.Suits[suit].ShowShape(c, c);
 				hs.Suits[suit].ShowDummyPoints(dp, dp);
 				hs.Suits[suit].ShowLongHandPoints(startPoints, startPoints);
 				hs.Suits[suit].ShowQuality(q, q);
+				hs.Suits[suit].ShowLosers(ltc, ltc);
 				var keyCards = countAces;
 				if (hand.Contains(new Card(Rank.King, suit)))
 				{

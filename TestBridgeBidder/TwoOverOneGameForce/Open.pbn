@@ -177,3 +177,30 @@ Pass Pass Pass 2S
 7S
 
 
+[Event "3rd seat open solid 4-card spade suit"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - KQJT.3.876.AT762 -"]
+[Auction "N"]
+Pass Pass 1S
+
+[Event "2nd seat don't open same solid 4-card spade suit"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- KQJT.3.876.AT762 - -"]
+[Auction "N"]
+Pass Pass 
+
+[Event "4th seat don't open same solid 4-card spade suit"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - - KQJT.3.876.AT762"]
+[Auction "N"]
+Pass Pass Pass Pass
+
+[Event "3rd seat open solid 4-card heart suit"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - 3.KQJT.876.AT762 -"]
+[Auction "N"]
+Pass Pass 1H

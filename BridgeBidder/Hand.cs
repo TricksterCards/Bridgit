@@ -128,5 +128,25 @@ namespace BridgeBidding
 			return this.Count(c => c.Suit == suit && c.Rank >= Rank.Queen) >= 2 || this.Count(c => c.Suit == suit && c.Rank >= Rank.Ten) >= 3;
 		}
 
+		public int Losers(Suit? s = null)
+		{
+			int losers = 0;
+			if (s is Suit suit)
+			{
+				losers = Math.Min(this.Count(c => (c.Suit == suit)), 3);
+				if (losers == 3 && this.Contains(new Card(Rank.Queen, suit))) losers--;
+				if (losers >=2 && this.Contains(new Card(Rank.King, suit))) losers--;
+				if (losers >= 1 && this.Contains(new Card(Rank.Ace, suit))) losers--;
+			}
+			else
+			{
+				foreach (Suit x in Card.Suits)
+				{
+					losers += Losers(x);
+				}
+			}
+			return losers;
+		}
+
 	}
 }

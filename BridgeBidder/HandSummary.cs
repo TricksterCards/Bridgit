@@ -46,6 +46,11 @@ namespace BridgeBidding
                 HandSummary.NoTrumpDummyPoints = CombineRange(HandSummary.NoTrumpDummyPoints, (min, max), CombineRule.Show);
             }
 
+			public void ShowLosers(int min, int max)
+			{
+				HandSummary.Losers = CombineRange(HandSummary.Losers, (min, max), CombineRule.Show);
+			}
+
             public void ShowIsBalanced(bool isBalanced)
 			{
 				// TODO: This needs to union?  What if one is true and one is false???
@@ -114,6 +119,10 @@ namespace BridgeBidding
                     _suitSummary._quality = CombineRange(_suitSummary._quality, ((int)min, (int)max), CombineRule.Show);
                 }
 
+				public void ShowLosers(int min, int max)
+				{
+					_suitSummary.Losers = CombineRange(_suitSummary.Losers, (min, max), CombineRule.Show);
+				}
 			
 				public void ShowKeyCards(HashSet<int> keyCards)
 				{
@@ -144,6 +153,7 @@ namespace BridgeBidding
 
 			public int? RuleOf9Points { get; protected set; }
 
+			public (int Min, int Max)? Losers { get; protected set; }
 
 			public (int Min, int Max) GetShape()
 			{
@@ -205,6 +215,7 @@ namespace BridgeBidding
 				this.DummyPoints = null;
                 this.LongHandPoints = null;
                 this._quality = null;
+				this.Losers = null;
                 this.KeyCards = null;
 				this.HaveQueen = null;
 				this.Stopped = null;
@@ -218,6 +229,7 @@ namespace BridgeBidding
                 this.DummyPoints = other.DummyPoints;
                 this.LongHandPoints = other.LongHandPoints;
                 this._quality = other._quality;
+				this.Losers = other.Losers;
 				this.KeyCards = other.KeyCards;
 				this.HaveQueen= other.HaveQueen;
 				this.Stopped = other.Stopped;
@@ -230,6 +242,7 @@ namespace BridgeBidding
                 this.DummyPoints = CombineRange(this.DummyPoints, other.DummyPoints, cr);
                 this.LongHandPoints = CombineRange(this.LongHandPoints, other.LongHandPoints, cr);
                 this._quality = CombineRange(this._quality, other._quality, cr);
+				this.Losers = CombineRange(this.Losers, other.Losers, cr);
                 this.HaveQueen = CombineBool(this.HaveQueen, other.HaveQueen, cr);
 				this.Stopped = CombineBool(this.Stopped, other.Stopped, cr);
 				this.KeyCards = CombineIntSet(this.KeyCards, other.KeyCards, cr);
@@ -243,6 +256,7 @@ namespace BridgeBidding
 					    this.DummyPoints == other.DummyPoints &&
 						this.LongHandPoints == other.LongHandPoints &&
 						this._quality == other._quality &&
+						this.Losers == other.Losers &&
 						this.HaveQueen == other.HaveQueen &&
 						this.Stopped == other.Stopped &&
 						this.KeyCards == other.KeyCards &&
@@ -257,6 +271,8 @@ namespace BridgeBidding
 
 		public (int Min, int Max)? NoTrumpLongHandPoints { get; protected set; }
 		public (int Min, int Max)? NoTrumpDummyPoints { get; protected set; }
+
+		public (int Min, int Max)? Losers { get; protected set; }
 
 	//	public (int Min, int Max) GetPoints()
 	//	{
@@ -288,6 +304,7 @@ namespace BridgeBidding
 			this.StartingPoints = null;
 			this.NoTrumpLongHandPoints = null;
 			this.NoTrumpDummyPoints = null;
+			this.Losers = null;
 			this.IsBalanced = null;
 			this.IsFlat = null;
 			this.CountAces = null;
@@ -306,6 +323,7 @@ namespace BridgeBidding
 			this.StartingPoints = other.StartingPoints;
 			this.NoTrumpLongHandPoints = other.NoTrumpLongHandPoints;
 			this.NoTrumpDummyPoints = other.NoTrumpDummyPoints;
+			this.Losers = other.Losers;
 			this.IsBalanced = other.IsBalanced;
 			this.IsFlat = other.IsFlat;
 			this.CountAces = other.CountAces;
@@ -343,6 +361,7 @@ namespace BridgeBidding
 			this.StartingPoints = CombineRange(this.StartingPoints, other.StartingPoints, cr);
 			this.NoTrumpLongHandPoints = CombineRange(this.NoTrumpLongHandPoints, other.NoTrumpLongHandPoints, cr);
 			this.NoTrumpDummyPoints = CombineRange(this.NoTrumpDummyPoints, other.NoTrumpDummyPoints, cr);
+			this.Losers = CombineRange(this.Losers, other.Losers, cr);
 			this.IsBalanced = CombineBool(this.IsBalanced, other.IsBalanced, cr);
 			this.IsFlat = CombineBool(this.IsFlat, other.IsFlat, cr);
 			this.CountAces = CombineIntSet(this.CountAces, other.CountAces, cr);
@@ -387,6 +406,7 @@ namespace BridgeBidding
 				this.StartingPoints != other.StartingPoints ||
 				this.NoTrumpLongHandPoints != other.NoTrumpLongHandPoints ||
 				this.NoTrumpDummyPoints != other.NoTrumpDummyPoints ||
+				this.Losers != other.Losers ||
 				this.IsBalanced != other.IsBalanced ||
 				this.IsFlat != other.IsFlat ||
 				!EqualIntSet(this.CountAces, other.CountAces) ||
