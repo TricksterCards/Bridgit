@@ -18,8 +18,8 @@ namespace BridgeBidding
             {
                 // DefaultPartnerBids...
                 PartnerBids(Bid.TwoNoTrump, OpenerRebid),
-                Forcing(Bid.TwoNoTrump, Fit(Suit.Hearts), Shape(Suit.Hearts, 4, 10), DummyPoints(RespondPoints)),
-                Forcing(Bid.TwoNoTrump, Fit(Suit.Spades), Shape(Suit.Spades, 4, 10), DummyPoints(RespondPoints))
+                Forcing(Bid.TwoNoTrump, Fit(Suit.Hearts), Shape(Suit.Hearts, 4, 10), DummyPoints(Suit.Hearts, RespondPoints)),
+                Forcing(Bid.TwoNoTrump, Fit(Suit.Spades), Shape(Suit.Spades, 4, 10), DummyPoints(Suit.Spades, RespondPoints))
             };
 
 		}
