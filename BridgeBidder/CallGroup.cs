@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace BridgeBidding
@@ -73,7 +74,7 @@ namespace BridgeBidding
                     }
                 }
             }
-            var calls = Keys;  // We are going to modify keys inside the loop so initialize enumerator ourside of loop
+            var calls = Keys.ToList();  // We are going to modify keys inside the loop so initialize enumerator ourside of loop
             foreach (var call in calls)
             {
                 if (!this[call].HasRules)
