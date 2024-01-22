@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-//using static BridgeBidding.BidRule;
+//using static BridgeBidding.CallFeature;
 
 namespace BridgeBidding
 {
@@ -11,48 +11,48 @@ namespace BridgeBidding
 
     public abstract class Bidder
 	{
-		public static BidRule PartnerBids(BidRulesFactory brf)
+		public static CallFeature PartnerBids(CallFeaturesFactory brf)
 		{
-			return PartnerBids(BidChoices.FromBidRulesFactory(brf));
+			return PartnerBids(PositionCalls.FromCallFeaturesFactory(brf));
 		}
 
-        public static BidRule PartnerBids(BidChoicesFactory bcf)
+        public static CallFeature PartnerBids(PositionCallsFactory bcf)
         {
             return _PartnerBids(null, bcf, new StaticConstraint[0]);
         }
 
 	
 
-		public static BidRule PartnerBids(Call call, BidRulesFactory brf, params StaticConstraint[] constraints)
+		public static CallFeature PartnerBids(Call call, CallFeaturesFactory brf, params StaticConstraint[] constraints)
 		{
 			Debug.Assert(call != null);
-			return _PartnerBids(call, BidChoices.FromBidRulesFactory(brf), constraints);
+			return _PartnerBids(call, PositionCalls.FromCallFeaturesFactory(brf), constraints);
 		}
-		public static BidRule PartnerBids(Call call, BidChoicesFactory choicesFactory)
+		public static CallFeature PartnerBids(Call call, PositionCallsFactory choicesFactory)
 		{
 			Debug.Assert(call != null);
 			return _PartnerBids(call, choicesFactory, new StaticConstraint[0]);
 		}
 
-		private static BidRule _PartnerBids(Call call,
-											BidChoicesFactory choicesFactory, 
+		private static PartnerCalls _PartnerBids(Call call,
+											PositionCallsFactory choicesFactory, 
 											params StaticConstraint[] constraints)
 		{
-			return new PartnerBidRule(call, choicesFactory, constraints);
+			return new PartnerCalls(call, choicesFactory, constraints);
 		}
 
-		public static BidRule Forcing(Call call, params Constraint[] constraints)
+		public static CallFeature Forcing(Call call, params Constraint[] constraints)
 		{
 			return Rule(call, BidForce.Forcing1Round, constraints);
 		}
 
-		public static BidRule Semiforcing(Call call, params Constraint[] constraints)
+		public static CallFeature Semiforcing(Call call, params Constraint[] constraints)
 		{
 			// TODO: What do do about semi-forcing?  
 			return Rule(call, BidForce.Nonforcing, constraints);
 		}
 
-		public static BidRule ForcingToGame(Call call, params Constraint[] constraints)
+		public static CallFeature ForcingToGame(Call call, params Constraint[] constraints)
 		{
 			return Rule(call, BidForce.ForcingToGame, constraints);
 		}
@@ -60,20 +60,20 @@ namespace BridgeBidding
 		// TODO: Need a non-forcing BidMessage...
 
 
-		public static BidRule Nonforcing(Call call, params Constraint[] constraints)
+		public static CallFeature Nonforcing(Call call, params Constraint[] constraints)
 		{
 			return Rule(call, BidForce.Nonforcing, constraints);
 		}
 
 
 
-		public static BidRule Invitational(Call call, params Constraint[] constraints)
+		public static CallFeature Invitational(Call call, params Constraint[] constraints)
 		{
 			return Rule(call, BidForce.Invitational, constraints);
 		}
 	
 
-		public static BidRule Signoff(Call call, params Constraint[] constraints)
+		public static CallFeature Signoff(Call call, params Constraint[] constraints)
 		{
 			return Rule(call, BidForce.Signoff, constraints);
 		}
@@ -84,15 +84,25 @@ namespace BridgeBidding
 			return new BidRule(call, force, constraints);
 		}
 
-		public static BidRule Alert(Call call, string text, params StaticConstraint[] constraints)
+		public static CallFeature Alert(Call call, string text, params StaticConstraint[] constraints)
 		{
-			return new BidAnnotation(call, BidAnnotation.AnnotationType.Alert, text, constraints);
+			return new CallAnnotation(call, CallAnnotation.AnnotationType.Alert, text, constraints);
 		}
-		public static BidRule Announce(Call call, string text, params StaticConstraint[] constraints)
+		public static CallFeature Announce(Call call, string text, params StaticConstraint[] constraints)
 		{
-			return new BidAnnotation(call, BidAnnotation.AnnotationType.Announce, text, constraints);
+			return new CallAnnotation(call, CallAnnotation.AnnotationType.Announce, text, constraints);
 		}
 
+		public static CallFeature Convention(Call call, string text, params StaticConstraint[] constraints)
+		{
+			return new CallAnnotation(call, CallAnnotation.AnnotationType.Convention, text, constraints);
+		}
+
+		public static CallAnnotation Convention(string text, params StaticConstraint[] constraints)
+		{
+			return new CallAnnotation(null, CallAnnotation.AnnotationType.Convention, text, constraints);
+		}
+		
 		// ************************************************************ STATIC CONSTRAINTS ***
 
 		public static StaticConstraint Seat(params int[] seats)
@@ -178,6 +188,11 @@ namespace BridgeBidding
 		}
 
 
+		public static StaticConstraint HasShownSuit(Suit? suit = null, bool eitherPartner = false)
+		{
+			return new HasShownSuit(suit, eitherPartner);
+		}
+		
 		// ************************************  DYNAMIC CONSTRAINTS ***
 		public static DynamicConstraint PassIn4thSeat()
 		{
@@ -278,7 +293,7 @@ namespace BridgeBidding
 			return new ShowsLosers(false, suit, min, max);
 		}
 
-
+	
 		public static Constraint Better(Suit better, Suit worse) { return new ShowsBetterSuit(better, worse, worse, false); }
 
 		public static Constraint BetterOrEqual(Suit better, Suit worse) { return new ShowsBetterSuit(better, worse, better, false); }
@@ -286,7 +301,6 @@ namespace BridgeBidding
 		public static Constraint BetterThan(Suit worse) { return new ShowsBetterSuit(null, worse, worse, false); }
 
 		public static Constraint BetterOrEqualTo(Suit worse) { return new ShowsBetterSuit(null, worse, null, false); }
-
 
 		public static Constraint LongerThan(Suit shorter) { return new ShowsBetterSuit(null, shorter, shorter, true); }
 
@@ -299,6 +313,7 @@ namespace BridgeBidding
 		{
 			return new ShowsLongestSuit(suit);
 		}
+
 
 		public static Constraint DummyPoints(Suit trumpSuit, (int min, int max) range)
 		{
@@ -447,10 +462,6 @@ namespace BridgeBidding
 
 
 
-		public static Constraint HasShownSuit(Suit? suit = null, bool eitherPartner = false)
-		{
-			return new HasShownSuit(suit, eitherPartner);
-		}
 
 		public static Constraint ShowsSuit()
 		{
@@ -477,7 +488,7 @@ namespace BridgeBidding
 		// THE FOLLOWING CONSTRAINTS ARE GROUPS OF CONSTRAINTS
         public static Constraint RaisePartner(Suit? suit = null, int raise = 1, int fit = 8)
         {
-            return And(Fit(fit, suit), Jump(raise - 1), ShowsTrump(suit));
+            return And(Partner(HasShownSuit(suit)), Fit(fit, suit), Jump(raise - 1), ShowsTrump(suit));
         }
         public static Constraint RaisePartner(int level)
         {

@@ -1,0 +1,62 @@
+[Event "1C Pass 1D minimal"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - K53.T7.A8753.Q85 -"]
+[Auction "N"]
+1C Pass 1D
+
+[Event "1C Pass 1H skip 5-card diamonds minimal"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - 3.KT57.A8753.Q85 -"]
+[Auction "N"]
+1C Pass 1H
+
+[Event "1C Pass 1S skip 5-card diamonds minimal"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - KT57.3.A8753.Q85 -"]
+[Auction "N"]
+1C Pass 1S
+
+[Event "1C Pass 1D show 5-card diamonds 11+ points and 4 spades"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - KT57.3.A8753.KQ2 -"]
+[Auction "N"]
+1C Pass 1D
+
+
+
+[Event "1S Pass 1NT, 11 length points, 5 hearts"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - 4.KQJ64.A32.7643 -"]
+[Auction "N"]
+1S Pass 1NT
+
+
+[Event "1S Pass 2H, 12 HCP, 5 hearts"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - 4.AQJ64.A32.J643 -"]
+[Auction "N"]
+1S Pass 2H
+
+
+[Event "1S Pass 2S, 8 points, spade support"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - 754.AJ8.K32.7643 -"]
+[Auction "N"]
+1S Pass 2S
+
+
+[Event "1S Pass 3S, 11 points, 4-card spade support"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - A754.KQ.Q32.7643 -"]
+[Auction "N"]
+1S Pass 3S
+
+
