@@ -14,21 +14,17 @@ Pass Pass 2C Pass
 3H Pass 3NT Pass
 Pass Pass
 
-[Event "Trickster Cards: Forcing reverse"]
-[Date "2023.11.29"]
-[West "Vincent"]
-[North "Lisa"]
-[East "Rachel"]
-[South "Tester 0"]
+% LARRY: Should responder show 6 hearts or support clubs?
+[Event "Forcing reverse by opener."]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:Q43.J76432.5.AT3 A95.T9.KQT76.654 KJ6.K.A942.KQJ98 T872.AQ85.J83.72"]
 [Declarer "S"]
-[Contract "3C"]
+[Contract "2H"]
 [Auction "N"]
 Pass Pass 1C Pass
 1H Pass 2D Pass
-3C Pass Pass Pass
+2H Pass Pass Pass
 
 [Event "Trickster Cards: 1NT Transfer Slam Invite Refused"]
 [Date "2023.11.30"]

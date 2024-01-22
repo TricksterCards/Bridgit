@@ -4,9 +4,9 @@
     public class Michaels : Bidder
     {
  
-        public static BidRule[] InitiateConvention(PositionState ps)
+        public static CallFeature[] InitiateConvention(PositionState ps)
         {
-            return new BidRule[]
+            return new CallFeature[]
              {
                 // TODO: Response with interference???  Lots of work here...
                 // TODO: Need some minimum points...
@@ -27,19 +27,19 @@
              };
          }
 
-        private static BidRule[] RespondMajors(PositionState _)
+        private static CallFeature[] RespondMajors(PositionState _)
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
                 Signoff(Bid.TwoHearts, BetterThan(Suit.Spades), Points((0, 5))),
                 Signoff(Bid.TwoSpades, BetterOrEqualTo(Suit.Hearts), Points((0, 5))),
             };
         }
 
-        private static BidRule[] ResopondMajorMinor(Suit majorSuit)
+        private static CallFeature[] ResopondMajorMinor(Suit majorSuit)
         {
             // TODO: Do something here ...
-            return new BidRule[0];
+            return new CallFeature[0];
         }
     }
 }

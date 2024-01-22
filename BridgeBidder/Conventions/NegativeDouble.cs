@@ -7,19 +7,19 @@ namespace BridgeBidding
     public class NegativeDouble : Respond
     {
         
-        // IMPORTANT:  The caller needs to have set a default bid handler for the BidChoices object
+        // IMPORTANT:  The caller needs to have set a default bid handler for the PositionCalls object
         // before adding these rules.  Also, for the sequence 1m-1H-X this code will also define the
         // exclusive rule for bidding 1S.  This will be handled by the logic that does not add existing
         // bids, but it is something to be aware of...
 
         // This method should only be called when a responder bid over an opener
         // TODO: Is there a negative double for 1NT - I think only suits....
-        public static IEnumerable<BidRule> InitiateConvention(PositionState ps)
+        public static IEnumerable<CallFeature> InitiateConvention(PositionState ps)
         {
             // TODO: Need to implement doubles beyond 1 level.
 
             Debug.Assert(ps.BiddingState.Contract.IsOpponents(ps));
-            var bids = new List<BidRule>();
+            var bids = new List<CallFeature>();
             var contractBid = ps.BiddingState.Contract.Bid;
             if (contractBid != null && contractBid.Level == 1 && contractBid.Strain != Strain.NoTrump)
             {

@@ -8,12 +8,12 @@ namespace BridgeBidding
     public class Blackwood : Bidder
 	{
         private static (int, int) SlamOrBetter = (32, 100);
-		private static (int, int) SmallSlam = (32, 35);
+	//	private static (int, int) SmallSlam = (32, 35);
         private static (int, int) GrandSlam = (36, 100);
 
-        public static IEnumerable<BidRule> InitiateConvention(PositionState ps)
+        public static IEnumerable<CallFeature> InitiateConvention(PositionState ps)
 		{
-			var bids = new List<BidRule>();
+			var bids = new List<CallFeature>();
 			Strain? strain = ps.PairState.Agreements.AgreedStrain;
 			if (strain == null)
 			{
@@ -27,9 +27,9 @@ namespace BridgeBidding
 			}
 			return bids;
 		}
-		public static IEnumerable<BidRule> RespondAces(PositionState ps)
+		public static IEnumerable<CallFeature> RespondAces(PositionState ps)
 		{
-			return new BidRule[]
+			return new CallFeature[]
 			{
 				PartnerBids(PlaceContract),
 				Forcing(Bid.FiveClubs, ShowsNoSuit(), Aces(0, 4)),
@@ -39,11 +39,11 @@ namespace BridgeBidding
 			};
 		}
 		// TODO: There needs to be somewhere that we ask for kings...
-		public static IEnumerable<BidRule> PlaceContract(PositionState ps)
+		public static IEnumerable<CallFeature> PlaceContract(PositionState ps)
 		{
 			// If we are missing 2 or more aces return to trump suit if necessary (may just pass).
 			// Otherwise 
-			return new BidRule[]
+			return new CallFeature[]
 			{
 				PartnerBids(Bid.FiveNoTrump, RespondKings),
 				Forcing(Bid.FiveNoTrump, PairAces(4), PairPoints(GrandSlam)),
@@ -65,9 +65,9 @@ namespace BridgeBidding
             };
 		}
 
-		public static IEnumerable<BidRule> RespondKings(PositionState ps)
+		public static IEnumerable<CallFeature> RespondKings(PositionState ps)
 		{
-			return new BidRule[]
+			return new CallFeature[]
 			{
 				PartnerBids(TryGrandSlam),
 				Forcing(Bid.SixClubs, ShowsNoSuit(), Kings(0, 4)),
@@ -77,9 +77,9 @@ namespace BridgeBidding
 			};
 		}
 
-		public static IEnumerable<BidRule> TryGrandSlam(PositionState ps)
+		public static IEnumerable<CallFeature> TryGrandSlam(PositionState ps)
 		{
-			return new BidRule[]
+			return new CallFeature[]
 			{
 				Signoff(Bid.SevenClubs, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),
 				Signoff(Bid.SevenDiamonds, AgreedStrain(), PairPoints(GrandSlam), PairAces(4), PairKings(4)),

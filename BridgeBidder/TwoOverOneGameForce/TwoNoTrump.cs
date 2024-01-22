@@ -21,10 +21,10 @@ namespace BridgeBidding
 			// TODO: More 
 
 		}
-		public BidRule[] Bids(PositionState ps)
+		public CallFeature[] Bids(PositionState ps)
 		{
 
-			return new BidRule[]
+			return new CallFeature[]
 			{
                 // TODO: Systems on/off through here --- just like 1NT.....
                 PartnerBids(Bid.TwoNoTrump, Respond),
@@ -33,9 +33,9 @@ namespace BridgeBidding
 		}
 
 
-		private BidChoices Respond(PositionState ps)
+		private PositionCalls Respond(PositionState ps)
 		{
-			var choices = new BidChoices(ps);
+			var choices = new PositionCalls(ps);
 			choices.AddRules(new Stayman2NT(this).InitiateConvention);
 			choices.AddRules(new Transfer2NT(this).InitiateConvention);
 			choices.AddRules(new Natural2NT(this).Response);
@@ -52,9 +52,9 @@ namespace BridgeBidding
 			this.NTB = ntb;
 		}
 
-		public IEnumerable<BidRule> Response(PositionState ps)
+		public IEnumerable<CallFeature> Response(PositionState ps)
 		{
-			return new BidRule[]
+			return new CallFeature[]
 			{
 			     // TODO: Perhaps bid BestSuit() of all the signoff suits... 
                 Signoff(Bid.ThreeClubs, NTB.RespondNoGame, Shape(5, 11), LongestMajor(4)),

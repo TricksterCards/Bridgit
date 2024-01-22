@@ -7,9 +7,9 @@ namespace BridgeBidding
 {
     public class SolidSuit: TwoOverOneGameForce
     {
-        public static IEnumerable<BidRule> Bids(PositionState ps)
+        public static IEnumerable<CallFeature> Bids(PositionState ps)
         {
-            var bids = new List<BidRule>();
+            var bids = new List<CallFeature>();
             foreach (var suit in Card.Suits)
             {
                 bids.Add(Signoff(new Bid(7, suit), Shape(13)));

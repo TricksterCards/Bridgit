@@ -5,9 +5,10 @@ namespace BridgeBidding
 {
     public class OpenBid2: Open
 	{
-        public static IEnumerable<BidRule> ResponderChangedSuits(PositionState ps)
+        public static PositionCalls ResponderChangedSuits(PositionState ps)
 		{
-			var bids = new List<BidRule>()
+			var choices = new PositionCalls(ps);
+			choices.AddRules(new CallFeature[]
 			{
 				PartnerBids(RespondBid2.Rebid),
 
@@ -30,7 +31,7 @@ namespace BridgeBidding
 				Nonforcing(Bid.OneSpade, Shape(4, 6)),
 
 				// TODO: These need to be lower priority...
-				Nonforcing(Bid.TwoDiamonds, RaisePartner(), Points(Minimum)),
+				Nonforcing(Bid.TwoDiamonds,RaisePartner(), Points(Minimum)),
 				Nonforcing(Bid.ThreeDiamonds, RaisePartner(2), Points(Medium)),
 
 
@@ -80,43 +81,43 @@ namespace BridgeBidding
 				Nonforcing(Bid.OneNoTrump, Balanced(), Points(Rebid1NT)),
 				Nonforcing(Bid.TwoNoTrump, Balanced(), Points(Rebid2NT)),
 
-            };
-			bids.AddRange(Compete.CompBids(ps));
-			return bids;
+            });
+			choices.AddRules(Compete.CompBids(ps));
+			return choices;
 		}
 
-		public static IEnumerable<BidRule> OneNTOverMajorOpen(PositionState ps)
+		public static PositionCalls OneNTOverMajorOpen(PositionState ps)
 		{
 			return ResponderChangedSuits(ps);
 			// TODO: Do something more here
 		}
 
 
-		public static IEnumerable<BidRule> OneNTOverMinorOpen(PositionState ps)
+		public static PositionCalls OneNTOverMinorOpen(PositionState ps)
 		{
 			return ResponderChangedSuits(ps);
 		}
 
-		public static IEnumerable<BidRule> TwoNTOverMinorOpen(PositionState ps)
+		public static PositionCalls TwoNTOverMinorOpen(PositionState ps)
 		{
 			return ResponderChangedSuits(ps);
 		}
 
-		public static IEnumerable<BidRule> ThreeNTOverClubOpen(PositionState ps)
+		public static PositionCalls ThreeNTOverClubOpen(PositionState ps)
 		{
 			return ResponderChangedSuits(ps);
 		}
 
-		public static IEnumerable<BidRule> ResponderRaisedMinor(PositionState ps)
+		public static IEnumerable<CallFeature> ResponderRaisedMinor(PositionState ps)
 		{
 			// TODO: More to do here...
 			return Compete.CompBids(ps);
 		}
 
-		public static IEnumerable<BidRule> ResponderRaisedMajor(PositionState ps)
+		public static IEnumerable<CallFeature> ResponderRaisedMajor(PositionState ps)
 		{
 			// TODO: Help suit raises?
-			var bids = new List<BidRule>()
+			var bids = new List<CallFeature>()
 			{
 				// TODO: These are not reall game invitations...
 				PartnerBids(Bid.ThreeHearts, RespondBid2.OpenerInvitedGame),

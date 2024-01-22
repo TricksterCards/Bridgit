@@ -44,7 +44,7 @@ namespace BridgeBidding
 		
 			if (requireFullHand && hand.Count != 13)
 			{
-				throw new ArgumentException($"hand {handString} does not contains {hand.Count} cards.  Should have 13.");
+				throw new ArgumentException($"hand {handString} contains {hand.Count} cards.  Should have 13.");
 			}
 
 			return hand;

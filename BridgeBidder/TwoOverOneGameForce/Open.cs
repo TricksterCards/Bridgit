@@ -30,9 +30,9 @@ namespace BridgeBidding
 		public static (int, int) ThirdSeat4CardMajor = (8, 12);
 
 
-        public static new BidChoices GetBidChoices(PositionState ps)
+        public static new PositionCalls GetPositionCalls(PositionState ps)
         {
-            var choices = new BidChoices(ps);
+            var choices = new PositionCalls(ps);
 
 			choices.AddRules(SolidSuit.Bids);
             choices.AddRules(Strong2Clubs.Open);
@@ -46,9 +46,9 @@ namespace BridgeBidding
             return choices;
         }
 
-        public static IEnumerable<BidRule> OpenSuit(PositionState _)
+        public static IEnumerable<CallFeature> OpenSuit(PositionState _)
 		{
-			return new List<BidRule>
+			return new List<CallFeature>
 			{
                 PartnerBids(Bid.OneClub,    Respond.OneClub),
 				PartnerBids(Bid.OneDiamond, Respond.OneDiamond),
@@ -100,10 +100,10 @@ namespace BridgeBidding
 		}
 
 		// These rules should not be added in 4th seat - weak opens make no sense
-		public static IEnumerable<BidRule> OpenSuitWeak(PositionState ps)
+		public static IEnumerable<CallFeature> OpenSuitWeak(PositionState ps)
 		{
 			Debug.Assert(ps.Seat != 4);
-			return new BidRule[]
+			return new CallFeature[]
 			{
 				PartnerBids(Respond.WeakOpen),
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace BridgeBidding
 {
@@ -8,15 +9,21 @@ namespace BridgeBidding
 		public TransferBidder(NoTrumpDescription ntd) : base(ntd) { }
 
 
-		public static BidRulesFactory InitiateConvention(NoTrumpDescription ntd)
+		public static CallFeaturesFactory InitiateConvention(NoTrumpDescription ntd)
 		{
 			return new TransferBidder(ntd).Initiate;
 		}
 
-		private IEnumerable<BidRule> Initiate(PositionState _)
+		private IEnumerable<CallFeature> Initiate(PositionState _)
 		{
-			return new BidRule[] {
+			return new CallFeature[] {
+				Convention(UserText.JacobyTransfer),
+				Announce(Bid.TwoDiamonds, UserText.TransferToHearts),
+				Announce(Bid.TwoHearts, UserText.TransferToSpades),
+				Announce(Bid.TwoSpades, UserText.TransferToClubs),
+
 				PartnerBids(AcceptTransfer),
+
 				// For weak hands, transfer to longest major.
 				// For invitational hands, 5/5 transfer to hearts then bid spades
 				// For game-going hands 5/5 transfer to spades then bid 3H
@@ -35,22 +42,21 @@ namespace BridgeBidding
 			};
 		}
 
-		private BidChoices AcceptTransfer(PositionState ps)
+		private PositionCalls AcceptTransfer(PositionState ps)
 		{
 			if (ps.RHO.Bid != null) {
-				// TOOD: Better interferrence....
-				return ps.PairState.BiddingSystem.GetBidChoices(ps);	
+				return ps.PairState.BiddingSystem.GetPositionCalls(ps);	
 			}
-			var choices = new BidChoices(ps);
+			var choices = new PositionCalls(ps);
 			if (ps.RHO.Doubled) {
-				choices.AddRules(new BidRule[] {
+				choices.AddRules(new CallFeature[] {
 					PartnerBids(Call.Pass, OpenerShowsTwo),	// Explicit Pass rule here
 
 					Nonforcing(Call.Pass, Partner(LastBid(2, Suit.Diamonds)), Shape(Suit.Hearts, 0, 2)),
 					Nonforcing(Call.Pass, Partner(LastBid(2, Suit.Hearts)), Shape(Suit.Spades, 0, 2)),
 				});
 			}
-			choices.AddRules(new BidRule[] {
+			choices.AddRules(new CallFeature[] {
 				PartnerBids(ExplainTransfer),
 
 				Nonforcing(Bid.ThreeHearts, ShowsTrump(), Partner(LastBid(2, Suit.Diamonds)), NTD.OR.SuperAccept, Shape(4, 5)),
@@ -65,16 +71,32 @@ namespace BridgeBidding
 		}
 
 
-		private IEnumerable<BidRule> OpenerShowsTwo(PositionState ps)
+		// The opener passed after opponent's X showing only two of suit.
+		// Now we need to determine if we want to play in NT or play in
+		// our 7-card major.  Need ot have suit stopped.
+		private IEnumerable<CallFeature> OpenerShowsTwo(PositionState ps)
 		{
-			// TODO: Need to either bid our suit or NT if stopped...  Partner (opener) has passed transfer
-			// showing exactly two of the major being transferred to...
-			throw new NotImplementedException();
+			// TODO: Opps stopped needs to understand lead-directing X
+			// TODO: Point ranges are not reasonable. GameOrBetter does not
+			// take slam into account...
+			Debug.Assert(ps.RHO.Bid == null);
+			return new CallFeature[] {
+				PartnerBids(OpenerRebid),
+
+				Nonforcing(Bid.TwoNoTrump, NTD.RR.InviteGame, OppsStopped()),
+				Nonforcing(Bid.TwoHearts, LastBid(Bid.TwoDiamonds), NTD.RR.InviteGame),
+				Nonforcing(Bid.TwoSpades, LastBid(Bid.TwoHearts), NTD.RR.InviteGame),
+
+				Nonforcing(Bid.ThreeNoTrump, NTD.RR.GameOrBetter, OppsStopped()),
+				Nonforcing(Bid.FourHearts, LastBid(Bid.TwoDiamonds), NTD.RR.GameOrBetter),
+				Nonforcing(Bid.FourSpades, LastBid(Bid.TwoHearts), NTD.RR.GameOrBetter),
+			};
+			
 		}
 
-		private IEnumerable<BidRule> ExplainTransfer(PositionState _)
+		private IEnumerable<CallFeature> ExplainTransfer(PositionState _)
 		{
-			return new BidRule[] {
+			return new CallFeature[] {
 				PartnerBids(OpenerRebid),
 
 				// This can happen if we are 5/5 with invitational hand. Show Spades
@@ -112,9 +134,9 @@ namespace BridgeBidding
 		}
 
 
-		private IEnumerable<BidRule> OpenerRebid(PositionState _)
+		private IEnumerable<CallFeature> OpenerRebid(PositionState _)
 		{
-			return new BidRule[] {
+			return new CallFeature[] {
 				PartnerBids(Bid.ThreeHearts, PlaceGameContract, LastBid(Bid.TwoSpades)),
 				PartnerBids(Bid.ThreeSpades, PlaceGameContract, LastBid(Bid.TwoHearts)),
 
@@ -132,8 +154,8 @@ namespace BridgeBidding
 				
 				// TODO: Really want to work off of "Partner Shows" instead of PartnerBid...
                 Signoff(Bid.FourHearts, NTD.OR.AcceptInvite, Fit()),
-				//Signoff(Bid.FourHearts, Points(OpenerRange.AcceptInvite), LastBid(Bid.TwoHearts), Partner(LastBid(Bid.TwoNoTrump)), Shape(3, 5)),
-				//Signoff(Bid.FourHearts, LastBid(Bid.TwoHearts), Partner(LastBid(Bid.ThreeNoTrump)), Shape(3, 5)),
+				Signoff(Bid.FourHearts, NTD.OR.AcceptInvite, LastBid(Bid.TwoHearts), Partner(LastBid(Bid.TwoNoTrump)), Shape(3, 5)),
+				Signoff(Bid.FourHearts, LastBid(Bid.TwoHearts), Partner(LastBid(Bid.ThreeNoTrump)), Shape(3, 5)),
 				Signoff(Bid.FourHearts, LastBid(Bid.TwoSpades), Partner(LastBid(Bid.ThreeHearts)), Shape(3, 5), BetterOrEqual(Suit.Hearts, Suit.Spades)),
 
 
@@ -171,9 +193,9 @@ namespace BridgeBidding
 		}
 
 		// Only a change of suit by opener after invitation will get to this code.  Figure out where to play
-		private IEnumerable<BidRule> PlaceGameContract(PositionState _)
+		private IEnumerable<CallFeature> PlaceGameContract(PositionState _)
 		{
-			return new BidRule[] {
+			return new CallFeature[] {
 				// If partner has shown 5 hearts or 5 spades then this is game force contract so place
 				// it in NT or 4 of their suit.
 
@@ -193,9 +215,9 @@ namespace BridgeBidding
 			this.NTB = ntb;
 		}
 
-		public IEnumerable<BidRule> InitiateConvention(PositionState _)
+		public IEnumerable<CallFeature> InitiateConvention(PositionState _)
 		{
-			return new BidRule[] {
+			return new CallFeature[] {
 				PartnerBids(AcceptTransfer),
 				// TODO: Need to deal with 5/5 invite, etc.  For now just basic transfers work
 				Forcing(Bid.ThreeDiamonds, Shape(Suit.Hearts, 5, 11), Better(Suit.Hearts, Suit.Spades)),
@@ -204,10 +226,10 @@ namespace BridgeBidding
 
 			};
 		}
-		private IEnumerable<BidRule> AcceptTransfer(PositionState _)
+		private IEnumerable<CallFeature> AcceptTransfer(PositionState _)
 		{
 			// TODO: INTERFERRENCE.  DOUBLE...
-			return new BidRule[] {
+			return new CallFeature[] {
 				PartnerBids(ExplainTransfer),
 
 				Nonforcing(Bid.ThreeHearts, Partner(LastBid(Bid.ThreeDiamonds))),
@@ -215,9 +237,9 @@ namespace BridgeBidding
 			};
 		}
 
-		private IEnumerable<BidRule> ExplainTransfer(PositionState _)
+		private IEnumerable<CallFeature> ExplainTransfer(PositionState _)
 		{
-			return new BidRule[] {
+			return new CallFeature[] {
 				PartnerBids(PlaceContract),
 				Signoff(Bid.Pass, NTB.RespondNoGame),
 
@@ -230,9 +252,9 @@ namespace BridgeBidding
 			};
 		}
 
-		private static IEnumerable<BidRule> PlaceContract(PositionState _)
+		private static IEnumerable<CallFeature> PlaceContract(PositionState _)
 		{
-			return new BidRule[] {
+			return new CallFeature[] {
 				Signoff(Bid.FourHearts, Fit()),
 				Signoff(Bid.FourSpades, Fit()),
 				Signoff(Bid.Pass)
@@ -249,9 +271,9 @@ namespace BridgeBidding
 			this.NTB = ntb;
 		}
 
-		public IEnumerable<BidRule> InitiateConvention(PositionState ps)
+		public IEnumerable<CallFeature> InitiateConvention(PositionState ps)
 		{
-			return new BidRule[]
+			return new CallFeature[]
 			{
 				PartnerBids(Bid.FourDiamonds, p => AcceptTransfer(p, Strain.Hearts)),
 				PartnerBids(Bid.FourHearts, p => AcceptTransfer(p, Strain.Spades)),
@@ -261,9 +283,9 @@ namespace BridgeBidding
 			};
 		}
 
-		public IEnumerable<BidRule> AcceptTransfer(PositionState ps, Strain strain)
+		public IEnumerable<CallFeature> AcceptTransfer(PositionState ps, Strain strain)
 		{
-			return new BidRule[]
+			return new CallFeature[]
 			{
 				Nonforcing(new Bid(4, strain))
 			};

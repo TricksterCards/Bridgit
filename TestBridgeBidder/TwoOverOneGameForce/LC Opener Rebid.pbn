@@ -124,14 +124,14 @@ Pass Pass
 1C Pass 1S Pass
 4S Pass Pass Pass
 
-% NOTE: TODO: THIS AUCTION INVOLVES OPENER SPLINTER.  NOT IMPLEMENTED YET
+% NOTE: A BETTER AUCTION INVOLVES OPENER SPLINTER.  NOT IMPLEMENTED YET
 [Event "Opener Rebid O"]
 [Dealer "N"]
 [Vulnerable "None"]
 [Deal "N:AK65.KJ52.AKJ2.8 - - -"]
 [Auction "N"]
 1D Pass 1S Pass
-4C Pass Pass Pass
+4S Pass Pass Pass
 
 
 [Event "Opener Rebid P"]

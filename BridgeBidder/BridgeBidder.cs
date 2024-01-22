@@ -5,8 +5,6 @@ using System.Linq;
 
 namespace BridgeBidding
 {
-
-
     public enum Direction { North = 0, East = 1, South = 2, West = 3 }
 
 	public static class BridgeBidder
@@ -43,12 +41,11 @@ namespace BridgeBidding
 
 			var biddingState = new BiddingState(hands, dealer, vulPairs, twoOverOne, twoOverOne);
 			biddingState.ReplayAuction(bidHistory);
-			var bid = biddingState.SuggestBid();
+			var call = biddingState.SuggestCall();
 
+			//Debug.WriteLine(biddingState.NextToAct.RightHandOpponent.PublicHandSummary.ToString());
 
-			Debug.WriteLine(biddingState.NextToAct.RightHandOpponent.PublicHandSummary.ToString());
-
-			return bid.ToString();
+			return call.ToString();
 		}
 
 		public static string[] ExplainHistory(string deal, string auction, string nsSystem = "SAYC", string ewSystem = "SAYC")

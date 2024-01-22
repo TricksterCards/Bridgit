@@ -1,0 +1,10 @@
+[Event "Revert to opener's first suit after XX"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:8.87.AK8763.AJ62 AJ76.KQJ2.9.K975 QT4.A543.Q54.QT4 K9532.T96.JT2.83"]
+[Declarer "N"]
+[Contract "1NT"]
+[Auction "N"]
+1D X XX 1S
+2C Pass 2D Pass
+Pass Pass

@@ -4,9 +4,6 @@ namespace BridgeBidding
 {
     internal class Compete : Bidder
     {
-
-
-
         private static (int, int) CompeteTo2 = (20, 22);
         private static (int, int) CompeteTo3 = (23, 25);
         private static (int, int) CompeteTo2NT = (20, 24);
@@ -20,12 +17,12 @@ namespace BridgeBidding
         // throug a static function.  These are all duplicated.  Can be appended to the end of another list.  
         // right now used by ResponderRebid.  
 
-        public static IEnumerable<BidRule> CompBids(PositionState ps)
+        public static IEnumerable<CallFeature> CompBids(PositionState ps)
         {
-            var bids = new List<BidRule>();
+            var bids = new List<CallFeature>();
             bids.AddRange(Blackwood.InitiateConvention(ps));
             bids.AddRange(Gerber.InitiateConvention(ps));
-            bids.AddRange(new BidRule[]
+            bids.AddRange(new CallFeature[]
             {
 
              //   Nonforcing(Call.Pass, 0),    // TOD   aO: What points?  This is the last gasp attempt here...
@@ -50,24 +47,19 @@ namespace BridgeBidding
                 Signoff(Bid.TwoNoTrump, OppsContract(), OppsStopped(), PairPoints(CompeteTo2NT)),
 
 
-                Nonforcing(Bid.FourClubs, Fit(), PairPoints(CompeteTo4), ShowsTrump()),
+                Nonforcing(Bid.FourClubs, Not(Gerber.Applies), Fit(), PairPoints(CompeteTo4), ShowsTrump()),
                 Nonforcing(Bid.FourDiamonds, Fit(), PairPoints(CompeteTo4), ShowsTrump()),
 
                 Nonforcing(Bid.FiveClubs, Fit(), PairPoints(CompeteTo5), ShowsTrump()),
                 Nonforcing(Bid.FiveDiamonds, Fit(), PairPoints(CompeteTo5), ShowsTrump()),
 
                 // TODO: Penalty doubles for game contracts.
-                Signoff(Call.Double, OppsContract(), PairPoints((12, 40)), RuleOf9()),
+                //Signoff(Call.Double, OppsContract(), PairPoints((12, 40)), RuleOf9()),
 
-                // TODO: Priority for these???
-                Nonforcing(Bid.SixClubs, Shape(12)),
-                Nonforcing(Bid.SixDiamonds, Shape(12)),
-                Nonforcing(Bid.SixHearts, Shape(12)),
-                Nonforcing(Bid.SixSpades, Shape(12)),
 
             });
             bids.AddRange(ForcedBid.Bids(ps));
-            bids.AddRange(new BidRule[] { Nonforcing(Call.Pass)});
+            bids.Add(Nonforcing(Call.Pass));
             return bids;
         }
 

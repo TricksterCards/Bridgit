@@ -150,11 +150,11 @@ namespace BridgeBidding
             NTD = ntd;
         }  
 
-        public IEnumerable<BidRule> Bids(PositionState ps)
+        public IEnumerable<CallFeature> Bids(PositionState ps)
         {
             if (ps.Role == PositionRole.Opener && ps.RoleRound == 1)
             {
-                return new BidRule[]
+                return new CallFeature[]
                 {
                     PartnerBids(Bid.OneNoTrump, ConventionalResponses),
                     Nonforcing(Bid.OneNoTrump, NTD.OR.Open, Balanced())
@@ -164,7 +164,7 @@ namespace BridgeBidding
             {
 				if (ps.BiddingState.Contract.PassEndsAuction && NTD.OpenType == "Balancing1NT")
 				{
-                    return new BidRule[]
+                    return new CallFeature[]
                     {
                         PartnerBids(Bid.OneNoTrump, ConventionalResponses),
                         // TODO: Perhaps more rules here for balancing but for now this is fine -- Balanced() is not necessary
@@ -173,28 +173,28 @@ namespace BridgeBidding
 				}
                 else if (NTD.OpenType == "Overcall1NT")
                 {
-                    return new BidRule[]
+                    return new CallFeature[]
                     {
                         PartnerBids(Bid.OneNoTrump, ConventionalResponses),
                         Nonforcing(Bid.OneNoTrump, NTD.OR.Open, Balanced(), OppsStopped(), Not(PassEndsAuction()))
                     };
                 }
 			}
-            return new BidRule[0];
+            return new CallFeature[0];
 		}
 
 
 
-        private BidChoices ConventionalResponses(PositionState ps)
+        private PositionCalls ConventionalResponses(PositionState ps)
         {
 
             if (ps.RHO.Bid is Bid rhoBid && !rhoBid.Equals(Bid.TwoClubs))
             {
                 // TODO: Handle interfererence better than this...
-                return ps.PairState.BiddingSystem.GetBidChoices(ps);
+                return ps.PairState.BiddingSystem.GetPositionCalls(ps);
             }
             // TODO: Interferrence?  Probably do something globally here...
-            var choices = new BidChoices(ps);
+            var choices = new PositionCalls(ps);
             choices.AddRules(StaymanBidder.InitiateConvention(NTD));
             choices.AddRules(TransferBidder.InitiateConvention(NTD));
             choices.AddRules(Gerber.InitiateConvention);
@@ -209,9 +209,9 @@ namespace BridgeBidding
     public class NoTrump : Bidder
     {
 
-        public static IEnumerable<BidRule> Open(PositionState ps)
+        public static IEnumerable<CallFeature> Open(PositionState ps)
         {
-            var bids = new List<BidRule>();
+            var bids = new List<CallFeature>();
 
             bids.AddRange(OneNoTrumpBidder.Open.Bids(ps));
             bids.AddRange(TwoNoTrump.Open.Bids(ps));
@@ -220,12 +220,12 @@ namespace BridgeBidding
         }
 
 
-        public static IEnumerable<BidRule> StrongOvercall(PositionState ps)
+        public static IEnumerable<CallFeature> StrongOvercall(PositionState ps)
         {          
             return OneNoTrumpBidder.Overcall.Bids(ps);
         }
 
-        public static IEnumerable<BidRule> BalancingOvercall(PositionState ps)
+        public static IEnumerable<CallFeature> BalancingOvercall(PositionState ps)
         {
             return OneNoTrumpBidder.Balancing.Bids(ps);
         }
@@ -241,16 +241,16 @@ namespace BridgeBidding
         {
         }
 
-        public static IEnumerable<BidRule> Respond(NoTrumpDescription ntd)
+        public static IEnumerable<CallFeature> Respond(NoTrumpDescription ntd)
         {
             return new Natural1NT(ntd).NaturalResponse();
         }
 
 
 
-        private IEnumerable<BidRule> NaturalResponse()
+        private IEnumerable<CallFeature> NaturalResponse()
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
                 PartnerBids(OpenerRebid),
                 PartnerBids(Bid.FourNoTrump, Compete.CompBids), // TODO: Handle slam invite better???  Maybe this is ok?
@@ -277,9 +277,9 @@ namespace BridgeBidding
             };
         }
 
-        private IEnumerable<BidRule> OpenerRebid(PositionState _)
+        private IEnumerable<CallFeature> OpenerRebid(PositionState _)
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
                 PartnerBids(ResponderRebid),
 
@@ -301,9 +301,9 @@ namespace BridgeBidding
                 Nonforcing(Bid.FourSpades, Partner(LastBid(Bid.ThreeSpades)), Shape(3, 5))
             };
         }
-        private IEnumerable<BidRule> ResponderRebid(PositionState _)
+        private IEnumerable<CallFeature> ResponderRebid(PositionState _)
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
                 // TODO: Ideally this would be "Parther(ShowsShape(Hearts, 5)" Better than lastbid...
                 Signoff(Bid.ThreeNoTrump, Partner(LastBid(Bid.ThreeHearts)), Shape(Suit.Hearts, 0, 2)),

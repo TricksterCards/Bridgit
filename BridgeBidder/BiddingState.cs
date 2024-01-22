@@ -5,88 +5,24 @@ using System.Diagnostics;
 
 namespace BridgeBidding
 {
-    // TODO: Line this up with trickser conventions, but re-declare for now for flexibility...
-    public static class Convention
-    {
-        public static string Stayman = "Stayman";
-        public static string Transfer = "Transfer";
-        public static string Strong2Clubs = "Strong2Clubs";
-        public static string UnusualNT = "UnusualNT";
-        public static string Michaels = "Michaels";
-        public static string TakeoutDouble = "TakeoutDouble";
-    }
-
-
 	public class BiddingState
     {
-
-        //   public Dictionary<Convention, Bidder> Conventions { get; protected set; }
-
-
-   //    private RedirectGroupXXX _baseBiddingXXX = new RedirectGroupXXX();
-  
         public Dictionary<Direction, PositionState> Positions { get; }
 
-
-        public PositionState Dealer { get; private set; }
+        public PositionState Dealer { get; }
 
         public PositionState NextToAct { get; private set; }
 
-        public Dictionary<string, Call> Conventions { get; private set; }
-
-        public Contract Contract { get; private set; }
+        public Contract Contract { get; }
 
         public Bid OpeningBid { get; private set; }
 
         public PositionState Opener { get; private set; }
 
-/*
-        public static bool IsVulnerable(string vul, Direction direction)
-        {
-            switch (vul)
-            {
-                case "None":
-                case "Love":
-                case "-":
-                    return false;
-                case "All":
-                case "Both":
-                    return true;
-                case "NS":
-                    return (direction == Direction.North || direction == Direction.South);
-                case "EW":
-                    return (direction == Direction.East || direction == Direction.West);
-                default:
-                    // TODO: Throw???
-                    Debug.Assert(false);    // Should never get here...
-                    return false;
-            }
-
-        }
-        */
-
-        /*
-        private static Dictionary<string, string> HACK_Conventions = new Dictionary<string, string>()
-        {
-            { "Stayman1NTOpen", "X" },
-            { "Transfer1NTOpen", "X" },
-            { "Stayman1NTOvercall", "X" },
-            { "Transfer1NTOvercall", null },
-            { "Stayman1NTBalancing", null },
-            { "Transfer1NTBalancing", null },
-            { "Stayman2NTOpen", "X" },
-            { "Transfer2NTOpen", "X" },
-            { "Stayman3NTOpen", "X" },
-            { "Transfer3NTOpen", "X" },
-            { "MichaelsCuebid", "1♠" }, // TODO: Only 1 level opening bids?
-            { "UnusualNT", "1♠" }       // TODO: Same question here...  Only 1 of a suit?
-        };
-        */
 
         public BiddingState(Dictionary<Direction, Hand> hands, Direction dealer, HashSet<Pair> vulPairs, IBiddingSystem nsSystem, IBiddingSystem ewSystem)
         {
             this.Positions = new Dictionary<Direction, PositionState>();
-            this.Conventions = new Dictionary<string, Call>();
             this.Contract = new Contract();
             Debug.Assert(hands.Count == 4);
             var d = dealer;
@@ -100,35 +36,6 @@ namespace BridgeBidding
             }
             this.Dealer = Positions[dealer];
             this.NextToAct = Dealer;
-
-
-            /*
-            // Hack for now.  TODO: Fill in this dictionary properly...
-            Conventions["Stayman1NTOpen"] = Call.Double;
-            Conventions["Transfer1NTOpen"] = Call.Double;
-            Conventions["4WayTransfer1NTOpen"] = null;
-            Conventions["Stayman2NTOpen"] = Call.Double;
-            Conventions["Transfer2NTOpen"] = Call.Double;
-            Conventions["Stayman1NTOvercall"] = Call.Double;
-            Conventions["Transfer1NTOvercall"] = null;
-            Conventions["Stayman1NTBalancing"] = Call.Double;
-            Conventions["Transfer1NTBalancing"] = null;
-            
-            foreach (var convention in HACK_Conventions)
-            {
-                if (convention.Value == null)
-                {
-                    // TODO: Is this appropriate?  Seems a bit of a hack.  
-                    this.Conventions[convention.Key] = new Bid(Call.NotActed);
-                }
-                else
-                {
-                    // TODO: What to do on failure?
-                    this.Conventions[convention.Key] = Call.FromString(convention.Value);
-                }
-                    
-            }
-            */
         }
 
         public void ReplayAuction(Call[] history)
@@ -136,11 +43,11 @@ namespace BridgeBidding
             foreach (var call in history)
             {
                 Contract.ValidateCall(call, NextToAct);
-                MakeCall(call, GetBidsForNextToAct());
+                MakeCall(call, NextToAct.GetPositionCalls());
             }
         }
 
-        public Call SuggestBid()
+        public Call SuggestCall()
         {
             if (!NextToAct.HasHand)
             {
@@ -150,23 +57,20 @@ namespace BridgeBidding
             {
                 throw new AuctionException(Call.Pass, NextToAct, Contract, "Auction is final.  No more bids can be made");
             }
-            var choices = GetBidsForNextToAct();
-            var chosenCall = choices.BestCall != null ? choices.BestCall : null;
-            if (chosenCall == null)
+            var choices = NextToAct.GetPositionCalls();
+            if (choices.BestCall == null)
             {
                 throw new Exception("No BestCall for auction.");
             }
-            MakeCall(chosenCall, choices);
-            return chosenCall;
+            MakeCall(choices.BestCall, choices);
+            return choices.BestCall;
         }
 
 
-        private void MakeCall(Call call, BidChoices choices)
+        private void MakeCall(Call call, PositionCalls choices)
         {
             Debug.Assert(Contract.IsValid(call, NextToAct));
-            //  Now get the rule set from the choices...
-            var ruleSet = choices.GetBidRuleSet(call);
-            NextToAct.MakeCall(ruleSet);
+            NextToAct.MakeCall(choices.GetCallDetails(call));
             if (this.OpeningBid == null && call is Bid bid)
             {
                 this.OpeningBid = bid;
@@ -175,16 +79,11 @@ namespace BridgeBidding
             NextToAct = NextToAct.LeftHandOpponent;
         }
 
-
-        internal BidChoices GetBidsForNextToAct()
-        {
-            return NextToAct.GetBidChoices();
-		}
-
-
+        // TODO: Really think through all of the issues with Hand State vs Agreements
+        // and when each should be updated....
         internal void UpdateStateFromFirstBid()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 50; i++)
             {
                 var position = Dealer;
                 var bidIndex = 0;
@@ -198,7 +97,7 @@ namespace BridgeBidding
                 }
                 if (!someStateChanged) { return; }
             }
-            Debug.Assert(false);    // In infinite loop of updating but getting nowhere...
+            throw new Exception("Unable to resolve to a stable state.  Giving up");   
         }
     }
 }

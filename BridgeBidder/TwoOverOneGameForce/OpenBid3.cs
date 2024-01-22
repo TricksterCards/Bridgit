@@ -6,9 +6,9 @@ namespace BridgeBidding
     public class OpenBid3: Open
 	{
 
-		public static IEnumerable<BidRule> ThirdBid(PositionState ps)
+		public static IEnumerable<CallFeature> ThirdBid(PositionState ps)
 		{
-			var bids = new List<BidRule>()
+			var bids = new List<CallFeature>()
 			{
 				// Lowest priority if nothing else fits is bid NT
 				Nonforcing(Bid.OneNoTrump, Balanced(), Points(Rebid1NT)),

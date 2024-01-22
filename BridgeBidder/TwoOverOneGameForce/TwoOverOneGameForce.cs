@@ -4,19 +4,19 @@
     public class TwoOverOneGameForce : Bidder, IBiddingSystem
     {
 
-        public BidChoices GetBidChoices(PositionState ps)
+        public PositionCalls GetPositionCalls(PositionState ps)
         {
             if (ps.Role == PositionRole.Opener && ps.RoleRound == 1)
             {
-                return Open.GetBidChoices(ps);
+                return Open.GetPositionCalls(ps);
             }
             else if (ps.Role == PositionRole.Overcaller && ps.RoleRound == 1)
             {
-                return Overcall.GetBidChoices(ps);
+                return Overcall.GetPositionCalls(ps);
             }
             else
             {
-                return new BidChoices(ps, Compete.CompBids);
+                return new PositionCalls(ps, Compete.CompBids);
             }
         }
 

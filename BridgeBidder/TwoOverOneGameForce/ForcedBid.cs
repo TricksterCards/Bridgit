@@ -7,12 +7,12 @@ namespace BridgeBidding
     public class ForcedBid: Bidder
 	{
 		// TODO: Where should we check position state to see if the forced bids are necessary?  Here?  
-		public static IEnumerable<BidRule> Bids(PositionState ps)
+		public static IEnumerable<CallFeature> Bids(PositionState ps)
 		{
-			var bids = new List<BidRule>();
+			var bids = new List<CallFeature>();
 			if (ps.ForcedToBid)
 			{
-				bids.AddRange(new BidRule[] {
+				bids.AddRange(new CallFeature[] {
 					Nonforcing(Bid.TwoClubs, Fit(7)),
 					Nonforcing(Bid.TwoDiamonds, Fit(7)),
 					Nonforcing(Bid.TwoHearts, Fit(7)),

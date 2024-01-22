@@ -18,10 +18,10 @@ namespace BridgeBidding
 
 
 
-        public static IEnumerable<BidRule> Open(PositionState _)
+        public static IEnumerable<CallFeature> Open(PositionState _)
 
         {
-            return new BidRule[] {
+            return new CallFeature[] {
                 PartnerBids(Bid.TwoClubs, Respond),
 
                 // TODO: Other reasons for 2-club opening...
@@ -30,11 +30,11 @@ namespace BridgeBidding
     
         }
 
-        private static BidChoices Respond(PositionState ps)
+        private static PositionCalls Respond(PositionState ps)
         {
-            var choices = new BidChoices(ps);
+            var choices = new PositionCalls(ps);
             if (ps.RHO.Passed) {
-                choices.AddRules(new BidRule[] {
+                choices.AddRules(new CallFeature[] {
                     PartnerBids(OpenerRebidPositiveResponse),
                     PartnerBids(Bid.TwoDiamonds, OpenerRebidWaiting), 
 
@@ -60,13 +60,13 @@ namespace BridgeBidding
             return choices;
         }
 
-        private static IEnumerable<BidRule> OpenerRebidWaiting(PositionState ps)
+        private static IEnumerable<CallFeature> OpenerRebidWaiting(PositionState ps)
         {
             
-            var bids = new List<BidRule>();
+            var bids = new List<CallFeature>();
             bids.AddRange(TwoNoTrump.After2COpen.Bids(ps));
             bids.AddRange(ThreeNoTrump.After2COpen.Bids(ps));
-            bids.AddRange(new BidRule[]
+            bids.AddRange(new CallFeature[]
             {
                 PartnerBids(Responder2ndBid),
 
@@ -79,11 +79,11 @@ namespace BridgeBidding
             // TODO: Next state, more bids, et.....
         }
 
-        private static IEnumerable<BidRule> OpenerRebidPositiveResponse(PositionState ps)
+        private static IEnumerable<CallFeature> OpenerRebidPositiveResponse(PositionState ps)
         {
-            var bids = new List<BidRule>();
+            var bids = new List<CallFeature>();
             bids.AddRange(Blackwood.InitiateConvention(ps));
-            bids.AddRange(new BidRule[]
+            bids.AddRange(new CallFeature[]
             {
                 // Highest priority is to support responder's suit...
                 PartnerBids(Responder2ndBid),
@@ -107,11 +107,11 @@ namespace BridgeBidding
             return bids;
         }
 
-        private static BidChoices Responder2ndBid(PositionState ps)
+        private static PositionCalls Responder2ndBid(PositionState ps)
         {
-            var choices = new BidChoices(ps);
+            var choices = new PositionCalls(ps);
             choices.AddRules(Blackwood.InitiateConvention);
-            choices.AddRules(new BidRule[]
+            choices.AddRules(new CallFeature[]
             {
                 PartnerBids(OpenerPlaceContract),
                 Forcing(Bid.ThreeHearts, Fit(), ShowsTrump()),
@@ -136,12 +136,12 @@ namespace BridgeBidding
             return choices;
         }
 
-        private static IEnumerable<BidRule> OpenerPlaceContract(PositionState ps)
+        private static IEnumerable<CallFeature> OpenerPlaceContract(PositionState ps)
         {
-            var bids = new List<BidRule>();
+            var bids = new List<CallFeature>();
             bids.AddRange(Blackwood.InitiateConvention(ps));
             // TODO: Perhaps gerber too???  Not sure...
-            bids.AddRange( new BidRule[] 
+            bids.AddRange( new CallFeature[] 
             {
 				Signoff(Bid.FourHearts, Fit(), ShowsTrump()),  // TODO: Limit points...???
 				Signoff(Bid.FourSpades, Fit(), ShowsTrump()),
@@ -152,12 +152,12 @@ namespace BridgeBidding
 			});
             return bids;
         }
-		private static IEnumerable<BidRule> PartnerIsBust(PositionState ps)
+		private static IEnumerable<CallFeature> PartnerIsBust(PositionState ps)
 		{
-			var bids = new List<BidRule>();
+			var bids = new List<CallFeature>();
 			bids.AddRange(Blackwood.InitiateConvention(ps));
 			// TODO: Perhaps gerber too???  Not sure...
-			bids.AddRange(new BidRule[]
+			bids.AddRange(new CallFeature[]
 			{
 				Signoff(Bid.FourHearts, LastBid(Bid.TwoHearts), Points(GameInHand)),
 				Signoff(Bid.FourSpades, LastBid(Bid.TwoSpades), Points(GameInHand)),

@@ -9,6 +9,7 @@ namespace TestBridgeBidder
     {
         public const string Sides = "NESW";
 
+
         public static PBNTest[] ImportTests(string text)
         {
             var tests = new List<PBNTest>();

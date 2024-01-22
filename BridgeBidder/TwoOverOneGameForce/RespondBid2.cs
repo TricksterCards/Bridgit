@@ -11,9 +11,9 @@ namespace BridgeBidding
     public class RespondBid2 : Respond
     {
 
-        public static IEnumerable<BidRule> Rebid(PositionState ps)
+        public static IEnumerable<CallFeature> Rebid(PositionState ps)
         {
-            var bids = new List<BidRule>
+            var bids = new List<CallFeature>
             {
                 PartnerBids(OpenBid3.ThirdBid),
 
@@ -43,7 +43,7 @@ namespace BridgeBidding
                 Signoff(Bid.TwoHearts, Fit(), ForcedToBid(), Points(MinimumHand)),
                 Signoff(Bid.TwoSpades, Fit(), ForcedToBid(), Points(MinimumHand)),
 
-                Signoff(Bid.ThreeClubs, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
+                Signoff(Bid.ThreeClubs, Break(false, "3C Forced"), Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
                 Signoff(Bid.ThreeDiamonds, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
                 Signoff(Bid.ThreeHearts, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
                 Signoff(Bid.ThreeSpades, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand))
@@ -54,9 +54,9 @@ namespace BridgeBidding
             return bids;
         }
 
-        public static IEnumerable<BidRule> OpenerInvitedGame(PositionState ps)
+        public static IEnumerable<CallFeature> OpenerInvitedGame(PositionState ps)
         {
-            var bids = new List<BidRule>()
+            var bids = new List<CallFeature>()
             {
                 Signoff(Bid.FourHearts, Fit(), PairPoints(PairGame)),
                 Signoff(Bid.FourSpades, Fit(), PairPoints(PairGame))

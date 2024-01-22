@@ -9,14 +9,14 @@ namespace BridgeBidding
  
         public StaymanBidder(NoTrumpDescription ntd) : base(ntd) { }
 
-        public static BidRulesFactory InitiateConvention(NoTrumpDescription ntd)
+        public static CallFeaturesFactory InitiateConvention(NoTrumpDescription ntd)
         {
             return new StaymanBidder(ntd).Initiate;
         }
 
-		private IEnumerable<BidRule> Initiate(PositionState ps)
+		private IEnumerable<CallFeature> Initiate(PositionState ps)
 		{
-
+            // TODO: REALLY THINK ABOUT WHO IS RESPONSIBLE FOR SYSTEMS "ON" OVER INTERFERRENCE!!!
             // If there is a bid then it can only be 2C..
             Call call = Bid.TwoClubs;
             if (ps.RHO.Bid is Bid rhoBid)
@@ -31,8 +31,10 @@ namespace BridgeBidding
                     throw new System.Exception("INVALID STATE HERE...");
                 }
             }
-            return new BidRule[] {
+            return new CallFeature[] {
+                Convention(UserText.Stayman),
                 PartnerBids(call, Answer),
+
                 Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), Flat(false), ShowsSuit(Suit.Hearts)),
                 Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Spades, 4), Shape(Suit.Hearts, 0, 4), Flat(false), ShowsSuit(Suit.Spades)),
                 Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5), ShowsSuits(Suit.Hearts, Suit.Spades)),
@@ -44,10 +46,10 @@ namespace BridgeBidding
 		}
 
        
-        public IEnumerable<BidRule> Answer(PositionState ps)
+        public IEnumerable<CallFeature> Answer(PositionState ps)
 		{
-            return new BidRule[] {
-
+            return new CallFeature[] {
+                // TODO: Should we tag this with convention too???
                 PartnerBids(Bid.TwoDiamonds, RespondTo2D),
 				PartnerBids(Bid.TwoHearts,   p => RespondTo2M(p, Suit.Hearts)),
 				PartnerBids(Bid.TwoSpades,   p => RespondTo2M(p, Suit.Spades)),
@@ -62,9 +64,9 @@ namespace BridgeBidding
         }
 
 
-        public IEnumerable<BidRule> RespondTo2D(PositionState ps)
+        public IEnumerable<CallFeature> RespondTo2D(PositionState ps)
         {
-            var bids = new List<BidRule>
+            var bids = new List<CallFeature>
             {
                 // TODO: Points 0-7 defined as garbage range...
                 Signoff(Call.Pass, NTD.RR.LessThanInvite),
@@ -93,9 +95,9 @@ namespace BridgeBidding
             return bids;
         }
 
-        public IEnumerable<BidRule> RespondTo2M(PositionState _, Suit major)
+        public IEnumerable<CallFeature> RespondTo2M(PositionState _, Suit major)
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
 
                 Signoff(Call.Pass, NTD.RR.LessThanInvite),
@@ -112,9 +114,9 @@ namespace BridgeBidding
 			};
 		}
         /*
-        public IEnumerable<BidRule> Explain(PositionState _)
+        public IEnumerable<CallFeature> Explain(PositionState _)
         {
-            return new BidRule[] {
+            return new CallFeature[] {
                 DefaultPartnerBids(Bid.Double, PlaceContract), 
 
                 // TODO: Points 0-7 defined as garbage range...
@@ -156,27 +158,27 @@ namespace BridgeBidding
         //******************** 2nd bid of opener.
 
         // Bid sequence was 1NT/2C/2X/
-        public IEnumerable<BidRule> CheckOpenerSpadeGame(PositionState ps)
+        public IEnumerable<CallFeature> CheckOpenerSpadeGame(PositionState ps)
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
                 Signoff(Bid.FourSpades, Fit(), ShowsTrump()),
                 Signoff(Call.Pass)
             };
         }
 
-        public IEnumerable<BidRule> GameNewMajor(PositionState ps, Suit major)
+        public IEnumerable<CallFeature> GameNewMajor(PositionState ps, Suit major)
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
                 Signoff(new Bid(4, major), Fit(), ShowsTrump()),
                 Signoff(Bid.ThreeNoTrump)
             };
         }
 
-        public IEnumerable<BidRule> PlaceConractNewMajor(PositionState ps, Suit major)
+        public IEnumerable<CallFeature> PlaceConractNewMajor(PositionState ps, Suit major)
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
                 Signoff(Call.Pass, NTD.OR.DontAcceptInvite, Fit(major)),    // TODO: Need to use dummy points here...
                 Signoff(Bid.TwoNoTrump, NTD.OR.DontAcceptInvite),
@@ -185,9 +187,9 @@ namespace BridgeBidding
             };
         }
 
-        public IEnumerable<BidRule> PlaceContract2NTInvite(PositionState ps)
+        public IEnumerable<CallFeature> PlaceContract2NTInvite(PositionState ps)
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
 				PartnerBids(Bid.ThreeSpades, CheckSpadeGame),
                 // This is possible to know we have a fit if partner bid stayman, we respond hearts,
@@ -203,9 +205,9 @@ namespace BridgeBidding
 
         }
 
-        public IEnumerable<BidRule> PlaceContractMajorInvite(PositionState ps, Suit major)
+        public IEnumerable<CallFeature> PlaceContractMajorInvite(PositionState ps, Suit major)
         {
-			return new BidRule[]
+			return new CallFeature[]
             {
 				Signoff(new Bid(4, major), NTD.OR.AcceptInvite, Fit(), ShowsTrump()),
                 Signoff(Call.Pass, NTD.OR.DontAcceptInvite)
@@ -213,9 +215,9 @@ namespace BridgeBidding
 
 		}
 		/*
-        public IEnumerable<BidRule> PlaceContract(PositionState _)
+        public IEnumerable<CallFeature> PlaceContract(PositionState _)
         {
-            return new BidRule[] {
+            return new CallFeature[] {
 				// These rules deal with a 5/4 invitational that we want to reject.  Leave contract in bid suit
 				// if we have 3.  Otherwise put in NT
 				Signoff(Bid.Pass, NTD.OR.DontAcceptInvite,  // TODO: Should check for dummy points...
@@ -250,9 +252,9 @@ namespace BridgeBidding
             };
         }
         */
-		public IEnumerable<BidRule> CheckSpadeGame(PositionState _)
+		public IEnumerable<CallFeature> CheckSpadeGame(PositionState _)
         {
-            return new BidRule[] {
+            return new CallFeature[] {
                 Signoff(Bid.FourSpades, ShowsTrump(), NTD.RR.GameAsDummy, Shape(4, 5)),
                 Signoff(Call.Pass)
             };
@@ -272,13 +274,14 @@ namespace BridgeBidding
             this.NTB = ntb;
         }
 
-        public IEnumerable<BidRule> InitiateConvention(PositionState ps) 
+        public IEnumerable<CallFeature> InitiateConvention(PositionState ps) 
         {
             // If there is a bid then it can only be 3C..
             Bid bidStayman = Bid.ThreeClubs;
 
+            // TODO: This is no longer possible unless convert this to PositionCalls...
             Call call = ps.RightHandOpponent.GetBidHistory(0).Equals(bidStayman) ? Bid.Double : bidStayman;
-            return new BidRule[] {
+            return new CallFeature[] {
                 PartnerBids(call, Answer),
                 Forcing(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Flat(false)),
                 Forcing(call, NTB.RespondGame, Shape(Suit.Spades, 4), Flat(false)),
@@ -288,9 +291,9 @@ namespace BridgeBidding
                 //Forcing(Bid.TwoClubs, Points(NTLessThanInvite), Shape(Suit.Diamonds, 4, 5), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)),
             };
         }
-        public IEnumerable<BidRule> Answer(PositionState _)
+        public IEnumerable<CallFeature> Answer(PositionState _)
         {
-            return new BidRule[] {
+            return new CallFeature[] {
                 PartnerBids(ResponderRebid),
 
                 Forcing(Bid.ThreeDiamonds, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
@@ -301,24 +304,25 @@ namespace BridgeBidding
             };
         }
 
-        public static IEnumerable<BidRule> ResponderRebid(PositionState _)
+        public static IEnumerable<CallFeature> ResponderRebid(PositionState _)
         {
-            return new BidRule[] {
+            return new CallFeature[] {
                 PartnerBids(Bid.ThreeHearts, OpenerRebid),
                 PartnerBids(Bid.ThreeSpades, OpenerRebid),
 
                 Forcing(Bid.ThreeHearts, Shape(5), Partner(LastBid(Bid.ThreeDiamonds))),
                 Forcing(Bid.ThreeSpades, Shape(5), Partner(LastBid(Bid.ThreeDiamonds))),
 
-                Signoff(Bid.ThreeNoTrump, Fit(Suit.Hearts, false), Fit(Suit.Spades, false)),
                 Signoff(Bid.FourHearts, Fit()),
-                Signoff(Bid.FourSpades, Fit())
+                Signoff(Bid.FourSpades, Fit()),
+                
+                Signoff(Bid.ThreeNoTrump),
             };
         }
     
-        public static IEnumerable<BidRule> OpenerRebid(PositionState _)
+        public static IEnumerable<CallFeature> OpenerRebid(PositionState _)
         { 
-            return new BidRule[] {
+            return new CallFeature[] {
                 Signoff(Bid.ThreeNoTrump, Fit(Suit.Hearts, false), Fit(Suit.Spades, false)),
                 Signoff(Bid.FourHearts, Fit()),
                 Signoff(Bid.FourSpades, Fit()),

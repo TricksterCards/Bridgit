@@ -6,24 +6,24 @@ namespace BridgeBidding
     public class Overcall: TwoOverOneGameForce
     {
 
-        public static new BidChoices GetBidChoices(PositionState ps)
+        public static new PositionCalls GetPositionCalls(PositionState ps)
         {
 
-            var choices = new BidChoices(ps);
+            var choices = new PositionCalls(ps);
             choices.AddRules(SuitOvercall);
             choices.AddRules(NoTrump.StrongOvercall);
             choices.AddRules(TakeoutDouble.InitiateConvention);
             choices.AddRules(NoTrump.BalancingOvercall);
 
             // TODO: Perhaps do this for open also -- Pass as separate and final rule group...
-            choices.AddRules(new BidRule[] { Nonforcing(Call.Pass, Points(LessThanOvercall)) });
+            choices.AddRules(new CallFeature[] { Nonforcing(Call.Pass, Points(LessThanOvercall)) });
 
             return choices;
         }
 
-		public static IEnumerable<BidRule> SuitOvercall(PositionState _)
+		public static IEnumerable<CallFeature> SuitOvercall(PositionState _)
         {
-            return new BidRule[] {
+            return new CallFeature[] {
                 // TODO: What is the level of interference we can take
                 PartnerBids(Advance.FirstBid), 
 
@@ -37,22 +37,20 @@ namespace BridgeBidding
 				Nonforcing(Bid.ThreeHearts, Jump(1, 2), CueBid(false), Points(OvercallWeak3Level), Shape(7), DecentSuit()),
 				Nonforcing(Bid.ThreeSpades, Jump(1, 2), CueBid(false), Points(OvercallWeak3Level), Shape(7), DecentSuit()),
 
-				Nonforcing(Bid.OneDiamond, Points(Overcall1Level), Shape(6, 11)),
-				Nonforcing(Bid.OneHeart, Points(Overcall1Level), Shape(6, 11)),
-				Nonforcing(Bid.OneSpade, Points(Overcall1Level), Shape(6, 11)),
+				Nonforcing(Bid.OneDiamond, Points(Overcall1Level), Shape(6, 10)),
+				Nonforcing(Bid.OneHeart, Points(Overcall1Level), Shape(6, 10)),
+				Nonforcing(Bid.OneSpade, Points(Overcall1Level), Shape(6, 10)),
 
                 // TODO: May want to consider more rules for 1-level overcall.  If you have 10 points an a crummy suit for example...
-                Nonforcing(Bid.OneDiamond, Points(Overcall1Level), Shape(5), GoodSuit()),
-                Nonforcing(Bid.OneHeart, Points(Overcall1Level), Shape(5), GoodSuit()),
-                Nonforcing(Bid.OneSpade, Points(Overcall1Level), Shape(5), GoodSuit()),
+                Nonforcing(Bid.OneDiamond, Points(Overcall1Level), Shape(5), DecentSuit()),
+                Nonforcing(Bid.OneHeart, Points(Overcall1Level), Shape(5), DecentSuit()),
+                Nonforcing(Bid.OneSpade, Points(Overcall1Level), Shape(5), DecentSuit()),
 
 
                 Nonforcing(Bid.TwoClubs, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
                 Nonforcing(Bid.TwoDiamonds, Jump(0), CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
                 Nonforcing(Bid.TwoHearts, Jump(0), CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
                 Nonforcing(Bid.TwoSpades, Jump(0), CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
-
-
             };
           
         }
@@ -62,9 +60,9 @@ namespace BridgeBidding
 
         private static (int, int) SupportAdvancer = (12, 17);
 
-        public static IEnumerable<BidRule> Rebid(PositionState _)
+        public static IEnumerable<CallFeature> Rebid(PositionState _)
         {
-            return new BidRule[] {
+            return new CallFeature[] {
                 PartnerBids(Advance.Rebid),
 
                 Nonforcing(Bid.TwoHearts, Rebid(false), Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump()),

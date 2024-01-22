@@ -4,60 +4,21 @@ using System.Diagnostics;
 
 namespace BridgeBidding
 {
-    public enum BidForce { Nonforcing, Invitational, Forcing1Round, ForcingToGame, Signoff }
+	// TODO: Think through "force" vs intent.  
+    public enum BidForce { Unknown, Nonforcing, Invitational, Forcing1Round, ForcingToGame, Signoff }
 
 
-    public class BidRule
+    public class BidRule : CallFeature
 	{
-
-        public Call Call { get; }
 
 		public BidForce Force { get; }
 
 
-		private List<Constraint> _constraints = new List<Constraint>();
-		public BidRule(Call call, BidForce force, params Constraint[] constraints)
+		public BidRule(Call call, BidForce force, params Constraint[] constraints) :
+		 	base(call, constraints)
 		{
-			this.Call = call;
 			this.Force = force;
-			foreach (Constraint constraint in constraints)
-			{
-				AddConstraint(constraint);
-			}
 		}
-
-
-		public void AddConstraint(Constraint constraint)
-		{
-			if (constraint is ConstraintGroup group)
-			{
-				foreach (Constraint child in group.ChildConstraints)
-				{
-					AddConstraint(child);
-				}
-			}
-			else
-			{
-				this._constraints.Add(constraint);
-			}
-		}
-
-		public bool SatisifiesStaticConstraints(PositionState ps)
-		{
-			foreach (Constraint constraint in _constraints)
-			{
-				if (constraint is StaticConstraint staticConstraint &&
-					!staticConstraint.Conforms(Call, ps))
-				{
-					return false;
-				}
-			}
-			return true;
-
-
-		}
-
-
 
         public bool SatisifiesDynamicConstraints(PositionState ps, HandSummary hs)
         {
@@ -71,25 +32,6 @@ namespace BridgeBidding
             }
             return true;
         }
-
-		/*
-        public bool Conforms(bool onceAndDoneOnly, PositionState ps, HandSummary hs)
-		{
-			foreach (Constraint constraint in _constraints)
-			{
-				if (onceAndDoneOnly)
-				{
-					Debug.Assert(hs == null);	// Once and done rules can not rely on hand summary
-					if (constraint.OnceAndDone && !constraint.Conforms(Bid, ps, hs)) { return false; }
-				}
-				else
-				{ 
-					if (!constraint.OnceAndDone && !constraint.Conforms(Bid, ps, hs)) { return false; }
-				}
-			}
-			return true;
-		}
-		*/
 
 		public (HandSummary, PairAgreements) ShowState(PositionState ps)
 		{
@@ -112,32 +54,4 @@ namespace BridgeBidding
 			return (showHand.HandSummary, showAgreements.PairAgreements);
 		}
 	}
-
-
-	public class PartnerBidRule : BidRule
-	{
-		public BidChoicesFactory PartnerBids{ get; private set; }
-
-        public PartnerBidRule(Call call, BidChoicesFactory partnerBids, params StaticConstraint[] constraints) :
-			base(call, BidForce.Nonforcing, constraints)
-        {
-			Debug.Assert(partnerBids != null);
-            this.PartnerBids = partnerBids;
-        }
-    }
-
-	public class BidAnnotation : BidRule
-	{
-		public enum AnnotationType { Alert, Announce }
-		public string Text { get; }
-
-		public AnnotationType Type { get; }
-		public BidAnnotation(Call call, AnnotationType type, string text, params StaticConstraint[] constraints) :
-			base(call, BidForce.Nonforcing, constraints)
-		{
-			this.Type = type;
-			this.Text = text;
-		}
-	}
-
 }

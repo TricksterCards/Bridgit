@@ -7,24 +7,25 @@ namespace BridgeBidding
 	{
 		// TODO: These values are wrong.  31 points seems too low....
 		private static (int, int) SlamOrBetter = (31, 100);
-		private static (int, int) SmallSlam = (31, 35);
+	//	private static (int, int) SmallSlam = (31, 35);
 		private static (int, int) GrandSlam = (36, 100);
 
-		public static IEnumerable<BidRule> InitiateConvention(PositionState ps)
+		public static StaticConstraint Applies = new StaticConstraint((call, ps) => 
+				ps.Partner.Bid is Bid partnerBid &&
+				partnerBid.Strain == Strain.NoTrump && partnerBid.Level < 3);
+
+
+		public static IEnumerable<CallFeature> InitiateConvention(PositionState ps)
 		{
-			var bids = new List<BidRule>();
-			// TODO: This is kind of a hack.  But for now just look for any 1 or 2 level NT bid.
-			if (ps.Partner.LastCall is Call partnerCall && partnerCall is Bid partnerBid &&
-				partnerBid.Strain == Strain.NoTrump && (partnerBid.Level <= 3))
+			return new CallFeature[]
 			{
-				bids.Add(PartnerBids(Bid.FourClubs, RespondAces));
-				bids.Add(Forcing(Bid.FourClubs, PairPoints(SlamOrBetter)));
-			}
-			return bids;
+				PartnerBids(Bid.FourClubs, RespondAces, Gerber.Applies),
+				Forcing(Bid.FourClubs, Gerber.Applies, PairPoints(SlamOrBetter))
+			};
 		}
-		public static IEnumerable<BidRule> RespondAces(PositionState ps)
+		public static IEnumerable<CallFeature> RespondAces(PositionState ps)
 		{
-			return new BidRule[]
+			return new CallFeature[]
 			{
 				PartnerBids(PlaceContract),
 				
@@ -35,10 +36,10 @@ namespace BridgeBidding
 			};
 		}
 		// TODO: There needs to be somewhere that we ask for kings...
-		public static IEnumerable<BidRule> PlaceContract(PositionState ps)
+		public static IEnumerable<CallFeature> PlaceContract(PositionState ps)
 		{
 			// TODO: Need to ask about kings..... 
-			return new BidRule[]
+			return new CallFeature[]
 			{
 				Signoff(Bid.SevenNoTrump, PairPoints(GrandSlam), PairAces(4)),
 				Signoff(Bid.SixNoTrump, PairAces(3, 4)),

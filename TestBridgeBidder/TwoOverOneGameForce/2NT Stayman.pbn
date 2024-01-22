@@ -9,3 +9,15 @@
 Pass Pass 2NT Pass
 3C Pass 3H Pass
 4H Pass Pass Pass
+
+
+[Event "Stayman over 2NT - no fit.  Play in 3NT"]
+[Dealer "N"]
+[Vulnerable "NS"]
+[Deal "N:JT32.Q87.QT62.42 985.A95.J985.J85 K6.K42.AK7.AKT97 AQ74.JT63.43.Q63"]
+[Declarer "S"]
+[Contract "3D"]
+[Auction "N"]
+Pass Pass 2NT Pass
+3C Pass 3D Pass
+3NT Pass Pass Pass

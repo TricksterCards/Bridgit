@@ -16,12 +16,12 @@ namespace BridgeBidding
         public static (int, int) AdvanceCuebid = (11, 40);
 
 
-        public static IEnumerable<BidRule> FirstBid(PositionState ps)
+        public static IEnumerable<CallFeature> FirstBid(PositionState ps)
         {
             if (ps.Partner.LastCall is Bid partnerBid &&
                 partnerBid.Suit is Suit partnerSuit)
             {
-                var bids = new List<BidRule>
+                var bids = new List<CallFeature>
                 {
                     // TODO: What is the level of interference we can take
                     PartnerBids(Overcall.Rebid),
@@ -59,7 +59,7 @@ namespace BridgeBidding
 
 
 
-                    // TODO: Make a special BidRule here to handle rebid after cuebid...
+                    // TODO: Make a special CallFeature here to handle rebid after cuebid...
                     Forcing(Bid.TwoClubs, CueBid(), Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrump(partnerSuit)),
                     Forcing(Bid.TwoDiamonds, CueBid(), Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrump(partnerSuit)),
                     Forcing(Bid.TwoHearts, CueBid(), Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrump(partnerSuit)),
@@ -93,13 +93,13 @@ namespace BridgeBidding
             // TODO: Throw?  What?  Perhaps a new exception that just reverts
             // to competition if bidders fail but stop in debug mode...
             Debug.Fail("Partner.LastCall is not a bid.  How in the world did we get here?");
-            return new BidRule[0];
+            return new CallFeature[0];
         }
 
 
-        public static IEnumerable<BidRule> Rebid(PositionState _)
+        public static IEnumerable<CallFeature> Rebid(PositionState _)
         {
-            return new BidRule[] { 
+            return new CallFeature[] { 
                 // TODO: ONly bid these if they are necessary.  Minors don't need to go the 4-level unless forced there...
                 Signoff(Bid.FourClubs, Fit(), PairPoints((26, 28)), ShowsTrump()),
                 Signoff(Bid.FourDiamonds, Fit(), PairPoints((26, 28)), ShowsTrump()),

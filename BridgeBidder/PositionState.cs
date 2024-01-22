@@ -23,7 +23,7 @@ namespace BridgeBidding
 
 		public bool HasHand => _privateHandSummary != null;
 
-		private List<BidRuleSet> _bids;
+		private List<CallDetails> _bids;
 
 		public PairState PairState { get; private set; }
 
@@ -34,6 +34,8 @@ namespace BridgeBidding
 		public HandSummary PublicHandSummary { get; private set; }
 
 		public bool Passed => _bids.Count == 0 || _bids.Last().Call.Equals(Call.Pass);
+
+		public bool IsPassedHand => _bids.Count > 0 && _bids.First().Call.Equals(Call.Pass);
 
 		public bool Doubled => _bids.Count > 0 && _bids.Last().Call.Equals(Call.Double);
 
@@ -99,7 +101,7 @@ namespace BridgeBidding
 			this.Role = PositionRole.Opener;    // Best start for any position.  Will change with time.
 			this.PublicHandSummary = new HandSummary();
 			this.PairState = pairState;
-			this._bids = new List<BidRuleSet>();
+			this._bids = new List<CallDetails>();
 
 			if (hand != null)
 			{
@@ -140,17 +142,17 @@ namespace BridgeBidding
 		
 		}
 		
-		public BidChoices GetBidChoices()
+		public PositionCalls GetPositionCalls()
 		{ 
-			BidChoicesFactory bidFactory = Partner._bids.Count > 0 ? Partner._bids.Last().GetBidsFactory() : null;
+			PositionCallsFactory bidFactory = Partner._bids.Count > 0 ? Partner._bids.Last().GetBidsFactory() : null;
 			if (bidFactory != null) return bidFactory(this);
-			return PairState.BiddingSystem.GetBidChoices(this);
+			return PairState.BiddingSystem.GetPositionCalls(this);
 		}
 	
 
 
 		// THIS IS AN INTERNAL FUNCITON:
-		public void MakeCall(BidRuleSet bidGroup)
+		public void MakeCall(CallDetails bidGroup)
 		{
 			BiddingState.Contract.ValidateCall(bidGroup.Call, this);
             if (!bidGroup.Call.Equals(Call.Pass) && !this._roleAssigned)
@@ -202,7 +204,7 @@ namespace BridgeBidding
 			return true;
 		}
 
-		internal bool RepeatUpdatesUntilStable(BidRuleSet bidGroup)
+		internal bool RepeatUpdatesUntilStable(CallDetails bidGroup)
 		{
 			bool stateChanged = false;
 			for (int i = 0; i < 1000; i++)
@@ -268,35 +270,6 @@ namespace BridgeBidding
 			return BiddingState.NextToAct == this && BiddingState.Contract.IsValid(call, this);
 		}
 
-        // TODO: Just a start of taking a group of rules and returning a subest
-        // TODO: NEED TO ADD -PRIORITY BIDS FOR FALL-BACK. THESE SHOULD BE IGNORED IN THE FIRST ROUND
-		/*
-        public BidRuleSet ChooseBid(Dictionary<Bid, BidRuleSet> rules)
-		{
-			Debug.Assert(_privateHandSummary != null);
-			BidRuleSet choice = null;
-			var priority = int.MinValue;
-			foreach (var ruleGroup in rules.Values)
-			{
-				if ((choice == null || ruleGroup.Priority > priority) &&
-					ruleGroup.Conforms(this, _privateHandSummary))
-				{
-					choice = ruleGroup;
-					priority = ruleGroup.Priority;
-				}
-			}
-
-			if (choice == null)
-			{
-				// UGLY TODO: CLEAN THIS UP!!!
-				//Debug.WriteLine("***Generating bogus pass***");
-                var pass = new BidRule(new Bid(Call.Pass, BidForce.Nonforcing), 0, new Constraint[0]); 
-				choice = new BidRuleSet(pass.Bid, Convention.Natural, null);
-				choice.Add(pass);
-			}
-            return choice;
-		}
-		*/
-
+ 
 	}
 }

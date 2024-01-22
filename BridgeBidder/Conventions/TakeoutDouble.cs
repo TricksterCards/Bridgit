@@ -13,9 +13,9 @@ namespace BridgeBidding
 
 
 
-        public static IEnumerable<BidRule> InitiateConvention(PositionState ps)
+        public static IEnumerable<CallFeature> InitiateConvention(PositionState ps)
         {
-            var bids = new List<BidRule>();
+            var bids = new List<CallFeature>();
             if (ps.IsOpponentsContract && ps.BiddingState.OpeningBid.Strain != Strain.NoTrump)
             {
                 var contractBid = ps.BiddingState.Contract.Bid;
@@ -28,9 +28,9 @@ namespace BridgeBidding
         }
 
 
-        private static IEnumerable<BidRule> Takeout(PositionState ps, int Level)
+        private static IEnumerable<CallFeature> Takeout(PositionState ps, int Level)
         {
-            var bids = new List<BidRule>
+            var bids = new List<CallFeature>
             {
                 PartnerBids(Call.Double, Respond),
                 Forcing(Bid.Double, Points(StrongTakeout))
@@ -69,10 +69,10 @@ namespace BridgeBidding
         public static (int, int) GameLevel = (12, 40);
         public static (int, int) Game3NT = (13, 40);
 
-        private static BidChoices Respond(PositionState ps)
+        private static PositionCalls Respond(PositionState ps)
         {
-            var choices = new BidChoices(ps);
-            choices.AddRules(new BidRule[]
+            var choices = new PositionCalls(ps);
+            choices.AddRules(new CallFeature[]
             {
                 PartnerBids(DoublerRebid),
 
@@ -115,9 +115,9 @@ namespace BridgeBidding
 
 
 
-        private static IEnumerable<BidRule> DoublerRebid(PositionState ps)
+        private static IEnumerable<CallFeature> DoublerRebid(PositionState ps)
         {
-            return new BidRule[]
+            return new CallFeature[]
             {
      
                 PartnerBids(AdvancerRebid),
@@ -158,7 +158,7 @@ namespace BridgeBidding
             };
         }
 
-        private static IEnumerable<BidRule> AdvancerRebid(PositionState ps)
+        private static IEnumerable<CallFeature> AdvancerRebid(PositionState ps)
         {
             return Compete.CompBids(ps);
         }
@@ -167,7 +167,7 @@ namespace BridgeBidding
         private static PrescribedBids RespondWithInterference()
         {
             var pb = new PrescribedBids();
-            pb.BidRules.Add(Signoff(Bid.Pass, new Constraint[0]));   // TODO: Do something here
+            pb.CallFeatures.Add(Signoff(Bid.Pass, new Constraint[0]));   // TODO: Do something here
             return pb;
         }
         */

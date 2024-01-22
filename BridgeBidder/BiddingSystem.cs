@@ -3,7 +3,7 @@
     public interface IBiddingSystem
     {
 
-        BidChoices GetBidChoices(PositionState positionState);  
+        PositionCalls GetPositionCalls(PositionState positionState);  
     }
 
 }
