@@ -1,0 +1,64 @@
+[Event "3rd seat open solid 4-card spade suit"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - KQJT.3.876.AT762 -"]
+[Auction "N"]
+Pass Pass 1S
+
+[Event "2nd seat don't open same solid 4-card spade suit"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- KQJT.3.876.AT762 - -"]
+[Auction "N"]
+Pass Pass 
+
+[Event "4th seat don't open same solid 4-card spade suit"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - - KQJT.3.876.AT762"]
+[Auction "N"]
+Pass Pass Pass Pass
+
+[Event "3rd seat open solid 4-card heart suit"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - 3.KQJT.876.AT762 -"]
+[Auction "N"]
+Pass Pass 1H
+
+[Event "3rd seat open 10 points unbalanced. Not vul."]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - 3.Q842.K87.AT762 -"]
+[Auction "N"]
+Pass Pass 1C
+
+
+[Event "3rd seat dont open 10 points unbalanced when vulnerable."]
+[Dealer "N"]
+[Vulnerable "NS"]
+[Deal "N:- - 3.Q842.K87.AT762 -"]
+[Auction "N"]
+Pass Pass Pass
+
+[Event "3rd seat open 11 points balanced, not vul."]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - J32.Q842.KJ7.AT7 -"]
+[Auction "N"]
+Pass Pass 1C
+
+[Event "3rd seat don't open 11 points balanced when vulnerable."]
+[Dealer "N"]
+[Vulnerable "NS"]
+[Deal "N:- - J32.Q842.KJ7.AT7 -"]
+[Auction "N"]
+Pass Pass Pass
+
+[Event "3rd seat open 1H with better heart suit, 11 points balanced, not vul."]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - J32.QJT2.K67.AT7 -"]
+[Auction "N"]
+Pass Pass 1H
+

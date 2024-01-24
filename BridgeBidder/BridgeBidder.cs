@@ -48,6 +48,28 @@ namespace BridgeBidding
 			return call.ToString();
 		}
 
+		// Kind of a hack for now - use for console app...
+		public static string FullAuction(string deal, string vulnerable)
+		{
+			Direction dealer;
+			var hands = ParseDeal(deal, out dealer);
+			var vulPairs = ParseVulnerable(vulnerable);
+		    IBiddingSystem twoOverOne = new TwoOverOneGameForce();
+
+			var output = $"[Deal \"{deal}\"]\n[Vulnerable \"{vulnerable}\"]\n[Auction \"{deal.Substring(0,1)}\"]\n";
+			var biddingState = new BiddingState(hands, dealer, vulPairs, twoOverOne, twoOverOne);
+			var n = 0;
+			while (!biddingState.Contract.AuctionComplete)
+			{
+				var call = biddingState.SuggestCall();
+				output += call.ToString() + " ";
+				n += 1;
+				if (n % 4 == 0) output += "\n";
+			}
+			if (n % 4 != 0) output += "\n";
+			output += $"[Contract \"{biddingState.Contract}\"]\n";
+			return output;
+		}
 		public static string[] ExplainHistory(string deal, string auction, string nsSystem = "SAYC", string ewSystem = "SAYC")
 		{
 			throw new NotImplementedException();

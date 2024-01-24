@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace BridgeBidding
 {
@@ -26,7 +27,6 @@ namespace BridgeBidding
             if (call is Bid bid) { return bid.Strain; }
             return null;
         }
-
     }
 
     public class StaticConstraint: Constraint

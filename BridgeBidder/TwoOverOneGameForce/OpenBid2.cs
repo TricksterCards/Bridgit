@@ -15,12 +15,12 @@ namespace BridgeBidding
 
 				// Responder bid a major suits and we have a fit.  Support at appropriate level.
 				// RaisePartner() requires a known 8+ card fit.  If the selected, the rule shows trump
-				Nonforcing(Bid.TwoHearts,   RaisePartner(1), DummyPoints(Minimum)),
-				Nonforcing(Bid.TwoSpades,   RaisePartner(1), DummyPoints(Minimum)),
-				Nonforcing(Bid.ThreeHearts, RaisePartner(2), DummyPoints(Medium)),
-				Nonforcing(Bid.ThreeSpades, RaisePartner(2), DummyPoints(Medium)),
-                Nonforcing(Bid.FourHearts,  RaisePartner(3), DummyPoints(Maximum)),
-				Nonforcing(Bid.FourSpades,  RaisePartner(3), DummyPoints(Maximum)),
+				Nonforcing(Bid.TwoHearts,   RaisePartner(1), DummyMinimum),
+				Nonforcing(Bid.TwoSpades,   RaisePartner(1), DummyMinimum),
+				Nonforcing(Bid.ThreeHearts, RaisePartner(2), DummyMedium),
+				Nonforcing(Bid.ThreeSpades, RaisePartner(2), DummyMedium),
+                Nonforcing(Bid.FourHearts,  RaisePartner(3), DummyMaximum),
+				Nonforcing(Bid.FourSpades,  RaisePartner(3), DummyMaximum),
 
 				// TODO: There is the possibility that slam will push us beyond
 				// "maximum" - need to handle in Blackwood...
@@ -31,18 +31,18 @@ namespace BridgeBidding
 				Nonforcing(Bid.OneSpade, Shape(4, 6)),
 
 				// TODO: These need to be lower priority...
-				Nonforcing(Bid.TwoDiamonds,RaisePartner(), Points(Minimum)),
-				Nonforcing(Bid.ThreeDiamonds, RaisePartner(2), Points(Medium)),
+				Nonforcing(Bid.TwoDiamonds,RaisePartner(), Minimum),
+				Nonforcing(Bid.ThreeDiamonds, RaisePartner(2), Medium),
 
 
 				// With a big hand we need to make a forcing bid.  Reverse if possible.
-				Forcing(Bid.TwoDiamonds, Reverse(), Points(MediumOrBetter)),
-				Forcing(Bid.TwoHearts, Reverse(), Points(MediumOrBetter)),
-				Forcing(Bid.TwoSpades, Reverse(), Points(MediumOrBetter)),
+				Forcing(Bid.TwoDiamonds, Reverse(), MediumOrBetter),
+				Forcing(Bid.TwoHearts, Reverse(), MediumOrBetter),
+				Forcing(Bid.TwoSpades, Reverse(), MediumOrBetter),
 
-		//		Forcing(3, Strain.Diamonds, Jump(0), Reverse(), Points(Maximum)),
-		//		Forcing(3, Strain.Hearts, Jump(0), Reverse(), Points(Maximum)),
-		//		Forcing(3, Strain.Spades, Jump(0), Reverse(), Points(Maximum)),
+		//		Forcing(3, Strain.Diamonds, Jump(0), Reverse(), Maximum),
+		//		Forcing(3, Strain.Hearts, Jump(0), Reverse(), Maximum),
+		//		Forcing(3, Strain.Spades, Jump(0), Reverse(), Maximum),
 
 				// TODO: What about minors.  This is bad. Think we want to fall through to 3NT...
                 //Nonforcing(4, Strain.Clubs, DefaultPriority + 10, Fit(), ShowsTrump(), Points(MediumOpener)),
@@ -53,22 +53,22 @@ namespace BridgeBidding
 				// Show a new suit at an appropriate level...
 	//			Nonforcing(Bid.TwoClubs, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
     //            Nonforcing(Bid.TwoClubs, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
-                Nonforcing(Bid.TwoHearts, Not(Rebid()), Not(IsReverse()), Balanced(false), Points(Minimum), Shape(4, 6)),
-                Nonforcing(Bid.TwoClubs, Not(Rebid()), Balanced(false), Points(Minimum), Shape(4, 6)),
-                Nonforcing(Bid.TwoDiamonds, Not(Rebid()), Not(IsReverse()), Balanced(false), Points(Minimum), Shape(4, 6)),
+                Nonforcing(Bid.TwoHearts, Not(Rebid()), Not(IsReverse()), Balanced(false), Minimum, Shape(4, 6)),
+                Nonforcing(Bid.TwoClubs, Not(Rebid()), Balanced(false), Minimum, Shape(4, 6)),
+                Nonforcing(Bid.TwoDiamonds, Not(Rebid()), Not(IsReverse()), Balanced(false), Minimum, Shape(4, 6)),
         
 
 
 				// Rebid a 6 card suit
-				Nonforcing(Bid.TwoClubs,      Rebid(), Shape(6, 11), Points(Minimum)),
-				Nonforcing(Bid.TwoDiamonds,   Rebid(), Shape(6, 11), Points(Minimum)),
-				Nonforcing(Bid.TwoHearts,     Rebid(), Shape(6, 11), Points(Minimum)),
-				Nonforcing(Bid.TwoSpades,     Rebid(), Shape(6, 11), Points(Minimum)),
+				Nonforcing(Bid.TwoClubs,      Rebid(), Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoDiamonds,   Rebid(), Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoHearts,     Rebid(), Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoSpades,     Rebid(), Shape(6, 11), Minimum),
 
-				Nonforcing(Bid.ThreeClubs,    Rebid(), Shape(6, 11), Points(Medium)),
-				Nonforcing(Bid.ThreeDiamonds, Rebid(), Shape(6, 11), Points(Medium)),
-				Nonforcing(Bid.ThreeHearts,   Rebid(), Shape(6, 11), Points(Medium)),
-				Nonforcing(Bid.ThreeSpades,   Rebid(), Shape(6, 11), Points(Medium)),
+				Nonforcing(Bid.ThreeClubs,    Rebid(), Shape(6, 11), Medium),
+				Nonforcing(Bid.ThreeDiamonds, Rebid(), Shape(6, 11), Medium),
+				Nonforcing(Bid.ThreeHearts,   Rebid(), Shape(6, 11), Medium),
+				Nonforcing(Bid.ThreeSpades,   Rebid(), Shape(6, 11), Medium),
 
 				// TODO: Need jump shifts here....
 

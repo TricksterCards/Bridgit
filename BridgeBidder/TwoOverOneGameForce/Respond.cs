@@ -62,40 +62,70 @@ namespace BridgeBidding
             return bids;
         }
 
-        // Responses to 1 Club open.  No interference
+        // Responses to 1 Club open.
 
         public static PositionCalls OneClub(PositionState ps)
         {
             if (!ps.RHO.Passed)
                 return OppsInterferred(ps, Suit.Clubs);
-            // TODO: Passed hand different bids...
+
             var choices = new PositionCalls(ps);
-            choices.AddRules(SolidSuit.Bids);
-            choices.AddRules(new CallFeature[]
+            if (ps.IsPassedHand)
             {
-				PartnerBids(OpenBid2.ResponderChangedSuits),
-				PartnerBids(Bid.TwoClubs,   OpenBid2.ResponderRaisedMinor),
-				PartnerBids(Bid.ThreeClubs, OpenBid2.ResponderRaisedMinor),
-				PartnerBids(Bid.FourClubs,  OpenBid2.ResponderRaisedMinor),
-                PartnerBids(Bid.FiveClubs,  OpenBid2.ResponderRaisedMinor),
+                choices.AddRules(new CallFeature[]
+                {
+                    PartnerBids(OpenBid2.ResponderChangedSuits),
+                    PartnerBids(Bid.TwoClubs,   OpenBid2.ResponderRaisedMinor),
+                    PartnerBids(Bid.ThreeClubs, OpenBid2.ResponderRaisedMinor),
+                    PartnerBids(Bid.FourClubs,  OpenBid2.ResponderRaisedMinor),
+                    PartnerBids(Bid.FiveClubs,  OpenBid2.ResponderRaisedMinor),
 
-				Forcing(Bid.OneDiamond, Points(Respond1Level), Shape(5, 10), LongestMajor(3)),
+                
+                    Nonforcing(Bid.OneDiamond, Points(Respond1Level), Shape(5, 10), LongestMajor(3)),
 
-                Forcing(Bid.OneHeart, Points(Respond1Level), Shape(4), Shape(Suit.Spades, 0, 4)),
-                Forcing(Bid.OneHeart, Points(Respond1Level), Shape(5, 10), LongerThan(Suit.Spades)),
+                    Nonforcing(Bid.OneHeart, Points(Respond1Level), Shape(4), Shape(Suit.Spades, 0, 4)),
+                    Nonforcing(Bid.OneHeart, Points(Respond1Level), Shape(5, 10), LongerThan(Suit.Spades)),
 
-                Forcing(Bid.OneSpade, Points(Respond1Level), Shape(4, 10), LongerOrEqualTo(Suit.Hearts)),
+                    Nonforcing(Bid.OneSpade, Points(Respond1Level), Shape(4, 10), LongerOrEqualTo(Suit.Hearts)),
 
-                // TODO: Inverted minors...
-                Invitational(Bid.TwoClubs, ShowsTrump(), Points(Raise1), Shape(5), LongestMajor(3)),
-				Invitational(Bid.ThreeClubs, ShowsTrump(), Points(LimitRaise), Shape(5), LongestMajor(3)),                
-                Signoff(Bid.FiveClubs, ShowsTrump(), Points(Weak5Level), Shape(7, 10)),
-                Signoff(Bid.FourClubs, ShowsTrump(), Points(Weak4Level), Shape(6)),
-            });
+                    // TODO: Inverted minors...
+                    Invitational(Bid.TwoClubs, ShowsTrump(), Points(Raise1), Shape(5), LongestMajor(3)),
+                    Invitational(Bid.ThreeClubs, ShowsTrump(), Points(LimitRaise), Shape(5), LongestMajor(3)),                
+                    Signoff(Bid.FiveClubs, ShowsTrump(), Points(Weak5Level), Shape(7, 10)),
+                    Signoff(Bid.FourClubs, ShowsTrump(), Points(Weak4Level), Shape(6)),
+                });
+            }
+            else
+            {
+                choices.AddRules(SolidSuit.Bids);
+                choices.AddRules(new CallFeature[]
+                {
+                    PartnerBids(OpenBid2.ResponderChangedSuits),
+                    PartnerBids(Bid.TwoClubs,   OpenBid2.ResponderRaisedMinor),
+                    PartnerBids(Bid.ThreeClubs, OpenBid2.ResponderRaisedMinor),
+                    PartnerBids(Bid.FourClubs,  OpenBid2.ResponderRaisedMinor),
+                    PartnerBids(Bid.FiveClubs,  OpenBid2.ResponderRaisedMinor),
+
+                    Forcing(Bid.OneDiamond, Points(Respond1Level), Shape(5, 10), LongestMajor(3)),
+                    // TODO: Should we bid "up the line" with 11+ points?
+                    Forcing(Bid.OneDiamond, Points(LimitRaiseOrBetter), Shape(5, 10), LongerThan(Suit.Hearts), LongerThan(Suit.Spades)),
+
+                    Forcing(Bid.OneHeart, Points(Respond1Level), Shape(4), Shape(Suit.Spades, 0, 4)),
+                    Forcing(Bid.OneHeart, Points(Respond1Level), Shape(5, 10), LongerThan(Suit.Spades)),
+
+                    Forcing(Bid.OneSpade, Points(Respond1Level), Shape(4, 10), LongerOrEqualTo(Suit.Hearts)),
+
+                    // TODO: Inverted minors...
+                    Invitational(Bid.TwoClubs, ShowsTrump(), Points(Raise1), Shape(5), LongestMajor(3)),
+                    Invitational(Bid.ThreeClubs, ShowsTrump(), Points(LimitRaise), Shape(5), LongestMajor(3)),                
+                    Signoff(Bid.FiveClubs, ShowsTrump(), Points(Weak5Level), Shape(7, 10)),
+                    Signoff(Bid.FourClubs, ShowsTrump(), Points(Weak4Level), Shape(6)),
+                });
+            }
             choices.AddRules(NoTrumpResponsesToMinor(Suit.Clubs));
             choices.AddRules(WeakJumpShift(Suit.Clubs));
 
-            choices.AddRules(new CallFeature[] {  Signoff(Bid.Pass, Points(RespondPass))});
+            choices.AddPassRule(Points(RespondPass));
             return choices;
         }
 

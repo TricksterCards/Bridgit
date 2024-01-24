@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 //using static BridgeBidding.CallFeature;
 
@@ -138,6 +139,11 @@ namespace BridgeBidding
 			return new JumpBid(jumpLevels);
 		}
 
+		public static StaticConstraint IsVul()
+		{
+			return new StaticConstraint((call, ps) => ps.PairState.Vulnerable);
+		}
+		
 		public static StaticConstraint IsReverse(bool desiredValue = true)
 		{
 			return new StaticConstraint((call, ps) => ps.IsOpenerReverseBid(call));
