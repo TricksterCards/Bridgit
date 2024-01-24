@@ -44,14 +44,14 @@ Pass Pass Pass
 [Event "3rd seat open 11 points balanced, not vul."]
 [Dealer "N"]
 [Vulnerable "None"]
-[Deal "N:- - J32.Q842.KJ7.AT7 -"]
+[Deal "N:- - J3.Q842.KJ7.AT72 -"]
 [Auction "N"]
 Pass Pass 1C
 
 [Event "3rd seat don't open 11 points balanced when vulnerable."]
 [Dealer "N"]
 [Vulnerable "NS"]
-[Deal "N:- - J32.Q842.KJ7.AT7 -"]
+[Deal "N:- - J3.Q842.KJ7.AT72 -"]
 [Auction "N"]
 Pass Pass Pass
 
@@ -61,4 +61,60 @@ Pass Pass Pass
 [Deal "N:- - J32.QJT2.K67.AT7 -"]
 [Auction "N"]
 Pass Pass 1H
+
+[Event "Balanced 11 points, not vul, but no points in long suits."]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - A32.J9T2.Q67.AT7 -"]
+[Auction "N"]
+Pass Pass Pass
+
+[Event "Balanced 11 points, not vul, decent long suit."]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - A32.9T2.QJ67.AT7 -"]
+[Auction "N"]
+Pass Pass 1D
+
+[Event "Non-balanced 10 points, not vul, points not in long suits."]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - 87632.A2.AJ.T742 -"]
+[Auction "N"]
+Pass Pass 1S
+
+[Event "Non-balanced 10 points, not vul, points in long suits."]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - A7632.A2.J8.T742 -"]
+[Auction "N"]
+Pass Pass 1S
+
+
+[Event "Non-balanced 10 points, vulnerable, points in long suits - don't open."]
+[Dealer "N"]
+[Vulnerable "All"]
+[Deal "N:- - A7632.A2.J8.T742 -"]
+[Auction "N"]
+Pass Pass Pass
+
+
+
+[Event "Balanced 11 points, not vulnerable, bad long suits don't open."]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - Q3.AKJ.JT38.T742 -"]
+[Auction "N"]
+Pass Pass Pass
+
+
+
+[Event "Balanced 11 points, not vulnerable, decent long suit open."]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - Q3.KJ3.AJT8.T742 -"]
+[Auction "N"]
+Pass Pass 1D
+
+
 

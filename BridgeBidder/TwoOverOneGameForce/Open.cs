@@ -140,12 +140,11 @@ namespace BridgeBidding
 		{
 			return new CallFeature[]
 			{
+				// Don't open a 3-card suit weak.  If standard open rules dont apply then dont open
 				Nonforcing(Bid.OneClub, range, LongestSuit(), Shape(Suit.Hearts, 0, 4)),
-				Nonforcing(Bid.OneClub, range, Shape(3), Shape(Suit.Diamonds, 0, 3), LongestMajor(4)),
 				Nonforcing(Bid.OneClub, range, Shape(4, 11), LongerThan(Suit.Diamonds), LongestMajor(4)),
 
 				Nonforcing(Bid.OneDiamond, range, LongestSuit(), Shape(Suit.Hearts, 0, 4)),
-				Nonforcing(Bid.OneDiamond, range, Shape(3), Shape(Suit.Clubs, 0, 2), LongestMajor(4)),
 				Nonforcing(Bid.OneDiamond, range, Shape(4, 10), LongerOrEqualTo(Suit.Clubs), LongestMajor(4)),
 
 				Nonforcing(Bid.OneHeart, range, Shape(5, 10), LongerThan(Suit.Spades)),
