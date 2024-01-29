@@ -453,6 +453,7 @@ namespace BridgeBidding
 				Signoff(Bid.FourHearts, RaisePartner(raise: 3, fit: 10), DummyPoints(Weak4Level)),
                 Signoff(Bid.FourSpades, RaisePartner(raise: 3, fit: 10), DummyPoints(Weak4Level)),
 
+                PartnerBids(Call.Pass, OpenBid2.ResponderPassedInCompetition),
                 Signoff(Bid.Pass),  // May have enought points to respond but no good call, so can't specify points.
 
             });

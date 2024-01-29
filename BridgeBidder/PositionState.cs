@@ -51,9 +51,9 @@ namespace BridgeBidding
 		public Direction Direction { get; }
 
 		public int Seat { get; }
-		public bool Vulnerable { 
+		public bool IsVulnerable { 
 			get {
-				return PairState.Vulnerable;
+				return PairState.AreVulnerable;
 			}
 		 }
 
@@ -76,6 +76,10 @@ namespace BridgeBidding
 			return _bids[_bids.Count - 1 - historyLevel].Call;
 		}
 
+
+		public int CallCount => _bids.Count;
+
+		public CallDetails GetCallDetails(int index) => _bids[index];
 
 		private Direction OffsetDirection(int offset)
 		{

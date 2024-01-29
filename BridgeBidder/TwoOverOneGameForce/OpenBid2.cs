@@ -86,6 +86,27 @@ namespace BridgeBidding
 			return choices;
 		}
 
+		public static IEnumerable<CallFeature> ResponderPassedInCompetition(PositionState ps)
+		{
+			return new CallFeature[]
+			{
+				// TODO: This is way not finished.  Also I think that perhaps min-medium
+				// would just rebid at the cheapest level??? Competition...
+				// Rebid a 6 card suit
+				Nonforcing(Bid.TwoClubs,      Rebid(), Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoDiamonds,   Rebid(), Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoHearts,     Rebid(), Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoSpades,     Rebid(), Shape(6, 11), Minimum),
+
+				Nonforcing(Bid.ThreeClubs,    Rebid(), Shape(6, 11), MediumOrBetter),
+				Nonforcing(Bid.ThreeDiamonds, Rebid(), Shape(6, 11), MediumOrBetter),
+				Nonforcing(Bid.ThreeHearts,   Rebid(), Shape(6, 11), MediumOrBetter),
+				Nonforcing(Bid.ThreeSpades,   Rebid(), Shape(6, 11), MediumOrBetter),
+
+				Nonforcing(Call.Pass)
+			};
+		}
+
 		public static PositionCalls OneNTOverMajorOpen(PositionState ps)
 		{
 			return ResponderChangedSuits(ps);

@@ -2,11 +2,57 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using BridgeBidding.PBN;
+using BridgeBidding;
 
 namespace TestBridgeBidder
 {
     public class PBN
     {
+     
+        // This function must ensure that test names are unique.  The testing infrastructure blows up if test names
+        // are duplicated.
+        public static PBNTest[] ImportTests(string text)
+        {
+            var tests = new List<PBNTest>();
+            var games = BridgeBidding.PBN.FromString.Games(text);
+            foreach (var game in games)
+            {
+                var auction = game.GetAuction();
+                var board = game.GetBoard();
+                var bidHistory = "";
+                var direction = board.Dealer;
+                for (var i = 0; i < auction.Length; i++)
+                {
+                    var call = auction[i];
+                    if (board.Hands[direction] != null)
+                    {
+                        var bidNumber = 1 + i / 4;
+                        string testName = game.Tags["Event"];
+                        if (board.Number != null)
+                        {
+                            testName += $" Board {board.Number}";
+
+                        }
+                        tests.Add(
+                                new PBNTest
+                                {
+                                    Auction = bidHistory,
+                                    Deal = BridgeBidding.PBN.ToString.Deal(board.Dealer, board.Hands),
+                                    ExpectedCall = call.ToString(),
+                                    Name = $"{testName} (Seat {direction}, Bid {bidNumber})"
+                                }
+                                );
+                    }
+                    direction = BridgeBidder.LeftHandOpponent(direction);
+                    bidHistory += $"{call} ";
+                }
+            }
+            return tests.ToArray();
+        }
+    }
+}
+        /*
         public const string Sides = "NESW";
 
 
@@ -70,6 +116,7 @@ namespace TestBridgeBidder
         }
 
 
+
         private static HashSet<int> DetermineKnownHands(int dealerSeat, string hands)
         {
             var knownHands = new HashSet<int>();
@@ -128,3 +175,4 @@ namespace TestBridgeBidder
         }
     }
 }
+*/

@@ -40,7 +40,7 @@ namespace BridgeBidding
         public static (int, int) Rebid2NT = (18, 19);
 
 
-		public static (int, int) ForthSeatOpen2 = (12, 15);
+		public static Constraint ForthSeatOpen2 = Points(12, 15);
 
 		public static (int, int) LessThanJumpShift = (12, 18);
 		public static (int, int) JumpShift = (19, 21);
@@ -76,9 +76,9 @@ namespace BridgeBidding
 				PartnerBids(Bid.TwoHearts,   Respond.ForthSeat2Open, Seat(4)),
 				PartnerBids(Bid.TwoSpades,   Respond.ForthSeat2Open, Seat(4)),
 
-				Nonforcing(Bid.TwoSpades,   Seat(4), Shape(6, 10), GoodSuit(), BetterOrEqualTo(Suit.Hearts), Points(ForthSeatOpen2)),
-				Nonforcing(Bid.TwoHearts,   Seat(4), Shape(6, 10), GoodSuit(), BetterThan(Suit.Spades), Points(ForthSeatOpen2)),
-				Nonforcing(Bid.TwoDiamonds, Seat(4), Shape(6, 10), GoodSuit(), Points(ForthSeatOpen2)),
+				Nonforcing(Bid.TwoSpades,   Seat(4), Shape(6, 10), GoodSuit(), BetterOrEqualTo(Suit.Hearts), ForthSeatOpen2),
+				Nonforcing(Bid.TwoHearts,   Seat(4), Shape(6, 10), GoodSuit(), BetterThan(Suit.Spades), ForthSeatOpen2),
+				Nonforcing(Bid.TwoDiamonds, Seat(4), Shape(6, 10), GoodSuit(), ForthSeatOpen2),
 
 				// In 4th seat we want to pass if the Rule of 15 does not apply.
 				Nonforcing(Call.Pass, Seat(4), PassIn4thSeat()),
@@ -87,9 +87,9 @@ namespace BridgeBidding
 			if (ps.Seat == 3)
 			{
 				// No special case for vulnerable & balanced.  Same as 1st and 2nd seats...
-				bids.AddRange(ThirdSeat4CardMajor(And(IsVul(), Balanced(false), Points(11, 16))));
-				bids.AddRange(ThirdSeat4CardMajor(And(Not(IsVul()), Balanced(true), Points(11, 16))));
-				bids.AddRange(ThirdSeat4CardMajor(And(Not(IsVul()), Balanced(false), Points(10, 16))));
+				bids.AddRange(ThirdSeat4CardMajor(And(IsVul(), Balanced(false), Points(11, 13))));
+				bids.AddRange(ThirdSeat4CardMajor(And(Not(IsVul()), Balanced(true), Points(11, 13))));
+				bids.AddRange(ThirdSeat4CardMajor(And(Not(IsVul()), Balanced(false), Points(10, 13))));
 			}
 			bids.AddRange(new CallFeature[] 
 			{
@@ -120,9 +120,9 @@ namespace BridgeBidding
 			if (ps.Seat == 3)
 			{
 				// No special case for vulnerable & balanced.  Same as 1st and 2nd seats...
-				bids.AddRange(ThirdSeatWeak(And(IsVul(), Balanced(false), Points(11, 16))));
-				bids.AddRange(ThirdSeatWeak(And(Not(IsVul()), Balanced(true), DecentSuit(), Points(11, 16))));
-				bids.AddRange(ThirdSeatWeak(And(Not(IsVul()), Balanced(false), Points(10, 16))));
+				bids.AddRange(ThirdSeatWeak(And(IsVul(), Balanced(false), Points(11, 11))));
+				bids.AddRange(ThirdSeatWeak(And(Not(IsVul()), Balanced(true), DecentSuit(), Points(11, 11))));
+				bids.AddRange(ThirdSeatWeak(And(Not(IsVul()), Balanced(false), Points(10, 11))));
 			}
 			return bids;
 		}

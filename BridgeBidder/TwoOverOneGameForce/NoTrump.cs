@@ -156,6 +156,7 @@ namespace BridgeBidding
             {
                 return new CallFeature[]
                 {
+                    Announce(Bid.OneNoTrump, UserText.OneNoTrumpRange),
                     PartnerBids(Bid.OneNoTrump, ConventionalResponses),
                     Nonforcing(Bid.OneNoTrump, NTD.OR.Open, Balanced())
                 };

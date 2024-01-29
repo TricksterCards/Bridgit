@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace BridgeBidding
 {
-    public enum Direction { North = 0, East = 1, South = 2, West = 3 }
+
+    public enum Direction { N = 0, E = 1, S = 2, W = 3 }
+
+	// TODO: DO something with this...
+	public enum Scoring { MP, IMP };
 
 	public static class BridgeBidder
 	{
@@ -27,49 +33,48 @@ namespace BridgeBidding
 		/// <exception cref="AuctionException"></exception> 
 		public static string SuggestBid(string deal, string vulnerable, string auction, string bidSystemNS = "TwoOverOneGameForce", string bidSystemEW = "TwoOverOneGameForce")
 		{
-			Direction dealer;
-			var hands = ParseDeal(deal, out dealer);
-			var vulPairs = ParseVulnerable(vulnerable);
-			var bidHistory = ParseAuction(auction);
+			var board = PBN.FromString.Board(deal, vulnerable);
+			var bidHistory = PBN.FromString.Auction(auction);
 
 			// For now we will only allow SAYC bidding system.
             if (bidSystemNS != "TwoOverOneGameForce" || bidSystemEW != "TwoOverOneGameForce")
             {
                 throw new ArgumentException("Bidding system is limited to 2/1");
             }
-            IBiddingSystem twoOverOne = new TwoOverOneGameForce();
-
-			var biddingState = new BiddingState(hands, dealer, vulPairs, twoOverOne, twoOverOne);
-			biddingState.ReplayAuction(bidHistory);
-			var call = biddingState.SuggestCall();
-
-			//Debug.WriteLine(biddingState.NextToAct.RightHandOpponent.PublicHandSummary.ToString());
-
+			var call = SuggestCall(board, bidHistory);
 			return call.ToString();
+		}
+
+		// TODO: Addd bidding system parameters here.  
+		public static Call SuggestCall(Board board, Call[] auction)
+		{
+            IBiddingSystem twoOverOne = new TwoOverOneGameForce();
+			var biddingState = new BiddingState(board, twoOverOne, twoOverOne);
+			biddingState.ReplayAuction(auction);
+			return biddingState.SuggestCall();
 		}
 
 		// Kind of a hack for now - use for console app...
 		public static string FullAuction(string deal, string vulnerable)
 		{
-			Direction dealer;
-			var hands = ParseDeal(deal, out dealer);
-			var vulPairs = ParseVulnerable(vulnerable);
-		    IBiddingSystem twoOverOne = new TwoOverOneGameForce();
+			var board = PBN.FromString.Board(deal, vulnerable);
+            IBiddingSystem twoOverOne = new TwoOverOneGameForce();
 
-			var output = $"[Deal \"{deal}\"]\n[Vulnerable \"{vulnerable}\"]\n[Auction \"{deal.Substring(0,1)}\"]\n";
-			var biddingState = new BiddingState(hands, dealer, vulPairs, twoOverOne, twoOverOne);
-			var n = 0;
+			var biddingState = new BiddingState(board, twoOverOne, twoOverOne);
 			while (!biddingState.Contract.AuctionComplete)
 			{
+				// TODO: This seems wrong.  Should have to MakeCall() after suggestion
+				// or at least name MakeSuggestedCall().
 				var call = biddingState.SuggestCall();
-				output += call.ToString() + " ";
-				n += 1;
-				if (n % 4 == 0) output += "\n";
 			}
-			if (n % 4 != 0) output += "\n";
-			output += $"[Contract \"{biddingState.Contract}\"]\n";
-			return output;
+
+			var game = new PBN.Game();
+			game.Update(biddingState);
+
+			return game.GetGameText();		// TODO: Probably better name than this...
 		}
+
+
 		public static string[] ExplainHistory(string deal, string auction, string nsSystem = "SAYC", string ewSystem = "SAYC")
 		{
 			throw new NotImplementedException();
@@ -81,47 +86,9 @@ namespace BridgeBidding
 		}
 
 
-		public static HashSet<Pair> ParseVulnerable(string vulnerable)
-		{
-			if (vulnerable == null)
-				throw new ArgumentNullException("vulnerable");
 
-			var vulPairs = new HashSet<Pair>();
-            switch (vulnerable)
-            {
-                case "None":
-                    break;
-                case "All":
-                    vulPairs.Add(Pair.NorthSouth);
-					vulPairs.Add(Pair.EastWest);
-					break;
-                case "NS":
-					vulPairs.Add(Pair.NorthSouth);
-					break;
-                case "EW":
-					vulPairs.Add(Pair.EastWest);
-					break;
-                default:
-                    throw new ArgumentException($"Invalid vulnerablity parameter value {vulnerable}");
 
-            }
-			return vulPairs;
-        }
 
-		// null is allowed for the auction string - returns an empty array of Calls.
-		private static Call[] ParseAuction(string auction)
-		{
-			var bidHistory = new List<Call>();
-			if (auction != null) 
-			{
-				var calls = auction.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-				foreach (var call in calls)
-				{
-					bidHistory.Add(Call.FromString(call));
-				}
-			}
-			return bidHistory.ToArray();
-		}
 
 
 		public static Direction Partner(Direction direction)
@@ -140,74 +107,11 @@ namespace BridgeBidding
 		}
 
 
-		private static Dictionary<string, Direction> StringToDirection = new Dictionary<string, Direction>
-		{
-			{ "N",     Direction.North },
-			{ "E",     Direction.East  },
-			{ "S",     Direction.South },
-			{ "W",     Direction.West  },
-		};
+
 
 		// PBN defines deal import as D:(hand1) (hand2) (hand3) (hand4)
 		// where "D" is be equal to the dealer.  
 		
-		private static Dictionary<Direction, Hand> ParseDeal(string deal, out Direction dealer)
-		{
-			if (deal == null)
-			{
-				throw new ArgumentNullException("deal");
-			}
-			if (deal.Length < 9)
-			{
-				throw new ArgumentException("deal paramerter is too short to be valid PBN deal format");
-			}
-			if (deal.Substring(1, 1) != ":" || !StringToDirection.TryGetValue(deal.Substring(0,1).ToUpper(), out dealer))
-			{
-				throw new ArgumentException($"Dealer prefix {deal.Substring(0, 2)} is invalid");
-			};
-          	var hands = new Dictionary<Direction, Hand>();
-            var handStrings = deal.Substring(2).Split(' ');
-			if (handStrings.Length != 4) 
-			{
-				throw new ArgumentException("deal must contain 4 hands");
-			}
-			var direction = dealer;
-            foreach (var handString in handStrings)
-            {
-				hands[direction] = Hand.ParsePbnFormat(handString, requireFullHand: true);
-				direction = LeftHandOpponent(direction);
-            }
-
-			int totalExpected = 0;
-			var allCards = new HashSet<Card>();
-			foreach (var hand in hands)
-			{
-				if (hand.Value != null) 
-				{
-					allCards.UnionWith(hand.Value);
-					totalExpected += 13;
-					if (allCards.Count < totalExpected)
-					{
-						foreach (var otherHand in hands)
-						{
-							if (otherHand.Key != hand.Key && otherHand.Value != null)
-							{
-								var dup = otherHand.Value.Intersect(hand.Value);
-								if (dup.Count() > 0)
-								{
-									throw new ArgumentException($"{dup.First()} duplicated in {hand.Key} and {otherHand.Key}");
-								}
-							}
-						}
-						// Throw a useful excpetion to help debug problems with 
-						throw new ArgumentException($"One or more duplicated cards in {deal}");
-					}
-				}
-			}
-
-            return hands;
-   
-		}
 
 	}
 }

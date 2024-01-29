@@ -24,18 +24,18 @@ namespace TestBridgeBidder
         [DynamicData(nameof(SAYCTestData), DynamicDataDisplayName=nameof(GetDataDisplayName))]      
         public void SAYCTests(PBNTest test)
         {
-                var suggestion = BridgeBidder.SuggestBid(test.Deal, test.Vulnerable, test.Auction);
+                string suggestion = BridgeBidder.SuggestBid(test.Deal, test.Vulnerable, test.Auction);
 
-                Assert.AreEqual(test.Bid, suggestion);
+                Assert.AreEqual(test.ExpectedCall, suggestion);
         }
 
         [TestMethod]
         [DynamicData(nameof(TwoOverOneGameForceData), DynamicDataDisplayName=nameof(GetDataDisplayName))]        
         public void TwoOverOneTests(PBNTest test)
         {
-                var suggestion = BridgeBidder.SuggestBid(test.Deal, test.Vulnerable, test.Auction);
+                string suggestion = BridgeBidder.SuggestBid(test.Deal, test.Vulnerable, test.Auction);
 
-                Assert.AreEqual(test.Bid, suggestion);
+                Assert.AreEqual(test.ExpectedCall, suggestion);
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -12,43 +13,7 @@ namespace BridgeBidding
 		public Hand() { }
 
 
-		public static Hand ParsePbnFormat(string handString, bool requireFullHand = true)
-		{
-			if (handString == null)
-			{
-				throw new ArgumentNullException("handString");
-			}
-			if (handString == "-") 
-			{
-				return null;
-			}
 
-			Suit[] pbnSuits = { Suit.Spades, Suit.Hearts, Suit.Diamonds, Suit.Clubs };
-
-			var suits = handString.Split('.');
-			if (suits.Length != pbnSuits.Length)
-			{
-				throw new ArgumentException("handString does not contain four suits");
-			}
-			Hand hand = new Hand();			
-			for (var i = 0; i < suits.Length; i++)
-				foreach (var rankChar in suits[i])
-				{
-					var card = new Card(Card.ParseRank(rankChar), pbnSuits[i]);
-					if (hand.Contains(card))
-					{
-						throw new ArgumentException($"Duplicate card {card} in {handString}");
-					}
-					hand.Add(card);
-				}
-		
-			if (requireFullHand && hand.Count != 13)
-			{
-				throw new ArgumentException($"hand {handString} contains {hand.Count} cards.  Should have 13.");
-			}
-
-			return hand;
-		}
 
 		public int HighCardPoints(Suit? suit = null)
 		{
@@ -103,18 +68,8 @@ namespace BridgeBidding
 		{
 			get
 			{
-				var counts = CountsBySuit();
-				bool found4 = false;
-				foreach (var suit in Card.Suits)
-				{
-					if (counts[suit] > 4) return false;
-					if (counts[suit] == 4)
-					{
-						if (found4) return false;
-						found4 = true;
-					}
-				}
-				return true;
+				var suitCounts = this.GroupBy(c => c.Suit).Select(g => new { suit = g.Key, count = g.Count() }).OrderBy(sc => sc.count).ToList();
+				return suitCounts.Count == 4 && suitCounts[0].count == 3;
 			}
 		}
 

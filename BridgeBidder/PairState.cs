@@ -3,7 +3,7 @@ using System.Dynamic;
 
 namespace BridgeBidding
 {
-    public enum Pair { NorthSouth, EastWest }
+    public enum Pair { NS, EW }
 
     public class PairState
     {
@@ -12,17 +12,19 @@ namespace BridgeBidding
         public PairAgreements Agreements { get; set; }
         public IBiddingSystem BiddingSystem { get; }
 
-        public bool Vulnerable { get; private set;}
+        public bool AreVulnerable { get; }
 
         // TODO: Is this part of the pair agreements?? 
         public bool InGameForcingAuction { get; set; }
 
-        public PairState(Pair pair, IBiddingSystem biddingSystem, HashSet<Pair> vulPairs)
+        public PairState(Pair pair, IBiddingSystem biddingSystem, Vulnerable vulnerable)
         {
             this.Pair = pair;
             this.Agreements = new PairAgreements();
             this.BiddingSystem = biddingSystem;
-            this.Vulnerable = vulPairs.Contains(pair);
+            this.AreVulnerable = (vulnerable == Vulnerable.All ||
+                        (vulnerable == Vulnerable.NS && pair == Pair.NS) ||
+                        (vulnerable == Vulnerable.EW && pair == Pair.EW));
             this.InGameForcingAuction = false;
         }
 

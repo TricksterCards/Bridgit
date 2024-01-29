@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 namespace BridgeBidding
 {
 
@@ -24,8 +25,8 @@ namespace BridgeBidding
 			throw new ArgumentException($"rank {rankString} is invalid character");
 		}
 
-		public Rank Rank { get; private set; }
-		public Suit Suit { get; private set; }
+		public Rank Rank { get; }
+		public Suit Suit { get; }
 		public Card(Rank rank, Suit suit)
 		{
 			this.Rank = rank;
@@ -40,6 +41,23 @@ namespace BridgeBidding
 			return (obj is Card card && card.Rank == Rank && card.Suit == Suit);
 		}
 
+		public static List<Card> NewDeck(bool shuffle)
+		{
+			var deck = new List<Card>();
+			foreach (var suit in Suits)
+			{
+				foreach (Rank rank in Enum.GetValues(typeof(Rank)))
+				{
+					deck.Add(new Card(rank, suit));
+				}
+			}
+			if (shuffle)
+			{
+				var r = new Random();
+				deck = deck.OrderBy(x => r.Next()).ToList();
+			}
+			return deck;
+		}
 
 		public static Dictionary<char, Rank> StringToRank = new Dictionary<char, Rank>
 		{

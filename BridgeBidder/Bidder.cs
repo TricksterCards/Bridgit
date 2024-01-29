@@ -141,7 +141,7 @@ namespace BridgeBidding
 
 		public static StaticConstraint IsVul()
 		{
-			return new StaticConstraint((call, ps) => ps.PairState.Vulnerable);
+			return new StaticConstraint((call, ps) => ps.PairState.AreVulnerable);
 		}
 		
 		public static StaticConstraint IsReverse(bool desiredValue = true)

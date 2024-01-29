@@ -19,22 +19,25 @@ namespace BridgeBidding
 
         public PositionState Opener { get; private set; }
 
+        public Board Board { get; }
 
-        public BiddingState(Dictionary<Direction, Hand> hands, Direction dealer, HashSet<Pair> vulPairs, IBiddingSystem nsSystem, IBiddingSystem ewSystem)
+        public BiddingState(Board board, IBiddingSystem nsSystem, IBiddingSystem ewSystem)
         {
+            this.Board = board;
             this.Positions = new Dictionary<Direction, PositionState>();
             this.Contract = new Contract();
-            Debug.Assert(hands.Count == 4);
-            var d = dealer;
-            var ns = new PairState(Pair.NorthSouth, nsSystem, vulPairs);
-            var ew = new PairState(Pair.EastWest, ewSystem, vulPairs);
-            for (int seat = 1; seat <= hands.Count; seat++)
+            var d = board.Dealer;
+            var ns = new PairState(Pair.NS, nsSystem, board.Vulnerable);
+            var ew = new PairState(Pair.EW, ewSystem, board.Vulnerable);
+            for (int seat = 1; seat <= 4; seat++)
             {
-                PairState pairState = (d == Direction.North || d == Direction.South) ? ns : ew;
-                this.Positions[d] = new PositionState(this, pairState, d, seat, hands[d]);
+                Hand hand = null;
+                board.Hands.TryGetValue(d, out hand);
+                PairState pairState = (d == Direction.N || d == Direction.S) ? ns : ew;
+                this.Positions[d] = new PositionState(this, pairState, d, seat, hand);
                 d = BridgeBidder.LeftHandOpponent(d);
             }
-            this.Dealer = Positions[dealer];
+            this.Dealer = Positions[Board.Dealer];
             this.NextToAct = Dealer;
         }
 
@@ -78,6 +81,22 @@ namespace BridgeBidding
             }
             NextToAct = NextToAct.LeftHandOpponent;
         }
+
+        public List<CallDetails> GetAuction()
+        {
+            var bidder = Dealer;
+            var bidIndex = 0;
+            var calls = new List<CallDetails>();
+            while (bidIndex < bidder.CallCount)
+            {
+                calls.Add(bidder.GetCallDetails(bidIndex));
+                if (calls.Count % 4 == 0) bidIndex += 1;
+                bidder = bidder.LeftHandOpponent;
+            }
+            return calls;
+        }
+
+
 
         // TODO: Really think through all of the issues with Hand State vs Agreements
         // and when each should be updated....
