@@ -32,7 +32,7 @@ namespace BridgeBidding.PBN
 			{
 				throw new ArgumentException("deal paramerter is too short to be valid PBN deal format");
 			}
-			if (deal.Substring(1, 1) != ":" || !StringToDirection.TryGetValue(deal.Substring(0,1).ToUpper(), out dealer))
+			if (deal.Substring(1, 1) != ":" || !Enum.TryParse<Direction>(deal.Substring(0,1), out dealer))
 			{
 				throw new ArgumentException($"Dealer prefix {deal.Substring(0, 2)} is invalid");
 			};
@@ -118,34 +118,21 @@ namespace BridgeBidding.PBN
 		}
 
 
-		private static Dictionary<string, Direction> StringToDirection = new Dictionary<string, Direction>
-		{
-			{ "N",     Direction.N },
-			{ "E",     Direction.E  },
-			{ "S",     Direction.S },
-			{ "W",     Direction.W  },
-		};
-
+		// TODO: Is this correct?  Should we require a value?
 		// If the null string is passed into this method, Vulnerable.None is returned.
 		public static Vulnerable Vulnerable(string vulnerable)
 		{
-            switch (vulnerable)
-            {
-				case null:
-                case "None":
-                    return BridgeBidding.Vulnerable.None;
-                case "All":
-					return BridgeBidding.Vulnerable.All;
-                case "NS":
-					return BridgeBidding.Vulnerable.NS;
-                case "EW":
-					return BridgeBidding.Vulnerable.EW;
-                default:
-                    throw new ArgumentException($"Invalid vulnerablity parameter value {vulnerable}");
-            }
+			if (vulnerable == null)
+			{
+				throw new ArgumentNullException("vulnerable");
+			}
+			Vulnerable vulEnum;
+			if (Enum.TryParse<Vulnerable>(vulnerable, out vulEnum))
+			{
+				return vulEnum;
+			}
+            throw new ArgumentException($"Invalid vulnerablity parameter value {vulnerable}");
         }
-
-        // TODO: Implement something that takes a list of strings and joins them...
 
         // TODO: Annothations along with the calls???  Seems overkill and silly
 		// null is allowed for the auction string - returns an empty array of Calls.

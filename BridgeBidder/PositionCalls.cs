@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -13,18 +14,10 @@ namespace BridgeBidding
   
     public delegate PositionCalls PositionCallsFactory(PositionState ps);
 
-
-
-    public class PositionCalls 
+    public class PositionCalls: Dictionary<Call, CallDetails>
     {
         public PositionState PositionState { get; }
-
-        public HashSet<Call> Calls { get; }
-
-        public Call BestCall => _bestCallGroup == null ? null : _bestCallGroup.BestCall;
-      
-        private CallGroup _bestCallGroup = null;
-        private List<CallGroup> _callGroups = new List<CallGroup>();
+        public CallDetails BestCall { get; private set; } 
 
         public static PositionCallsFactory FromCallFeaturesFactory(CallFeaturesFactory CallFeatures)
         {
@@ -39,7 +32,6 @@ namespace BridgeBidding
         public PositionCalls(PositionState ps)
         {
             PositionState = ps;
-            Calls = new HashSet<Call>();
         }
 
         public PositionCalls(PositionState ps, CallFeaturesFactory rulesFactory) : this(ps)
@@ -52,28 +44,6 @@ namespace BridgeBidding
             AddRules(rules);
         }
 
-
-        public CallDetails GetCallDetails(Call call)
-        {
-            // This is a small optimization to avoid searching groups if the BestCall has been selected
-            if (call == BestCall)
-                return _bestCallGroup[call];
-
-            if (Calls.Contains(call))
-            {
-                foreach (var group in _callGroups)
-                {
-                    if (group.ContainsKey(call))
-                    {
-                        return group[call];
-                    }
-                }
-                Debug.Fail("Should never get here.");
-            }
-            var fakeGroup = CallGroup.Create(PositionState, Calls, new CallFeature[] { Bidder.Nonforcing(call) });
-            return fakeGroup[call];
-        }
-
         public void AddRules(CallFeaturesFactory factory)
         {
             AddRules(factory(PositionState));
@@ -81,11 +51,15 @@ namespace BridgeBidding
 
         public void AddRules(IEnumerable<CallFeature> rules)
         {
-            var group = CallGroup.Create(PositionState, Calls, rules);
-            _callGroups.Add(group);
-            Calls.UnionWith(group.Keys);
-            if (_bestCallGroup == null && group.BestCall != null)
-                _bestCallGroup = group;
+            var group = CallGroup.Create(this, rules);
+            foreach (var c in group)
+            {
+                Add(c.Key, c.Value);
+            }
+            if (BestCall == null)
+            {
+                BestCall = group.BestCall;
+            }
         }
 
         // Method for adding a stand-alone pass rule.
@@ -94,5 +68,9 @@ namespace BridgeBidding
             AddRules(new CallFeature[] { Bidder.Nonforcing(Call.Pass, constraints) });
         }
 
+        public void CreatePlaceholderCall(Call call)
+        {
+            AddRules(new CallFeature[] { Bidder.Nonforcing(call) });
+        }
     }
 }

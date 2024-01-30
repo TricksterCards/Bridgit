@@ -41,17 +41,27 @@ namespace BridgeBidding
             {
                 throw new ArgumentException("Bidding system is limited to 2/1");
             }
-			var call = SuggestCall(board, bidHistory);
-			return call.ToString();
+			var callDetails = SuggestCall(board, bidHistory);
+			return callDetails.Call.ToString();
 		}
 
 		// TODO: Addd bidding system parameters here.  
-		public static Call SuggestCall(Board board, Call[] auction)
+		public static CallDetails SuggestCall(Board board, IEnumerable<Call> auction)
 		{
             IBiddingSystem twoOverOne = new TwoOverOneGameForce();
 			var biddingState = new BiddingState(board, twoOverOne, twoOverOne);
 			biddingState.ReplayAuction(auction);
-			return biddingState.SuggestCall();
+			if (!biddingState.NextToAct.HasHand)
+			{
+				throw new AuctionException(null, biddingState.NextToAct, biddingState.Contract,
+								"Can not suggest next bid when position has no defined hand.");
+			}
+			if (biddingState.CallChoices.BestCall == null)
+			{
+				throw new AuctionException(null, biddingState.NextToAct, biddingState.Contract,
+						"No suggested call given by bidding system.");
+			}
+			return biddingState.CallChoices.BestCall;
 		}
 
 		// Kind of a hack for now - use for console app...
@@ -63,13 +73,13 @@ namespace BridgeBidding
 			var biddingState = new BiddingState(board, twoOverOne, twoOverOne);
 			while (!biddingState.Contract.AuctionComplete)
 			{
-				// TODO: This seems wrong.  Should have to MakeCall() after suggestion
-				// or at least name MakeSuggestedCall().
-				var call = biddingState.SuggestCall();
+				var call = biddingState.CallChoices.BestCall;
+				biddingState.MakeCall(call);
 			}
 
 			var game = new PBN.Game();
 			game.Update(biddingState);
+			game.Tags["Event"] = "Full auction";
 
 			return game.GetGameText();		// TODO: Probably better name than this...
 		}

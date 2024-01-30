@@ -2,8 +2,6 @@
 {
     public interface IBiddingSystem
     {
-
-        PositionCalls GetPositionCalls(PositionState positionState);  
+        PositionCalls GetPositionCalls(PositionState positionState);
     }
-
 }

@@ -156,10 +156,10 @@ namespace BridgeBidding
 
 
 		// THIS IS AN INTERNAL FUNCITON:
-		public void MakeCall(CallDetails bidGroup)
+		internal void MakeCall(CallDetails callDetails)
 		{
-			BiddingState.Contract.ValidateCall(bidGroup.Call, this);
-            if (!bidGroup.Call.Equals(Call.Pass) && !this._roleAssigned)
+			BiddingState.Contract.ValidateCall(callDetails.Call, this);
+            if (!callDetails.Call.Equals(Call.Pass) && !this._roleAssigned)
 			{
 				if (Role == PositionRole.Opener)
 				{
@@ -175,18 +175,17 @@ namespace BridgeBidding
 					Partner.AssignRole(PositionRole.Advancer);
 				}
 			}
-			_bids.Add(bidGroup);
-			if (bidGroup.BidForce == BidForce.ForcingToGame)
+			_bids.Add(callDetails);
+			if (callDetails.BidForce == BidForce.ForcingToGame)
 			{
 				PairState.InGameForcingAuction = true;
 			}
 			// Now we prune any rules that do not 
 
-			if (RepeatUpdatesUntilStable(bidGroup))
+			if (RepeatUpdatesUntilStable(callDetails))
 			{
 				BiddingState.UpdateStateFromFirstBid();
 			}
-			BiddingState.Contract.MakeCall(bidGroup.Call, this);
 		}
 
 		private void AssignRole(PositionRole role)
@@ -208,14 +207,16 @@ namespace BridgeBidding
 			return true;
 		}
 
-		internal bool RepeatUpdatesUntilStable(CallDetails bidGroup)
+		internal bool RepeatUpdatesUntilStable(CallDetails callDetails)
 		{
+			Debug.Assert(callDetails.PositionState == this);
+
 			bool stateChanged = false;
 			for (int i = 0; i < 1000; i++)
 			{
-                stateChanged |= bidGroup.PruneRules(this);
+                stateChanged |= callDetails.PruneRules(this);
 
-                (HandSummary hs, PairAgreements pa) newState = bidGroup.ShowState(this);
+                (HandSummary hs, PairAgreements pa) newState = callDetails.ShowState();
 
 				var showHand = new HandSummary.ShowState(PublicHandSummary);
 				var showAgreements = new PairAgreements.ShowState(PairState.Agreements);
@@ -269,9 +270,10 @@ namespace BridgeBidding
 			return (this._privateHandSummary == null) ? false : rule.SatisifiesDynamicConstraints(this, this._privateHandSummary);
 		}
 
+
 		public bool IsValidNextCall(Call call)
 		{
-			return BiddingState.NextToAct == this && BiddingState.Contract.IsValid(call, this);
+			return BiddingState.Contract.IsValid(call, this);
 		}
 
  

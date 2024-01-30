@@ -1,40 +1,44 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 
 namespace BridgeBidding
 {
     public class CallGroup : Dictionary<Call, CallDetails>
     {
+        public PositionCalls PositionCalls { get; }
+
+        public PositionState PositionState => PositionCalls.PositionState;
+
         public PartnerCalls PartnerCalls  { get; private set; }
         public List<CallAnnotation> Annotations { get; }
-        public Call BestCall = null;
+        public CallDetails BestCall = null;
 
 
 
-        public static CallGroup Create(PositionState ps, HashSet<Call> existingCalls, IEnumerable<CallFeature> rules)
+        public static CallGroup Create(PositionCalls positionCalls, IEnumerable<CallFeature> rules)
         {
-            var group = new CallGroup();
-            group.AddRules(ps, existingCalls, rules);
+            var group = new CallGroup(positionCalls);
+            group.AddRules(rules);
             return group;
         }
 
-        private CallGroup()
+        private CallGroup(PositionCalls positionCalls)
         {
+            this.PositionCalls = positionCalls;
             Annotations = new List<CallAnnotation>();
         }
 
-
-        public void AddRules(PositionState ps, 
-                            HashSet<Call> existingCalls,
-                            IEnumerable<CallFeature> features)
+        // Add only calls that are not already defined in the PositionCalls
+        private void AddRules(IEnumerable<CallFeature> features)
         {
             foreach (var feature in features)
             {
                 if (feature.Call == null)
                 {
-                    if (feature.SatisifiesStaticConstraints(ps))
+                    if (feature.SatisifiesStaticConstraints(PositionState))
                     {
                         if (feature is PartnerCalls partnerCalls)
                         {
@@ -53,10 +57,10 @@ namespace BridgeBidding
                 }
                 else
                 {
-                    // TODO: Right now it is fine to all
-                    if (ps.IsValidNextCall(feature.Call) && !existingCalls.Contains(feature.Call))
+                    if (PositionState.IsValidNextCall(feature.Call) &&
+                        !PositionCalls.ContainsKey(feature.Call))
                     {
-                        if (feature.SatisifiesStaticConstraints(ps))
+                        if (feature.SatisifiesStaticConstraints(PositionState))
                         {
                             if (!this.ContainsKey(feature.Call))
                             {
@@ -66,9 +70,9 @@ namespace BridgeBidding
 
                             if (BestCall == null &&
                                 feature is BidRule rule && 
-                                ps.PrivateHandConforms(rule))
+                                PositionState.PrivateHandConforms(rule))
                             {
-                                BestCall = rule.Call;
+                                BestCall = this[feature.Call];
                             }
                         }
                     }
@@ -79,7 +83,7 @@ namespace BridgeBidding
             {
                 if (!this[call].HasRules)
                 {
-                    Debug.Assert(call != BestCall);
+                    Debug.Assert(BestCall == null || !call.Equals(BestCall.Call));
                     this.Remove(call);
                 }
             }

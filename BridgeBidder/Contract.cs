@@ -113,10 +113,12 @@ namespace BridgeBidding
 			}
         }
 
-        public void MakeCall(Call call, PositionState by)
+        public void MakeCall(CallDetails callDetails)
 		{
+			var call = callDetails.Call;
+			var by = callDetails.PositionState;
 			ValidateCall(call, by);	// Throws AuctionExeption if invalid call sequence
-			if (call is Pass)
+			if (call.Equals(Call.Pass))
 			{
 				CallsRemaining -= 1;
 			}

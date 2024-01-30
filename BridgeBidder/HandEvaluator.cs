@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace BridgeBidding
 {
-	class StandardHandEvaluator
+	public class StandardHandEvaluator
 	{
 		private static bool Stopped(Hand hand, Suit suit, int countSuit)
 		{

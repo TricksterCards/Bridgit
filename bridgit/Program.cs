@@ -11,12 +11,15 @@ namespace Bridgit
     {
         static void Main(string[] args)
         {
-       
+
+            var s = BridgeBidder.FullAuction("N:KT9.KQJ7.KQ5.J97 5.T983.AJT4.A643 AQ432.654.32.Q85 J876.A2.9876.KT2", "None");
+            Console.WriteLine(s);
+       /*
             var gen = new TestGenerator("Open", Call.Pass, Bid.OneClub, Bid.OneDiamond, Bid.OneHeart, Bid.OneSpade, Bid.OneNoTrump,
                     Bid.TwoClubs, Bid.TwoDiamonds, Bid.TwoHearts, Bid.TwoSpades, Bid.TwoNoTrump);
             gen.GenerateTests(10);
             Console.WriteLine(gen);
-            
+      */
         }
 
 

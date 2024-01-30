@@ -11,6 +11,19 @@ namespace BridgeBidding
 
         public PositionState Dealer { get; }
 
+        private PositionCalls _positionCalls = null;
+        public PositionCalls CallChoices 
+        {
+            get 
+            {
+                if (_positionCalls == null)
+                {
+                    _positionCalls = NextToAct.GetPositionCalls();
+                }
+                return _positionCalls;
+            }
+        }
+
         public PositionState NextToAct { get; private set; }
 
         public Contract Contract { get; }
@@ -41,46 +54,47 @@ namespace BridgeBidding
             this.NextToAct = Dealer;
         }
 
-        public void ReplayAuction(Call[] history)
+        public void ReplayAuction(IEnumerable<Call> history)
         {
             foreach (var call in history)
             {
                 Contract.ValidateCall(call, NextToAct);
-                MakeCall(call, NextToAct.GetPositionCalls());
+                if (!CallChoices.ContainsKey(call))
+                {
+                    // TODO: This is something strange.  A call we don't know
+                    // how to interpret.  Should bidding system get a crack at this
+                    // when we create the placeholder?
+                    CallChoices.CreatePlaceholderCall(call);
+                }
+                MakeCall(CallChoices[call]);
             }
         }
 
-        public Call SuggestCall()
+        
+        public void MakeCall(CallDetails callDetails)
         {
-            if (!NextToAct.HasHand)
-            {
-                throw new AuctionException(Call.Pass, NextToAct, Contract, $"{NextToAct.Direction} does not have a known hand so can not suggest a bid.");
-            }
-            if (Contract.AuctionComplete)
-            {
-                throw new AuctionException(Call.Pass, NextToAct, Contract, "Auction is final.  No more bids can be made");
-            }
-            var choices = NextToAct.GetPositionCalls();
-            if (choices.BestCall == null)
-            {
-                throw new Exception("No BestCall for auction.");
-            }
-            MakeCall(choices.BestCall, choices);
-            return choices.BestCall;
-        }
+            Debug.Assert(NextToAct == callDetails.PositionState);
+            
+            if (callDetails.Group.PositionCalls != CallChoices)
+			{
+				throw new System.Exception("MakeCall method called for CallDetails that is not part of current call choices");
+			}
 
+            // TODO: Carefully consider if contract should be updated before or after 
+            // PositionState.MakeCall 
+            callDetails.PositionState.MakeCall(callDetails);
+            Contract.MakeCall(callDetails); // This also validates the call and will throw if a problem.
 
-        private void MakeCall(Call call, PositionCalls choices)
-        {
-            Debug.Assert(Contract.IsValid(call, NextToAct));
-            NextToAct.MakeCall(choices.GetCallDetails(call));
-            if (this.OpeningBid == null && call is Bid bid)
+            if (this.OpeningBid == null && callDetails.Call is Bid bid)
             {
                 this.OpeningBid = bid;
                 this.Opener = NextToAct;
             }
+
             NextToAct = NextToAct.LeftHandOpponent;
+            _positionCalls = null;  // Reset call choices
         }
+        
 
         public List<CallDetails> GetAuction()
         {

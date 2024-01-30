@@ -30,6 +30,8 @@ namespace BridgeBidding
         public bool HasRules {  get {  return _ruleInfo.Count > 0; } }
 
 		public CallGroup Group { get; }
+
+		public PositionState PositionState => Group.PositionState;
        
 
 		public CallDetails(CallGroup group, Call call) 
@@ -94,18 +96,18 @@ namespace BridgeBidding
 		}
 
 
-        public (HandSummary, PairAgreements) ShowState(PositionState ps)
+        public (HandSummary, PairAgreements) ShowState()
         {
 			// TODO: This is a hack. Need to understand what's going on here.  But for now if empty rules
 			// just return the current state...
-			if (!HasRules) { return (ps.PublicHandSummary, ps.PairState.Agreements); }
+			if (!HasRules) { return (PositionState.PublicHandSummary, PositionState.PairState.Agreements); }
 
             var showHand = new HandSummary.ShowState();
             var showAgreements = new PairAgreements.ShowState();
             bool firstRule = true;
             foreach (var ri in _ruleInfo)
             {
-                (HandSummary hs, PairAgreements pa) newState = ri.Rule.ShowState(ps);
+                (HandSummary hs, PairAgreements pa) newState = ri.Rule.ShowState(PositionState);
 				ri.HandSummary = newState.hs;
 				ri.PairAgreements = newState.pa;	
 				// TODO: This is right to save the state, but needs to be used later WITHOUT calling show.
@@ -133,8 +135,6 @@ namespace BridgeBidding
 			_ruleInfo = rules;
 			return true;
 		}
-
-        
 
     }
 
