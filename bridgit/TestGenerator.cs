@@ -35,7 +35,7 @@ namespace Bridgit
                 board.Hands[Direction.S] = null;
                 board.Hands[Direction.W] = null;
                 var bs = new BiddingState(board, _bidder, _bidder);
-                CallDetails callDetails = bs.SuggestCall();
+                CallDetails callDetails = bs.CallChoices.BestCall;
                 var call = callDetails.Call;
                 if (Tests.ContainsKey(call) && Tests[call].Count < count)
                 {
@@ -52,7 +52,7 @@ namespace Bridgit
         {
             Debug.Assert(board.Dealer == Direction.N);
             var bs = new BiddingState(board, bidder, bidder);
-            CallDetails lastCall = bs.SuggestCall();
+            CallDetails lastCall = bs.CallChoices.BestCall;
             var auction = new List<Call>();
             while (board.Dealer != Direction.E)
             {
@@ -60,7 +60,7 @@ namespace Bridgit
                 auction.Add(Call.Pass);
                 bs = new BiddingState(board, bidder, bidder);
                 bs.ReplayAuction(auction.ToArray());
-                CallDetails posCall = bs.SuggestCall();
+                CallDetails posCall = bs.CallChoices.BestCall;
                 if (!posCall.Call.Equals(lastCall.Call))
                 {
                     return true;
