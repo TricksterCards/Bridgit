@@ -15,15 +15,15 @@ namespace Bridgit
        //     var s = BridgeBidder.FullAuction("N:KT9.KQJ7.KQ5.J97 5.T983.AJT4.A643 AQ432.654.32.Q85 J876.A2.9876.KT2", "None");
        //     Console.WriteLine(s);
        
-            var gen = new TestGenerator("Open", 4, Call.Pass, Bid.OneClub, Bid.OneDiamond, Bid.OneHeart, Bid.OneSpade, Bid.OneNoTrump,
-                    Bid.TwoClubs, Bid.TwoDiamonds, Bid.TwoHearts, Bid.TwoSpades, Bid.TwoNoTrump);
-            gen.GenerateTests(10);
-            Console.WriteLine(gen);
-      /*
-            var gen = new TestGenerator("Seat-dependent");
+        ///    var gen = new TestGenerator("Open", 4, Call.Pass, Bid._1C, Bid._1D, Bid._1H, Bid._1S, Bid._1NT,
+         //           Bid._2C, Bid._2D, Bid._2H, Bid._2S, Bid._2NT);
+         //   gen.GenerateTests(10);
+         //   Console.WriteLine(gen);
+      
+            var gen = new TestGenerator("Seat-dependent", 1, Bid._3C);
             var games = gen.GenerateSeatDependentTests(20);
             Console.WriteLine(gen.GamesToString("Seat dependent", games));
-            */
+        
         }
 
 

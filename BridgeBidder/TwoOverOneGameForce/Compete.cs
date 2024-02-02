@@ -27,31 +27,31 @@ namespace BridgeBidding
 
              //   Nonforcing(Call.Pass, 0),    // TOD   aO: What points?  This is the last gasp attempt here...
 
-                Nonforcing(Bid.FourHearts, Fit(), PairPoints(CompeteTo4), ShowsTrump()),
-                Nonforcing(Bid.FourSpades, Fit(), PairPoints(CompeteTo4), ShowsTrump()),
+                Nonforcing(Bid._4H, Fit(), PairPoints(CompeteTo4), ShowsTrump),
+                Nonforcing(Bid._4S, Fit(), PairPoints(CompeteTo4), ShowsTrump),
 
 
 
-                Nonforcing(Bid.TwoClubs, Fit(), PairPoints(CompeteTo2), ShowsTrump()),
-                Nonforcing(Bid.TwoDiamonds, Fit(), PairPoints(CompeteTo2), ShowsTrump()),
-                Nonforcing(Bid.TwoHearts, Fit(), PairPoints(CompeteTo2), ShowsTrump()),
-                Nonforcing(Bid.TwoSpades, Fit(), PairPoints(CompeteTo2), ShowsTrump()),
+                Nonforcing(Bid._2C, Fit(), PairPoints(CompeteTo2), ShowsTrump),
+                Nonforcing(Bid._2D, Fit(), PairPoints(CompeteTo2), ShowsTrump),
+                Nonforcing(Bid._2H, Fit(), PairPoints(CompeteTo2), ShowsTrump),
+                Nonforcing(Bid._2S, Fit(), PairPoints(CompeteTo2), ShowsTrump),
 
-                Nonforcing(Bid.ThreeClubs,  Fit(), PairPoints(CompeteTo3), ShowsTrump()),
-                Nonforcing(Bid.ThreeDiamonds,  Fit(), PairPoints(CompeteTo3), ShowsTrump()),
-                Nonforcing(Bid.ThreeHearts, Fit(), PairPoints(CompeteTo3), ShowsTrump()),
-                Nonforcing(Bid.ThreeSpades, Fit(), PairPoints(CompeteTo3), ShowsTrump()),
+                Nonforcing(Bid._3C,  Fit(), PairPoints(CompeteTo3), ShowsTrump),
+                Nonforcing(Bid._3D,  Fit(), PairPoints(CompeteTo3), ShowsTrump),
+                Nonforcing(Bid._3H, Fit(), PairPoints(CompeteTo3), ShowsTrump),
+                Nonforcing(Bid._3S, Fit(), PairPoints(CompeteTo3), ShowsTrump),
 
-                Signoff(Bid.ThreeNoTrump, OppsStopped(), PairPoints(CompeteTo3NT)),
+                Signoff(Bid._3NT, OppsStopped(), PairPoints(CompeteTo3NT)),
 
-                Signoff(Bid.TwoNoTrump, OppsContract(), OppsStopped(), PairPoints(CompeteTo2NT)),
+                Signoff(Bid._2NT, OppsContract(), OppsStopped(), PairPoints(CompeteTo2NT)),
 
 
-                Nonforcing(Bid.FourClubs, Not(Gerber.Applies), Fit(), PairPoints(CompeteTo4), ShowsTrump()),
-                Nonforcing(Bid.FourDiamonds, Fit(), PairPoints(CompeteTo4), ShowsTrump()),
+                Nonforcing(Bid._4C, Not(Gerber.Applies), Fit(), PairPoints(CompeteTo4), ShowsTrump),
+                Nonforcing(Bid._4D, Fit(), PairPoints(CompeteTo4), ShowsTrump),
 
-                Nonforcing(Bid.FiveClubs, Fit(), PairPoints(CompeteTo5), ShowsTrump()),
-                Nonforcing(Bid.FiveDiamonds, Fit(), PairPoints(CompeteTo5), ShowsTrump()),
+                Nonforcing(Bid._5C, Fit(), PairPoints(CompeteTo5), ShowsTrump),
+                Nonforcing(Bid._5D, Fit(), PairPoints(CompeteTo5), ShowsTrump),
 
                 // TODO: Penalty doubles for game contracts.
                 //Signoff(Call.Double, OppsContract(), PairPoints((12, 40)), RuleOf9()),

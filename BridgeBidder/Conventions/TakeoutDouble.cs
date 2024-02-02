@@ -78,31 +78,31 @@ namespace BridgeBidding
 
                 Signoff(Call.Pass, RuleOf9()),
                 // TODO: FOR NOW WE WILL JUST BID AT THE NEXT LEVEL REGARDLESS OF POINTS...
-                // TODO: Need LongestSuit()...
+                // TODO: Need LongestSuit...
                 // TODO: Should this be TakeoutSuit()...
-                Nonforcing(Bid.OneDiamond, TakeoutSuit(), Points(MinLevel)),
-                Nonforcing(Bid.OneHeart, TakeoutSuit(), Points(MinLevel)),
-                Nonforcing(Bid.OneSpade, TakeoutSuit(), Points(MinLevel)),
+                Nonforcing(Bid._1D, TakeoutSuit(), Points(MinLevel)),
+                Nonforcing(Bid._1H, TakeoutSuit(), Points(MinLevel)),
+                Nonforcing(Bid._1S, TakeoutSuit(), Points(MinLevel)),
 
 
-                Nonforcing(Bid.OneNoTrump, Balanced(), OppsStopped(), Points(NoTrump1)),
+                Nonforcing(Bid._1NT, Balanced(), OppsStopped(), Points(NoTrump1)),
 
-                Nonforcing(Bid.TwoClubs, TakeoutSuit(), Points(MinLevel)),
-                Nonforcing(Bid.TwoDiamonds, TakeoutSuit(), Jump(0), Points(MinLevel)),
-                Nonforcing(Bid.TwoDiamonds, TakeoutSuit(), Jump(1), Points(InviteLevel)),
-                Nonforcing(Bid.TwoHearts, TakeoutSuit(), Jump(0), Points(MinLevel)),
-                Nonforcing(Bid.TwoHearts, TakeoutSuit(), Jump(1), Points(InviteLevel)),
-                Nonforcing(Bid.TwoSpades, TakeoutSuit(), Jump(0), Points(MinLevel)),
-                Nonforcing(Bid.TwoSpades, TakeoutSuit(), Jump(1), Points(InviteLevel)),
+                Nonforcing(Bid._2C, TakeoutSuit(), Points(MinLevel)),
+                Nonforcing(Bid._2D, TakeoutSuit(), Jump(0), Points(MinLevel)),
+                Nonforcing(Bid._2D, TakeoutSuit(), Jump(1), Points(InviteLevel)),
+                Nonforcing(Bid._2H, TakeoutSuit(), Jump(0), Points(MinLevel)),
+                Nonforcing(Bid._2H, TakeoutSuit(), Jump(1), Points(InviteLevel)),
+                Nonforcing(Bid._2S, TakeoutSuit(), Jump(0), Points(MinLevel)),
+                Nonforcing(Bid._2S, TakeoutSuit(), Jump(1), Points(InviteLevel)),
 
 
-                Nonforcing(Bid.TwoNoTrump, Balanced(), OppsStopped(), Points(NoTrump2)),
+                Nonforcing(Bid._2NT, Balanced(), OppsStopped(), Points(NoTrump2)),
 
                 // TODO: Game bids
-                Signoff(Bid.FourHearts, TakeoutSuit(), Points(GameLevel)),
-                Signoff(Bid.FourSpades, TakeoutSuit(), Points(GameLevel)),
+                Signoff(Bid._4H, TakeoutSuit(), Points(GameLevel)),
+                Signoff(Bid._4S, TakeoutSuit(), Points(GameLevel)),
 
-                Signoff(Bid.ThreeNoTrump, Balanced(), OppsStopped(), Points(Game3NT)),
+                Signoff(Bid._3NT, Balanced(), OppsStopped(), Points(Game3NT)),
 
                 Nonforcing(Call.Pass, Not(RHO(LastBid(Call.Pass))))
             }) ;
@@ -124,31 +124,31 @@ namespace BridgeBidding
 
 
                 // TODO: Clean this up... For now just majors...  Clean up range...
-                Signoff(Bid.FourHearts, Fit(), PairPoints((25, 30))),
-                Signoff(Bid.FourSpades, Fit(), PairPoints((25, 30))),
+                Signoff(Bid._4H, Fit(), PairPoints((25, 30))),
+                Signoff(Bid._4S, Fit(), PairPoints((25, 30))),
 
-                // CANT BE - Invitational(Bid.TwoClubs, RaisePartner(), Points(MediumTakeout)),
-                Invitational(Bid.TwoDiamonds, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid.TwoHearts,   RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid.TwoSpades,   RaisePartner(), DummyPoints(MediumTakeout)),
+                // CANT BE - Invitational(Bid._2C, RaisePartner(), Points(MediumTakeout)),
+                Invitational(Bid._2D, RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._2H,   RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._2S,   RaisePartner(), DummyPoints(MediumTakeout)),
 
-                Invitational(Bid.ThreeClubs,    RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid.ThreeDiamonds, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid.ThreeDiamonds, RaisePartner(2), DummyPoints(MaximumTakeout)),
-                Invitational(Bid.ThreeHearts,   RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid.ThreeHearts,   RaisePartner(2), DummyPoints(MaximumTakeout)),
-                Invitational(Bid.ThreeSpades,   RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid.ThreeSpades,   RaisePartner(2), DummyPoints(MaximumTakeout)),
+                Invitational(Bid._3C,    RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._3D, RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._3D, RaisePartner(2), DummyPoints(MaximumTakeout)),
+                Invitational(Bid._3H,   RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._3H,   RaisePartner(2), DummyPoints(MaximumTakeout)),
+                Invitational(Bid._3S,   RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._3S,   RaisePartner(2), DummyPoints(MaximumTakeout)),
                 // TODO: Bid new suits for strong hands...  Bid NT?  
 
                 // TODO: Forcing?  What to do here...
                 // TODO: What is the lowest suit we could do here?  1C X Pass 1D is all I can think of...
-                Invitational(Bid.OneHeart, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid.OneSpade, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid.TwoClubs, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid.TwoDiamonds, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid.TwoHearts, Jump(0), Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid.TwoSpades, Jump(0), Shape(5, 11), Points(MediumTakeout)),
+                Invitational(Bid._1H, Shape(5, 11), Points(MediumTakeout)),
+                Invitational(Bid._1S, Shape(5, 11), Points(MediumTakeout)),
+                Invitational(Bid._2C, Shape(5, 11), Points(MediumTakeout)),
+                Invitational(Bid._2D, Shape(5, 11), Points(MediumTakeout)),
+                Invitational(Bid._2H, Jump(0), Shape(5, 11), Points(MediumTakeout)),
+                Invitational(Bid._2S, Jump(0), Shape(5, 11), Points(MediumTakeout)),
 
                 // TODO: Need stronger bids here...
 

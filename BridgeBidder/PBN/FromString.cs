@@ -218,7 +218,7 @@ namespace BridgeBidding.PBN
             var tags = new List<PBNTag>();
             var lines = text.Split(new[] { "\n", "\n\r" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(line => line.Trim())
-                .Where(line => !string.IsNullOrEmpty(line) && !line.StartsWith("%"));
+                .Where(line => !string.IsNullOrEmpty(line) && !line.StartsWith("%") && !line.StartsWith(";"));
             foreach (var line in lines)
                 if (line.StartsWith("["))
                 {

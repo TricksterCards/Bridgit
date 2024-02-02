@@ -136,8 +136,6 @@ namespace BridgeBidding
         public Strain Strain { get; }
         public Suit? Suit => StrainToSuit(Strain);
 
-        public static Bid _1C = new Bid(1, BridgeBidding.Suit.Clubs);
-
         public Bid(int level, Suit suit) : this(level, SuitToStrain(suit))
         { }
 
@@ -164,51 +162,51 @@ namespace BridgeBidding
         }
 
 
-        public static Bid OneClub =     new Bid(1, Strain.Clubs);
-        public static Bid OneDiamond =  new Bid(1, Strain.Diamonds);
-        public static Bid OneHeart =    new Bid(1, Strain.Hearts);
-        public static Bid OneSpade =    new Bid(1, Strain.Spades);
-        public static Bid OneNoTrump =  new Bid(1, Strain.NoTrump);
+        public static Bid _1C  = new Bid(1, Strain.Clubs);
+        public static Bid _1D  = new Bid(1, Strain.Diamonds);
+        public static Bid _1H  = new Bid(1, Strain.Hearts);
+        public static Bid _1S  = new Bid(1, Strain.Spades);
+        public static Bid _1NT = new Bid(1, Strain.NoTrump);
 
-        public static Bid TwoClubs =    new Bid(2, Strain.Clubs);
-        public static Bid TwoDiamonds = new Bid(2, Strain.Diamonds);
-        public static Bid TwoHearts =   new Bid(2, Strain.Hearts);
-        public static Bid TwoSpades =   new Bid(2, Strain.Spades);
-        public static Bid TwoNoTrump =  new Bid(2, Strain.NoTrump);
+        public static Bid _2C  = new Bid(2, Strain.Clubs);
+        public static Bid _2D  = new Bid(2, Strain.Diamonds);
+        public static Bid _2H  = new Bid(2, Strain.Hearts);
+        public static Bid _2S  = new Bid(2, Strain.Spades);
+        public static Bid _2NT = new Bid(2, Strain.NoTrump);
 
-        public static Bid ThreeClubs =   new Bid(3, Strain.Clubs);
-        public static Bid ThreeDiamonds= new Bid(3, Strain.Diamonds);
-        public static Bid ThreeHearts =  new Bid(3, Strain.Hearts);
-        public static Bid ThreeSpades =  new Bid(3, Strain.Spades);
-        public static Bid ThreeNoTrump = new Bid(3, Strain.NoTrump);
-
-
-        public static Bid FourClubs =   new Bid(4, Strain.Clubs);
-        public static Bid FourDiamonds= new Bid(4, Strain.Diamonds);
-        public static Bid FourHearts =  new Bid(4, Strain.Hearts);
-        public static Bid FourSpades =  new Bid(4, Strain.Spades);
-        public static Bid FourNoTrump = new Bid(4, Strain.NoTrump);
+        public static Bid _3C  = new Bid(3, Strain.Clubs);
+        public static Bid _3D  = new Bid(3, Strain.Diamonds);
+        public static Bid _3H  = new Bid(3, Strain.Hearts);
+        public static Bid _3S  = new Bid(3, Strain.Spades);
+        public static Bid _3NT = new Bid(3, Strain.NoTrump);
 
 
-        public static Bid FiveClubs =   new Bid(5, Strain.Clubs);
-        public static Bid FiveDiamonds= new Bid(5, Strain.Diamonds);
-        public static Bid FiveHearts =  new Bid(5, Strain.Hearts);
-        public static Bid FiveSpades =  new Bid(5, Strain.Spades);
-        public static Bid FiveNoTrump = new Bid(5, Strain.NoTrump);
+        public static Bid _4C  = new Bid(4, Strain.Clubs);
+        public static Bid _4D  = new Bid(4, Strain.Diamonds);
+        public static Bid _4H  = new Bid(4, Strain.Hearts);
+        public static Bid _4S  = new Bid(4, Strain.Spades);
+        public static Bid _4NT = new Bid(4, Strain.NoTrump);
 
 
-        public static Bid SixClubs =    new Bid(6, Strain.Clubs);
-        public static Bid SixDiamonds = new Bid(6, Strain.Diamonds);
-        public static Bid SixHearts =   new Bid(6, Strain.Hearts);
-        public static Bid SixSpades =   new Bid(6, Strain.Spades);
-        public static Bid SixNoTrump =  new Bid(6, Strain.NoTrump);
+        public static Bid _5C  = new Bid(5, Strain.Clubs);
+        public static Bid _5D  = new Bid(5, Strain.Diamonds);
+        public static Bid _5H  = new Bid(5, Strain.Hearts);
+        public static Bid _5S  = new Bid(5, Strain.Spades);
+        public static Bid _5NT = new Bid(5, Strain.NoTrump);
 
 
-        public static Bid SevenClubs =   new Bid(7, Strain.Clubs);
-        public static Bid SevenDiamonds= new Bid(7, Strain.Diamonds);
-        public static Bid SevenHearts =  new Bid(7, Strain.Hearts);
-        public static Bid SevenSpades =  new Bid(7, Strain.Spades);
-        public static Bid SevenNoTrump = new Bid(7, Strain.NoTrump);
+        public static Bid _6C  = new Bid(6, Strain.Clubs);
+        public static Bid _6D  = new Bid(6, Strain.Diamonds);
+        public static Bid _6H  = new Bid(6, Strain.Hearts);
+        public static Bid _6S  = new Bid(6, Strain.Spades);
+        public static Bid _6NT = new Bid(6, Strain.NoTrump);
+
+
+        public static Bid _7C  = new Bid(7, Strain.Clubs);
+        public static Bid _7D  = new Bid(7, Strain.Diamonds);
+        public static Bid _7H  = new Bid(7, Strain.Hearts);
+        public static Bid _7S  = new Bid(7, Strain.Spades);
+        public static Bid _7NT = new Bid(7, Strain.NoTrump);
 
     }
 }

@@ -19,8 +19,8 @@ namespace BridgeBidding
 		{
 			return new CallFeature[]
 			{
-				PartnerBids(Bid.FourClubs, RespondAces, Gerber.Applies),
-				Forcing(Bid.FourClubs, Gerber.Applies, PairPoints(SlamOrBetter))
+				PartnerBids(Bid._4C, RespondAces, Gerber.Applies),
+				Forcing(Bid._4C, Gerber.Applies, PairPoints(SlamOrBetter))
 			};
 		}
 		public static IEnumerable<CallFeature> RespondAces(PositionState ps)
@@ -29,10 +29,10 @@ namespace BridgeBidding
 			{
 				PartnerBids(PlaceContract),
 				
-				Forcing(Bid.FourDiamonds, ShowsNoSuit(), Aces(0, 4)),
-				Forcing(Bid.FourHearts, ShowsNoSuit(), Aces(1)),
-				Forcing(Bid.FourSpades, ShowsNoSuit(), Aces(2)),
-				Forcing(Bid.FourNoTrump, ShowsNoSuit(), Aces(3)),
+				Forcing(Bid._4D, ShowsNoSuit(), Aces(0, 4)),
+				Forcing(Bid._4H, ShowsNoSuit(), Aces(1)),
+				Forcing(Bid._4S, ShowsNoSuit(), Aces(2)),
+				Forcing(Bid._4NT, ShowsNoSuit(), Aces(3)),
 			};
 		}
 		// TODO: There needs to be somewhere that we ask for kings...
@@ -41,9 +41,9 @@ namespace BridgeBidding
 			// TODO: Need to ask about kings..... 
 			return new CallFeature[]
 			{
-				Signoff(Bid.SevenNoTrump, PairPoints(GrandSlam), PairAces(4)),
-				Signoff(Bid.SixNoTrump, PairAces(3, 4)),
-				Signoff(Bid.FourNoTrump, PairAces(0, 1, 2))
+				Signoff(Bid._7NT, PairPoints(GrandSlam), PairAces(4)),
+				Signoff(Bid._6NT, PairAces(3, 4)),
+				Signoff(Bid._4NT, PairAces(0, 1, 2))
 			};
 		}
 

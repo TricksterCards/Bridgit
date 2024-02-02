@@ -329,7 +329,8 @@ namespace BridgeBidding
 
 		public static Constraint LongerOrEqual(Suit longer, Suit shorter) { return new ShowsBetterSuit(longer, shorter, longer, true); }
 
-		public static DynamicConstraint LongestSuit(Suit? suit = null)
+		public static DynamicConstraint LongestSuit = IsLongestSuit(null);
+		public static DynamicConstraint IsLongestSuit(Suit? suit)
 		{
 			return new ShowsLongestSuit(suit);
 		}
@@ -349,17 +350,17 @@ namespace BridgeBidding
 
 
 
-		
+		public static Constraint ShowsTrump = new ShowsTrump(null);
 
-		public static Constraint ShowsTrump(Strain? trumpStrain = null)
+		public static Constraint AgreeOnStrain(Strain trumpStrain)
 		{
 			return new ShowsTrump(trumpStrain);
 		}
 
-		public static Constraint ShowsTrump(Suit? trumpSuit)
+		public static Constraint ShowsTrumpSuit(Suit? trumpSuit)
 		{
-			if (trumpSuit == null) { return new ShowsTrump(null); }
-			return new ShowsTrump(Call.SuitToStrain(trumpSuit));
+			if (trumpSuit == null) return ShowsTrump;
+			return AgreeOnStrain(Call.SuitToStrain(trumpSuit));
 		}
 
 
@@ -508,7 +509,7 @@ namespace BridgeBidding
 		// THE FOLLOWING CONSTRAINTS ARE GROUPS OF CONSTRAINTS
         public static Constraint RaisePartner(Suit? suit = null, int raise = 1, int fit = 8)
         {
-            return And(Partner(HasShownSuit(suit)), Fit(fit, suit), Jump(raise - 1), ShowsTrump(suit));
+            return And(Partner(HasShownSuit(suit)), Fit(fit, suit), Jump(raise - 1), ShowsTrumpSuit(suit));
         }
         public static Constraint RaisePartner(int level)
         {

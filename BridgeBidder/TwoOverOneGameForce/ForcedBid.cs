@@ -13,25 +13,25 @@ namespace BridgeBidding
 			if (ps.ForcedToBid)
 			{
 				bids.AddRange(new CallFeature[] {
-					Nonforcing(Bid.TwoClubs, Fit(7)),
-					Nonforcing(Bid.TwoDiamonds, Fit(7)),
-					Nonforcing(Bid.TwoHearts, Fit(7)),
-					Nonforcing(Bid.TwoSpades, Fit(7)),
+					Nonforcing(Bid._2C, Fit(7)),
+					Nonforcing(Bid._2D, Fit(7)),
+					Nonforcing(Bid._2H, Fit(7)),
+					Nonforcing(Bid._2S, Fit(7)),
 
-					Nonforcing(Bid.ThreeClubs, Jump(0), Fit(7)),
-					Nonforcing(Bid.ThreeDiamonds, Jump(0), Fit(7)),
-					Nonforcing(Bid.ThreeHearts, Jump(0), Fit(7)),
-					Nonforcing(Bid.ThreeSpades, Jump(0), Fit(7)),
+					Nonforcing(Bid._3C, Jump(0), Fit(7)),
+					Nonforcing(Bid._3D, Jump(0), Fit(7)),
+					Nonforcing(Bid._3H, Jump(0), Fit(7)),
+					Nonforcing(Bid._3S, Jump(0), Fit(7)),
 
-					Nonforcing(Bid.FourClubs, Jump(0), Fit(7)),
-					Nonforcing(Bid.FourDiamonds, Jump(0), Fit(7)),
-					Nonforcing(Bid.FourHearts, Jump(0), Fit(7)),
-					Nonforcing(Bid.FourSpades, Jump(0), Fit(7)), 
+					Nonforcing(Bid._4C, Jump(0), Fit(7)),
+					Nonforcing(Bid._4D, Jump(0), Fit(7)),
+					Nonforcing(Bid._4H, Jump(0), Fit(7)),
+					Nonforcing(Bid._4S, Jump(0), Fit(7)), 
 
 					// Now the worst possible cases.  NT if no 7-card fit
-					Nonforcing(Bid.OneNoTrump),
-					Nonforcing(Bid.TwoNoTrump, Jump(0)),
-					Nonforcing(Bid.ThreeNoTrump, Jump(0))
+					Nonforcing(Bid._1NT),
+					Nonforcing(Bid._2NT, Jump(0)),
+					Nonforcing(Bid._3NT, Jump(0))
 
 				});
 			};

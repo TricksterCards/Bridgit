@@ -27,8 +27,8 @@ namespace BridgeBidding
 			return new CallFeature[]
 			{
                 // TODO: Systems on/off through here --- just like 1NT.....
-                PartnerBids(Bid.TwoNoTrump, Respond),
-				Nonforcing(Bid.TwoNoTrump, OpenPoints, Balanced())
+                PartnerBids(Bid._2NT, Respond),
+				Nonforcing(Bid._2NT, OpenPoints, Balanced())
 			};
 		}
 
@@ -57,17 +57,17 @@ namespace BridgeBidding
 			return new CallFeature[]
 			{
 			     // TODO: Perhaps bid BestSuit() of all the signoff suits... 
-                Signoff(Bid.ThreeClubs, NTB.RespondNoGame, Shape(5, 11), LongestMajor(4)),
-				Signoff(Bid.ThreeDiamonds, NTB.RespondNoGame, Shape(5, 11), LongestMajor(4)),
-				Signoff(Bid.ThreeHearts, NTB.RespondNoGame, Shape(5, 11)),
-				Signoff(Bid.ThreeSpades, NTB.RespondNoGame, Shape(5, 11)),
+                Signoff(Bid._3C, NTB.RespondNoGame, Shape(5, 11), LongestMajor(4)),
+				Signoff(Bid._3D, NTB.RespondNoGame, Shape(5, 11), LongestMajor(4)),
+				Signoff(Bid._3H, NTB.RespondNoGame, Shape(5, 11)),
+				Signoff(Bid._3S, NTB.RespondNoGame, Shape(5, 11)),
 
 				Signoff(Bid.Pass, NTB.RespondNoGame),
 
-				Signoff(Bid.ThreeNoTrump, NTB.RespondGame, LongestMajor(4)),
+				Signoff(Bid._3NT, NTB.RespondGame, LongestMajor(4)),
 
-				Signoff(Bid.FourHearts, NTB.RespondGame, Shape(5, 11), BetterThan(Suit.Spades)),
-				Signoff(Bid.FourSpades, NTB.RespondGame, Shape(5, 11), BetterOrEqualTo(Suit.Hearts)),
+				Signoff(Bid._4H, NTB.RespondGame, Shape(5, 11), BetterThan(Suit.Spades)),
+				Signoff(Bid._4S, NTB.RespondGame, Shape(5, 11), BetterOrEqualTo(Suit.Hearts)),
 			};
 		}
 	}

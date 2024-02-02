@@ -18,27 +18,27 @@ namespace BridgeBidding
 		{
 			return new CallFeature[] {
 				Convention(UserText.JacobyTransfer),
-				Announce(Bid.TwoDiamonds, UserText.TransferToHearts),
-				Announce(Bid.TwoHearts, UserText.TransferToSpades),
-				Announce(Bid.TwoSpades, UserText.TransferToClubs),
+				Announce(Bid._2D, UserText.TransferToHearts),
+				Announce(Bid._2H, UserText.TransferToSpades),
+				Announce(Bid._2S, UserText.TransferToClubs),
 
 				PartnerBids(AcceptTransfer),
 
 				// For weak hands, transfer to longest major.
 				// For invitational hands, 5/5 transfer to hearts then bid spades
 				// For game-going hands 5/5 transfer to spades then bid 3H
-				Forcing(Bid.TwoDiamonds, NTD.RR.LessThanInvite, Shape(Suit.Hearts, 5, 11), Better(Suit.Hearts, Suit.Spades), ShowsSuit(Suit.Hearts)),
-				Forcing(Bid.TwoDiamonds, NTD.RR.InviteGame, Shape(Suit.Hearts, 5, 11), Shape(Suit.Spades, 0, 5), ShowsSuit(Suit.Hearts)),
-				Forcing(Bid.TwoDiamonds, NTD.RR.GameOrBetter, Shape(Suit.Hearts, 5, 11), Shape(Suit.Spades, 0, 4), ShowsSuit(Suit.Hearts)),
+				Forcing(Bid._2D, NTD.RR.LessThanInvite, Shape(Suit.Hearts, 5, 11), Better(Suit.Hearts, Suit.Spades), ShowsSuit(Suit.Hearts)),
+				Forcing(Bid._2D, NTD.RR.InviteGame, Shape(Suit.Hearts, 5, 11), Shape(Suit.Spades, 0, 5), ShowsSuit(Suit.Hearts)),
+				Forcing(Bid._2D, NTD.RR.GameOrBetter, Shape(Suit.Hearts, 5, 11), Shape(Suit.Spades, 0, 4), ShowsSuit(Suit.Hearts)),
 
-				Forcing(Bid.TwoHearts, NTD.RR.LessThanInvite, Shape(Suit.Spades, 5, 11), BetterOrEqual(Suit.Spades, Suit.Hearts), ShowsSuit(Suit.Spades)),
-				Forcing(Bid.TwoHearts, NTD.RR.InviteGame, Shape(Suit.Spades, 5, 11), Shape(Suit.Hearts, 0, 4), ShowsSuit(Suit.Spades)),
-				Forcing(Bid.TwoHearts, NTD.RR.GameOrBetter, Shape(Suit.Spades, 5, 11), ShowsSuit(Suit.Spades)),
+				Forcing(Bid._2H, NTD.RR.LessThanInvite, Shape(Suit.Spades, 5, 11), BetterOrEqual(Suit.Spades, Suit.Hearts), ShowsSuit(Suit.Spades)),
+				Forcing(Bid._2H, NTD.RR.InviteGame, Shape(Suit.Spades, 5, 11), Shape(Suit.Hearts, 0, 4), ShowsSuit(Suit.Spades)),
+				Forcing(Bid._2H, NTD.RR.GameOrBetter, Shape(Suit.Spades, 5, 11), ShowsSuit(Suit.Spades)),
 
 				// TODO: Solid long minors are lots of tricks.  Need logic for those....
 				// TODO: 4-way transfers...
-				Forcing(Bid.TwoSpades, NTD.RR.LessThanInvite, Shape(Suit.Clubs, 6, 11)),
-				Forcing(Bid.TwoSpades, NTD.RR.LessThanInvite, Shape(Suit.Diamonds, 6, 11))
+				Forcing(Bid._2S, NTD.RR.LessThanInvite, Shape(Suit.Clubs, 6, 11)),
+				Forcing(Bid._2S, NTD.RR.LessThanInvite, Shape(Suit.Diamonds, 6, 11))
 			};
 		}
 
@@ -59,13 +59,13 @@ namespace BridgeBidding
 			choices.AddRules(new CallFeature[] {
 				PartnerBids(ExplainTransfer),
 
-				Nonforcing(Bid.ThreeHearts, ShowsTrump(), Partner(LastBid(2, Suit.Diamonds)), NTD.OR.SuperAccept, Shape(4, 5)),
-				Nonforcing(Bid.ThreeSpades, ShowsTrump(), Partner(LastBid(2, Suit.Hearts)), NTD.OR.SuperAccept, Shape(4, 5)),
+				Nonforcing(Bid._3H, ShowsTrump, Partner(LastBid(2, Suit.Diamonds)), NTD.OR.SuperAccept, Shape(4, 5)),
+				Nonforcing(Bid._3S, ShowsTrump, Partner(LastBid(2, Suit.Hearts)), NTD.OR.SuperAccept, Shape(4, 5)),
 
-				Nonforcing(Bid.TwoHearts, Partner(LastBid(2, Suit.Diamonds))),
-				Nonforcing(Bid.TwoSpades, Partner(LastBid(2, Suit.Hearts))),
+				Nonforcing(Bid._2H, Partner(LastBid(2, Suit.Diamonds))),
+				Nonforcing(Bid._2S, Partner(LastBid(2, Suit.Hearts))),
 
-				Nonforcing(Bid.ThreeClubs, Partner(LastBid(2, Suit.Spades)))
+				Nonforcing(Bid._3C, Partner(LastBid(2, Suit.Spades)))
 			});
 			return choices;
 		}
@@ -83,13 +83,13 @@ namespace BridgeBidding
 			return new CallFeature[] {
 				PartnerBids(OpenerRebid),
 
-				Nonforcing(Bid.TwoNoTrump, NTD.RR.InviteGame, OppsStopped()),
-				Nonforcing(Bid.TwoHearts, LastBid(Bid.TwoDiamonds), NTD.RR.InviteGame),
-				Nonforcing(Bid.TwoSpades, LastBid(Bid.TwoHearts), NTD.RR.InviteGame),
+				Nonforcing(Bid._2NT, NTD.RR.InviteGame, OppsStopped()),
+				Nonforcing(Bid._2H, LastBid(Bid._2D), NTD.RR.InviteGame),
+				Nonforcing(Bid._2S, LastBid(Bid._2H), NTD.RR.InviteGame),
 
-				Nonforcing(Bid.ThreeNoTrump, NTD.RR.GameOrBetter, OppsStopped()),
-				Nonforcing(Bid.FourHearts, LastBid(Bid.TwoDiamonds), NTD.RR.GameOrBetter),
-				Nonforcing(Bid.FourSpades, LastBid(Bid.TwoHearts), NTD.RR.GameOrBetter),
+				Nonforcing(Bid._3NT, NTD.RR.GameOrBetter, OppsStopped()),
+				Nonforcing(Bid._4H, LastBid(Bid._2D), NTD.RR.GameOrBetter),
+				Nonforcing(Bid._4S, LastBid(Bid._2H), NTD.RR.GameOrBetter),
 			};
 			
 		}
@@ -101,31 +101,31 @@ namespace BridgeBidding
 
 				// This can happen if we are 5/5 with invitational hand. Show Spades
 				// TODDO: Higher prioiryt than other bids.  Seems reasonable...
-				Invitational(Bid.TwoSpades, NTD.RR.InviteGame, Shape(5, 11)),
+				Invitational(Bid._2S, NTD.RR.InviteGame, Shape(5, 11)),
 
-				Forcing(Bid.ThreeHearts, NTD.RR.GameOrBetter, Partner(LastBid(Bid.TwoSpades)), Shape(5)),
-				Signoff(Bid.FourHearts, NTD.RR.GameIfSuperAccept, Partner(LastBid(Bid.ThreeHearts))),
-				Signoff(Bid.FourSpades, NTD.RR.GameIfSuperAccept, Partner(LastBid(Bid.ThreeSpades))),
+				Forcing(Bid._3H, NTD.RR.GameOrBetter, Partner(LastBid(Bid._2S)), Shape(5)),
+				Signoff(Bid._4H, NTD.RR.GameIfSuperAccept, Partner(LastBid(Bid._3H))),
+				Signoff(Bid._4S, NTD.RR.GameIfSuperAccept, Partner(LastBid(Bid._3S))),
 
-				Invitational(Bid.TwoNoTrump, NTD.RR.InviteGame, Partner(LastBid(Bid.TwoHearts)), Shape(Suit.Hearts, 5)),
-				Invitational(Bid.TwoNoTrump, NTD.RR.InviteGame, Partner(LastBid(Bid.TwoSpades)), Shape(Suit.Spades, 5)),
+				Invitational(Bid._2NT, NTD.RR.InviteGame, Partner(LastBid(Bid._2H)), Shape(Suit.Hearts, 5)),
+				Invitational(Bid._2NT, NTD.RR.InviteGame, Partner(LastBid(Bid._2S)), Shape(Suit.Spades, 5)),
 
-				Signoff(Bid.ThreeDiamonds, Partner(LastBid(Bid.ThreeClubs)), Shape(Suit.Diamonds, 6, 11)),
-
-
-				Invitational(Bid.ThreeHearts, NTD.RR.InviteGame, Partner(LastBid(Bid.TwoHearts)), Shape(6, 11)),
-				Invitational(Bid.ThreeSpades, NTD.RR.InviteGame, Partner(LastBid(Bid.TwoSpades)), Shape(6, 11)),
-
-				Signoff(Bid.ThreeNoTrump, NTD.RR.Game, Partner(LastBid(Bid.TwoHearts)), Shape(Suit.Hearts, 5)),
-				Signoff(Bid.ThreeNoTrump, NTD.RR.Game, Partner(LastBid(Bid.TwoSpades)), Shape(Suit.Spades, 5)),
-
-				Signoff(Bid.FourHearts, NTD.RR.Game, Partner(LastBid(Bid.TwoHearts)), Shape(6, 11)),
+				Signoff(Bid._3D, Partner(LastBid(Bid._3C)), Shape(Suit.Diamonds, 6, 11)),
 
 
-				Signoff(Bid.FourSpades, NTD.RR.Game, Partner(LastBid(Bid.TwoSpades)), Shape(6,11)),
+				Invitational(Bid._3H, NTD.RR.InviteGame, Partner(LastBid(Bid._2H)), Shape(6, 11)),
+				Invitational(Bid._3S, NTD.RR.InviteGame, Partner(LastBid(Bid._2S)), Shape(6, 11)),
 
-				Invitational(Bid.FourNoTrump, NTD.RR.InviteSlam, Partner(LastBid(Bid.TwoHearts)), Shape(Suit.Hearts, 5)),
-				Invitational(Bid.FourNoTrump, NTD.RR.InviteSlam, Partner(LastBid(Bid.TwoSpades)), Shape(Suit.Spades, 5)),
+				Signoff(Bid._3NT, NTD.RR.Game, Partner(LastBid(Bid._2H)), Shape(Suit.Hearts, 5)),
+				Signoff(Bid._3NT, NTD.RR.Game, Partner(LastBid(Bid._2S)), Shape(Suit.Spades, 5)),
+
+				Signoff(Bid._4H, NTD.RR.Game, Partner(LastBid(Bid._2H)), Shape(6, 11)),
+
+
+				Signoff(Bid._4S, NTD.RR.Game, Partner(LastBid(Bid._2S)), Shape(6,11)),
+
+				Invitational(Bid._4NT, NTD.RR.InviteSlam, Partner(LastBid(Bid._2H)), Shape(Suit.Hearts, 5)),
+				Invitational(Bid._4NT, NTD.RR.InviteSlam, Partner(LastBid(Bid._2S)), Shape(Suit.Spades, 5)),
 
 				// TODO: What about slam invite with 6+ of major.  Bid 5M?
 				// TODO:  Grand slame, etc...
@@ -137,47 +137,47 @@ namespace BridgeBidding
 		private IEnumerable<CallFeature> OpenerRebid(PositionState _)
 		{
 			return new CallFeature[] {
-				PartnerBids(Bid.ThreeHearts, PlaceGameContract, LastBid(Bid.TwoSpades)),
-				PartnerBids(Bid.ThreeSpades, PlaceGameContract, LastBid(Bid.TwoHearts)),
+				PartnerBids(Bid._3H, PlaceGameContract, LastBid(Bid._2S)),
+				PartnerBids(Bid._3S, PlaceGameContract, LastBid(Bid._2H)),
 
 				// TODO: Make lower priority???  
-				Signoff(Bid.Pass, LastBid(Bid.ThreeClubs), Partner(LastBid(Bid.ThreeDiamonds))),
+				Signoff(Bid.Pass, LastBid(Bid._3C), Partner(LastBid(Bid._3D))),
 
 				// If we have a 5 card suit then show it if invited.  
-				Forcing(Bid.ThreeHearts, NTD.OR.AcceptInvite, LastBid(Bid.TwoSpades), Shape(5), Shape(Suit.Spades, 2)),
-				Forcing(Bid.ThreeSpades, NTD.OR.AcceptInvite, LastBid(Bid.TwoHearts), Shape(5), Shape(Suit.Hearts, 2)),
+				Forcing(Bid._3H, NTD.OR.AcceptInvite, LastBid(Bid._2S), Shape(5), Shape(Suit.Spades, 2)),
+				Forcing(Bid._3S, NTD.OR.AcceptInvite, LastBid(Bid._2H), Shape(5), Shape(Suit.Hearts, 2)),
 
 
-				Signoff(Bid.ThreeHearts, NTD.OR.DontAcceptInvite, LastBid(Bid.TwoHearts), Shape(3, 5)),
-                Signoff(Bid.ThreeSpades, NTD.OR.DontAcceptInvite, LastBid(Bid.TwoSpades), Shape(3, 5)),
+				Signoff(Bid._3H, NTD.OR.DontAcceptInvite, LastBid(Bid._2H), Shape(3, 5)),
+                Signoff(Bid._3S, NTD.OR.DontAcceptInvite, LastBid(Bid._2S), Shape(3, 5)),
 
 				
 				// TODO: Really want to work off of "Partner Shows" instead of PartnerBid...
-                Signoff(Bid.FourHearts, NTD.OR.AcceptInvite, Fit()),
-				Signoff(Bid.FourHearts, NTD.OR.AcceptInvite, LastBid(Bid.TwoHearts), Partner(LastBid(Bid.TwoNoTrump)), Shape(3, 5)),
-				Signoff(Bid.FourHearts, LastBid(Bid.TwoHearts), Partner(LastBid(Bid.ThreeNoTrump)), Shape(3, 5)),
-				Signoff(Bid.FourHearts, LastBid(Bid.TwoSpades), Partner(LastBid(Bid.ThreeHearts)), Shape(3, 5), BetterOrEqual(Suit.Hearts, Suit.Spades)),
+                Signoff(Bid._4H, NTD.OR.AcceptInvite, Fit()),
+				Signoff(Bid._4H, NTD.OR.AcceptInvite, LastBid(Bid._2H), Partner(LastBid(Bid._2NT)), Shape(3, 5)),
+				Signoff(Bid._4H, LastBid(Bid._2H), Partner(LastBid(Bid._3NT)), Shape(3, 5)),
+				Signoff(Bid._4H, LastBid(Bid._2S), Partner(LastBid(Bid._3H)), Shape(3, 5), BetterOrEqual(Suit.Hearts, Suit.Spades)),
 
 
-				Signoff(Bid.FourSpades, NTD.OR.AcceptInvite, Partner(LastBid(Bid.ThreeSpades))),
-				Signoff(Bid.FourSpades, NTD.OR.AcceptInvite, LastBid(Bid.TwoSpades), Partner(LastBid(Bid.TwoNoTrump)), Shape(3, 5)),
-				Signoff(Bid.FourSpades, LastBid(Bid.TwoSpades), Partner(LastBid(Bid.ThreeNoTrump)), Shape(3, 5)),
-				Signoff(Bid.FourSpades, LastBid(Bid.TwoHearts), Partner(LastBid(Bid.ThreeSpades)), Shape(3, 5), Better(Suit.Spades, Suit.Hearts)),
+				Signoff(Bid._4S, NTD.OR.AcceptInvite, Partner(LastBid(Bid._3S))),
+				Signoff(Bid._4S, NTD.OR.AcceptInvite, LastBid(Bid._2S), Partner(LastBid(Bid._2NT)), Shape(3, 5)),
+				Signoff(Bid._4S, LastBid(Bid._2S), Partner(LastBid(Bid._3NT)), Shape(3, 5)),
+				Signoff(Bid._4S, LastBid(Bid._2H), Partner(LastBid(Bid._3S)), Shape(3, 5), Better(Suit.Spades, Suit.Hearts)),
 
 
                 // Didn't fine a suit to play in, so bid game if we have the points...
-                Signoff(Bid.ThreeNoTrump,  NTD.OR.AcceptInvite),
+                Signoff(Bid._3NT,  NTD.OR.AcceptInvite),
 
-				Signoff(Bid.FiveHearts, Partner(LastBid(Bid.FourNoTrump)), Fit(), NTD.OR.DontAcceptInvite),
-				Signoff(Bid.FiveSpades, Partner(LastBid(Bid.FourNoTrump)), Fit(), NTD.OR.DontAcceptInvite),
+				Signoff(Bid._5H, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.DontAcceptInvite),
+				Signoff(Bid._5S, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.DontAcceptInvite),
 
 
-				Signoff(Bid.SixHearts, Partner(LastBid(Bid.FourNoTrump)), Fit(), NTD.OR.AcceptInvite),
-				Signoff(Bid.SixSpades, Partner(LastBid(Bid.FourNoTrump)), Fit(), NTD.OR.AcceptInvite),
+				Signoff(Bid._6H, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.AcceptInvite),
+				Signoff(Bid._6S, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.AcceptInvite),
 
 				// Because this is lower priority it will only happen if there is not a fit
 				// so bid 6NT if partner invited to slam with 4NT
-				Signoff(Bid.SixNoTrump, Partner(LastBid(Bid.FourNoTrump)), NTD.OR.AcceptInvite),
+				Signoff(Bid._6NT, Partner(LastBid(Bid._4NT)), NTD.OR.AcceptInvite),
 
 
                 // TODO: SLAM BIDDING...
@@ -199,10 +199,10 @@ namespace BridgeBidding
 				// If partner has shown 5 hearts or 5 spades then this is game force contract so place
 				// it in NT or 4 of their suit.
 
-                Signoff(Bid.FourHearts,  Fit(), ShowsTrump()),
-				Signoff(Bid.FourSpades, Fit(), ShowsTrump()),
+                Signoff(Bid._4H,  Fit(), ShowsTrump),
+				Signoff(Bid._4S, Fit(), ShowsTrump),
 
-				Signoff(Bid.ThreeNoTrump)
+				Signoff(Bid._3NT)
 			};
 		}
 	}
@@ -220,9 +220,9 @@ namespace BridgeBidding
 			return new CallFeature[] {
 				PartnerBids(AcceptTransfer),
 				// TODO: Need to deal with 5/5 invite, etc.  For now just basic transfers work
-				Forcing(Bid.ThreeDiamonds, Shape(Suit.Hearts, 5, 11), Better(Suit.Hearts, Suit.Spades)),
+				Forcing(Bid._3D, Shape(Suit.Hearts, 5, 11), Better(Suit.Hearts, Suit.Spades)),
 
-				Forcing(Bid.ThreeHearts, Shape(Suit.Spades, 5, 11), BetterOrEqual(Suit.Spades, Suit.Hearts))
+				Forcing(Bid._3H, Shape(Suit.Spades, 5, 11), BetterOrEqual(Suit.Spades, Suit.Hearts))
 
 			};
 		}
@@ -232,8 +232,8 @@ namespace BridgeBidding
 			return new CallFeature[] {
 				PartnerBids(ExplainTransfer),
 
-				Nonforcing(Bid.ThreeHearts, Partner(LastBid(Bid.ThreeDiamonds))),
-				Nonforcing(Bid.ThreeSpades, Partner(LastBid(Bid.ThreeHearts)))
+				Nonforcing(Bid._3H, Partner(LastBid(Bid._3D))),
+				Nonforcing(Bid._3S, Partner(LastBid(Bid._3H)))
 			};
 		}
 
@@ -243,11 +243,11 @@ namespace BridgeBidding
 				PartnerBids(PlaceContract),
 				Signoff(Bid.Pass, NTB.RespondNoGame),
 
-				Nonforcing(Bid.ThreeNoTrump, NTB.RespondGame, Partner(LastBid(Bid.ThreeHearts)), Shape(Suit.Hearts, 5)),
-				Nonforcing(Bid.ThreeNoTrump, NTB.RespondGame, Partner(LastBid(Bid.ThreeSpades)), Shape(Suit.Spades, 5)),
+				Nonforcing(Bid._3NT, NTB.RespondGame, Partner(LastBid(Bid._3H)), Shape(Suit.Hearts, 5)),
+				Nonforcing(Bid._3NT, NTB.RespondGame, Partner(LastBid(Bid._3S)), Shape(Suit.Spades, 5)),
 
-				Signoff(Bid.FourHearts, NTB.RespondGame, Partner(LastBid(Bid.ThreeHearts)), Shape(6, 11)),
-				Signoff(Bid.FourSpades, NTB.RespondGame, Partner(LastBid(Bid.ThreeSpades)), Shape(6, 11))
+				Signoff(Bid._4H, NTB.RespondGame, Partner(LastBid(Bid._3H)), Shape(6, 11)),
+				Signoff(Bid._4S, NTB.RespondGame, Partner(LastBid(Bid._3S)), Shape(6, 11))
 
 			};
 		}
@@ -255,8 +255,8 @@ namespace BridgeBidding
 		private static IEnumerable<CallFeature> PlaceContract(PositionState _)
 		{
 			return new CallFeature[] {
-				Signoff(Bid.FourHearts, Fit()),
-				Signoff(Bid.FourSpades, Fit()),
+				Signoff(Bid._4H, Fit()),
+				Signoff(Bid._4S, Fit()),
 				Signoff(Bid.Pass)
 			};
 		}
@@ -275,11 +275,11 @@ namespace BridgeBidding
 		{
 			return new CallFeature[]
 			{
-				PartnerBids(Bid.FourDiamonds, p => AcceptTransfer(p, Strain.Hearts)),
-				PartnerBids(Bid.FourHearts, p => AcceptTransfer(p, Strain.Spades)),
+				PartnerBids(Bid._4D, p => AcceptTransfer(p, Strain.Hearts)),
+				PartnerBids(Bid._4H, p => AcceptTransfer(p, Strain.Spades)),
 
-				Forcing(Bid.FourDiamonds, Shape(Suit.Hearts, 5, 11)),
-				Forcing(Bid.FourHearts, Shape(Suit.Spades, 5, 11)),
+				Forcing(Bid._4D, Shape(Suit.Hearts, 5, 11)),
+				Forcing(Bid._4H, Shape(Suit.Spades, 5, 11)),
 			};
 		}
 

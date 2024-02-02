@@ -21,8 +21,8 @@ namespace BridgeBidding
 			return new CallFeature[]
 			{
                 // TODO: Systems on/off through here --- just like 1NT.....
-                PartnerBids(Bid.ThreeNoTrump, Respond),
-				Nonforcing(Bid.ThreeNoTrump, OpenPoints, Balanced())
+                PartnerBids(Bid._3NT, Respond),
+				Nonforcing(Bid._3NT, OpenPoints, Balanced())
 			};
 		}
 
@@ -52,8 +52,8 @@ namespace BridgeBidding
 			return new CallFeature[]
 			{
 			     // TODO: Perhaps bid BestSuit() of all the signoff suits... 
-             	Signoff(Bid.FourHearts, NTB.RespondNoSlam, Shape(5, 11)),
-				Signoff(Bid.FourSpades, NTB.RespondNoSlam, Shape(5, 11)),
+             	Signoff(Bid._4H, NTB.RespondNoSlam, Shape(5, 11)),
+				Signoff(Bid._4S, NTB.RespondNoSlam, Shape(5, 11)),
 
 				Signoff(Bid.Pass, NTB.RespondNoSlam),
 			};

@@ -1,0 +1,451 @@
+[Event "Seat dependent, seat 1, vul None"]
+[Board "1"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:64.T8.K8.AQJ9872 - - -"]
+[Auction "N"]
+1C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 1, vul NS"]
+[Board "2"]
+[Dealer "N"]
+[Vulnerable "NS"]
+[Deal "N:64.T8.K8.AQJ9872 - - -"]
+[Auction "N"]
+1C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 1, vul EW"]
+[Board "3"]
+[Dealer "N"]
+[Vulnerable "EW"]
+[Deal "N:64.T8.K8.AQJ9872 - - -"]
+[Auction "N"]
+1C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 1, vul All"]
+[Board "4"]
+[Dealer "N"]
+[Vulnerable "All"]
+[Deal "N:64.T8.K8.AQJ9872 - - -"]
+[Auction "N"]
+1C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 2, vul None"]
+[Board "5"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 64.T8.K8.AQJ9872 - -"]
+[Auction "W"]
+Pass 1C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 2, vul NS"]
+[Board "6"]
+[Dealer "W"]
+[Vulnerable "NS"]
+[Deal "W:- 64.T8.K8.AQJ9872 - -"]
+[Auction "W"]
+Pass 1C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 2, vul EW"]
+[Board "7"]
+[Dealer "W"]
+[Vulnerable "EW"]
+[Deal "W:- 64.T8.K8.AQJ9872 - -"]
+[Auction "W"]
+Pass 1C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 2, vul All"]
+[Board "8"]
+[Dealer "W"]
+[Vulnerable "All"]
+[Deal "W:- 64.T8.K8.AQJ9872 - -"]
+[Auction "W"]
+Pass 1C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 3, vul None"]
+[Board "9"]
+[Dealer "S"]
+[Vulnerable "None"]
+[Deal "S:- - 64.T8.K8.AQJ9872 -"]
+[Auction "S"]
+Pass Pass 3C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 3, vul NS"]
+[Board "10"]
+[Dealer "S"]
+[Vulnerable "NS"]
+[Deal "S:- - 64.T8.K8.AQJ9872 -"]
+[Auction "S"]
+Pass Pass 3C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 3, vul EW"]
+[Board "11"]
+[Dealer "S"]
+[Vulnerable "EW"]
+[Deal "S:- - 64.T8.K8.AQJ9872 -"]
+[Auction "S"]
+Pass Pass 3C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 3, vul All"]
+[Board "12"]
+[Dealer "S"]
+[Vulnerable "All"]
+[Deal "S:- - 64.T8.K8.AQJ9872 -"]
+[Auction "S"]
+Pass Pass 3C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 4, vul None"]
+[Board "13"]
+[Dealer "E"]
+[Vulnerable "None"]
+[Deal "E:- - - 64.T8.K8.AQJ9872"]
+[Auction "E"]
+Pass Pass Pass 3C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 4, vul NS"]
+[Board "14"]
+[Dealer "E"]
+[Vulnerable "NS"]
+[Deal "E:- - - 64.T8.K8.AQJ9872"]
+[Auction "E"]
+Pass Pass Pass 3C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 4, vul EW"]
+[Board "15"]
+[Dealer "E"]
+[Vulnerable "EW"]
+[Deal "E:- - - 64.T8.K8.AQJ9872"]
+[Auction "E"]
+Pass Pass Pass 3C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 4, vul All"]
+[Board "16"]
+[Dealer "E"]
+[Vulnerable "All"]
+[Deal "E:- - - 64.T8.K8.AQJ9872"]
+[Auction "E"]
+Pass Pass Pass 3C +
+;       S: 64         Poor
+;       H: T8         Poor
+;       D: K8         Decent
+;       C: AQJ9872    Good
+;  Points: (10, 13)
+;  HCP:    (10, 10)
+
+[Event "Seat dependent, seat 1, vul None"]
+[Board "17"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:53.Q8.JT3.AQ9432 - - -"]
+[Auction "N"]
+3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 1, vul NS"]
+[Board "18"]
+[Dealer "N"]
+[Vulnerable "NS"]
+[Deal "N:53.Q8.JT3.AQ9432 - - -"]
+[Auction "N"]
+3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 1, vul EW"]
+[Board "19"]
+[Dealer "N"]
+[Vulnerable "EW"]
+[Deal "N:53.Q8.JT3.AQ9432 - - -"]
+[Auction "N"]
+3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 1, vul All"]
+[Board "20"]
+[Dealer "N"]
+[Vulnerable "All"]
+[Deal "N:53.Q8.JT3.AQ9432 - - -"]
+[Auction "N"]
+3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 2, vul None"]
+[Board "21"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 53.Q8.JT3.AQ9432 - -"]
+[Auction "W"]
+Pass 3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 2, vul NS"]
+[Board "22"]
+[Dealer "W"]
+[Vulnerable "NS"]
+[Deal "W:- 53.Q8.JT3.AQ9432 - -"]
+[Auction "W"]
+Pass Pass +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 2, vul EW"]
+[Board "23"]
+[Dealer "W"]
+[Vulnerable "EW"]
+[Deal "W:- 53.Q8.JT3.AQ9432 - -"]
+[Auction "W"]
+Pass 3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 2, vul All"]
+[Board "24"]
+[Dealer "W"]
+[Vulnerable "All"]
+[Deal "W:- 53.Q8.JT3.AQ9432 - -"]
+[Auction "W"]
+Pass Pass +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 3, vul None"]
+[Board "25"]
+[Dealer "S"]
+[Vulnerable "None"]
+[Deal "S:- - 53.Q8.JT3.AQ9432 -"]
+[Auction "S"]
+Pass Pass 3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 3, vul NS"]
+[Board "26"]
+[Dealer "S"]
+[Vulnerable "NS"]
+[Deal "S:- - 53.Q8.JT3.AQ9432 -"]
+[Auction "S"]
+Pass Pass 3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 3, vul EW"]
+[Board "27"]
+[Dealer "S"]
+[Vulnerable "EW"]
+[Deal "S:- - 53.Q8.JT3.AQ9432 -"]
+[Auction "S"]
+Pass Pass 3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 3, vul All"]
+[Board "28"]
+[Dealer "S"]
+[Vulnerable "All"]
+[Deal "S:- - 53.Q8.JT3.AQ9432 -"]
+[Auction "S"]
+Pass Pass 3C +
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 4, vul None"]
+[Board "29"]
+[Dealer "E"]
+[Vulnerable "None"]
+[Deal "E:- - - 53.Q8.JT3.AQ9432"]
+[Contract "Pass"]
+[Auction "E"]
+Pass Pass Pass Pass
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 4, vul NS"]
+[Board "30"]
+[Dealer "E"]
+[Vulnerable "NS"]
+[Deal "E:- - - 53.Q8.JT3.AQ9432"]
+[Contract "Pass"]
+[Auction "E"]
+Pass Pass Pass Pass
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 4, vul EW"]
+[Board "31"]
+[Dealer "E"]
+[Vulnerable "EW"]
+[Deal "E:- - - 53.Q8.JT3.AQ9432"]
+[Contract "Pass"]
+[Auction "E"]
+Pass Pass Pass Pass
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)
+
+[Event "Seat dependent, seat 4, vul All"]
+[Board "32"]
+[Dealer "E"]
+[Vulnerable "All"]
+[Deal "E:- - - 53.Q8.JT3.AQ9432"]
+[Contract "Pass"]
+[Auction "E"]
+Pass Pass Pass Pass
+;       S: 53         Poor
+;       H: Q8         Poor
+;       D: JT3        Poor
+;       C: AQ9432     Good
+;  Points: (9, 11)
+;  HCP:    (9, 9)

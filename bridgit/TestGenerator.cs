@@ -80,12 +80,17 @@ namespace Bridgit
                     var auction = new List<Call>();
                     while (seat <= 4)
                     {
-                        var bs = new BiddingState(board, _bidder, _bidder);
-                        bs.ReplayAuction(auction);
-                        bs.MakeCall(bs.CallChoices.BestCall);
-                        var game = new Game();
-                        game.Update(bs);
-                        games.Add(game);
+                        foreach (var vul in Enum.GetValues<Vulnerable>())
+                        {
+                            board.Vulnerable = vul;
+                            var bs = new BiddingState(board, _bidder, _bidder);
+                            bs.ReplayAuction(auction);
+                            bs.MakeCall(bs.CallChoices.BestCall);
+                            var game = new Game();
+                            game.Update(bs);
+                            game.Tags["Event"] = $"Seat dependent, seat {seat}, vul {vul}";
+                            games.Add(game);
+                        }
                         seat++;
                         auction.Add(Call.Pass);
                         board.Dealer = BridgeBidder.RightHandOpponent(board.Dealer);
@@ -103,14 +108,20 @@ namespace Bridgit
             var auction = new List<Call>();
             while (board.Dealer != Direction.E)
             {
+
                 board.Dealer = BridgeBidder.RightHandOpponent(board.Dealer);
                 auction.Add(Call.Pass);
-                bs = new BiddingState(board, _bidder, _bidder);
-                bs.ReplayAuction(auction);
-                CallDetails posCall = bs.CallChoices.BestCall;
-                if (!posCall.Call.Equals(lastCall.Call))
+                foreach (var vul in Enum.GetValues<Vulnerable>())
                 {
-                    return true;
+                    board.Vulnerable = vul;
+                    bs = new BiddingState(board, _bidder, _bidder);
+                    bs.ReplayAuction(auction);
+                    CallDetails posCall = bs.CallChoices.BestCall;
+                    if (!posCall.Call.Equals(lastCall.Call) &&
+                        (Tests.ContainsKey(posCall.Call) || Tests.ContainsKey(lastCall.Call)))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -122,7 +133,7 @@ namespace Bridgit
             var sb = new StringBuilder();
             foreach (var game in games)
             {
-                game.Tags["Event"] = eventName;
+                //game.Tags["Event"] = eventName;
                 game.Tags["Board"] = boardNumber.ToString();
                 sb.Append(game.GetGameText());
                 var board = game.GetBoard();

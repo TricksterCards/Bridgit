@@ -65,21 +65,21 @@ namespace BridgeBidding
 		{
 			var bids = new List<CallFeature>
 			{
-                PartnerBids(Bid.OneClub,    Respond.OneClub),
-				PartnerBids(Bid.OneDiamond, Respond.OneDiamond),
-				PartnerBids(Bid.OneHeart,   Respond.OneHeart),
-				PartnerBids(Bid.OneSpade,   Respond.OneSpade),
+                PartnerBids(Bid._1C, Respond.OneClub),
+				PartnerBids(Bid._1D, Respond.OneDiamond),
+				PartnerBids(Bid._1H, Respond.OneHeart),
+				PartnerBids(Bid._1S, Respond.OneSpade),
 
 /*
 				// 2-level opening in 4th seat is strong, like a 1 level
 				// TODO: Rename this function - sometimes opens 2-level
-				PartnerBids(Bid.TwoDiamonds, Respond.ForthSeat2Open, Seat(4)),
-				PartnerBids(Bid.TwoHearts,   Respond.ForthSeat2Open, Seat(4)),
-				PartnerBids(Bid.TwoSpades,   Respond.ForthSeat2Open, Seat(4)),
+				PartnerBids(Bid._2D, Respond.ForthSeat2Open, Seat(4)),
+				PartnerBids(Bid._2H,   Respond.ForthSeat2Open, Seat(4)),
+				PartnerBids(Bid._2S,   Respond.ForthSeat2Open, Seat(4)),
 
-				Nonforcing(Bid.TwoSpades,   Seat(4), Shape(6, 10), GoodPlusSuit, BetterOrEqualTo(Suit.Hearts), ForthSeatOpen2),
-				Nonforcing(Bid.TwoHearts,   Seat(4), Shape(6, 10), GoodPlusSuit, BetterThan(Suit.Spades), ForthSeatOpen2),
-				Nonforcing(Bid.TwoDiamonds, Seat(4), Shape(6, 10), GoodPlusSuit, ForthSeatOpen2),
+				Nonforcing(Bid._2S,   Seat(4), Shape(6, 10), GoodPlusSuit, BetterOrEqualTo(Suit.Hearts), ForthSeatOpen2),
+				Nonforcing(Bid._2H,   Seat(4), Shape(6, 10), GoodPlusSuit, BetterThan(Suit.Spades), ForthSeatOpen2),
+				Nonforcing(Bid._2D, Seat(4), Shape(6, 10), GoodPlusSuit, ForthSeatOpen2),
 */
 				// In 4th seat we want to pass if the Rule of 15 does not apply.
 				Nonforcing(Call.Pass, Seat(4), PassIn4thSeat()),
@@ -95,26 +95,26 @@ namespace BridgeBidding
 			bids.AddRange(new CallFeature[] 
 			{
 				// For medium+ hands we will always bid the longest suit first.
-				Nonforcing(Bid.OneClub, MediumOrBetter, Shape(4, 10), LongestSuit()),				
-				Nonforcing(Bid.OneDiamond, MediumOrBetter, Shape(4, 10), LongestSuit()),
+				Nonforcing(Bid._1C, MediumOrBetter, Shape(4, 10), LongestSuit),				
+				Nonforcing(Bid._1D, MediumOrBetter, Shape(4, 10), LongestSuit),
 
 				// Special case 5 clubs and 4 diamonds with mimimum hand.  Bid diamonds to avoid reverse
-				Nonforcing(Bid.OneDiamond, Minimum, Shape(Suit.Clubs, 5), Shape(Suit.Diamonds, 4)),
+				Nonforcing(Bid._1D, Minimum, Shape(Suit.Clubs, 5), Shape(Suit.Diamonds, 4)),
 
-				Nonforcing(Bid.OneClub, OneLevel, LongestSuit(), Shape(Suit.Hearts, 0, 4)),
-				Nonforcing(Bid.OneClub, OneLevel, Shape(3), Shape(Suit.Diamonds, 0, 3), LongestMajor(4)),
-				Nonforcing(Bid.OneClub, OneLevel, Shape(4, 11), LongerThan(Suit.Diamonds), LongestMajor(4)),
+				Nonforcing(Bid._1C, OneLevel, LongestSuit, Shape(Suit.Hearts, 0, 4)),
+				Nonforcing(Bid._1C, OneLevel, Shape(3), Shape(Suit.Diamonds, 0, 3), LongestMajor(4)),
+				Nonforcing(Bid._1C, OneLevel, Shape(4, 11), LongerThan(Suit.Diamonds), LongestMajor(4)),
 
-				Nonforcing(Bid.OneDiamond, OneLevel, LongestSuit(), Shape(Suit.Hearts, 0, 4)),
-				Nonforcing(Bid.OneDiamond, OneLevel, Shape(3), Shape(Suit.Clubs, 0, 2), LongestMajor(4)),
-				Nonforcing(Bid.OneDiamond, OneLevel, Shape(4, 10), LongerOrEqualTo(Suit.Clubs), LongestMajor(4)),
+				Nonforcing(Bid._1D, OneLevel, LongestSuit, Shape(Suit.Hearts, 0, 4)),
+				Nonforcing(Bid._1D, OneLevel, Shape(3), Shape(Suit.Clubs, 0, 2), LongestMajor(4)),
+				Nonforcing(Bid._1D, OneLevel, Shape(4, 10), LongerOrEqualTo(Suit.Clubs), LongestMajor(4)),
 
 				// Special case longer hearts than spades, but not enough points to reverse.  Bid spades first.
-				Nonforcing(Bid.OneSpade, Minimum, Shape(5, 10), LongestSuit(Suit.Hearts)),
+				Nonforcing(Bid._1S, Minimum, Shape(5, 10), IsLongestSuit(Suit.Hearts)),
 
-				Nonforcing(Bid.OneHeart, OneLevel, Shape(5, 10), LongerThan(Suit.Spades)),
+				Nonforcing(Bid._1H, OneLevel, Shape(5, 10), LongerThan(Suit.Spades)),
 
-				Nonforcing(Bid.OneSpade, OneLevel, Shape(5, 10), LongerOrEqualTo(Suit.Hearts)),
+				Nonforcing(Bid._1S, OneLevel, Shape(5, 10), LongerOrEqualTo(Suit.Hearts)),
 			});
 			// Now handle cases where we are willing to open weak in 3rd seat.  Already 4-card
 			// majors have beein bid as a higher priority.  Now open with lower points.
@@ -127,7 +127,7 @@ namespace BridgeBidding
 			}
 			// Since this group contians a rule for Pass in 4th seat, we have to define one here 
 			// at the end of the group to catch the cases where we don't want to open because of
-			// just plain-old lack of points.
+			// just plain-old lack of points. 
 			bids.Add(Nonforcing(Call.Pass, Seat(4), DontOpen));
 			return bids;
 		}
@@ -136,8 +136,8 @@ namespace BridgeBidding
 		{
 			return new CallFeature[]
 			{
-				Nonforcing(Bid.OneSpade, range, GoodPlusSuit, Shape(4), BetterOrEqualTo(Suit.Hearts)),
-				Nonforcing(Bid.OneHeart, range, GoodPlusSuit, Shape(4), BetterThan(Suit.Spades))
+				Nonforcing(Bid._1S, range, GoodPlusSuit, Shape(4), BetterOrEqualTo(Suit.Hearts)),
+				Nonforcing(Bid._1H, range, GoodPlusSuit, Shape(4), BetterThan(Suit.Spades))
 			};
 		}
 
@@ -146,14 +146,14 @@ namespace BridgeBidding
 			return new CallFeature[]
 			{
 				// Don't open a 3-card suit weak.  If standard open rules dont apply then dont open
-				Nonforcing(Bid.OneClub, range, LongestSuit(), Shape(Suit.Hearts, 0, 4)),
-				Nonforcing(Bid.OneClub, range, Shape(4, 11), LongerThan(Suit.Diamonds), LongestMajor(4)),
+				Nonforcing(Bid._1C, range, LongestSuit, Shape(Suit.Hearts, 0, 4)),
+				Nonforcing(Bid._1C, range, Shape(4, 11), LongerThan(Suit.Diamonds), LongestMajor(4)),
 
-				Nonforcing(Bid.OneDiamond, range, LongestSuit(), Shape(Suit.Hearts, 0, 4)),
-				Nonforcing(Bid.OneDiamond, range, Shape(4, 10), LongerOrEqualTo(Suit.Clubs), LongestMajor(4)),
+				Nonforcing(Bid._1D, range, LongestSuit, Shape(Suit.Hearts, 0, 4)),
+				Nonforcing(Bid._1D, range, Shape(4, 10), LongerOrEqualTo(Suit.Clubs), LongestMajor(4)),
 
-				Nonforcing(Bid.OneHeart, range, Shape(5, 10), LongerThan(Suit.Spades)),
-				Nonforcing(Bid.OneSpade, range, Shape(5, 10), LongerOrEqualTo(Suit.Hearts)),
+				Nonforcing(Bid._1H, range, Shape(5, 10), LongerThan(Suit.Spades)),
+				Nonforcing(Bid._1S, range, Shape(5, 10), LongerOrEqualTo(Suit.Hearts)),
 
 			};
 		}
@@ -167,23 +167,23 @@ namespace BridgeBidding
 				PartnerBids(Respond.WeakOpen),
 
 				// 2C can not be bid since strong opening.  Take care of great 6-card suits by bidding 3C
-				Nonforcing(Bid.TwoDiamonds, Weak, Shape(6), GoodPlusSuit),
-				Nonforcing(Bid.TwoHearts,   Weak, Shape(6), GoodPlusSuit),
-				Nonforcing(Bid.TwoSpades,   Weak, Shape(6), GoodPlusSuit),
+				Nonforcing(Bid._2D, Weak, Shape(6), GoodPlusSuit),
+				Nonforcing(Bid._2H,   Weak, Shape(6), GoodPlusSuit),
+				Nonforcing(Bid._2S,   Weak, Shape(6), GoodPlusSuit),
 
-				Nonforcing(Bid.ThreeClubs,    VeryWeak, Shape(6), ExcellentPlusSuit),
-				Nonforcing(Bid.ThreeClubs,    VeryWeak, Shape(7), GoodPlusSuit),
-				Nonforcing(Bid.ThreeDiamonds, VeryWeak, Shape(7), GoodPlusSuit),
-				Nonforcing(Bid.ThreeHearts,   VeryWeak, Shape(7), GoodPlusSuit),
-				Nonforcing(Bid.ThreeSpades,   VeryWeak, Shape(7), GoodPlusSuit),
+				Nonforcing(Bid._3C,    VeryWeak, Shape(6), ExcellentPlusSuit),
+				Nonforcing(Bid._3C,    VeryWeak, Shape(7), GoodPlusSuit),
+				Nonforcing(Bid._3D, VeryWeak, Shape(7), GoodPlusSuit),
+				Nonforcing(Bid._3H,   VeryWeak, Shape(7), GoodPlusSuit),
+				Nonforcing(Bid._3S,   VeryWeak, Shape(7), GoodPlusSuit),
 				
-                Nonforcing(Bid.FourClubs,    VeryWeak, Shape(8), DecentPlusSuit),
-				Nonforcing(Bid.FourDiamonds, VeryWeak, Shape(8), DecentPlusSuit),
-				Nonforcing(Bid.FourHearts,   VeryWeak, Shape(8, 10), DecentPlusSuit),
-				Nonforcing(Bid.FourSpades,   VeryWeak, Shape(8, 10), DecentPlusSuit),
+                Nonforcing(Bid._4C,    VeryWeak, Shape(8), DecentPlusSuit),
+				Nonforcing(Bid._4D, VeryWeak, Shape(8), DecentPlusSuit),
+				Nonforcing(Bid._4H,   VeryWeak, Shape(8, 10), DecentPlusSuit),
+				Nonforcing(Bid._4S,   VeryWeak, Shape(8, 10), DecentPlusSuit),
 
-                Nonforcing(Bid.FiveClubs,    VeryWeak, Shape(9, 10), DecentPlusSuit),
-				Nonforcing(Bid.FiveDiamonds, VeryWeak, Shape(9, 10), DecentPlusSuit),
+                Nonforcing(Bid._5C,    VeryWeak, Shape(9, 10), DecentPlusSuit),
+				Nonforcing(Bid._5D, VeryWeak, Shape(9, 10), DecentPlusSuit),
 			};
 		}
 */
@@ -198,11 +198,15 @@ namespace BridgeBidding
 					AddWeakRules(rules, And(IsFavVul,   Points(8, 11), Shape(5), ExcellentPlusSuit), onlyLevel: 2);
 					AddWeakRules(rules, And(BothNotVul, Points(5, 11), DecentPlusSuit));
 					AddWeakRules(rules, And(IsVul,      Points(7, 11), GoodPlusSuit));
+					AddWeakBid(rules, Bid._3C, And(IsNotVul, Shape(6), Points(5, 11), GoodPlusSuit));
+					AddWeakBid(rules, Bid._3C, And(IsVul, Shape(6), Points(7, 11), GoodPlusSuit));
 					break;
 
 				case 2:
 					AddWeakRules(rules, And(IsNotVul, Points(6, 11), DecentPlusSuit));
 					AddWeakRules(rules, And(IsVul,    Points(8, 11), GoodPlusSuit));
+					AddWeakBid(rules, Bid._3C, And(IsNotVul, Shape(6), Points(6, 11), GoodPlusSuit));
+					AddWeakBid(rules, Bid._3C, And(IsVul, Shape(6), Points(8, 11), ExcellentPlusSuit));
 					break;
 
 				case 3:
@@ -211,10 +215,14 @@ namespace BridgeBidding
 					AddWeakRules(rules, And(BothNotVul, Points(4, 13), DecentPlusSuit));
 					AddWeakRules(rules, And(BothNotVul, Points(4, 13), Shape(5), ExcellentPlusSuit), onlyLevel: 2);
 					AddWeakRules(rules, And(IsVul,      Points(6, 13), GoodPlusSuit));
+					AddWeakBid(rules, Bid._3C, And(IsFavVul, Shape(6), Points(2, 13)));
+					AddWeakBid(rules, Bid._3C, And(BothNotVul, Shape(6), Points(4, 13), DecentPlusSuit));
+					AddWeakBid(rules, Bid._3C, And(IsVul, Shape(6), Points(6, 13), GoodPlusSuit));
 					break;
 
 				case 4:
 					AddWeakRules(rules, And(Points(10, 15), DecentPlusSuit));
+					AddWeakBid(rules, Bid._3C, And(Shape(6), Points(10, 15), ExcellentPlusSuit));
 					break;
 
 				default:
@@ -242,30 +250,35 @@ namespace BridgeBidding
 				foreach (var suit in Card.Suits)
 				{
 					var bid = new Bid(level, suit);
-					if (!bid.Equals(Bid.TwoClubs))
+					if (!bid.Equals(Bid._2C))
 					{
-						if (suit != Suit.Hearts && suit != Suit.Spades)
-						{
-							rules.Add(Nonforcing(bid, levelConstraint, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)));
-						}
-						if (suit == Suit.Hearts)
-						{
-							rules.Add(Nonforcing(bid, levelConstraint, Shape(Suit.Spades, 0, 3)));
-						}
-						else 
-						{
-							rules.Add(Nonforcing(bid, levelConstraint, Shape(Suit.Hearts, 4, 5), IsBadSuit(Suit.Hearts)));
-						}
-						if (suit == Suit.Spades)
-						{
-							rules.Add(Nonforcing(bid, levelConstraint, Shape(Suit.Hearts, 0, 3)));
-						}
-						else 
-						{
-							rules.Add(Nonforcing(bid, levelConstraint, Shape(Suit.Spades, 4, 5), IsBadSuit(Suit.Spades)));
-						}
+						AddWeakBid(rules, bid, levelConstraint);
 					}
 				}
+			}
+		}
+
+		private static void AddWeakBid(List<CallFeature> rules, Bid bid, Constraint constraint)
+		{
+			if (bid.Suit != Suit.Hearts && bid.Suit != Suit.Spades)
+			{
+				rules.Add(Nonforcing(bid, constraint, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)));
+			}
+			if (bid.Suit == Suit.Hearts)
+			{
+				rules.Add(Nonforcing(bid, constraint, Shape(Suit.Spades, 0, 3)));
+			}
+			else 
+			{
+				rules.Add(Nonforcing(bid, constraint, Shape(Suit.Hearts, 4, 5), IsBadSuit(Suit.Hearts)));
+			}
+			if (bid.Suit == Suit.Spades)
+			{
+				rules.Add(Nonforcing(bid, constraint, Shape(Suit.Hearts, 0, 3)));
+			}
+			else 
+			{
+				rules.Add(Nonforcing(bid, constraint, Shape(Suit.Spades, 4, 5), IsBadSuit(Suit.Spades)));
 			}
 		}
 	}

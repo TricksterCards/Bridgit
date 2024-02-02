@@ -22,10 +22,10 @@ namespace BridgeBidding
 
         {
             return new CallFeature[] {
-                PartnerBids(Bid.TwoClubs, Respond),
+                PartnerBids(Bid._2C, Respond),
 
                 // TODO: Other reasons for 2-club opening...
-                Forcing(Bid.TwoClubs, Points(StrongOpenRange), ShowsNoSuit())
+                Forcing(Bid._2C, Points(StrongOpenRange), ShowsNoSuit())
             };
     
         }
@@ -36,15 +36,15 @@ namespace BridgeBidding
             if (ps.RHO.Passed) {
                 choices.AddRules(new CallFeature[] {
                     PartnerBids(OpenerRebidPositiveResponse),
-                    PartnerBids(Bid.TwoDiamonds, OpenerRebidWaiting), 
+                    PartnerBids(Bid._2D, OpenerRebidWaiting), 
 
-                    Forcing(Bid.TwoHearts, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
-                    Forcing(Bid.TwoSpades, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
-                    Forcing(Bid.TwoNoTrump, Points(PositiveResponse), Balanced()),
-                    Forcing(Bid.ThreeClubs, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
-                    Forcing(Bid.ThreeDiamonds, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+                    Forcing(Bid._2H, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+                    Forcing(Bid._2S, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+                    Forcing(Bid._2NT, Points(PositiveResponse), Balanced()),
+                    Forcing(Bid._3C, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+                    Forcing(Bid._3D, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
 
-                    Forcing(Bid.TwoDiamonds, Points(Waiting), ShowsNoSuit()),
+                    Forcing(Bid._2D, Points(Waiting), ShowsNoSuit()),
                 });
             }
             else if (ps.RHO.Doubled)
@@ -70,10 +70,10 @@ namespace BridgeBidding
             {
                 PartnerBids(Responder2ndBid),
 
-                Forcing(Bid.TwoHearts, Shape(5, 11)),
-                Forcing(Bid.TwoSpades, Shape(5, 11)),
-                Forcing(Bid.ThreeClubs, Shape(5, 11)),
-                Forcing(Bid.ThreeDiamonds, Shape(5, 11))
+                Forcing(Bid._2H, Shape(5, 11)),
+                Forcing(Bid._2S, Shape(5, 11)),
+                Forcing(Bid._3C, Shape(5, 11)),
+                Forcing(Bid._3D, Shape(5, 11))
             });
             return bids;
             // TODO: Next state, more bids, et.....
@@ -88,19 +88,19 @@ namespace BridgeBidding
                 // Highest priority is to support responder's suit...
                 PartnerBids(Responder2ndBid),
 
-                Forcing(Bid.ThreeHearts, Fit(), ShowsTrump()),
-                Forcing(Bid.ThreeSpades, Fit(), ShowsTrump()),
-                Forcing(Bid.FourClubs, Fit(), ShowsTrump()),
-                Forcing(Bid.FourDiamonds, Fit(), ShowsTrump()),
+                Forcing(Bid._3H, Fit(), ShowsTrump),
+                Forcing(Bid._3S, Fit(), ShowsTrump),
+                Forcing(Bid._4C, Fit(), ShowsTrump),
+                Forcing(Bid._4D, Fit(), ShowsTrump),
 
-				Forcing(Bid.TwoSpades, Shape(5, 11)),
+				Forcing(Bid._2S, Shape(5, 11)),
 	// TODO: What about 2NT??			Forcing(Bid.TwoUnknown, Balanced(), Points(Rebid2NT)),
-				Forcing(Bid.ThreeClubs, Shape(5, 11)),
-                Forcing(Bid.ThreeDiamonds, Shape(5, 11)),
-                Forcing(Bid.ThreeHearts, Shape(5, 11)),
-                Forcing(Bid.ThreeSpades, Jump(0), Shape(5, 11)),
+				Forcing(Bid._3C, Shape(5, 11)),
+                Forcing(Bid._3D, Shape(5, 11)),
+                Forcing(Bid._3H, Shape(5, 11)),
+                Forcing(Bid._3S, Jump(0), Shape(5, 11)),
               // TODO: 3 NT>>>  Forcing(Bid.ThreeUnknown, Jump(0)),
-                Forcing(Bid.FourClubs, Shape(5, 11), Jump(0)),
+                Forcing(Bid._4C, Shape(5, 11), Jump(0)),
               
 
 			});
@@ -114,23 +114,23 @@ namespace BridgeBidding
             choices.AddRules(new CallFeature[]
             {
                 PartnerBids(OpenerPlaceContract),
-                Forcing(Bid.ThreeHearts, Fit(), ShowsTrump()),
-                Forcing(Bid.ThreeSpades, Fit(), ShowsTrump()),
-                Forcing(Bid.FourClubs, Fit(), ShowsTrump()),
-                Forcing(Bid.FourDiamonds, Fit(), ShowsTrump()),
+                Forcing(Bid._3H, Fit(), ShowsTrump),
+                Forcing(Bid._3S, Fit(), ShowsTrump),
+                Forcing(Bid._4C, Fit(), ShowsTrump),
+                Forcing(Bid._4D, Fit(), ShowsTrump),
 
                 // Now show a bust hand by bidding cheapest minor with less 0-4 points
-                PartnerBids(Bid.ThreeClubs, PartnerIsBust),
-                PartnerBids(Bid.ThreeDiamonds, PartnerIsBust, Partner(LastBid(Bid.ThreeClubs))),
-                Forcing(Bid.ThreeClubs, ShowsNoSuit(), Points(RespondBust)),
-                Forcing(Bid.ThreeDiamonds, Partner(LastBid(Bid.ThreeClubs)), ShowsNoSuit(), Points(RespondBust)),
+                PartnerBids(Bid._3C, PartnerIsBust),
+                PartnerBids(Bid._3D, PartnerIsBust, Partner(LastBid(Bid._3C))),
+                Forcing(Bid._3C, ShowsNoSuit(), Points(RespondBust)),
+                Forcing(Bid._3D, Partner(LastBid(Bid._3C)), ShowsNoSuit(), Points(RespondBust)),
 
                 // Show a 5 card major if we have one.
-                Forcing(Bid.ThreeHearts, Shape(5, 11), Points(RespondSuitNotBust)),
-                Forcing(Bid.ThreeSpades, Shape(5, 11), Points(RespondSuitNotBust)),
+                Forcing(Bid._3H, Shape(5, 11), Points(RespondSuitNotBust)),
+                Forcing(Bid._3S, Shape(5, 11), Points(RespondSuitNotBust)),
 
                 // Final bid if we're 
-                Signoff(Bid.ThreeNoTrump, Points(RespondNTNotBust)) 
+                Signoff(Bid._3NT, Points(RespondNTNotBust)) 
 
             });
             return choices;
@@ -143,11 +143,11 @@ namespace BridgeBidding
             // TODO: Perhaps gerber too???  Not sure...
             bids.AddRange( new CallFeature[] 
             {
-				Signoff(Bid.FourHearts, Fit(), ShowsTrump()),  // TODO: Limit points...???
-				Signoff(Bid.FourSpades, Fit(), ShowsTrump()),
-				Forcing(Bid.FourClubs, Fit(), ShowsTrump()),
-				Forcing(Bid.FourDiamonds, Fit(), ShowsTrump()),
-                Signoff(Bid.ThreeNoTrump),
+				Signoff(Bid._4H, Fit(), ShowsTrump),  // TODO: Limit points...???
+				Signoff(Bid._4S, Fit(), ShowsTrump),
+				Forcing(Bid._4C, Fit(), ShowsTrump),
+				Forcing(Bid._4D, Fit(), ShowsTrump),
+                Signoff(Bid._3NT),
                 Signoff(Call.Pass)  // If we get here then we are already in game...
 			});
             return bids;
@@ -159,18 +159,18 @@ namespace BridgeBidding
 			// TODO: Perhaps gerber too???  Not sure...
 			bids.AddRange(new CallFeature[]
 			{
-				Signoff(Bid.FourHearts,   LastBid(Bid.TwoHearts), Points(GameInHand)),
-				Signoff(Bid.FourSpades,   LastBid(Bid.TwoSpades), Points(GameInHand)),
-                Signoff(Bid.FiveClubs,    LastBid(Bid.ThreeClubs), Shape(7, 11), Points(GameInHand)),
-                Signoff(Bid.FiveDiamonds, LastBid(Bid.ThreeDiamonds), Shape(7, 11), Points(GameInHand)),
+				Signoff(Bid._4H,   LastBid(Bid._2H), Points(GameInHand)),
+				Signoff(Bid._4S,   LastBid(Bid._2S), Points(GameInHand)),
+                Signoff(Bid._5C,    LastBid(Bid._3C), Shape(7, 11), Points(GameInHand)),
+                Signoff(Bid._5D, LastBid(Bid._3D), Shape(7, 11), Points(GameInHand)),
 
-                Signoff(Bid.ThreeNoTrump, Points(GameInHand)),
+                Signoff(Bid._3NT, Points(GameInHand)),
 
                 // Bust partner so return to or original suit...
-                Signoff(Bid.ThreeHearts,  Rebid),
-                Signoff(Bid.ThreeSpades,  Rebid),
-                Signoff(Bid.FourClubs,    Rebid),
-                Signoff(Bid.FourDiamonds, Rebid)
+                Signoff(Bid._3H,  Rebid),
+                Signoff(Bid._3S,  Rebid),
+                Signoff(Bid._4C,    Rebid),
+                Signoff(Bid._4D, Rebid)
 			});
 			return bids;
 		}

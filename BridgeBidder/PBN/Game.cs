@@ -72,11 +72,16 @@ namespace BridgeBidding.PBN
 			int boardNumber = int.MinValue;
 			if (Tags.ContainsKey("Board"))
 			{ 
-				int.TryParse(Tags["Board"], out boardNumber); 
+				if (!int.TryParse(Tags["Board"], out boardNumber))
+				{
+					boardNumber = int.MinValue;
+				} 
 			}
 			var deal = Tags["Deal"];
-			string vulnerable = "None";
-			Tags.TryGetValue("Vulnerable", out vulnerable);
+			string vulnerable;
+			if (!Tags.TryGetValue("Vulnerable", out vulnerable)) {
+				vulnerable = "None";
+			}
 			if (boardNumber != int.MinValue)
 			{
 				return FromString.Board(deal, vulnerable, boardNumber);

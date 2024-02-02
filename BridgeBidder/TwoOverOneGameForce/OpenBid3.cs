@@ -11,8 +11,8 @@ namespace BridgeBidding
 			var bids = new List<CallFeature>()
 			{
 				// Lowest priority if nothing else fits is bid NT
-				Nonforcing(Bid.OneNoTrump, Balanced(), Points(Rebid1NT)),
-				Nonforcing(Bid.TwoNoTrump, Balanced(), Points(Rebid2NT)),
+				Nonforcing(Bid._1NT, Balanced(), Points(Rebid1NT)),
+				Nonforcing(Bid._2NT, Balanced(), Points(Rebid2NT)),
 				// TODO: What about 3NT...
             };
 
