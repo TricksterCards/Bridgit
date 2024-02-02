@@ -151,7 +151,7 @@ namespace BridgeBidding.PBN
 				var tokens = auction.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 				foreach (var token in tokens)
 				{
-					if (!token.StartsWith("$") && !token.StartsWith("="))
+					if (!token.StartsWith("$") && !token.StartsWith("=") && !token.Equals("+"))
 					{
 						bidHistory.Add(Call.FromString(token));
 					}

@@ -10,7 +10,7 @@ namespace BridgeBidding
 			var choices = new PositionCalls(ps);
 			choices.AddRules(new CallFeature[]
 			{
-				PartnerBids(RespondBid2.Rebid),
+				PartnerBids(RespondBid2.SecondBid),
 
 
 				// Responder bid a major suits and we have a fit.  Support at appropriate level.
@@ -53,22 +53,22 @@ namespace BridgeBidding
 				// Show a new suit at an appropriate level...
 	//			Nonforcing(Bid.TwoClubs, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
     //            Nonforcing(Bid.TwoClubs, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
-                Nonforcing(Bid.TwoHearts, Not(Rebid()), Not(IsReverse()), Balanced(false), Minimum, Shape(4, 6)),
-                Nonforcing(Bid.TwoClubs, Not(Rebid()), Balanced(false), Minimum, Shape(4, 6)),
-                Nonforcing(Bid.TwoDiamonds, Not(Rebid()), Not(IsReverse()), Balanced(false), Minimum, Shape(4, 6)),
+                Nonforcing(Bid.TwoHearts, Not(Rebid), Not(IsReverse), Balanced(false), Minimum, Shape(4, 6)),
+                Nonforcing(Bid.TwoClubs, Not(Rebid), Balanced(false), Minimum, Shape(4, 6)),
+                Nonforcing(Bid.TwoDiamonds, Not(Rebid), Not(IsReverse), Balanced(false), Minimum, Shape(4, 6)),
         
 
 
 				// Rebid a 6 card suit
-				Nonforcing(Bid.TwoClubs,      Rebid(), Shape(6, 11), Minimum),
-				Nonforcing(Bid.TwoDiamonds,   Rebid(), Shape(6, 11), Minimum),
-				Nonforcing(Bid.TwoHearts,     Rebid(), Shape(6, 11), Minimum),
-				Nonforcing(Bid.TwoSpades,     Rebid(), Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoClubs,      Rebid, Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoDiamonds,   Rebid, Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoHearts,     Rebid, Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoSpades,     Rebid, Shape(6, 11), Minimum),
 
-				Nonforcing(Bid.ThreeClubs,    Rebid(), Shape(6, 11), Medium),
-				Nonforcing(Bid.ThreeDiamonds, Rebid(), Shape(6, 11), Medium),
-				Nonforcing(Bid.ThreeHearts,   Rebid(), Shape(6, 11), Medium),
-				Nonforcing(Bid.ThreeSpades,   Rebid(), Shape(6, 11), Medium),
+				Nonforcing(Bid.ThreeClubs,    Rebid, Shape(6, 11), Medium),
+				Nonforcing(Bid.ThreeDiamonds, Rebid, Shape(6, 11), Medium),
+				Nonforcing(Bid.ThreeHearts,   Rebid, Shape(6, 11), Medium),
+				Nonforcing(Bid.ThreeSpades,   Rebid, Shape(6, 11), Medium),
 
 				// TODO: Need jump shifts here....
 
@@ -93,15 +93,15 @@ namespace BridgeBidding
 				// TODO: This is way not finished.  Also I think that perhaps min-medium
 				// would just rebid at the cheapest level??? Competition...
 				// Rebid a 6 card suit
-				Nonforcing(Bid.TwoClubs,      Rebid(), Shape(6, 11), Minimum),
-				Nonforcing(Bid.TwoDiamonds,   Rebid(), Shape(6, 11), Minimum),
-				Nonforcing(Bid.TwoHearts,     Rebid(), Shape(6, 11), Minimum),
-				Nonforcing(Bid.TwoSpades,     Rebid(), Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoClubs,      Rebid, Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoDiamonds,   Rebid, Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoHearts,     Rebid, Shape(6, 11), Minimum),
+				Nonforcing(Bid.TwoSpades,     Rebid, Shape(6, 11), Minimum),
 
-				Nonforcing(Bid.ThreeClubs,    Rebid(), Shape(6, 11), MediumOrBetter),
-				Nonforcing(Bid.ThreeDiamonds, Rebid(), Shape(6, 11), MediumOrBetter),
-				Nonforcing(Bid.ThreeHearts,   Rebid(), Shape(6, 11), MediumOrBetter),
-				Nonforcing(Bid.ThreeSpades,   Rebid(), Shape(6, 11), MediumOrBetter),
+				Nonforcing(Bid.ThreeClubs,    Rebid, Shape(6, 11), MediumOrBetter),
+				Nonforcing(Bid.ThreeDiamonds, Rebid, Shape(6, 11), MediumOrBetter),
+				Nonforcing(Bid.ThreeHearts,   Rebid, Shape(6, 11), MediumOrBetter),
+				Nonforcing(Bid.ThreeSpades,   Rebid, Shape(6, 11), MediumOrBetter),
 
 				Nonforcing(Call.Pass)
 			};

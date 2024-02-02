@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime;
 using System.Text;
+using System.Threading;
 
 namespace BridgeBidding.PBN
 {
@@ -142,6 +143,14 @@ namespace BridgeBidding.PBN
 				Tags["Board"] = bs.Board.Number.ToString();
 			}
 			UpdateAuction(bs);
+			if (bs.Contract.AuctionComplete)
+			{
+				Tags["Contract"] = bs.Contract.ToString();
+				if (bs.Contract.Declarer != null)
+				{
+					Tags["Declarer"] = bs.Contract.Declarer.Direction.ToString();
+				}
+			}
         }
 
 
@@ -165,6 +174,11 @@ namespace BridgeBidding.PBN
 					}
 				}
 				
+				if (i + 1 == auction.Count && !bs.Contract.AuctionComplete)
+				{
+					curLine += " +";
+				}
+
 				if (i % 4 == 3)
 				{
 					lines.Add(curLine);

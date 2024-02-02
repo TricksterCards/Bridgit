@@ -55,8 +55,8 @@ namespace BridgeBidding
             {
                 if (suit != openSuit)
                 {
-                    bids.Add(Signoff(new Bid (2, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentSuit()));
-                    bids.Add(Signoff(new Bid (3, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentSuit()));
+                    bids.Add(Signoff(new Bid (2, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentPlusSuit));
+                    bids.Add(Signoff(new Bid (3, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentPlusSuit));
                 }
             }
             return bids;

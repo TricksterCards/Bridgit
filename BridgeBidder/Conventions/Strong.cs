@@ -159,18 +159,18 @@ namespace BridgeBidding
 			// TODO: Perhaps gerber too???  Not sure...
 			bids.AddRange(new CallFeature[]
 			{
-				Signoff(Bid.FourHearts, LastBid(Bid.TwoHearts), Points(GameInHand)),
-				Signoff(Bid.FourSpades, LastBid(Bid.TwoSpades), Points(GameInHand)),
-                Signoff(Bid.FiveClubs, LastBid(Bid.ThreeClubs), Shape(7, 11), Points(GameInHand)),
+				Signoff(Bid.FourHearts,   LastBid(Bid.TwoHearts), Points(GameInHand)),
+				Signoff(Bid.FourSpades,   LastBid(Bid.TwoSpades), Points(GameInHand)),
+                Signoff(Bid.FiveClubs,    LastBid(Bid.ThreeClubs), Shape(7, 11), Points(GameInHand)),
                 Signoff(Bid.FiveDiamonds, LastBid(Bid.ThreeDiamonds), Shape(7, 11), Points(GameInHand)),
 
                 Signoff(Bid.ThreeNoTrump, Points(GameInHand)),
 
                 // Bust partner so return to or original suit...
-                Signoff(Bid.ThreeHearts, Rebid()),
-                Signoff(Bid.ThreeSpades, Rebid()),
-                Signoff(Bid.FourClubs, Rebid()),
-                Signoff(Bid.FourDiamonds, Rebid())
+                Signoff(Bid.ThreeHearts,  Rebid),
+                Signoff(Bid.ThreeSpades,  Rebid),
+                Signoff(Bid.FourClubs,    Rebid),
+                Signoff(Bid.FourDiamonds, Rebid)
 			});
 			return bids;
 		}

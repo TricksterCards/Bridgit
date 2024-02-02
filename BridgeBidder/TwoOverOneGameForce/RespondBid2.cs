@@ -11,7 +11,7 @@ namespace BridgeBidding
     public class RespondBid2 : Respond
     {
 
-        public static IEnumerable<CallFeature> Rebid(PositionState ps)
+        public static IEnumerable<CallFeature> SecondBid(PositionState ps)
         {
             var bids = new List<CallFeature>
             {
@@ -38,15 +38,15 @@ namespace BridgeBidding
                 Nonforcing(Bid.OneNoTrump, Points(MinimumHand)),
                 
              /// TODO: MORE PASSING MORE OFTEN...   Signoff(Call.Pass, Points(MinimumHand), ForcedToBid(false), )
-                Signoff(Bid.TwoClubs, Fit(), ForcedToBid(), Points(MinimumHand)),
-                Signoff(Bid.TwoDiamonds, Fit(), ForcedToBid(), Points(MinimumHand)),
-                Signoff(Bid.TwoHearts, Fit(), ForcedToBid(), Points(MinimumHand)),
-                Signoff(Bid.TwoSpades, Fit(), ForcedToBid(), Points(MinimumHand)),
+                Signoff(Bid.TwoClubs, Fit(), ForcedToBid, Points(MinimumHand)),
+                Signoff(Bid.TwoDiamonds, Fit(), ForcedToBid, Points(MinimumHand)),
+                Signoff(Bid.TwoHearts, Fit(), ForcedToBid, Points(MinimumHand)),
+                Signoff(Bid.TwoSpades, Fit(), ForcedToBid, Points(MinimumHand)),
 
-                Signoff(Bid.ThreeClubs, Break(false, "3C Forced"), Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
-                Signoff(Bid.ThreeDiamonds, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
-                Signoff(Bid.ThreeHearts, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand)),
-                Signoff(Bid.ThreeSpades, Fit(), Jump(0), ForcedToBid(), Points(MinimumHand))
+                Signoff(Bid.ThreeClubs, Fit(), Jump(0), ForcedToBid, Points(MinimumHand)),
+                Signoff(Bid.ThreeDiamonds, Fit(), Jump(0), ForcedToBid, Points(MinimumHand)),
+                Signoff(Bid.ThreeHearts, Fit(), Jump(0), ForcedToBid, Points(MinimumHand)),
+                Signoff(Bid.ThreeSpades, Fit(), Jump(0), ForcedToBid, Points(MinimumHand))
 
 
             };

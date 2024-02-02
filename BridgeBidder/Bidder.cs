@@ -128,10 +128,8 @@ namespace BridgeBidding
 		}
 
 
-		public static StaticConstraint Rebid(bool desired = true)
-		{
-			return new BidHistory(0, null, desired);
-		}
+		public static StaticConstraint Rebid = new BidHistory(0, null, true);
+		public static StaticConstraint NotRebid = Not(Rebid);
 
 
 		public static StaticConstraint Jump(params int[] jumpLevels)
@@ -139,20 +137,29 @@ namespace BridgeBidding
 			return new JumpBid(jumpLevels);
 		}
 
-		public static StaticConstraint IsVul()
-		{
-			return new StaticConstraint((call, ps) => ps.PairState.AreVulnerable);
-		}
+		// Various vulnerability constraints.  Be careful with Not()
+		public static StaticConstraint IsVul = new StaticConstraint((call, ps) => ps.IsVulnerable);
+		public static StaticConstraint IsNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable);
+		public static StaticConstraint IsFavVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && ps.RHO.IsVulnerable);
+		public static StaticConstraint IsUnfavVul = new StaticConstraint((call, ps) => ps.IsVulnerable && !ps.RHO.IsVulnerable);
+		public static StaticConstraint BothVul = new StaticConstraint((call, ps) => ps.IsVulnerable && ps.RHO.IsVulnerable);
+		public static StaticConstraint BothNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && !ps.RHO.IsVulnerable);
 		
-		public static StaticConstraint IsReverse(bool desiredValue = true)
+		/*	-- TODO Figure out what we want to do about constraint groups.  Specifically static constraint groups.
+		public static StaticConstraint StaticAnd(params StaticConstraint[] constraints)
 		{
-			return new StaticConstraint((call, ps) => ps.IsOpenerReverseBid(call));
+			return new StaticConstraint((call, ps) => {
+				foreach (var constraint in constraints)
+				{
+					if (!constraint.Conforms(call, ps) retrn false;
+				}
+				return true;
+			});
 		}
+		*/ 
+		public static StaticConstraint IsReverse = new StaticConstraint((call, ps) => ps.IsOpenerReverseBid(call));
+		public static StaticConstraint ForcedToBid = new StaticConstraint((call, ps) => ps.ForcedToBid);
 
-		public static StaticConstraint ForcedToBid()
-		{
-			return new StaticConstraint((call, ps) => ps.ForcedToBid);
-		}
 
 		public static StaticConstraint Not(StaticConstraint c)
 		{
@@ -284,14 +291,21 @@ namespace BridgeBidding
 			return new ConstraintGroup(constraints);
 		}
 
-        public static Constraint ExcellentSuit(Suit? suit = null)
+
+		public static Constraint ExcellentPlusSuit = IsExcellentPlusSuit(null);
+        public static Constraint IsExcellentPlusSuit(Suit? suit = null)
         { return new ShowsQuality(suit, SuitQuality.Excellent, SuitQuality.Solid); }
 
-
-        public static Constraint GoodSuit(Suit? suit = null)
+		public static Constraint BadSuit = IsBadSuit(null);
+		public static Constraint IsBadSuit(Suit? suit)
+		{ return new ShowsQuality(suit, SuitQuality.Poor, SuitQuality.Poor);
+		}
+        public static Constraint GoodPlusSuit = IsGoodPlusSuit(null);
+		public static Constraint IsGoodPlusSuit(Suit? suit)
 		{ return new ShowsQuality(suit, SuitQuality.Good, SuitQuality.Solid); }
 
-		public static Constraint DecentSuit(Suit? suit = null)
+		public static Constraint DecentPlusSuit = IsDecentPlusSuit(null);
+		public static Constraint IsDecentPlusSuit(Suit? suit)
 		{ return new ShowsQuality(suit, SuitQuality.Decent, SuitQuality.Solid); }
 
 		public static DynamicConstraint SuitLosers(int min, int max, Suit? suit = null)
@@ -412,9 +426,9 @@ namespace BridgeBidding
 			return Fit(8, null, desiredValue);
 		}
 
-		public static Constraint Reverse(bool desiredValue = true)
+		public static Constraint Reverse()
 		{
-			return And(IsReverse(desiredValue), new ShowsReverseShape());
+			return And(IsReverse, new ShowsReverseShape());
 		}
 
 		public static Constraint PairPoints((int Min, int Max) range)

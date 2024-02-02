@@ -1,0 +1,1549 @@
+[Event "Open seat 2 Pass"]
+[Board "1"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- JT4.K95.KT753.K9 - -"]
+[Auction "W"]
+Pass Pass
+%       S: JT4        Poor
+%       H: K95        Decent
+%       D: KT753      Decent
+%       C: K9         Decent
+%  Points: (10, 11)
+%  HCP:    (10, 10)
+
+[Event "Open seat 2 Pass"]
+[Board "2"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 97.KQ53.KJ2.QT54 - -"]
+[Auction "W"]
+Pass Pass
+%       S: 97         Poor
+%       H: KQ53       Good
+%       D: KJ2        Decent
+%       C: QT54       Poor
+%  Points: (11, 12)
+%  HCP:    (11, 11)
+
+[Event "Open seat 2 Pass"]
+[Board "3"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 76.T9732.A32.K93 - -"]
+[Auction "W"]
+Pass Pass
+%       S: 76         Poor
+%       H: T9732      Poor
+%       D: A32        Decent
+%       C: K93        Decent
+%  Points: (7, 8)
+%  HCP:    (7, 7)
+
+[Event "Open seat 2 Pass"]
+[Board "4"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KT82.K2.KJ862.97 - -"]
+[Auction "W"]
+Pass Pass
+%       S: KT82       Decent
+%       H: K2         Decent
+%       D: KJ862      Decent
+%       C: 97         Poor
+%  Points: (10, 12)
+%  HCP:    (10, 10)
+
+[Event "Open seat 2 Pass"]
+[Board "5"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- T74.87.54.KQT963 - -"]
+[Auction "W"]
+Pass Pass
+%       S: T74        Poor
+%       H: 87         Poor
+%       D: 54         Poor
+%       C: KQT963     Good
+%  Points: (5, 7)
+%  HCP:    (5, 5)
+
+[Event "Open seat 2 Pass"]
+[Board "6"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- J86.5.AJ653.T743 - -"]
+[Auction "W"]
+Pass Pass
+%       S: J86        Poor
+%       H: 5          Poor
+%       D: AJ653      Decent
+%       C: T743       Poor
+%  Points: (6, 9)
+%  HCP:    (6, 6)
+
+[Event "Open seat 2 Pass"]
+[Board "7"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A76.T95.875.KQ95 - -"]
+[Auction "W"]
+Pass Pass
+%       S: A76        Decent
+%       H: T95        Poor
+%       D: 875        Poor
+%       C: KQ95       Good
+%  Points: (9, 9)
+%  HCP:    (9, 9)
+
+[Event "Open seat 2 Pass"]
+[Board "8"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KJT87.QJ5.QJ72.7 - -"]
+[Auction "W"]
+Pass Pass
+%       S: KJT87      Good
+%       H: QJ5        Decent
+%       D: QJ72       Decent
+%       C: 7          Poor
+%  Points: (10, 13)
+%  HCP:    (10, 10)
+
+[Event "Open seat 2 Pass"]
+[Board "9"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 97.KT874.A952.75 - -"]
+[Auction "W"]
+Pass Pass
+%       S: 97         Poor
+%       H: KT874      Decent
+%       D: A952       Decent
+%       C: 75         Poor
+%  Points: (7, 9)
+%  HCP:    (7, 7)
+
+[Event "Open seat 2 Pass"]
+[Board "10"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- T3.6.J96532.Q872 - -"]
+[Auction "W"]
+Pass Pass
+%       S: T3         Poor
+%       H: 6          Poor
+%       D: J96532     Poor
+%       C: Q872       Poor
+%  Points: (3, 7)
+%  HCP:    (3, 3)
+
+[Event "Open seat 2 1C"]
+[Board "11"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- Q.K8.AJ2.AKJ8762 - -"]
+[Auction "W"]
+Pass 1C
+%       S: Q          Poor
+%       H: K8         Decent
+%       D: AJ2        Decent
+%       C: AKJ8762    Excellent
+%  Points: (18, 22)
+%  HCP:    (18, 18)
+
+[Event "Open seat 2 1C"]
+[Board "12"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- Q43.AJ5.J42.AQ65 - -"]
+[Auction "W"]
+Pass 1C
+%       S: Q43        Poor
+%       H: AJ5        Decent
+%       D: J42        Poor
+%       C: AQ65       Good
+%  Points: (14, 14)
+%  HCP:    (14, 14)
+
+[Event "Open seat 2 1C"]
+[Board "13"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KQ43.KJ42.A9.853 - -"]
+[Auction "W"]
+Pass 1C
+%       S: KQ43       Good
+%       H: KJ42       Decent
+%       D: A9         Decent
+%       C: 853        Poor
+%  Points: (13, 14)
+%  HCP:    (13, 13)
+
+[Event "Open seat 2 1C"]
+[Board "14"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A76.3.KQJ.K87643 - -"]
+[Auction "W"]
+Pass 1C
+%       S: A76        Decent
+%       H: 3          Poor
+%       D: KQJ        Good
+%       C: K87643     Decent
+%  Points: (13, 16)
+%  HCP:    (13, 13)
+
+[Event "Open seat 2 1C"]
+[Board "15"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AQJ.AT9.6.KQT985 - -"]
+[Auction "W"]
+Pass 1C
+%       S: AQJ        Good
+%       H: AT9        Decent
+%       D: 6          Poor
+%       C: KQT985     Good
+%  Points: (16, 19)
+%  HCP:    (16, 16)
+
+[Event "Open seat 2 1C"]
+[Board "16"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 74.K82.KT5.AQ865 - -"]
+[Auction "W"]
+Pass 1C
+%       S: 74         Poor
+%       H: K82        Decent
+%       D: KT5        Decent
+%       C: AQ865      Good
+%  Points: (12, 13)
+%  HCP:    (12, 12)
+
+[Event "Open seat 2 1C"]
+[Board "17"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KJ3.A54.Q.AKJ642 - -"]
+[Auction "W"]
+Pass 1C
+%       S: KJ3        Decent
+%       H: A54        Decent
+%       D: Q          Poor
+%       C: AKJ642     Excellent
+%  Points: (18, 21)
+%  HCP:    (18, 18)
+
+[Event "Open seat 2 1C"]
+[Board "18"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- J.A65.QJ8.QT7432 - -"]
+[Auction "W"]
+Pass 1C
+%       S: J          Poor
+%       H: A65        Decent
+%       D: QJ8        Decent
+%       C: QT7432     Poor
+%  Points: (10, 13)
+%  HCP:    (10, 10)
+
+[Event "Open seat 2 1C"]
+[Board "19"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AT.KJT4.7.AQ9652 - -"]
+[Auction "W"]
+Pass 1C
+%       S: AT         Decent
+%       H: KJT4       Good
+%       D: 7          Poor
+%       C: AQ9652     Good
+%  Points: (14, 18)
+%  HCP:    (14, 14)
+
+[Event "Open seat 2 1C"]
+[Board "20"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A642.Q93.A98.K82 - -"]
+[Auction "W"]
+Pass 1C
+%       S: A642       Decent
+%       H: Q93        Poor
+%       D: A98        Decent
+%       C: K82        Decent
+%  Points: (13, 13)
+%  HCP:    (13, 13)
+
+[Event "Open seat 2 1D"]
+[Board "21"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- QT53.6.AKQJ62.QJ - -"]
+[Auction "W"]
+Pass 1D
+%       S: QT53       Poor
+%       H: 6          Poor
+%       D: AKQJ62     Solid
+%       C: QJ         Decent
+%  Points: (15, 19)
+%  HCP:    (15, 15)
+
+[Event "Open seat 2 1D"]
+[Board "22"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- QT93.J.KT94.AQ95 - -"]
+[Auction "W"]
+Pass 1D
+%       S: QT93       Poor
+%       H: J          Poor
+%       D: KT94       Decent
+%       C: AQ95       Good
+%  Points: (12, 15)
+%  HCP:    (12, 12)
+
+[Event "Open seat 2 1D"]
+[Board "23"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 97.J7.AK832.AT72 - -"]
+[Auction "W"]
+Pass 1D
+%       S: 97         Poor
+%       H: J7         Poor
+%       D: AK832      Good
+%       C: AT72       Decent
+%  Points: (12, 14)
+%  HCP:    (12, 12)
+
+[Event "Open seat 2 1D"]
+[Board "24"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AQ5.AT5.A9753.64 - -"]
+[Auction "W"]
+Pass 1D
+%       S: AQ5        Good
+%       H: AT5        Decent
+%       D: A9753      Decent
+%       C: 64         Poor
+%  Points: (14, 15)
+%  HCP:    (14, 14)
+
+[Event "Open seat 2 1D"]
+[Board "25"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 73.K64.A964.AJ73 - -"]
+[Auction "W"]
+Pass 1D
+%       S: 73         Poor
+%       H: K64        Decent
+%       D: A964       Decent
+%       C: AJ73       Decent
+%  Points: (12, 13)
+%  HCP:    (12, 12)
+
+[Event "Open seat 2 1D"]
+[Board "26"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- .52.QJT98742.AKQ - -"]
+[Auction "W"]
+Pass 1D
+%       S:            Poor
+%       H: 52         Poor
+%       D: QJT98742   Good
+%       C: AKQ        Excellent
+%  Points: (12, 18)
+%  HCP:    (12, 12)
+
+[Event "Open seat 2 1D"]
+[Board "27"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KT4.7.AQT54.KJ62 - -"]
+[Auction "W"]
+Pass 1D
+%       S: KT4        Decent
+%       H: 7          Poor
+%       D: AQT54      Good
+%       C: KJ62       Decent
+%  Points: (13, 16)
+%  HCP:    (13, 13)
+
+[Event "Open seat 2 1D"]
+[Board "28"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- J6.AJ7.AKQT943.J - -"]
+[Auction "W"]
+Pass 1D
+%       S: J6         Poor
+%       H: AJ7        Decent
+%       D: AKQT943    Excellent
+%       C: J          Poor
+%  Points: (16, 20)
+%  HCP:    (16, 16)
+
+[Event "Open seat 2 1D"]
+[Board "29"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- K.AJ5.QT9762.K83 - -"]
+[Auction "W"]
+Pass 1D
+%       S: K          Decent
+%       H: AJ5        Decent
+%       D: QT9762     Poor
+%       C: K83        Decent
+%  Points: (13, 16)
+%  HCP:    (13, 13)
+
+[Event "Open seat 2 1D"]
+[Board "30"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AT6.8.AQ976.AT72 - -"]
+[Auction "W"]
+Pass 1D
+%       S: AT6        Decent
+%       H: 8          Poor
+%       D: AQ976      Good
+%       C: AT72       Decent
+%  Points: (14, 17)
+%  HCP:    (14, 14)
+
+[Event "Open seat 2 1H"]
+[Board "31"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- T85.KJ853.A94.A5 - -"]
+[Auction "W"]
+Pass 1H
+%       S: T85        Poor
+%       H: KJ853      Decent
+%       D: A94        Decent
+%       C: A5         Decent
+%  Points: (12, 13)
+%  HCP:    (12, 12)
+
+[Event "Open seat 2 1H"]
+[Board "32"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A875.AT742.KJ3.K - -"]
+[Auction "W"]
+Pass 1H
+%       S: A875       Decent
+%       H: AT742      Decent
+%       D: KJ3        Decent
+%       C: K          Decent
+%  Points: (15, 18)
+%  HCP:    (15, 15)
+
+[Event "Open seat 2 1H"]
+[Board "33"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KJ.AKT65432..765 - -"]
+[Auction "W"]
+Pass 1H
+%       S: KJ         Decent
+%       H: AKT65432   Good
+%       D:            Poor
+%       C: 765        Poor
+%  Points: (11, 17)
+%  HCP:    (11, 11)
+
+[Event "Open seat 2 1H"]
+[Board "34"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- T6.AQJT6.A95.T94 - -"]
+[Auction "W"]
+Pass 1H
+%       S: T6         Poor
+%       H: AQJT6      Good
+%       D: A95        Decent
+%       C: T94        Poor
+%  Points: (11, 12)
+%  HCP:    (11, 11)
+
+[Event "Open seat 2 1H"]
+[Board "35"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- K97.AKJT863..QT7 - -"]
+[Auction "W"]
+Pass 1H
+%       S: K97        Decent
+%       H: AKJT863    Excellent
+%       D:            Poor
+%       C: QT7        Poor
+%  Points: (13, 18)
+%  HCP:    (13, 13)
+
+[Event "Open seat 2 1H"]
+[Board "36"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- K98.JT863.Q8.AK9 - -"]
+[Auction "W"]
+Pass 1H
+%       S: K98        Decent
+%       H: JT863      Poor
+%       D: Q8         Poor
+%       C: AK9        Good
+%  Points: (13, 14)
+%  HCP:    (13, 13)
+
+[Event "Open seat 2 1H"]
+[Board "37"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- K542.AQJT98..T94 - -"]
+[Auction "W"]
+Pass 1H
+%       S: K542       Decent
+%       H: AQJT98     Good
+%       D:            Poor
+%       C: T94        Poor
+%  Points: (10, 15)
+%  HCP:    (10, 10)
+
+[Event "Open seat 2 1H"]
+[Board "38"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- T.KJ972.QJ2.AK63 - -"]
+[Auction "W"]
+Pass 1H
+%       S: T          Poor
+%       H: KJ972      Decent
+%       D: QJ2        Decent
+%       C: AK63       Good
+%  Points: (14, 17)
+%  HCP:    (14, 14)
+
+[Event "Open seat 2 1H"]
+[Board "39"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A.AT762.T98.AK96 - -"]
+[Auction "W"]
+Pass 1H
+%       S: A          Decent
+%       H: AT762      Decent
+%       D: T98        Poor
+%       C: AK96       Good
+%  Points: (15, 18)
+%  HCP:    (15, 15)
+
+[Event "Open seat 2 1H"]
+[Board "40"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A.A86532.Q6.AQ82 - -"]
+[Auction "W"]
+Pass 1H
+%       S: A          Decent
+%       H: A86532     Decent
+%       D: Q6         Poor
+%       C: AQ82       Good
+%  Points: (16, 20)
+%  HCP:    (16, 16)
+
+[Event "Open seat 2 1S"]
+[Board "41"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AKJ65.A97.Q64.97 - -"]
+[Auction "W"]
+Pass 1S
+%       S: AKJ65      Excellent
+%       H: A97        Decent
+%       D: Q64        Poor
+%       C: 97         Poor
+%  Points: (14, 15)
+%  HCP:    (14, 14)
+
+[Event "Open seat 2 1S"]
+[Board "42"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- QJ8753.8.KQJ2.Q2 - -"]
+[Auction "W"]
+Pass 1S
+%       S: QJ8753     Decent
+%       H: 8          Poor
+%       D: KQJ2       Good
+%       C: Q2         Poor
+%  Points: (11, 15)
+%  HCP:    (11, 11)
+
+[Event "Open seat 2 1S"]
+[Board "43"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KQT762.K.AQT42.T - -"]
+[Auction "W"]
+Pass 1S
+%       S: KQT762     Good
+%       H: K          Decent
+%       D: AQT42      Good
+%       C: T          Poor
+%  Points: (14, 20)
+%  HCP:    (14, 14)
+
+[Event "Open seat 2 1S"]
+[Board "44"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AJ543.432.Q8.AT3 - -"]
+[Auction "W"]
+Pass 1S
+%       S: AJ543      Decent
+%       H: 432        Poor
+%       D: Q8         Poor
+%       C: AT3        Decent
+%  Points: (11, 12)
+%  HCP:    (11, 11)
+
+[Event "Open seat 2 1S"]
+[Board "45"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KQJ97.KQ8.K.AT92 - -"]
+[Auction "W"]
+Pass 1S
+%       S: KQJ97      Good
+%       H: KQ8        Good
+%       D: K          Decent
+%       C: AT92       Decent
+%  Points: (18, 21)
+%  HCP:    (18, 18)
+
+[Event "Open seat 2 1S"]
+[Board "46"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AT632.AJ43.5.AJ5 - -"]
+[Auction "W"]
+Pass 1S
+%       S: AT632      Decent
+%       H: AJ43       Decent
+%       D: 5          Poor
+%       C: AJ5        Decent
+%  Points: (14, 17)
+%  HCP:    (14, 14)
+
+[Event "Open seat 2 1S"]
+[Board "47"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AJT8432.K.T8652. - -"]
+[Auction "W"]
+Pass 1S
+%       S: AJT8432    Good
+%       H: K          Decent
+%       D: T8652      Poor
+%       C:            Poor
+%  Points: (8, 16)
+%  HCP:    (8, 8)
+
+[Event "Open seat 2 1S"]
+[Board "48"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- Q98765.75.K82.AQ - -"]
+[Auction "W"]
+Pass 1S
+%       S: Q98765     Poor
+%       H: 75         Poor
+%       D: K82        Decent
+%       C: AQ         Good
+%  Points: (11, 13)
+%  HCP:    (11, 11)
+
+[Event "Open seat 2 1S"]
+[Board "49"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KQ87543..JT54.AJ - -"]
+[Auction "W"]
+Pass 1S
+%       S: KQ87543    Good
+%       H:            Poor
+%       D: JT54       Poor
+%       C: AJ         Decent
+%  Points: (11, 17)
+%  HCP:    (11, 11)
+
+[Event "Open seat 2 1S"]
+[Board "50"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- QT7654.A9.32.KJ3 - -"]
+[Auction "W"]
+Pass 1S
+%       S: QT7654     Poor
+%       H: A9         Decent
+%       D: 32         Poor
+%       C: KJ3        Decent
+%  Points: (10, 12)
+%  HCP:    (10, 10)
+
+[Event "Open seat 2 1NT"]
+[Board "51"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- Q432.QT.AK52.A75 - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: Q432       Poor
+%       H: QT         Poor
+%       D: AK52       Good
+%       C: A75        Decent
+%  Points: (15, 16)
+%  HCP:    (15, 15)
+
+[Event "Open seat 2 1NT"]
+[Board "52"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- QJ2.QT9.AT52.AK5 - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: QJ2        Decent
+%       H: QT9        Poor
+%       D: AT52       Decent
+%       C: AK5        Good
+%  Points: (16, 16)
+%  HCP:    (16, 16)
+
+[Event "Open seat 2 1NT"]
+[Board "53"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A964.Q98.K86.AQT - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: A964       Decent
+%       H: Q98        Poor
+%       D: K86        Decent
+%       C: AQT        Good
+%  Points: (15, 15)
+%  HCP:    (15, 15)
+
+[Event "Open seat 2 1NT"]
+[Board "54"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KQT65.QJ3.Q6.KQ4 - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: KQT65      Good
+%       H: QJ3        Decent
+%       D: Q6         Poor
+%       C: KQ4        Good
+%  Points: (15, 16)
+%  HCP:    (15, 15)
+
+[Event "Open seat 2 1NT"]
+[Board "55"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A75.K84.AJ32.K63 - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: A75        Decent
+%       H: K84        Decent
+%       D: AJ32       Decent
+%       C: K63        Decent
+%  Points: (15, 15)
+%  HCP:    (15, 15)
+
+[Event "Open seat 2 1NT"]
+[Board "56"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- K8.A543.A85.A753 - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: K8         Decent
+%       H: A543       Decent
+%       D: A85        Decent
+%       C: A753       Decent
+%  Points: (15, 16)
+%  HCP:    (15, 15)
+
+[Event "Open seat 2 1NT"]
+[Board "57"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 874.A82.A43.AKQ8 - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: 874        Poor
+%       H: A82        Decent
+%       D: A43        Decent
+%       C: AKQ8       Excellent
+%  Points: (17, 17)
+%  HCP:    (17, 17)
+
+[Event "Open seat 2 1NT"]
+[Board "58"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- QJ8.AQJ43.K5.K94 - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: QJ8        Decent
+%       H: AQJ43      Good
+%       D: K5         Decent
+%       C: K94        Decent
+%  Points: (16, 17)
+%  HCP:    (16, 16)
+
+[Event "Open seat 2 1NT"]
+[Board "59"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AK5.K865.A86.K63 - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: AK5        Good
+%       H: K865       Decent
+%       D: A86        Decent
+%       C: K63        Decent
+%  Points: (17, 17)
+%  HCP:    (17, 17)
+
+[Event "Open seat 2 1NT"]
+[Board "60"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KT72.AKT.AT43.Q9 - -"]
+[Auction "W"]
+Pass 1NT =1=
+[Note "1:15 to 17"]
+%       S: KT72       Decent
+%       H: AKT        Good
+%       D: AT43       Decent
+%       C: Q9         Poor
+%  Points: (16, 17)
+%  HCP:    (16, 16)
+
+[Event "Open seat 2 2C"]
+[Board "61"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AK.AT96.AQ6.AJT3 - -"]
+[Auction "W"]
+Pass 2C
+%       S: AK         Good
+%       H: AT96       Decent
+%       D: AQ6        Good
+%       C: AJT3       Good
+%  Points: (22, 23)
+%  HCP:    (22, 22)
+
+[Event "Open seat 2 2C"]
+[Board "62"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- .A32.AKQ92.AKQ73 - -"]
+[Auction "W"]
+Pass 2C
+%       S:            Poor
+%       H: A32        Decent
+%       D: AKQ92      Excellent
+%       C: AKQ73      Excellent
+%  Points: (22, 27)
+%  HCP:    (22, 22)
+
+[Event "Open seat 2 2C"]
+[Board "63"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 5.AKQ65.AJ2.AKT7 - -"]
+[Auction "W"]
+Pass 2C
+%       S: 5          Poor
+%       H: AKQ65      Excellent
+%       D: AJ2        Decent
+%       C: AKT7       Good
+%  Points: (21, 24)
+%  HCP:    (21, 21)
+
+[Event "Open seat 2 2C"]
+[Board "64"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AK3.AKQT87.A75.7 - -"]
+[Auction "W"]
+Pass 2C
+%       S: AK3        Good
+%       H: AKQT87     Excellent
+%       D: A75        Decent
+%       C: 7          Poor
+%  Points: (20, 23)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2C"]
+[Board "65"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AT3.AKQ953.AK8.3 - -"]
+[Auction "W"]
+Pass 2C
+%       S: AT3        Decent
+%       H: AKQ953     Excellent
+%       D: AK8        Good
+%       C: 3          Poor
+%  Points: (20, 23)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2C"]
+[Board "66"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KQJ.KQ3.KQ.KQJ96 - -"]
+[Auction "W"]
+Pass 2C
+%       S: KQJ        Good
+%       H: KQ3        Good
+%       D: KQ         Good
+%       C: KQJ96      Good
+%  Points: (22, 23)
+%  HCP:    (22, 22)
+
+[Event "Open seat 2 2C"]
+[Board "67"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A32.Q2.A2.AKQJ84 - -"]
+[Auction "W"]
+Pass 2C
+%       S: A32        Decent
+%       H: Q2         Poor
+%       D: A2         Decent
+%       C: AKQJ84     Solid
+%  Points: (20, 22)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2C"]
+[Board "68"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AKJ5.AKQ8.953.KQ - -"]
+[Auction "W"]
+Pass 2C
+%       S: AKJ5       Excellent
+%       H: AKQ8       Excellent
+%       D: 953        Poor
+%       C: KQ         Good
+%  Points: (22, 23)
+%  HCP:    (22, 22)
+
+[Event "Open seat 2 2C"]
+[Board "69"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AQ.Q975.AK3.AK82 - -"]
+[Auction "W"]
+Pass 2C
+%       S: AQ         Good
+%       H: Q975       Poor
+%       D: AK3        Good
+%       C: AK82       Good
+%  Points: (22, 23)
+%  HCP:    (22, 22)
+
+[Event "Open seat 2 2C"]
+[Board "70"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- .AKJ62.AQ5.AQ863 - -"]
+[Auction "W"]
+Pass 2C
+%       S:            Poor
+%       H: AKJ62      Excellent
+%       D: AQ5        Good
+%       C: AQ863      Good
+%  Points: (20, 25)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2D"]
+[Board "71"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- J7.4.AQ8743.8543 - -"]
+[Auction "W"]
+Pass 2D
+%       S: J7         Poor
+%       H: 4          Poor
+%       D: AQ8743     Good
+%       C: 8543       Poor
+%  Points: (7, 11)
+%  HCP:    (7, 7)
+
+[Event "Open seat 2 2D"]
+[Board "72"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 64.J87.A96532.Q9 - -"]
+[Auction "W"]
+Pass 2D
+%       S: 64         Poor
+%       H: J87        Poor
+%       D: A96532     Decent
+%       C: Q9         Poor
+%  Points: (7, 9)
+%  HCP:    (7, 7)
+
+[Event "Open seat 2 2D"]
+[Board "73"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- Q652.9.KT9843.KJ - -"]
+[Auction "W"]
+Pass 2D
+%       S: Q652       Poor
+%       H: 9          Poor
+%       D: KT9843     Decent
+%       C: KJ         Decent
+%  Points: (9, 13)
+%  HCP:    (9, 9)
+
+[Event "Open seat 2 2D"]
+[Board "74"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- QJ9.72.K98652.T5 - -"]
+[Auction "W"]
+Pass 2D
+%       S: QJ9        Decent
+%       H: 72         Poor
+%       D: K98652     Decent
+%       C: T5         Poor
+%  Points: (6, 8)
+%  HCP:    (6, 6)
+
+[Event "Open seat 2 2D"]
+[Board "75"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A86.J63.A87652.T - -"]
+[Auction "W"]
+Pass 2D
+%       S: A86        Decent
+%       H: J63        Poor
+%       D: A87652     Decent
+%       C: T          Poor
+%  Points: (9, 12)
+%  HCP:    (9, 9)
+
+[Event "Open seat 2 2D"]
+[Board "76"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 2.J87.QJ9876.Q74 - -"]
+[Auction "W"]
+Pass 2D
+%       S: 2          Poor
+%       H: J87        Poor
+%       D: QJ9876     Decent
+%       C: Q74        Poor
+%  Points: (6, 9)
+%  HCP:    (6, 6)
+
+[Event "Open seat 2 2D"]
+[Board "77"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 53.Q84.AJT972.74 - -"]
+[Auction "W"]
+Pass 2D
+%       S: 53         Poor
+%       H: Q84        Poor
+%       D: AJT972     Good
+%       C: 74         Poor
+%  Points: (7, 9)
+%  HCP:    (7, 7)
+
+[Event "Open seat 2 2D"]
+[Board "78"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- Q5.JT63.KQ8752.T - -"]
+[Auction "W"]
+Pass 2D
+%       S: Q5         Poor
+%       H: JT63       Poor
+%       D: KQ8752     Good
+%       C: T          Poor
+%  Points: (8, 12)
+%  HCP:    (8, 8)
+
+[Event "Open seat 2 2D"]
+[Board "79"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 54.JT.QJT854.762 - -"]
+[Auction "W"]
+Pass 2D
+%       S: 54         Poor
+%       H: JT         Poor
+%       D: QJT854     Good
+%       C: 762        Poor
+%  Points: (4, 6)
+%  HCP:    (4, 4)
+
+[Event "Open seat 2 2D"]
+[Board "80"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- .63.AJT762.Q9754 - -"]
+[Auction "W"]
+Pass 2D
+%       S:            Poor
+%       H: 63         Poor
+%       D: AJT762     Good
+%       C: Q9754      Poor
+%  Points: (7, 13)
+%  HCP:    (7, 7)
+
+[Event "Open seat 2 2H"]
+[Board "81"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 963.AK9876.T8.J6 - -"]
+[Auction "W"]
+Pass 2H
+%       S: 963        Poor
+%       H: AK9876     Good
+%       D: T8         Poor
+%       C: J6         Poor
+%  Points: (8, 10)
+%  HCP:    (8, 8)
+
+[Event "Open seat 2 2H"]
+[Board "82"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- QT865.QJT862.3.2 - -"]
+[Auction "W"]
+Pass 2H
+%       S: QT865      Poor
+%       H: QJT862     Good
+%       D: 3          Poor
+%       C: 2          Poor
+%  Points: (5, 11)
+%  HCP:    (5, 5)
+
+[Event "Open seat 2 2H"]
+[Board "83"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 9.AJT873.J876.84 - -"]
+[Auction "W"]
+Pass 2H
+%       S: 9          Poor
+%       H: AJT873     Good
+%       D: J876       Poor
+%       C: 84         Poor
+%  Points: (6, 10)
+%  HCP:    (6, 6)
+
+[Event "Open seat 2 2H"]
+[Board "84"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- T5.KJT652.JT9.94 - -"]
+[Auction "W"]
+Pass 2H
+%       S: T5         Poor
+%       H: KJT652     Good
+%       D: JT9        Poor
+%       C: 94         Poor
+%  Points: (5, 7)
+%  HCP:    (5, 5)
+
+[Event "Open seat 2 2H"]
+[Board "85"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 863.QJT983.KQ.J9 - -"]
+[Auction "W"]
+Pass 2H
+%       S: 863        Poor
+%       H: QJT983     Good
+%       D: KQ         Good
+%       C: J9         Poor
+%  Points: (9, 11)
+%  HCP:    (9, 9)
+
+[Event "Open seat 2 2H"]
+[Board "86"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- T5.KJT975.94.Q52 - -"]
+[Auction "W"]
+Pass 2H
+%       S: T5         Poor
+%       H: KJT975     Good
+%       D: 94         Poor
+%       C: Q52        Poor
+%  Points: (6, 8)
+%  HCP:    (6, 6)
+
+[Event "Open seat 2 2H"]
+[Board "87"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- K54.AT9852.J86.7 - -"]
+[Auction "W"]
+Pass 2H
+%       S: K54        Decent
+%       H: AT9852     Decent
+%       D: J86        Poor
+%       C: 7          Poor
+%  Points: (8, 11)
+%  HCP:    (8, 8)
+
+[Event "Open seat 2 2H"]
+[Board "88"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- Q96.KQJT75.J.932 - -"]
+[Auction "W"]
+Pass 2H
+%       S: Q96        Poor
+%       H: KQJT75     Good
+%       D: J          Poor
+%       C: 932        Poor
+%  Points: (9, 12)
+%  HCP:    (9, 9)
+
+[Event "Open seat 2 2H"]
+[Board "89"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 64.AJT963.A5.632 - -"]
+[Auction "W"]
+Pass 2H
+%       S: 64         Poor
+%       H: AJT963     Good
+%       D: A5         Decent
+%       C: 632        Poor
+%  Points: (9, 11)
+%  HCP:    (9, 9)
+
+[Event "Open seat 2 2H"]
+[Board "90"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- 542.KJ9743.J.Q62 - -"]
+[Auction "W"]
+Pass 2H
+%       S: 542        Poor
+%       H: KJ9743     Decent
+%       D: J          Poor
+%       C: Q62        Poor
+%  Points: (7, 10)
+%  HCP:    (7, 7)
+
+[Event "Open seat 2 2S"]
+[Board "91"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- K98753.72.QT9.J5 - -"]
+[Auction "W"]
+Pass 2S
+%       S: K98753     Decent
+%       H: 72         Poor
+%       D: QT9        Poor
+%       C: J5         Poor
+%  Points: (6, 8)
+%  HCP:    (6, 6)
+
+[Event "Open seat 2 2S"]
+[Board "92"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AJ6532.T8.J8.QJ3 - -"]
+[Auction "W"]
+Pass 2S
+%       S: AJ6532     Decent
+%       H: T8         Poor
+%       D: J8         Poor
+%       C: QJ3        Decent
+%  Points: (9, 11)
+%  HCP:    (9, 9)
+
+[Event "Open seat 2 2S"]
+[Board "93"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KQ9862.J6.K865.4 - -"]
+[Auction "W"]
+Pass 2S
+%       S: KQ9862     Good
+%       H: J6         Poor
+%       D: K865       Decent
+%       C: 4          Poor
+%  Points: (9, 13)
+%  HCP:    (9, 9)
+
+[Event "Open seat 2 2S"]
+[Board "94"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A97543.9.JT76.QJ - -"]
+[Auction "W"]
+Pass 2S
+%       S: A97543     Decent
+%       H: 9          Poor
+%       D: JT76       Poor
+%       C: QJ         Decent
+%  Points: (8, 12)
+%  HCP:    (8, 8)
+
+[Event "Open seat 2 2S"]
+[Board "95"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AK7652.6.J42.T95 - -"]
+[Auction "W"]
+Pass 2S
+%       S: AK7652     Good
+%       H: 6          Poor
+%       D: J42        Poor
+%       C: T95        Poor
+%  Points: (8, 11)
+%  HCP:    (8, 8)
+
+[Event "Open seat 2 2S"]
+[Board "96"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KJ9654.J5.9.KJ64 - -"]
+[Auction "W"]
+Pass 2S
+%       S: KJ9654     Decent
+%       H: J5         Poor
+%       D: 9          Poor
+%       C: KJ64       Decent
+%  Points: (9, 13)
+%  HCP:    (9, 9)
+
+[Event "Open seat 2 2S"]
+[Board "97"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AJ7543.2.T82.JT4 - -"]
+[Auction "W"]
+Pass 2S
+%       S: AJ7543     Decent
+%       H: 2          Poor
+%       D: T82        Poor
+%       C: JT4        Poor
+%  Points: (6, 9)
+%  HCP:    (6, 6)
+
+[Event "Open seat 2 2S"]
+[Board "98"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KQ9762.85.954.85 - -"]
+[Auction "W"]
+Pass 2S
+%       S: KQ9762     Good
+%       H: 85         Poor
+%       D: 954        Poor
+%       C: 85         Poor
+%  Points: (5, 7)
+%  HCP:    (5, 5)
+
+[Event "Open seat 2 2S"]
+[Board "99"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KJT986.QT85.J.T3 - -"]
+[Auction "W"]
+Pass 2S
+%       S: KJT986     Good
+%       H: QT85       Poor
+%       D: J          Poor
+%       C: T3         Poor
+%  Points: (7, 11)
+%  HCP:    (7, 7)
+
+[Event "Open seat 2 2S"]
+[Board "100"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KJ9852.2.98732.5 - -"]
+[Auction "W"]
+Pass 2S
+%       S: KJ9852     Decent
+%       H: 2          Poor
+%       D: 98732      Poor
+%       C: 5          Poor
+%  Points: (4, 10)
+%  HCP:    (4, 4)
+
+[Event "Open seat 2 2NT"]
+[Board "101"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AT96.Q73.AKJ.AK8 - -"]
+[Auction "W"]
+Pass 2NT
+%       S: AT96       Decent
+%       H: Q73        Poor
+%       D: AKJ        Excellent
+%       C: AK8        Good
+%  Points: (21, 21)
+%  HCP:    (21, 21)
+
+[Event "Open seat 2 2NT"]
+[Board "102"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- Q95.AK2.QJ43.AKJ - -"]
+[Auction "W"]
+Pass 2NT
+%       S: Q95        Poor
+%       H: AK2        Good
+%       D: QJ43       Decent
+%       C: AKJ        Excellent
+%  Points: (20, 20)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2NT"]
+[Board "103"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AK4.A5.K643.AQ54 - -"]
+[Auction "W"]
+Pass 2NT
+%       S: AK4        Good
+%       H: A5         Decent
+%       D: K643       Decent
+%       C: AQ54       Good
+%  Points: (20, 21)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2NT"]
+[Board "104"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AQ3.AK4.K43.KJ76 - -"]
+[Auction "W"]
+Pass 2NT
+%       S: AQ3        Good
+%       H: AK4        Good
+%       D: K43        Decent
+%       C: KJ76       Decent
+%  Points: (20, 20)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2NT"]
+[Board "105"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AKJ4.AK97.AQ8.75 - -"]
+[Auction "W"]
+Pass 2NT
+%       S: AKJ4       Excellent
+%       H: AK97       Good
+%       D: AQ8        Good
+%       C: 75         Poor
+%  Points: (21, 22)
+%  HCP:    (21, 21)
+
+[Event "Open seat 2 2NT"]
+[Board "106"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- A752.AJ4.AK.AT62 - -"]
+[Auction "W"]
+Pass 2NT
+%       S: A752       Decent
+%       H: AJ4        Decent
+%       D: AK         Good
+%       C: AT62       Decent
+%  Points: (20, 21)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2NT"]
+[Board "107"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- KQ2.A853.AK8.A43 - -"]
+[Auction "W"]
+Pass 2NT
+%       S: KQ2        Good
+%       H: A853       Decent
+%       D: AK8        Good
+%       C: A43        Decent
+%  Points: (20, 20)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2NT"]
+[Board "108"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AJ2.QT.AKJ4.KQT4 - -"]
+[Auction "W"]
+Pass 2NT
+%       S: AJ2        Decent
+%       H: QT         Poor
+%       D: AKJ4       Excellent
+%       C: KQT4       Good
+%  Points: (20, 21)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2NT"]
+[Board "109"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AKT.A4.AKT5.Q963 - -"]
+[Auction "W"]
+Pass 2NT
+%       S: AKT        Good
+%       H: A4         Decent
+%       D: AKT5       Good
+%       C: Q963       Poor
+%  Points: (20, 21)
+%  HCP:    (20, 20)
+
+[Event "Open seat 2 2NT"]
+[Board "110"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:- AJ92.KT2.AQ.AQT3 - -"]
+[Auction "W"]
+Pass 2NT
+%       S: AJ92       Decent
+%       H: KT2        Decent
+%       D: AQ         Good
+%       C: AQT3       Good
+%  Points: (20, 21)
+%  HCP:    (20, 20)

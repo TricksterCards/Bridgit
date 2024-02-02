@@ -15,9 +15,13 @@ namespace Bridgit
 
         private IBiddingSystem _bidder = new TwoOverOneGameForce();
 
-        public TestGenerator(string eventDescription, params Call[] calls)
+        private int _seat;
+
+        public TestGenerator(string eventDescription, int seat, params Call[] calls)
         {
             this.EventDescription = eventDescription;
+            this._seat = seat;
+            Debug.Assert(seat >= 1 && seat <= 4);
             foreach (var call in calls)
             {
                 Tests[call] = new List<Game>();
@@ -26,15 +30,24 @@ namespace Bridgit
 
         public void GenerateTests(int count)
         {
+            var auction = new List<Call>();
+            var dealer = Direction.N;
+            for (int s = 1; s < _seat; s++)
+            {
+                auction.Add(Call.Pass);
+                dealer = BridgeBidder.RightHandOpponent(dealer);
+            }
             int needed = Tests.Count * count;
             while (needed > 0)
             {
                 var board = new Board();
+                board.Dealer = dealer;
                 board.DealRandomHands();
-                board.Hands[Direction.E] = null;
-                board.Hands[Direction.S] = null;
-                board.Hands[Direction.W] = null;
+                foreach (Direction noHand in Enum.GetValues<Direction>())
+                    if (noHand != Direction.N)
+                        board.Hands[noHand] = null;
                 var bs = new BiddingState(board, _bidder, _bidder);
+                bs.ReplayAuction(auction);
                 CallDetails callDetails = bs.CallChoices.BestCall;
                 var call = callDetails.Call;
                 if (Tests.ContainsKey(call) && Tests[call].Count < count)
@@ -48,18 +61,52 @@ namespace Bridgit
             }
         }
 
-        private bool CallsDifferBySeat(Board board, IBiddingSystem bidder)
+
+        public Game[] GenerateSeatDependentTests(int count)
+        {
+            var games = new List<Game>();
+            int needed = Tests.Count * count;
+            while (games.Count < count)
+            {
+                var board = new Board();
+                board.DealRandomHands();
+                board.Hands[Direction.E] = null;
+                board.Hands[Direction.S] = null;
+                board.Hands[Direction.W] = null;
+                if (CallsDifferBySeat(board))
+                {
+                    board.Dealer = Direction.N;
+                    var seat = 1;
+                    var auction = new List<Call>();
+                    while (seat <= 4)
+                    {
+                        var bs = new BiddingState(board, _bidder, _bidder);
+                        bs.ReplayAuction(auction);
+                        bs.MakeCall(bs.CallChoices.BestCall);
+                        var game = new Game();
+                        game.Update(bs);
+                        games.Add(game);
+                        seat++;
+                        auction.Add(Call.Pass);
+                        board.Dealer = BridgeBidder.RightHandOpponent(board.Dealer);
+                    }
+                }
+            }
+            return games.ToArray();
+        }
+
+        private bool CallsDifferBySeat(Board board)
         {
             Debug.Assert(board.Dealer == Direction.N);
-            var bs = new BiddingState(board, bidder, bidder);
+            var bs = new BiddingState(board, _bidder, _bidder);
             CallDetails lastCall = bs.CallChoices.BestCall;
             var auction = new List<Call>();
             while (board.Dealer != Direction.E)
             {
                 board.Dealer = BridgeBidder.RightHandOpponent(board.Dealer);
                 auction.Add(Call.Pass);
-                bs = new BiddingState(board, bidder, bidder);
-                bs.ReplayAuction(auction.ToArray());
+                bs = new BiddingState(board, _bidder, _bidder);
+                bs.ReplayAuction(auction);
                 CallDetails posCall = bs.CallChoices.BestCall;
                 if (!posCall.Call.Equals(lastCall.Call))
                 {
@@ -69,35 +116,57 @@ namespace Bridgit
             return false;
         }
 
+        public string GamesToString(string eventName, Game[] games)
+        {
+            int boardNumber = 1;
+            var sb = new StringBuilder();
+            foreach (var game in games)
+            {
+                game.Tags["Event"] = eventName;
+                game.Tags["Board"] = boardNumber.ToString();
+                sb.Append(game.GetGameText());
+                var board = game.GetBoard();
+                sb.Append(HandCommentary(board.Hands[Direction.N]));
+                boardNumber++;
+            }
+            return sb.ToString();
+        }
+
         public override string ToString()
         {
             int boardNumber = 1;
             var sb = new StringBuilder();
             foreach (var test in Tests)
             {
-                var eventName = $"{EventDescription} {test.Key}";
+                var eventName = $"{EventDescription} seat {_seat} {test.Key}";
                 foreach (var game in test.Value)
                 {
                     game.Tags["Event"] = eventName;
                     game.Tags["Board"] = boardNumber.ToString();
                     sb.Append(game.GetGameText());
                     var board = game.GetBoard();
-                    var hand = board.Hands[Direction.N];
-                    var stringHand = BridgeBidding.PBN.ToString.Hand(hand);
-                    var suits = stringHand.Split('.');
-                	var showHand = new HandSummary.ShowState();
-					StandardHandEvaluator.Evaluate(hand, showHand);
-                    var ha = showHand.HandSummary;
-                    sb.Append($"%       S: {suits[0]}\n");
-                    sb.Append($"%       H: {suits[1]}\n");
-                    sb.Append($"%       D: {suits[2]}\n");
-                    sb.Append($"%       C: {suits[3]}\n");
-                    sb.Append($"%  Points: {ha.Points}\n");
-                    sb.Append($"%  HCP:    {ha.HighCardPoints}\n");
-                    sb.Append("\n");
+                    sb.Append(HandCommentary(board.Hands[Direction.N]));
                     boardNumber++;
                 }
             }
+            return sb.ToString();
+        }
+
+        public string HandCommentary(Hand hand)
+        {
+            var sb = new StringBuilder();
+            var stringHand = BridgeBidding.PBN.ToString.Hand(hand);
+            var suits = stringHand.Split('.');
+            var showHand = new HandSummary.ShowState();
+            StandardHandEvaluator.Evaluate(hand, showHand);
+            var ha = showHand.HandSummary;
+            sb.Append($";       S: {suits[0], -10} {ha.Suits[Suit.Spades].GetQuality().Min}\n");
+            sb.Append($";       H: {suits[1], -10} {ha.Suits[Suit.Hearts].GetQuality().Min}\n");
+            sb.Append($";       D: {suits[2], -10} {ha.Suits[Suit.Diamonds].GetQuality().Min}\n");
+            sb.Append($";       C: {suits[3], -10} {ha.Suits[Suit.Clubs].GetQuality().Min}\n");
+            sb.Append($";  Points: {ha.Points}\n");
+            sb.Append($";  HCP:    {ha.HighCardPoints}\n");
+            sb.Append("\n");
             return sb.ToString();
         }
 

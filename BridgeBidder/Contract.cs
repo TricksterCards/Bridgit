@@ -148,5 +148,33 @@ namespace BridgeBidding
 		public bool PassEndsAuction { get { return this.CallsRemaining == 1; } }
 
 		public bool AuctionComplete { get { return this.CallsRemaining == 0; } }
-	}
+
+        public override string ToString()
+        {
+			var s = "";
+            if (Bid == null)
+			{
+				s = "Pass";
+			}
+			else
+			{
+				s = Bid.ToString();
+				if (Doubled)
+				{
+					s += "X";
+				}
+				if (Redoubled)
+				{
+					s += "X";
+				}
+			}
+			return s;
+
+			
+
+
+        }
+    }
+
+
 }

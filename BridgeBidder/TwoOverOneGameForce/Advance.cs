@@ -24,7 +24,7 @@ namespace BridgeBidding
                 var bids = new List<CallFeature>
                 {
                     // TODO: What is the level of interference we can take
-                    PartnerBids(Overcall.Rebid),
+                    PartnerBids(Overcall.SecondBid),
 
                                         // Weak jumps to game are highter priority than simple raises.
                     // Fill this out better but for now just go on law of total trump, jumping if weak.  
@@ -40,21 +40,21 @@ namespace BridgeBidding
                     Nonforcing(Bid.TwoSpades,    Fit(), DummyPoints(Raise), ShowsTrump()),
 
 
-                    Nonforcing(Bid.OneHeart, Points(AdvanceNewSuit1Level), Shape(5), GoodSuit()),
+                    Nonforcing(Bid.OneHeart, Points(AdvanceNewSuit1Level), Shape(5), GoodPlusSuit),
                     Nonforcing(Bid.OneHeart, Points(AdvanceNewSuit1Level), Shape(6, 11)),
 
-                    Nonforcing(Bid.OneSpade, Points(AdvanceNewSuit1Level), Shape(5), GoodSuit()),
+                    Nonforcing(Bid.OneSpade, Points(AdvanceNewSuit1Level), Shape(5), GoodPlusSuit),
                     Nonforcing(Bid.OneSpade, Points(AdvanceNewSuit1Level), Shape(6, 11)),
 
                
                     // TODO: Should these be prioirty - 5 - support should be higher priorty.  Seems reasonable
-                    Nonforcing(Bid.TwoClubs, Points(NewSuit2Level), Shape(5), GoodSuit()),
+                    Nonforcing(Bid.TwoClubs, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
                     Nonforcing(Bid.TwoClubs, Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid.TwoDiamonds, Points(NewSuit2Level), Shape(5), GoodSuit()),
+                    Nonforcing(Bid.TwoDiamonds, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
                     Nonforcing(Bid.TwoDiamonds, Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid.TwoHearts, Jump(0), Points(NewSuit2Level), Shape(5), GoodSuit()),
+                    Nonforcing(Bid.TwoHearts, Jump(0), Points(NewSuit2Level), Shape(5), GoodPlusSuit),
                     Nonforcing(Bid.TwoHearts, Jump(0), Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid.TwoSpades, Jump(0), Points(NewSuit2Level), Shape(5), GoodSuit()),
+                    Nonforcing(Bid.TwoSpades, Jump(0), Points(NewSuit2Level), Shape(5), GoodPlusSuit),
                     Nonforcing(Bid.TwoSpades, Jump(0), Points(NewSuit2Level), Shape(6, 11)),
 
 
@@ -97,7 +97,7 @@ namespace BridgeBidding
         }
 
 
-        public static IEnumerable<CallFeature> Rebid(PositionState _)
+        public static IEnumerable<CallFeature> SecondBid(PositionState _)
         {
             return new CallFeature[] { 
                 // TODO: ONly bid these if they are necessary.  Minors don't need to go the 4-level unless forced there...

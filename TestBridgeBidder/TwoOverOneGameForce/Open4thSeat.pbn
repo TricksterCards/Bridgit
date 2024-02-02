@@ -19,24 +19,31 @@ Pass Pass Pass Pass
 [Auction "N"]
 Pass Pass Pass 1C
 
-[Event "Open in 4th seat - 2 Diamonds strong"]
+[Event "Open in 4th seat - 6 diamonds but decent 4-card hearts"]
 [Dealer "N"]
 [Vulnerable "None"]
-[Deal "N:- - - 83.QJ32.AKT743.Q"]
+[Deal "N:- - - 83.QJ32.AKT743.K"]
+[Auction "N"]
+Pass Pass Pass 1D
+
+[Event "Open in 4th seat - 6 diamonds, 4 crummy hearts"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:- - - QJ.7532.AKT743.Q"]
 [Auction "N"]
 Pass Pass Pass 2D
 
 [Event "Open in 4th seat - 2 H strong"]
 [Dealer "N"]
 [Vulnerable "None"]
-[Deal "N:- - - QJ32.AKT743.83.Q"]
+[Deal "N:- - - J432.AKT743.Q3.Q"]
 [Auction "N"]
 Pass Pass Pass 2H
 
 [Event "Open in 4th seat - 2 S strong"]
 [Dealer "N"]
 [Vulnerable "None"]
-[Deal "N:- - - AKT743.QJ32.83.Q"]
+[Deal "N:- - - AKT743.J432.Q3.Q"]
 [Auction "N"]
 Pass Pass Pass 2S
 
