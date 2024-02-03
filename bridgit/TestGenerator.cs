@@ -30,33 +30,48 @@ namespace Bridgit
 
         public void GenerateTests(int count)
         {
-            var auction = new List<Call>();
+         //   var auction = new List<Call>();
             var dealer = Direction.N;
             for (int s = 1; s < _seat; s++)
             {
-                auction.Add(Call.Pass);
+        //        auction.Add(Call.Pass);
                 dealer = BridgeBidder.RightHandOpponent(dealer);
             }
             int needed = Tests.Count * count;
             while (needed > 0)
             {
+                bool goodTest = true;
                 var board = new Board();
                 board.Dealer = dealer;
                 board.DealRandomHands();
-                foreach (Direction noHand in Enum.GetValues<Direction>())
-                    if (noHand != Direction.N)
-                        board.Hands[noHand] = null;
+            //    foreach (Direction noHand in Enum.GetValues<Direction>())
+            //        if (noHand != Direction.N)
+            //            board.Hands[noHand] = null;
                 var bs = new BiddingState(board, _bidder, _bidder);
-                bs.ReplayAuction(auction);
-                CallDetails callDetails = bs.CallChoices.BestCall;
-                var call = callDetails.Call;
-                if (Tests.ContainsKey(call) && Tests[call].Count < count)
+                for (int s = 1; s < _seat; s++)
                 {
-                    bs.MakeCall(callDetails);
-                    var game = new Game();
-                    game.Update(bs);
-                    Tests[call].Add(game);
-                    needed--;
+                    var callDetails = bs.CallChoices.BestCall;
+                    if (callDetails.Call.Equals(Call.Pass))
+                    {
+                        bs.MakeCall(callDetails);
+                    }
+                    else
+                    {
+                        goodTest = false;
+                    }
+                }
+                if (goodTest)
+                {
+                    CallDetails callDetails = bs.CallChoices.BestCall;
+                    var call = callDetails.Call;
+                    if (Tests.ContainsKey(call) && Tests[call].Count < count)
+                    {
+                        bs.MakeCall(callDetails);
+                        var game = new Game();
+                        game.Update(bs);
+                        Tests[call].Add(game);
+                        needed--;
+                    }
                 }
             }
         }
@@ -155,8 +170,9 @@ namespace Bridgit
                     game.Tags["Event"] = eventName;
                     game.Tags["Board"] = boardNumber.ToString();
                     sb.Append(game.GetGameText());
-                    var board = game.GetBoard();
-                    sb.Append(HandCommentary(board.Hands[Direction.N]));
+           //         var board = game.GetBoard();
+          //          sb.Append(HandCommentary(board.Hands[Direction.N]));
+                    sb.AppendLine();
                     boardNumber++;
                 }
             }

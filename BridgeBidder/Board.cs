@@ -15,6 +15,19 @@ namespace BridgeBidding
         public Dictionary<Direction, Hand> Hands = new Dictionary<Direction, Hand>();
 
 
+		public Board()
+		{
+
+		}
+
+		public Board(string dealString)
+		{
+			var deal = PBN.FromString.Deal(dealString);
+			this.Hands = deal.Hands;
+			this.Dealer = deal.Dealer;
+			this.Number = null;
+		}
+
 		public void Deal(List<Card> deck)
 		{
 			if (deck.Count != 52)

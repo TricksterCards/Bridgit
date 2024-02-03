@@ -44,6 +44,7 @@ namespace BridgeBidding.PBN
 
 		public Dictionary<string, string> Tags = new Dictionary<string, string>();
 		public Dictionary<string, List<String>> TagData = new Dictionary<string, List<string>>();
+		public Dictionary<string, string> TagCommentary = new Dictionary<string, string>();
 
 		public Notes AuctionNotes = new Notes();
 		public Notes PlayNotes = new Notes();
@@ -122,6 +123,16 @@ namespace BridgeBidding.PBN
 			return s;
 		}
 
+		private string GetCommentary(string tagName)
+		{
+			var s = "";
+			if (TagCommentary.ContainsKey(tagName))
+			{
+				s = $"{{\n{TagCommentary[tagName]}\n}}\n";
+			}
+			return s;
+		}
+
 		public string GetGameText()
 		{
 			var sb = new StringBuilder();
@@ -131,6 +142,7 @@ namespace BridgeBidding.PBN
 				{
 					sb.Append(PBN.ToString.Tag(tagName, Tags[tagName]));
 					sb.Append(GetTagData(tagName));
+					sb.Append(GetCommentary(tagName));
 				}
 			}
 			sb.Append(GetSectionWithNotes("Auction", AuctionNotes));
