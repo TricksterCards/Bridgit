@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.CommandLine;
+using System.Diagnostics;
 
 using BridgeBidding;
 using BridgeBidding.PBN;
@@ -45,6 +46,7 @@ public class Program
 			    game.Update(bs);
 			    game.Tags["Event"] = "Full auction";
 
+                Console.WriteLine("RALPH IS HERE!!!");
 			    Console.WriteLine(game.GetGameText());	
             },
             dealOption);
@@ -79,7 +81,8 @@ public class Program
             seatOption);    
         rootCommand.AddCommand(makeTestsCommand);
 
-        return await rootCommand.InvokeAsync(new string[] { "maketests", "--event", "Open", "--seat", "1" });
+        return await rootCommand.InvokeAsync(args);
+            //new string[] { "maketests", "--event", "Open", "--seat", "1" });
             //new string[] {"--poop", "N:K43.QJ3.AK32.Q85 QJT9.K98.JT9.AJ4 765.752.654.T932 A82.AT64.Q87.K76"});
     }
 /*
