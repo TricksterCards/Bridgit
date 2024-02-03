@@ -92,14 +92,15 @@ namespace BridgeBidding
 				bids.AddRange(ThirdSeat4CardMajor(And(IsNotVul, Balanced(true),  Points(11, 13))));
 				bids.AddRange(ThirdSeat4CardMajor(And(IsNotVul, Balanced(false), Points(10, 13))));
 			}
-			bids.AddRange(new CallFeature[] 
+			bids.AddRange(new CallFeature[]
 			{
 				// For medium+ hands we will always bid the longest suit first.
-				Nonforcing(Bid._1C, MediumOrBetter, Shape(4, 10), LongestSuit),				
+				Nonforcing(Bid._1C, MediumOrBetter, Shape(4, 10), LongestSuit),
 				Nonforcing(Bid._1D, MediumOrBetter, Shape(4, 10), LongestSuit),
 
-				// Special case 5 clubs and 4 diamonds with mimimum hand.  Bid diamonds to avoid reverse
+				// Special case 5/4 or 6/5 clubs & diamonds with mimimum hand.  Bid diamonds to avoid reverse
 				Nonforcing(Bid._1D, Minimum, Shape(Suit.Clubs, 5), Shape(Suit.Diamonds, 4)),
+				Nonforcing(Bid._1D, Minimum, Shape(Suit.Clubs, 6), Shape(Suit.Diamonds, 5)),
 
 				Nonforcing(Bid._1C, OneLevel, LongestSuit, Shape(Suit.Hearts, 0, 4)),
 				Nonforcing(Bid._1C, OneLevel, Shape(3), Shape(Suit.Diamonds, 0, 3), LongestMajor(4)),
