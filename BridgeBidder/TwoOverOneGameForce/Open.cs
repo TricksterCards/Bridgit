@@ -92,14 +92,15 @@ namespace BridgeBidding
 				bids.AddRange(ThirdSeat4CardMajor(And(IsNotVul, Balanced(true),  Points(11, 13))));
 				bids.AddRange(ThirdSeat4CardMajor(And(IsNotVul, Balanced(false), Points(10, 13))));
 			}
-			bids.AddRange(new CallFeature[] 
+			bids.AddRange(new CallFeature[]
 			{
 				// For medium+ hands we will always bid the longest suit first.
-				Nonforcing(Bid._1C, MediumOrBetter, Shape(4, 10), LongestSuit),				
+				Nonforcing(Bid._1C, MediumOrBetter, Shape(4, 10), LongestSuit),
 				Nonforcing(Bid._1D, MediumOrBetter, Shape(4, 10), LongestSuit),
 
-				// Special case 5 clubs and 4 diamonds with mimimum hand.  Bid diamonds to avoid reverse
+				// Special case 5/4 or 6/5 clubs & diamonds with mimimum hand.  Bid diamonds to avoid reverse
 				Nonforcing(Bid._1D, Minimum, Shape(Suit.Clubs, 5), Shape(Suit.Diamonds, 4)),
+				Nonforcing(Bid._1D, Minimum, Shape(Suit.Clubs, 6), Shape(Suit.Diamonds, 5)),
 
 				Nonforcing(Bid._1C, OneLevel, LongestSuit, Shape(Suit.Hearts, 0, 4)),
 				Nonforcing(Bid._1C, OneLevel, Shape(3), Shape(Suit.Diamonds, 0, 3), LongestMajor(4)),
@@ -157,36 +158,7 @@ namespace BridgeBidding
 
 			};
 		}
-/*
-		// These rules should not be added in 4th seat - weak opens make no sense
-		public static IEnumerable<CallFeature> OpenSuitWeak(PositionState ps)
-		{
-			Debug.Assert(ps.Seat != 4);
-			return new CallFeature[]
-			{
-				PartnerBids(Respond.WeakOpen),
 
-				// 2C can not be bid since strong opening.  Take care of great 6-card suits by bidding 3C
-				Nonforcing(Bid._2D, Weak, Shape(6), GoodPlusSuit),
-				Nonforcing(Bid._2H,   Weak, Shape(6), GoodPlusSuit),
-				Nonforcing(Bid._2S,   Weak, Shape(6), GoodPlusSuit),
-
-				Nonforcing(Bid._3C,    VeryWeak, Shape(6), ExcellentPlusSuit),
-				Nonforcing(Bid._3C,    VeryWeak, Shape(7), GoodPlusSuit),
-				Nonforcing(Bid._3D, VeryWeak, Shape(7), GoodPlusSuit),
-				Nonforcing(Bid._3H,   VeryWeak, Shape(7), GoodPlusSuit),
-				Nonforcing(Bid._3S,   VeryWeak, Shape(7), GoodPlusSuit),
-				
-                Nonforcing(Bid._4C,    VeryWeak, Shape(8), DecentPlusSuit),
-				Nonforcing(Bid._4D, VeryWeak, Shape(8), DecentPlusSuit),
-				Nonforcing(Bid._4H,   VeryWeak, Shape(8, 10), DecentPlusSuit),
-				Nonforcing(Bid._4S,   VeryWeak, Shape(8, 10), DecentPlusSuit),
-
-                Nonforcing(Bid._5C,    VeryWeak, Shape(9, 10), DecentPlusSuit),
-				Nonforcing(Bid._5D, VeryWeak, Shape(9, 10), DecentPlusSuit),
-			};
-		}
-*/
 		private static List<CallFeature> OpenSuitWeak(PositionState ps)
 		{
 			var rules = new List<CallFeature>();
