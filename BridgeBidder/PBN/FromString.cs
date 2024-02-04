@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http.Headers;
 
 
 namespace BridgeBidding.PBN
@@ -11,7 +12,7 @@ namespace BridgeBidding.PBN
 		
 		public static Board Board(string deal, string vulnerable, int? number = null)
 		{
-			var parsedDeal = FromString.Deal(deal);
+			var parsedDeal = Deal.Parse(deal);
 			return new Board
 			{
 				Number = number,
@@ -21,7 +22,8 @@ namespace BridgeBidding.PBN
 			};
 		}
 
-		public static (Direction Dealer, Dictionary<Direction, Hand> Hands) Deal(string deal)
+/*
+		public static Deal Deal(string deal)
 		{
             Direction dealer;
 			if (deal == null)
@@ -76,9 +78,11 @@ namespace BridgeBidding.PBN
 				}
 			}
 
-            return (dealer, hands);
+            return new Deal { Dealer = dealer, Hands = hands };
 		}
+*/
 
+/*
 		public static Suit[] HandSuitOrder = new Suit[] { Suit.Spades, Suit.Hearts, Suit.Diamonds, Suit.Clubs };
 
 		public static Hand Hand(string handString)
@@ -116,7 +120,7 @@ namespace BridgeBidding.PBN
 
 			return hand;
 		}
-
+*/
 
 		// TODO: Is this correct?  Should we require a value?
 		// If the null string is passed into this method, Vulnerable.None is returned.

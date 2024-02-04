@@ -179,10 +179,10 @@ namespace Bridgit
             return sb.ToString();
         }
 
-        public string HandCommentary(Hand hand)
+        public static string HandCommentary(Hand hand)
         {
             var sb = new StringBuilder();
-            var stringHand = BridgeBidding.PBN.ToString.Hand(hand);
+            var stringHand = hand.ToString();
             var suits = stringHand.Split('.');
             var showHand = new HandSummary.ShowState();
             StandardHandEvaluator.Evaluate(hand, showHand);

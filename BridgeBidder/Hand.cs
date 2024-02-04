@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+using System.Text;
+
 
 namespace BridgeBidding
 {
 	public class Hand : HashSet<Card>
 	{
 		public Hand() { }
-
-
 
 
 		public int HighCardPoints(Suit? suit = null)
@@ -101,6 +98,67 @@ namespace BridgeBidding
 				}
 			}
 			return losers;
+		}
+
+		
+		public static Suit[] SuitOrder = new Suit[] { Suit.Spades, Suit.Hearts, Suit.Diamonds, Suit.Clubs };
+
+
+		public static Hand Parse(string s)
+		{
+			if (s == null)
+			{
+				throw new ArgumentNullException("s");
+			}
+			if (s == "-") 
+			{
+				return null;
+			}
+
+			var suits = s.Split('.');
+			if (suits.Length != SuitOrder.Length)
+			{
+				throw new FormatException("handString does not contain four suits");
+			}
+			Hand hand = new Hand();			
+			for (var i = 0; i < suits.Length; i++)
+			{
+				foreach (var rankChar in suits[i])
+				{
+					var card = new Card(Card.ParseRank(rankChar), SuitOrder[i]);
+					if (hand.Contains(card))
+					{
+						throw new ArgumentException($"Duplicate card {card} in {s}");
+					}
+					hand.Add(card);
+				}
+			}
+
+			if (hand.Count != 13)
+			{
+				throw new FormatException($"hand {s} contains {hand.Count} cards.  Should have 13.");
+			}
+
+			return hand;
+		}
+
+
+        public override string ToString()
+		{
+			var sb = new StringBuilder();
+			var suitCards = this.GroupBy(c => c.Suit).ToDictionary(g => g.Key, g => g.OrderBy(sc => sc.Rank).Reverse());
+			foreach (var suit in SuitOrder)
+			{
+				if (suitCards.ContainsKey(suit))
+				{
+					foreach (var card in suitCards[suit])
+					{
+						sb.Append(Card.RankToSymbol[card.Rank]);
+					}
+				}
+                if (suit != Suit.Clubs) sb.Append(".");
+			}
+			return sb.ToString();
 		}
 
 	}

@@ -15,26 +15,43 @@ public class Program
     {
         var rootCommand = new RootCommand("Bridge bidding command line tool.");
 
-        var fileOption = new Option<FileInfo?>(
-            name: "--file",
-            description: "The file to read for bidding.");
+        //var fileOption = new Option<FileInfo?>(
+        //    name: "--file",
+        //    description: "The file to read for bidding.");
 
-        var dealOption = new Option<Board?>(
+        var dealOption = new Option<Deal>(
             name: "--deal",
             description: "Full deal in PBN format.",
             parseArgument: result =>
             {
-                return new Board(result.Tokens.Single().Value);
+                return Deal.Parse(result.Tokens.Single().ToString());
             });
 
-        var bidCommand = new Command("bid", "Bid the full auction for the specified deal or file.")
-            {
-                fileOption,
-                dealOption
-            };
+        var vulnerableOption = new Option<Vulnerable>(
+            name: "--vulnerable",
+            description: "Vulnerability.  If not specified then None.",
+            getDefaultValue: () => Vulnerable.None);
 
-        bidCommand.SetHandler((board) => 
-            { 
+        var bidCommand = new Command("bid", "Bid the full auction for the specified deal or file.");
+        bidCommand.Add(dealOption);
+        bidCommand.Add(vulnerableOption);
+
+
+        bidCommand.SetHandler((deal, vulnerable) =>
+            {
+                var board = new Board();
+                board.Vulnerable = vulnerable;
+                if (deal == null)
+                {
+                    board.DealRandomHands();
+                    board.Dealer = Direction.N;
+                }
+                else 
+                {
+                    board.Hands = deal.Hands;
+                    board.Dealer = deal.Dealer;
+                }
+
                 var bidSystem = new TwoOverOneGameForce();
                 var bs = new BiddingState(board, bidSystem, bidSystem);
                 while (!bs.Contract.AuctionComplete)
@@ -46,10 +63,14 @@ public class Program
 			    game.Update(bs);
 			    game.Tags["Event"] = "Full auction";
 
-                Console.WriteLine("RALPH IS HERE!!!");
 			    Console.WriteLine(game.GetGameText());	
+                Console.WriteLine("Declarer's know hand summary:");
+                Console.WriteLine(bs.Contract.Declarer.PublicHandSummary.ToString());
+                Console.WriteLine();
+                Console.WriteLine("Dummy's known hand summary:");
+                Console.WriteLine(bs.Contract.Declarer.Partner.PublicHandSummary.ToString());                
             },
-            dealOption);
+            dealOption, vulnerableOption);
 
 
         rootCommand.AddCommand(bidCommand);

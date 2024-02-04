@@ -22,7 +22,7 @@ namespace BridgeBidding
 
 		public Board(string dealString)
 		{
-			var deal = PBN.FromString.Deal(dealString);
+			var deal = PBN.Deal.Parse(dealString);
 			this.Hands = deal.Hands;
 			this.Dealer = deal.Dealer;
 			this.Number = null;

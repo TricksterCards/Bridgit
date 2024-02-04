@@ -152,9 +152,9 @@ namespace BridgeBidding.PBN
 
         public void Update(BiddingState bs)
         {
-            Tags["Dealer"] = PBN.ToString.Direction(bs.Dealer.Direction);
+            Tags["Dealer"] = bs.Dealer.Direction.ToString();
             Tags["Vulnerable"] = PBN.ToString.Vulnerable(bs);
-            Tags["Deal"] = PBN.ToString.Deal(bs.Dealer.Direction, bs.Board.Hands);
+            Tags["Deal"] = new Deal(bs.Board).ToString();
 			if (bs.Board.Number != null)
 			{
 				Tags["Board"] = bs.Board.Number.ToString();
@@ -173,7 +173,7 @@ namespace BridgeBidding.PBN
 
 		private void UpdateAuction(BiddingState bs)
 		{
-			Tags["Auction"] = PBN.ToString.Direction(bs.Dealer.Direction);
+			Tags["Auction"] = bs.Dealer.Direction.ToString();
             AuctionNotes.Clear();
 			var auction = bs.GetAuction();
 			List<string> lines = new List<string>();

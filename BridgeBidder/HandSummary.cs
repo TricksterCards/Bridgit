@@ -423,6 +423,8 @@ namespace BridgeBidding
 			if (r != null)
 			{
                 (int Min, int Max) range = ((int Min, int Max))r;
+				if (range.Min == range.Max)
+					return $"{name}: {range.Min}\n";
 				return $"{name}: {range.Min}-{range.Max}\n";
 			}
 			return "";

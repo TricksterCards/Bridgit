@@ -15,15 +15,15 @@ namespace BridgeBidding.PBN
 			return bs.Board.Vulnerable.ToString();
         }
 
-		public static string Direction(Direction direction)
-		{
-			return direction.ToString();
-		}
+	//	public static string Direction(Direction direction)
+	//	{
+	//		return direction.ToString();
+	//	}
 
-
+/*
         public static string Deal(Direction dealer, Dictionary<Direction, Hand> hands)
         {
-            string deal = Direction(dealer) + ":";
+            string deal = $"{dealer}";
             var direction = dealer;
 			for (int i = 0; i < 4; i++)
 			{
@@ -34,14 +34,15 @@ namespace BridgeBidding.PBN
 				}
 				else 
 				{
-					deal += PBN.ToString.Hand(hand);
+					deal += hand.ToString();
 				}
 				if (i < 3) deal += " ";
 				direction = BridgeBidder.LeftHandOpponent(direction);
 			}
             return deal;
         }
-
+		*/
+/*
 		public static string Hand(Hand hand)
 		{
 			var s = "";
@@ -59,7 +60,7 @@ namespace BridgeBidding.PBN
 			}
 			return s;
 		}
-
+*/
 		public static string Tag(string key, string value)
 		{
 			return $"[{key} \"{value}\"]\n";

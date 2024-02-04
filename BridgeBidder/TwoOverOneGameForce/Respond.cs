@@ -197,8 +197,8 @@ namespace BridgeBidding
                     Invitational(Bid._2C, Points(MaxPassed), Shape(5, 10)),
                     Invitational(Bid._2D, Points(MaxPassed), Shape(5, 10)),
 
-                    Invitational(Bid._2H, Points(Raise1), Shape(3, 5)),
-                    Invitational(Bid._3H, Points(MediumHand), Shape(3, 5)),
+                    Invitational(Bid._2H, DummyPoints(Raise1), Shape(3, 5)),
+                    Invitational(Bid._3H, DummyPoints(MediumHand), Shape(3, 5)),
                     // TODO: When would we bid 4?
                     Signoff(Bid._4H, Points(Weak4Level), Shape(5, 10)),
                 
@@ -233,8 +233,8 @@ namespace BridgeBidding
 
                     Forcing(Bid._1S, Points(Respond1Level), Shape(4, 10)),
 
-                    Invitational(Bid._2H, Points(Raise1), Shape(3, 5)),
-                    Invitational(Bid._3H, Points(MediumHand), Shape(4, 5)),
+                    Invitational(Bid._2H, DummyPoints(Raise1), Shape(3, 5)),
+                    Invitational(Bid._3H, DummyPoints(MediumHand), Shape(4, 5)),
                     // NOTE: Medium hand with 3-card support will be handled with 1NT followed by raise...
                     // TODO: LARRY - we have discussed 3-card limit raises.  Should we do that?
                     Signoff(Bid._4H, Points(Weak4Level), Shape(5, 10)),
@@ -276,8 +276,8 @@ namespace BridgeBidding
                     Invitational(Bid._2D, Points(MaxPassed), Shape(5, 10)),
                     Invitational(Bid._2H, Points(MaxPassed), Shape(5, 10)),
 
-                    Invitational(Bid._2S, Points(Raise1), Shape(3, 5)),
-                    Invitational(Bid._3S, Points(MediumHand), Shape(3, 5)),
+                    Invitational(Bid._2S, DummyPoints(Raise1), Shape(3, 5)),
+                    Invitational(Bid._3S, DummyPoints(MediumHand), Shape(3, 5)),
                     // TODO: When would we bid 4?
                     Signoff(Bid._4S, Points(Weak4Level), Shape(5, 10)),
                 
@@ -314,8 +314,8 @@ namespace BridgeBidding
 
                     ForcingToGame(Bid._2H, Shape(5, 10), Points(GameOrBetter)),
 
-                    Invitational(Bid._2S, Points(Raise1), Shape(3, 5)),
-                    Invitational(Bid._3S, Points(MediumHand), Shape(4, 5)),
+                    Invitational(Bid._2S, DummyPoints(Raise1), Shape(3, 5)),
+                    Invitational(Bid._3S, DummyPoints(MediumHand), Shape(4, 5)),
                     // NOTE: Medium hand with 3-card support will be handled with 1NT followed by raise...
                     // LARRY: Same issue here - 3-card supprot limit raises or 1NT relay?
                     Signoff(Bid._4S, Points(Weak4Level), Shape(5, 10)),

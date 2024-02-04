@@ -39,7 +39,7 @@ namespace TestBridgeBidder
                                 new PBNTest
                                 {
                                     Auction = bidHistory,
-                                    Deal = BridgeBidding.PBN.ToString.Deal(board.Dealer, board.Hands),
+                                    Deal = new Deal(board).ToString(),
                                     Vulnerable = board.Vulnerable.ToString(),
                                     ExpectedCall = call.ToString(),
                                     Name = $"{testName} (Seat {direction}, Bid {bidNumber})"
