@@ -135,9 +135,9 @@ namespace BridgeBidding.PBN
 			{
 				return vulEnum;
 			}
-            throw new ArgumentException($"Invalid vulnerablity parameter value {vulnerable}");
+            throw new FormatException($"Invalid vulnerablity parameter value {vulnerable}");
         }
-
+/*
         // TODO: Annothations along with the calls???  Seems overkill and silly
 		// null is allowed for the auction string - returns an empty array of Calls.
 		public static Call[] Auction(List<string> auctionData)
@@ -157,13 +157,13 @@ namespace BridgeBidding.PBN
 				{
 					if (!token.StartsWith("$") && !token.StartsWith("=") && !token.Equals("+"))
 					{
-						bidHistory.Add(Call.FromString(token));
+						bidHistory.Add(Call.Parse(token));
 					}
 				}
 			}
 			return bidHistory.ToArray();
 		}
-	
+*/	
        	public static List<Game> Games(string text)
         {
             var games = new List<Game>();
@@ -207,14 +207,14 @@ namespace BridgeBidding.PBN
 
 
 
-
+/*
         private static List<string> ImportAuction(List<string> bidLines)
         {
             return string.Join(" ", bidLines)
                 .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
         }
-
+*/
 
         private static List<PBNTag> TokenizeTags(string text)
         {

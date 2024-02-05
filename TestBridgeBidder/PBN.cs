@@ -19,7 +19,7 @@ namespace TestBridgeBidder
             var games = BridgeBidding.PBN.FromString.Games(text);
             foreach (var game in games)
             {
-                var auction = game.GetAuction();
+                var auction = Auction.FromGame(game).Calls;
                 var board = game.GetBoard();
                 var bidHistory = "";
                 var direction = board.Dealer;

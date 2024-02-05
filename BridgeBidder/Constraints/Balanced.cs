@@ -20,15 +20,16 @@
 	    void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
 		{
 			showHand.ShowIsBalanced(_desiredValue);
-			/*
+			// TODO: I am concerned that when a hand Shows a shape of 5X AND is balanced that the specifi
+			// showing of 5X will be lost.  Think this through carefully.
 			if (_desiredValue == true)
 			{
-				foreach (var suit in BasicBidding.BasicSuits)
+				foreach (var suit in Card.Suits)
 				{
 					showHand.Suits[suit].ShowShape(2, 5);
 				}
 			}
-			*/
+			
 		}
 	}
 

@@ -14,7 +14,24 @@ namespace BridgeBidding.PBN
 		public class Notes
 		{
 			private List<string> _notes = new List<string>();
-			public int Add(string note)
+
+			public string GetValue(string noteReference)
+			{
+				int i;
+				if (noteReference.Length < 3 || !noteReference.StartsWith("=") || !noteReference.EndsWith("=") ||
+				   (!int.TryParse(noteReference.Substring(1, noteReference.Length - 2), out i)))
+				{
+					throw new FormatException($"Note reference {noteReference} is not properly formed.");
+				}
+				if (i < 1 || i > _notes.Count)
+				{
+					throw new FormatException($"Note reference {noteReference} refers to a non-existant note.");
+				}
+				return _notes[i - 1];
+			}
+
+			// Returns a note ID reference in the form "=x=" where x is an integer starting with 1.
+			public string Add(string note)
 			{
 				var i = _notes.IndexOf(note);
 				if (i == -1)
@@ -22,7 +39,7 @@ namespace BridgeBidding.PBN
 					i = _notes.Count;
 					_notes.Add(note);
 				}
-				return i + 1;
+				return $"={i+1}=";
 			}
 			public List<string> GetValues()
 			{
@@ -36,8 +53,7 @@ namespace BridgeBidding.PBN
             public void Clear()
             {
                 _notes.Clear();
-            }
-			
+			}
 		}
 
 
@@ -89,12 +105,12 @@ namespace BridgeBidding.PBN
 			}
 			return FromString.Board(deal, vulnerable);
 		}
-
+/*
 		public Call[] GetAuction()
 		{
 			return FromString.Auction(TagData["Auction"]);
 		}
-
+*/
 		private string GetSectionWithNotes(string tagName, Notes notes)
 		{
 			var s = "";
@@ -159,7 +175,8 @@ namespace BridgeBidding.PBN
 			{
 				Tags["Board"] = bs.Board.Number.ToString();
 			}
-			UpdateAuction(bs);
+			Auction.FromBiddingState(bs).UpdateGame(this);
+		//	UpdateAuction(bs);
 			if (bs.Contract.AuctionComplete)
 			{
 				Tags["Contract"] = bs.Contract.ToString();
@@ -170,7 +187,7 @@ namespace BridgeBidding.PBN
 			}
         }
 
-
+/*
 		private void UpdateAuction(BiddingState bs)
 		{
 			Tags["Auction"] = bs.Dealer.Direction.ToString();
@@ -181,16 +198,25 @@ namespace BridgeBidding.PBN
 			for (int i = 0; i < auction.Count; i++)
 			{
 				curLine += auction[i].Call.ToString();
+				string note = "";
 				foreach (var annotation in auction[i].Annotations)
 				{
 					if (annotation.Type == CallAnnotation.AnnotationType.Alert ||
 						annotation.Type == CallAnnotation.AnnotationType.Announce)
 					{
-						var noteId = AuctionNotes.Add(annotation.Text);
-						curLine += $" ={noteId}=";
+						if (note.Length > 0)
+						{
+							note += ";";
+						}
+						note += $"{annotation.Type} {annotation.Text}";
 					}
 				}
-				
+				if (note.Length > 0)
+				{
+					string noteReference = AuctionNotes.Add(note);
+					curLine += $" {noteReference}";
+				}
+
 				if (i + 1 == auction.Count && !bs.Contract.AuctionComplete)
 				{
 					curLine += " +";
@@ -212,6 +238,6 @@ namespace BridgeBidding.PBN
 			}
 			TagData["Auction"] = lines;
 		}
-
+*/
     }
 }

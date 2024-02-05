@@ -2,7 +2,7 @@
   "profiles": {
     "bridgit": {
       "commandName": "Project",
-      "commandLineArgs": "bid --vulnerable NS --deal \"N:KQJ642.Q.J9.Q872 753.J93.KT43.KT4 AT98.AT2.Q752.95 .K87654.A86.AJ63\""
+      "commandLineArgs": ""
     }
   }
 }

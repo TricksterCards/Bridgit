@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using BridgeBidding.PBN;
 
 namespace BridgeBidding
 {
@@ -33,15 +34,15 @@ namespace BridgeBidding
 		/// <exception cref="AuctionException"></exception> 
 		public static string SuggestBid(string deal, string vulnerable, string auction, string bidSystemNS = "TwoOverOneGameForce", string bidSystemEW = "TwoOverOneGameForce")
 		{
-			var board = PBN.FromString.Board(deal, vulnerable);
-			var bidHistory = PBN.FromString.Auction(auction);
-
 			// For now we will only allow SAYC bidding system.
             if (bidSystemNS != "TwoOverOneGameForce" || bidSystemEW != "TwoOverOneGameForce")
             {
                 throw new ArgumentException("Bidding system is limited to 2/1");
             }
-			var callDetails = SuggestCall(board, bidHistory);
+
+			var board = PBN.FromString.Board(deal, vulnerable);
+			var bidHistory = Auction.FromString(board.Dealer, auction);
+			var callDetails = SuggestCall(board, bidHistory.Calls);
 			return callDetails.Call.ToString();
 		}
 

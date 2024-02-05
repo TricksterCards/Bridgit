@@ -59,14 +59,14 @@ namespace BridgeBidding
             }
         }
 
-        static public Call FromString(string str)
+        static public Call Parse(string str)
         {
             if (str == "Pass") { return Pass; }
             if (str == "X") { return Double; }
             if (str == "XX") { return Redouble; }
             int level;
             if (!int.TryParse(str.Substring(0, 1), out level) || level < 1 || level > 7) {
-                throw new ArgumentException("Bids must start with a number from 1 to 7");
+                throw new FormatException("Bids must start with a number from 1 to 7");
             }
             var strain = ParseStrain(str.Substring(1));
             return new Bid(level, strain);

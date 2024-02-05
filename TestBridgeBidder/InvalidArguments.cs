@@ -51,7 +51,7 @@ namespace TestBridgeBidder
         [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H 8D", DisplayName = "Invalid bid of eight diamonds.")]
         [DataRow("N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Joker", DisplayName = "Invalid call type.")]
 
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(FormatException))]
         public void TestInvalidParams(string deal, string vulnerable, string auction)
         {
             var suggestion = BridgeBidder.SuggestBid(deal, vulnerable, auction);  

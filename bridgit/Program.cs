@@ -5,7 +5,6 @@ using System.Diagnostics;
 
 using BridgeBidding;
 using BridgeBidding.PBN;
-using Bridgit;
 
 namespace bridgit;
 
@@ -13,7 +12,25 @@ public class Program
 {
     static async Task<int> Main(string[] args)
     {
+        
+
         var rootCommand = new RootCommand("Bridge bidding command line tool.");
+        rootCommand.SetHandler(() =>
+        {
+            Console.Clear();
+            Console.Title = "Bridgit";
+            Console.Write("How many deals would you like to bid? ");
+            var choice = Console.ReadLine();
+            int numDeals;
+            if (int.TryParse(choice, out numDeals))
+            {
+                for (int i = 0; i < numDeals; i++)
+                {
+                    BidDeal(null, Vulnerable.None, i+1);
+                }
+            }
+
+        });
 
         //var fileOption = new Option<FileInfo?>(
         //    name: "--file",
@@ -39,36 +56,7 @@ public class Program
 
         bidCommand.SetHandler((deal, vulnerable) =>
             {
-                var board = new Board();
-                board.Vulnerable = vulnerable;
-                if (deal == null)
-                {
-                    board.DealRandomHands();
-                    board.Dealer = Direction.N;
-                }
-                else 
-                {
-                    board.Hands = deal.Hands;
-                    board.Dealer = deal.Dealer;
-                }
-
-                var bidSystem = new TwoOverOneGameForce();
-                var bs = new BiddingState(board, bidSystem, bidSystem);
-                while (!bs.Contract.AuctionComplete)
-                {
-                    var callDetails = bs.CallChoices.BestCall;
-                    bs.MakeCall(callDetails);
-                }
-                var game = new Game();
-			    game.Update(bs);
-			    game.Tags["Event"] = "Full auction";
-
-			    Console.WriteLine(game.GetGameText());	
-                Console.WriteLine("Declarer's know hand summary:");
-                Console.WriteLine(bs.Contract.Declarer.PublicHandSummary.ToString());
-                Console.WriteLine();
-                Console.WriteLine("Dummy's known hand summary:");
-                Console.WriteLine(bs.Contract.Declarer.Partner.PublicHandSummary.ToString());                
+                BidDeal(deal, vulnerable, 1);
             },
             dealOption, vulnerableOption);
 
@@ -77,12 +65,14 @@ public class Program
 
         var eventOption = new Option<string>(
             name: "--event",
-            description: "Event name to add to PBN output"
+            description: "Event name to add to PBN output",
+            getDefaultValue: () => "New tests"
         );
 
         var seatOption = new Option<int>(
             name: "--seat",
-            description: "Seat for tests"
+            description: "Seat for tests",
+            getDefaultValue: () => 1
         );
 
         var makeTestsCommand = new Command("maketests", "Create new test cases")
@@ -143,4 +133,45 @@ public class Program
         }
     }
     */
+    static void BidDeal(Deal? deal, Vulnerable vul, int boardNumber)
+    {
+        var board = new Board();
+        board.Number = boardNumber;
+        board.Vulnerable = vul;
+        if (deal == null)
+        {
+            board.DealRandomHands();
+            board.Dealer = Direction.N;
+        }
+        else 
+        {
+            board.Hands = deal.Hands;
+            board.Dealer = deal.Dealer;
+        }
+
+        var bidSystem = new TwoOverOneGameForce();
+        var bs = new BiddingState(board, bidSystem, bidSystem);
+        while (!bs.Contract.AuctionComplete)
+        {
+            var callDetails = bs.CallChoices.BestCall;
+            bs.MakeCall(callDetails);
+        }
+        var game = new Game();
+        game.Update(bs);
+        var testEditor = new TestEditor(game);
+        game.Tags["Event"] = "Test new display game code";
+        testEditor.DisplayGame();
+        /*
+
+
+        Console.WriteLine(game.GetGameText());	
+        Console.WriteLine("Declarer's know hand summary:");
+        Console.WriteLine(bs.Contract.Declarer.PublicHandSummary.ToString());
+        Console.WriteLine();
+        Console.WriteLine("Dummy's known hand summary:");
+        Console.WriteLine(bs.Contract.Declarer.Partner.PublicHandSummary.ToString());
+        */                
+    }
+
+
 }
