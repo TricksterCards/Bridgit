@@ -16,53 +16,132 @@ public class TestEditor
         this.Game = game;
     }
 
-    public void DisplayGame()
-    {
-        Console.WriteLine($"{Game.Tags["Event"]}");
-        var board = Game.GetBoard();
-        Console.WriteLine($"{board.Dealer} deals, {board.Vulnerable} vulnerable");
-        DisplayHands(board.Hands);
-        Console.WriteLine();
-        var auction = Auction.FromGame(Game);
-        DisplayAuction(auction);
-        Console.WriteLine();
+    private int ActionNextBoard = 0;
+    private int ActionEditAuction = -1;
 
-        Console.Write("Press Y to accept, N to edit: ");
-        bool haveValidInput = false;
-        bool needToEdit = false;
-        while (!haveValidInput)
+
+
+
+    public int DisplayGame()
+    {
+        var auction = Auction.FromGame(Game);
+        while (true)
         {
-            var c = Console.ReadLine();
-            c = c.ToLower();
-            if (c.Equals("n"))
+            Console.WriteLine($"{Game.Tags["Event"]}");
+            var board = Game.GetBoard();
+            Console.WriteLine($"{board.Dealer} deals, {board.Vulnerable} vulnerable");
+            DisplayHands(board.Hands);
+            Console.WriteLine();
+            DisplayAuction(auction);
+            Console.WriteLine();
+
+            int action = GetUserAction();
+            if (action != ActionEditAuction)
             {
-                haveValidInput = true;
-                needToEdit = true;
+                return action;
             }
-            else if (c.Equals("y"))
-            {
-                haveValidInput = true;
-            }
+            EditAuction(auction);
         }
-        Console.WriteLine();
-        if (needToEdit) Console.WriteLine("*** NEED TO IMPLEMENT EDIITNG ***");
     }
 
-    public void DisplayAuction(Auction auction)
+
+    private void EditAuction(Auction auction)
     {
-        Console.WriteLine("West  North East  South");
+        Console.WriteLine("*** This is where we will be able to edit the auciton ***");
+        DisplayAuction(auction, true);
+        Console.Write("Which bid would you like to change? ");
+
+        var choice = Console.ReadLine();
+        // If there is no space then it is a number that selects the bid.  If there is a single space
+        // then it should be in the form "cur-bid new-call" where cur-bid is the current bid
+        // and new-call is the value to replace that bid with.  Note that cur-bid must be a unique
+        // bid in the auction so can't just be Pass or, if X is repeated that would simply replace the
+        // first one.
+        if (choice != null && choice.Split(" ").Length == 2)
+        {
+            var calls = choice.ToUpper().Split(" ");
+            Call oldCall;
+            Call newCall;
+            if (Call.TryParse(calls[0], out oldCall) && Call.TryParse(calls[1], out newCall))
+            {
+                for (int i = 0; i < auction.Count; i++)
+                {
+                    if (auction[i].Call.Equals(oldCall))
+                    {
+                        auction[i].Call = newCall;
+                        return;
+                    }
+                }
+                Console.WriteLine($"ERROR: Did not find {oldCall}");
+            }
+            else
+            {
+                Console.WriteLine("ERROR: Unable to parse calls.");
+            }
+        }
+        else
+        {
+            int bidIndex;
+            if (int.TryParse(choice, out bidIndex) && bidIndex > 0 && bidIndex <= auction.Count)
+            {
+                Console.Write($"What bid should replace {auction[bidIndex-1].Call}? ");
+                var newBid = Console.ReadLine();
+                Call call;
+                if (newBid != null && Call.TryParse(newBid.ToUpper(), out call))
+                {
+                    auction[bidIndex - 1].Call = call;
+                }
+                else
+                {
+                    Console.WriteLine("ERROR: Call value not recognized");
+                }
+            }
+            else
+            {
+                Console.WriteLine("ERROR:  Input should be bid index or of form \"oldbid newbid\"");
+            }
+        }
+    }
+
+    private int GetUserAction()
+    {
+        while (true)
+        {
+            Console.Write("Press enter for next board, E to edit, or enter a board #: ");
+            var c = Console.ReadLine();
+            if (string.IsNullOrEmpty(c))
+            {
+                return ActionNextBoard;
+            }
+            int jumpToBoard;
+            c = c.ToUpper();
+            if (c.Equals("E"))
+            {
+                return ActionEditAuction;
+            }
+            else if (int.TryParse(c, out jumpToBoard) && jumpToBoard > 0)
+            {
+                return jumpToBoard;
+            }
+        }
+    }
+    public void DisplayAuction(Auction auction, bool showBidNumbers = false)
+    {
+        Console.WriteLine(showBidNumbers ? "   West     North    East     South" : "West  North East  South");
         var direction = Direction.W;
         int col = 0;
+        int bidIndex = 1;
         while (direction != auction.FirstToAct)
         {
-            Console.Write("      ");
+            Console.Write(showBidNumbers? "         " : "      ");
             col += 1;
             direction = BridgeBidder.LeftHandOpponent(direction);
         }
         foreach (var call in auction.Calls)
         {
-            Console.Write($"{call, -6}");
-            col += 1;
+            Console.Write(showBidNumbers? $"{bidIndex, 2}:{call, -6}" : $"{call, -6}");
+            col ++;
+            bidIndex ++;
             if (col % 4 == 0) Console.WriteLine();
         }
         if (col % 4 != 0) Console.WriteLine();

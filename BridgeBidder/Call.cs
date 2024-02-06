@@ -59,6 +59,20 @@ namespace BridgeBidding
             }
         }
 
+
+        public static bool TryParse(string str, out Call call)
+        {
+            try
+            {
+                call = Parse(str);
+                return true;
+            } 
+            catch 
+            {
+                call = Call.Pass;
+                return false;
+            }
+        }
         static public Call Parse(string str)
         {
             if (str == "Pass") { return Pass; }

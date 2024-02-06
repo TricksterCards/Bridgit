@@ -191,7 +191,6 @@ namespace BridgeBidding
                     PartnerBids(Bid._3H, OpenBid2.ResponderRaisedMajor),
                     PartnerBids(Bid._4H,  OpenBid2.ResponderRaisedMajor),
 
-                    Nonforcing(Bid._1S, Shape(4, 10), Points(Respond1Level)),
 
                     // TODO: Rules for best suit if 5-5
                     Invitational(Bid._2C, Points(MaxPassed), Shape(5, 10)),
@@ -202,6 +201,7 @@ namespace BridgeBidding
                     // TODO: When would we bid 4?
                     Signoff(Bid._4H, Points(Weak4Level), Shape(5, 10)),
                 
+                    Nonforcing(Bid._1S, Shape(4, 10), Points(Respond1Level), Shape(Suit.Hearts, 0, 3)),
                   // TODO: Where  PartnerBids(Bid._1NT, OpenBid2.OneNTOverMajorOpen),
                     // TODO: Points range name wrong!
                     Semiforcing(Bid._1NT, Points(Respond1NTPassedHand), Shape(Suit.Hearts, 0, 2)),
@@ -231,13 +231,14 @@ namespace BridgeBidding
                     ForcingToGame(Bid._2D, Points(GameOrBetter), LongerOrEqualTo(Suit.Clubs), Shape(Suit.Spades, 0, 4)),
                     ForcingToGame(Bid._2D, DummyPoints(Suit.Hearts, GameOrBetter), LongerOrEqualTo(Suit.Clubs), Shape(Suit.Spades, 0, 4)),
 
-                    Forcing(Bid._1S, Points(Respond1Level), Shape(4, 10)),
 
                     Invitational(Bid._2H, DummyPoints(Raise1), Shape(3, 5)),
                     Invitational(Bid._3H, DummyPoints(MediumHand), Shape(4, 5)),
                     // NOTE: Medium hand with 3-card support will be handled with 1NT followed by raise...
                     // TODO: LARRY - we have discussed 3-card limit raises.  Should we do that?
                     Signoff(Bid._4H, Points(Weak4Level), Shape(5, 10)),
+
+                    Forcing(Bid._1S, Points(Respond1Level), Shape(4, 10), Shape(Suit.Hearts, 0, 3)),
 
                     PartnerBids(Bid._1NT, OpenBid2.OneNTOverMajorOpen),
                     Semiforcing(Bid._1NT, Points(Respond1NTOverMajor), Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
