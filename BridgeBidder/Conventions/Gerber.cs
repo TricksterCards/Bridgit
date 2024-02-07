@@ -29,10 +29,10 @@ namespace BridgeBidding
 			{
 				PartnerBids(PlaceContract),
 				
-				Forcing(Bid._4D, ShowsNoSuit(), Aces(0, 4)),
-				Forcing(Bid._4H, ShowsNoSuit(), Aces(1)),
-				Forcing(Bid._4S, ShowsNoSuit(), Aces(2)),
-				Forcing(Bid._4NT, ShowsNoSuit(), Aces(3)),
+				Forcing(Bid._4D,  ShowsNoSuit, Aces(0, 4)),
+				Forcing(Bid._4H,  ShowsNoSuit, Aces(1)),
+				Forcing(Bid._4S,  ShowsNoSuit, Aces(2)),
+				Forcing(Bid._4NT, ShowsNoSuit, Aces(3)),
 			};
 		}
 		// TODO: There needs to be somewhere that we ask for kings...

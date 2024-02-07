@@ -10,7 +10,6 @@ namespace TestBridgeBidder
     public class PBN
     {
      
-     
         // This function must ensure that test names are unique.  The testing infrastructure blows up if test names
         // are duplicated.
         public static PBNTest[] ImportTests(string text)

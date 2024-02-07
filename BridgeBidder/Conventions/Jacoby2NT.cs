@@ -66,9 +66,11 @@ namespace BridgeBidding
             choices.AddRules(new CallFeature[]
             {
                 // TODO: IMPLEMENT RESPONSES!!!
-                // TOOD: What is the thing to do here??  Perhaps bid controls.  Bid Blackwood. 
+                // TOOD: What is the thing to do here??  Perhaps bid controls.  
                 Signoff(Bid._4H, OpeningBid(Bid._1H)),
-                Signoff(Bid._4S, OpeningBid(Bid._1S))
+                Signoff(Bid._4S, OpeningBid(Bid._1S)),
+
+                Signoff(Bid.Pass)
             });     
             return choices;       
         }

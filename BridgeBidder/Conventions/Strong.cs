@@ -25,7 +25,7 @@ namespace BridgeBidding
                 PartnerBids(Bid._2C, Respond),
 
                 // TODO: Other reasons for 2-club opening...
-                Forcing(Bid._2C, Points(StrongOpenRange), ShowsNoSuit())
+                Forcing(Bid._2C, Points(StrongOpenRange), ShowsNoSuit)
             };
     
         }
@@ -38,13 +38,13 @@ namespace BridgeBidding
                     PartnerBids(OpenerRebidPositiveResponse),
                     PartnerBids(Bid._2D, OpenerRebidWaiting), 
 
-                    Forcing(Bid._2H, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
-                    Forcing(Bid._2S, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+                    Forcing(Bid._2H,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
+                    Forcing(Bid._2S,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
                     Forcing(Bid._2NT, Points(PositiveResponse), Balanced()),
-                    Forcing(Bid._3C, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
-                    Forcing(Bid._3D, Points(PositiveResponse), Shape(5, 11), Quality(SuitQuality.Good, SuitQuality.Solid)),
+                    Forcing(Bid._3C,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
+                    Forcing(Bid._3D,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
 
-                    Forcing(Bid._2D, Points(Waiting), ShowsNoSuit()),
+                    Forcing(Bid._2D,  Points(Waiting), ShowsNoSuit),
                 });
             }
             else if (ps.RHO.Doubled)
@@ -100,6 +100,9 @@ namespace BridgeBidding
                 Forcing(Bid._3D, Shape(5, 11)),
                 Forcing(Bid._3H, Shape(5, 11)),
                 Forcing(Bid._3S, Jump(0), Shape(5, 11)),
+
+                Nonforcing(Bid._3NT, Balanced(true)),
+
               // TODO: 3 NT>>>  Forcing(Bid.ThreeUnknown, Jump(0)),
                 Forcing(Bid._4C, Shape(5, 11), Jump(0)),
               
@@ -112,6 +115,7 @@ namespace BridgeBidding
         {
             var choices = new PositionCalls(ps);
             choices.AddRules(Blackwood.InitiateConvention);
+            choices.AddRules(Gerber.InitiateConvention);
             choices.AddRules(new CallFeature[]
             {
                 PartnerBids(OpenerPlaceContract),
@@ -123,8 +127,8 @@ namespace BridgeBidding
                 // Now show a bust hand by bidding cheapest minor with less 0-4 points
                 PartnerBids(Bid._3C, PartnerIsBust),
                 PartnerBids(Bid._3D, PartnerIsBust, Partner(LastBid(Bid._3C))),
-                Forcing(Bid._3C, ShowsNoSuit(), Points(RespondBust)),
-                Forcing(Bid._3D, Partner(LastBid(Bid._3C)), ShowsNoSuit(), Points(RespondBust)),
+                Forcing(Bid._3C, ShowsNoSuit, Points(RespondBust)),
+                Forcing(Bid._3D, Partner(LastBid(Bid._3C)), ShowsNoSuit, Points(RespondBust)),
 
                 // Show a 5 card major if we have one.
                 Forcing(Bid._3H, Shape(5, 11), Points(RespondSuitNotBust)),
@@ -132,8 +136,8 @@ namespace BridgeBidding
 
                 // Final bid if we're 
                 Signoff(Bid._3NT, Points(RespondNTNotBust)) 
-
             });
+            choices.AddPassRule();
             return choices;
         }
 

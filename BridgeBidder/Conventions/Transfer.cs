@@ -113,16 +113,14 @@ namespace BridgeBidding
 				Signoff(Bid._3D, Partner(LastBid(Bid._3C)), Shape(Suit.Diamonds, 6, 11)),
 
 
-				Invitational(Bid._3H, NTD.RR.InviteGame, Partner(LastBid(Bid._2H)), Shape(6, 11)),
-				Invitational(Bid._3S, NTD.RR.InviteGame, Partner(LastBid(Bid._2S)), Shape(6, 11)),
+				Invitational(Bid._3H, NTD.RR.InviteGame, Partner(LastBid(Bid._2H)), Shape(6, 11), ShowsTrump),
+				Invitational(Bid._3S, NTD.RR.InviteGame, Partner(LastBid(Bid._2S)), Shape(6, 11), ShowsTrump),
 
-				Signoff(Bid._3NT, NTD.RR.Game, Partner(LastBid(Bid._2H)), Shape(Suit.Hearts, 5)),
-				Signoff(Bid._3NT, NTD.RR.Game, Partner(LastBid(Bid._2S)), Shape(Suit.Spades, 5)),
+				Nonforcing(Bid._3NT, NTD.RR.Game, Partner(LastBid(Bid._2H)), Shape(Suit.Hearts, 5)),
+				Nonforcing(Bid._3NT, NTD.RR.Game, Partner(LastBid(Bid._2S)), Shape(Suit.Spades, 5)),
 
-				Signoff(Bid._4H, NTD.RR.Game, Partner(LastBid(Bid._2H)), Shape(6, 11)),
-
-
-				Signoff(Bid._4S, NTD.RR.Game, Partner(LastBid(Bid._2S)), Shape(6,11)),
+				Signoff(Bid._4H, NTD.RR.Game, Partner(LastBid(Bid._2H)), Shape(6, 11), ShowsTrump),
+				Signoff(Bid._4S, NTD.RR.Game, Partner(LastBid(Bid._2S)), Shape(6, 11), ShowsTrump),
 
 				Invitational(Bid._4NT, NTD.RR.InviteSlam, Partner(LastBid(Bid._2H)), Shape(Suit.Hearts, 5)),
 				Invitational(Bid._4NT, NTD.RR.InviteSlam, Partner(LastBid(Bid._2S)), Shape(Suit.Spades, 5)),
@@ -153,28 +151,30 @@ namespace BridgeBidding
 
 				
 				// TODO: Really want to work off of "Partner Shows" instead of PartnerBid...
-                Signoff(Bid._4H, NTD.OR.AcceptInvite, Fit()),
-				Signoff(Bid._4H, NTD.OR.AcceptInvite, LastBid(Bid._2H), Partner(LastBid(Bid._2NT)), Shape(3, 5)),
-				Signoff(Bid._4H, LastBid(Bid._2H), Partner(LastBid(Bid._3NT)), Shape(3, 5)),
-				Signoff(Bid._4H, LastBid(Bid._2S), Partner(LastBid(Bid._3H)), Shape(3, 5), BetterOrEqual(Suit.Hearts, Suit.Spades)),
+                Signoff(Bid._4H, ShowsTrump, NTD.OR.AcceptInvite, Fit()),
+				Signoff(Bid._4H, ShowsTrump, NTD.OR.AcceptInvite, LastBid(Bid._2H), Partner(LastBid(Bid._2NT)), Shape(3, 5)),
+				Signoff(Bid._4H, ShowsTrump, LastBid(Bid._2H), Partner(LastBid(Bid._3NT)), Shape(3, 5)),
+				Signoff(Bid._4H, ShowsTrump, LastBid(Bid._2S), Partner(LastBid(Bid._3H)), Shape(3, 5), BetterOrEqual(Suit.Hearts, Suit.Spades)),
 
 
-				Signoff(Bid._4S, NTD.OR.AcceptInvite, Partner(LastBid(Bid._3S))),
-				Signoff(Bid._4S, NTD.OR.AcceptInvite, LastBid(Bid._2S), Partner(LastBid(Bid._2NT)), Shape(3, 5)),
-				Signoff(Bid._4S, LastBid(Bid._2S), Partner(LastBid(Bid._3NT)), Shape(3, 5)),
-				Signoff(Bid._4S, LastBid(Bid._2H), Partner(LastBid(Bid._3S)), Shape(3, 5), Better(Suit.Spades, Suit.Hearts)),
+				Signoff(Bid._4S, ShowsTrump, NTD.OR.AcceptInvite, Partner(LastBid(Bid._3S))),
+				Signoff(Bid._4S, ShowsTrump, NTD.OR.AcceptInvite, LastBid(Bid._2S), Partner(LastBid(Bid._2NT)), Shape(3, 5)),
+				Signoff(Bid._4S, ShowsTrump, LastBid(Bid._2S), Partner(LastBid(Bid._3NT)), Shape(3, 5)),
+				Signoff(Bid._4S, ShowsTrump, LastBid(Bid._2H), Partner(LastBid(Bid._3S)), Shape(3, 5), Better(Suit.Spades, Suit.Hearts)),
 
-
+				// TODO: Should this call add ShowsTrump since we don't want to play in 
+				// any trump suit?  
                 // Didn't fine a suit to play in, so bid game if we have the points...
                 Signoff(Bid._3NT,  NTD.OR.AcceptInvite),
 
-				Signoff(Bid._5H, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.DontAcceptInvite),
-				Signoff(Bid._5S, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.DontAcceptInvite),
+				Signoff(Bid._5H, ShowsTrump, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.DontAcceptInvite),
+				Signoff(Bid._5S, ShowsTrump, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.DontAcceptInvite),
 
 
-				Signoff(Bid._6H, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.AcceptInvite),
-				Signoff(Bid._6S, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.AcceptInvite),
+				Signoff(Bid._6H, ShowsTrump, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.AcceptInvite),
+				Signoff(Bid._6S, ShowsTrump, Partner(LastBid(Bid._4NT)), Fit(), NTD.OR.AcceptInvite),
 
+				// TODO: AGAIN- should this "SHOWTRUMP?"
 				// Because this is lower priority it will only happen if there is not a fit
 				// so bid 6NT if partner invited to slam with 4NT
 				Signoff(Bid._6NT, Partner(LastBid(Bid._4NT)), NTD.OR.AcceptInvite),
@@ -246,8 +246,8 @@ namespace BridgeBidding
 				Nonforcing(Bid._3NT, NTB.RespondGame, Partner(LastBid(Bid._3H)), Shape(Suit.Hearts, 5)),
 				Nonforcing(Bid._3NT, NTB.RespondGame, Partner(LastBid(Bid._3S)), Shape(Suit.Spades, 5)),
 
-				Signoff(Bid._4H, NTB.RespondGame, Partner(LastBid(Bid._3H)), Shape(6, 11)),
-				Signoff(Bid._4S, NTB.RespondGame, Partner(LastBid(Bid._3S)), Shape(6, 11))
+				Signoff(Bid._4H, NTB.RespondGame, Partner(LastBid(Bid._3H)), Shape(6, 11), ShowsTrump),
+				Signoff(Bid._4S, NTB.RespondGame, Partner(LastBid(Bid._3S)), Shape(6, 11), ShowsTrump)
 
 			};
 		}
@@ -255,8 +255,8 @@ namespace BridgeBidding
 		private static IEnumerable<CallFeature> PlaceContract(PositionState _)
 		{
 			return new CallFeature[] {
-				Signoff(Bid._4H, Fit()),
-				Signoff(Bid._4S, Fit()),
+				Signoff(Bid._4H, Fit(), ShowsTrump),
+				Signoff(Bid._4S, Fit(), ShowsTrump),
 				Signoff(Bid.Pass)
 			};
 		}

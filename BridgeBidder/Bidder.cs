@@ -482,16 +482,7 @@ namespace BridgeBidding
 		}
 
 
-
-
-		public static Constraint ShowsSuit()
-		{
-			return new ShowsSuit(true, null);
-		}
-		public static Constraint ShowsNoSuit()
-		{
-			return new ShowsSuit(false, null);
-		}
+		public static DynamicConstraint ShowsNoSuit = new ShowsSuit(false, null);
 
 		public static DynamicConstraint BetterMinor(Suit? suit = null)
 		{

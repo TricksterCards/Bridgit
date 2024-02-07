@@ -57,7 +57,7 @@ namespace BridgeBidding
 				// TODO: Deal with interferenceDefaultPartnerBids(goodThrough: Bid.Double, Explain),
 
 				// TODO: Are these bids truly forcing?  Not if garbage stayman...
-				Forcing(Bid._2D, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3), ShowsNoSuit()),
+				Forcing(Bid._2D, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3), ShowsNoSuit),
 				Forcing(Bid._2H, Shape(4, 5), LongerOrEqualTo(Suit.Spades)),
                 Forcing(Bid._2S, Shape(4, 5), LongerThan(Suit.Hearts))
             };

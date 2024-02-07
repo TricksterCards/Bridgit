@@ -59,7 +59,8 @@ namespace BridgeBidding
             var bids = new List<CallFeature>()
             {
                 Signoff(Bid._4H, Fit(), PairPoints(PairGame)),
-                Signoff(Bid._4S, Fit(), PairPoints(PairGame))
+                Signoff(Bid._4S, Fit(), PairPoints(PairGame)),
+                Signoff(Call.Pass)
             };
             // TODO: Competative bids here too?  Seems silly since restricted raise
             return bids;

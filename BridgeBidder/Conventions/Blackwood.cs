@@ -32,10 +32,10 @@ namespace BridgeBidding
 			return new CallFeature[]
 			{
 				PartnerBids(PlaceContract),
-				Forcing(Bid._5C, ShowsNoSuit(), Aces(0, 4)),
-				Forcing(Bid._5D, ShowsNoSuit(), Aces(1)),
-				Forcing(Bid._5H, ShowsNoSuit(), Aces(2)),
-				Forcing(Bid._5S, ShowsNoSuit(), Aces(3)),
+				Forcing(Bid._5C, ShowsNoSuit, Aces(0, 4)),
+				Forcing(Bid._5D, ShowsNoSuit, Aces(1)),
+				Forcing(Bid._5H, ShowsNoSuit, Aces(2)),
+				Forcing(Bid._5S, ShowsNoSuit, Aces(3)),
 			};
 		}
 		// TODO: There needs to be somewhere that we ask for kings...
@@ -70,10 +70,10 @@ namespace BridgeBidding
 			return new CallFeature[]
 			{
 				PartnerBids(TryGrandSlam),
-				Forcing(Bid._6C, ShowsNoSuit(), Kings(0, 4)),
-				Forcing(Bid._6D, ShowsNoSuit(), Kings(1)),
-				Forcing(Bid._6H, ShowsNoSuit(), Kings(2)),
-				Forcing(Bid._6S, ShowsNoSuit(), Kings(3)),
+				Forcing(Bid._6C, ShowsNoSuit, Kings(0, 4)),
+				Forcing(Bid._6D, ShowsNoSuit, Kings(1)),
+				Forcing(Bid._6H, ShowsNoSuit, Kings(2)),
+				Forcing(Bid._6S, ShowsNoSuit, Kings(3)),
 			};
 		}
 
