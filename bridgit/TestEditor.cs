@@ -22,33 +22,35 @@ public class TestEditor
 
 
 
-    public int DisplayGame()
+    public void DisplayGame()
     {
-        var auction = Auction.FromGame(Game);
+        Console.WriteLine($"{Game.Tags["Event"]}");
+        var board = Game.GetBoard();
+        Console.WriteLine($"{board.Dealer} deals, {board.Vulnerable} vulnerable");
+        DisplayHands(board.Hands);
+        Console.WriteLine();
+        DisplayAuction();
+        Console.WriteLine();
+    }
+
+    public int GetUserInput()
+    {
         while (true)
         {
-            Console.WriteLine($"{Game.Tags["Event"]}");
-            var board = Game.GetBoard();
-            Console.WriteLine($"{board.Dealer} deals, {board.Vulnerable} vulnerable");
-            DisplayHands(board.Hands);
-            Console.WriteLine();
-            DisplayAuction(auction);
-            Console.WriteLine();
-
             int action = GetUserAction();
             if (action != ActionEditAuction)
             {
                 return action;
             }
-            EditAuction(auction);
+            EditAuction();
         }
     }
 
 
-    private void EditAuction(Auction auction)
+    private void EditAuction()
     {
-        Console.WriteLine("*** This is where we will be able to edit the auciton ***");
-        DisplayAuction(auction, true);
+        var auction = Auction.FromGame(Game);
+        DisplayAuction();
         Console.Write("Which bid would you like to change? ");
 
         var choice = Console.ReadLine();
@@ -69,6 +71,7 @@ public class TestEditor
                     if (auction[i].Call.Equals(oldCall))
                     {
                         auction[i].Call = newCall;
+                        auction.UpdateGame(Game);
                         return;
                     }
                 }
@@ -90,6 +93,7 @@ public class TestEditor
                 if (newBid != null && Call.TryParse(newBid.ToUpper(), out call))
                 {
                     auction[bidIndex - 1].Call = call;
+                    auction.UpdateGame(Game);
                 }
                 else
                 {
@@ -125,8 +129,9 @@ public class TestEditor
             }
         }
     }
-    public void DisplayAuction(Auction auction, bool showBidNumbers = false)
+    public void DisplayAuction(bool showBidNumbers = false)
     {
+        var auction = Auction.FromGame(Game);
         Console.WriteLine(showBidNumbers ? "   West     North    East     South" : "West  North East  South");
         var direction = Direction.W;
         int col = 0;

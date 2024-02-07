@@ -12,16 +12,20 @@ namespace BridgeBidding
         public PositionState Dealer { get; }
 
         private PositionCalls _positionCalls = null;
-        public PositionCalls CallChoices 
+        public PositionCalls GetCallChoices() 
         {
-            get 
+            if (_positionCalls == null)
             {
-                if (_positionCalls == null)
-                {
-                    _positionCalls = NextToAct.GetPositionCalls();
-                }
-                return _positionCalls;
+                _positionCalls = NextToAct.GetPositionCalls();
             }
+            return _positionCalls;
+        }
+
+        // THID METHOD IS FOR DEBUGGING SO THE CALLER CAN OBSERVE THE CREATIION THE PositionCalls object.
+        public PositionCalls DEBUG_ReEvaluateCallChoices()
+        {
+            _positionCalls = null;
+            return GetCallChoices();
         }
 
         public PositionState NextToAct { get; private set; }
@@ -59,14 +63,15 @@ namespace BridgeBidding
             foreach (var call in history)
             {
                 Contract.ValidateCall(call, NextToAct);
-                if (!CallChoices.ContainsKey(call))
+                var choices = GetCallChoices();
+                if (!choices.ContainsKey(call))
                 {
                     // TODO: This is something strange.  A call we don't know
                     // how to interpret.  Should bidding system get a crack at this
                     // when we create the placeholder?
-                    CallChoices.CreatePlaceholderCall(call);
+                    choices.CreatePlaceholderCall(call);
                 }
-                MakeCall(CallChoices[call]);
+                MakeCall(choices[call]);
             }
         }
 
@@ -75,7 +80,7 @@ namespace BridgeBidding
         {
             Debug.Assert(NextToAct == callDetails.PositionState);
             
-            if (callDetails.Group.PositionCalls != CallChoices)
+            if (callDetails.Group.PositionCalls != _positionCalls)
 			{
 				throw new System.Exception("MakeCall method called for CallDetails that is not part of current call choices");
 			}

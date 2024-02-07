@@ -85,6 +85,7 @@ namespace BridgeBidding.PBN
 
         public void UpdateGame(Game game)
         {
+            // TODO: Validate auction.  Use Contract class to make sure bids are correct.
 			game.Tags["Auction"] = FirstToAct.ToString();
             game.AuctionNotes.Clear();
 			List<string> lines = new List<string>();

@@ -50,12 +50,12 @@ namespace BridgeBidding
             else if (ps.RHO.Doubled)
             {
                 // TODO: Redouble is SOS, what about suit?
-                throw new NotImplementedException();
+                choices.AddPassRule();
             }
             else
             {
                 // TODO: What here??? Larry???
-                throw new NotImplementedException();
+                choices.AddPassRule();
             }
             return choices;
         }
@@ -79,11 +79,12 @@ namespace BridgeBidding
             // TODO: Next state, more bids, et.....
         }
 
-        private static IEnumerable<CallFeature> OpenerRebidPositiveResponse(PositionState ps)
+        private static PositionCalls OpenerRebidPositiveResponse(PositionState ps)
         {
-            var bids = new List<CallFeature>();
-            bids.AddRange(Blackwood.InitiateConvention(ps));
-            bids.AddRange(new CallFeature[]
+            var choices = new PositionCalls(ps);
+            choices.AddRules(Blackwood.InitiateConvention);
+            choices.AddRules(Gerber.InitiateConvention);
+            choices.AddRules(new CallFeature[]
             {
                 // Highest priority is to support responder's suit...
                 PartnerBids(Responder2ndBid),
@@ -104,7 +105,7 @@ namespace BridgeBidding
               
 
 			});
-            return bids;
+            return choices;
         }
 
         private static PositionCalls Responder2ndBid(PositionState ps)

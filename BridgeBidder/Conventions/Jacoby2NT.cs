@@ -25,8 +25,8 @@ namespace BridgeBidding
 
                 PartnerBids(Bid._2NT, OpenerRebid),
 
-                Forcing(Bid._2NT, Fit(Suit.Hearts), Shape(Suit.Hearts, 4, 10), DummyPoints(Suit.Hearts, RespondPoints)),
-                Forcing(Bid._2NT, Fit(Suit.Spades), Shape(Suit.Spades, 4, 10), DummyPoints(Suit.Spades, RespondPoints))
+                Forcing(Bid._2NT, Fit(Suit.Hearts), Shape(Suit.Hearts, 4, 10), DummyPoints(Suit.Hearts, RespondPoints), ShowsTrumpSuit(Suit.Hearts)),
+                Forcing(Bid._2NT, Fit(Suit.Spades), Shape(Suit.Spades, 4, 10), DummyPoints(Suit.Spades, RespondPoints), ShowsTrumpSuit(Suit.Spades))
             };
 
 		}
@@ -59,15 +59,18 @@ namespace BridgeBidding
             };
         }
 
-        public static IEnumerable<CallFeature> PlaceContract(PositionState ps)
+        public static PositionCalls PlaceContract(PositionState ps)
         {
-            return new CallFeature[]
+            var choices = new PositionCalls(ps);
+            choices.AddRules(Blackwood.InitiateConvention);
+            choices.AddRules(new CallFeature[]
             {
                 // TODO: IMPLEMENT RESPONSES!!!
                 // TOOD: What is the thing to do here??  Perhaps bid controls.  Bid Blackwood. 
                 Signoff(Bid._4H, OpeningBid(Bid._1H)),
                 Signoff(Bid._4S, OpeningBid(Bid._1S))
-            };            
+            });     
+            return choices;       
         }
     }
 }

@@ -57,15 +57,17 @@ namespace BridgeBidding
 				throw new AuctionException(null, biddingState.NextToAct, biddingState.Contract,
 								"Can not suggest next bid when position has no defined hand.");
 			}
-			if (biddingState.CallChoices.BestCall == null)
+			var choices = biddingState.GetCallChoices();
+			if (choices.BestCall == null)
 			{
 				throw new AuctionException(null, biddingState.NextToAct, biddingState.Contract,
 						"No suggested call given by bidding system.");
 			}
-			return biddingState.CallChoices.BestCall;
+			return choices.BestCall;
 		}
 
 		// Kind of a hack for now - use for console app...
+		/*
 		public static string FullAuction(string deal, string vulnerable)
 		{
 			var board = PBN.FromString.Board(deal, vulnerable);
@@ -74,7 +76,7 @@ namespace BridgeBidding
 			var biddingState = new BiddingState(board, twoOverOne, twoOverOne);
 			while (!biddingState.Contract.AuctionComplete)
 			{
-				var call = biddingState.CallChoices.BestCall;
+				var call = biddingState.GetCallChoices().BestCall;
 				biddingState.MakeCall(call);
 			}
 
@@ -84,7 +86,7 @@ namespace BridgeBidding
 
 			return game.GetGameText();		// TODO: Probably better name than this...
 		}
-
+*/
 
 		public static string[] ExplainHistory(string deal, string auction, string nsSystem = "SAYC", string ewSystem = "SAYC")
 		{

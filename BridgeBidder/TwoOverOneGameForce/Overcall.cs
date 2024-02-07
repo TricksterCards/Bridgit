@@ -63,20 +63,26 @@ namespace BridgeBidding
             return new CallFeature[] {
                 PartnerBids(Advance.SecondBid),
 
-                Nonforcing(Bid._2H,   NotRebid, Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump),
+                Nonforcing(Bid._2H, NotRebid, Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump),
                 Nonforcing(Bid._2S, NotRebid, Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump),
                 Nonforcing(Bid._3C, NotRebid, Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump),
                 Nonforcing(Bid._3D, NotRebid, Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump),
                 Nonforcing(Bid._3H, NotRebid, Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump),
                 Nonforcing(Bid._3S, NotRebid, Fit(), Jump(0), Points(SupportAdvancer), ShowsTrump),
 
+                Nonforcing(Bid._2H, Rebid, Shape(6, 10), Jump(0)),
+                Nonforcing(Bid._2S, Rebid, Shape(6, 10), Jump(0)),
+                Nonforcing(Bid._3C, Rebid, Shape(6, 10), Jump(0)),
+                Nonforcing(Bid._3D, Rebid, Shape(6, 10), Jump(0)),
+                Nonforcing(Bid._3H, Rebid, Shape(6, 10), Jump(0)),
+                Nonforcing(Bid._3S, Rebid, Shape(6, 10), Jump(0)),
                
                 // TODO: Pass if appropriate
                 // TODO: Rebid 6+ card suit if appropriate
                 // TODO: Bid some level of NT if appropriate...
 
-                Signoff(Bid._3NT, OppsStopped(), PairPoints((25, 30)) )
-
+                Signoff(Bid._3NT, OppsStopped(), PairPoints((25, 30))),
+                Signoff(Call.Pass)
             };
         }
 

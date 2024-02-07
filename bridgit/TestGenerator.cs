@@ -50,7 +50,7 @@ public class TestGenerator
             var bs = new BiddingState(board, _bidder, _bidder);
             for (int s = 1; s < _seat; s++)
             {
-                var callDetails = bs.CallChoices.BestCall;
+                var callDetails = bs.GetCallChoices().BestCall;
                 if (callDetails.Call.Equals(Call.Pass))
                 {
                     bs.MakeCall(callDetails);
@@ -62,7 +62,7 @@ public class TestGenerator
             }
             if (goodTest)
             {
-                CallDetails callDetails = bs.CallChoices.BestCall;
+                CallDetails callDetails = bs.GetCallChoices().BestCall;
                 var call = callDetails.Call;
                 if (Tests.ContainsKey(call) && Tests[call].Count < count)
                 {
@@ -100,7 +100,7 @@ public class TestGenerator
                         board.Vulnerable = vul;
                         var bs = new BiddingState(board, _bidder, _bidder);
                         bs.ReplayAuction(auction);
-                        bs.MakeCall(bs.CallChoices.BestCall);
+                        bs.MakeCall(bs.GetCallChoices().BestCall);
                         var game = new Game();
                         game.Update(bs);
                         game.Tags["Event"] = $"Seat dependent, seat {seat}, vul {vul}";
@@ -119,7 +119,7 @@ public class TestGenerator
     {
         Debug.Assert(board.Dealer == Direction.N);
         var bs = new BiddingState(board, _bidder, _bidder);
-        CallDetails lastCall = bs.CallChoices.BestCall;
+        CallDetails lastCall = bs.GetCallChoices().BestCall;
         var auction = new List<Call>();
         while (board.Dealer != Direction.E)
         {
@@ -131,7 +131,7 @@ public class TestGenerator
                 board.Vulnerable = vul;
                 bs = new BiddingState(board, _bidder, _bidder);
                 bs.ReplayAuction(auction);
-                CallDetails posCall = bs.CallChoices.BestCall;
+                CallDetails posCall = bs.GetCallChoices().BestCall;
                 if (!posCall.Call.Equals(lastCall.Call) &&
                     (Tests.ContainsKey(posCall.Call) || Tests.ContainsKey(lastCall.Call)))
                 {

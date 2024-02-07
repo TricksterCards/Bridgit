@@ -104,7 +104,9 @@ namespace BridgeBidding
                 Signoff(Bid._4C, Fit(), PairPoints((26, 28)), ShowsTrump),
                 Signoff(Bid._4D, Fit(), PairPoints((26, 28)), ShowsTrump),
                 Signoff(Bid._4H, Fit(), PairPoints((26, 31)), ShowsTrump),
-                Signoff(Bid._4S, Fit(), PairPoints((26, 31)), ShowsTrump)
+                Signoff(Bid._4S, Fit(), PairPoints((26, 31)), ShowsTrump),
+
+                Signoff(Call.Pass),
             };
         }
 

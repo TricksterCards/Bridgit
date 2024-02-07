@@ -148,19 +148,40 @@ public class Program
             board.Hands = deal.Hands;
             board.Dealer = deal.Dealer;
         }
-
+        Console.WriteLine($"bid --deal {new Deal(board).ToString()}");
         var bidSystem = new TwoOverOneGameForce();
         var bs = new BiddingState(board, bidSystem, bidSystem);
         while (!bs.Contract.AuctionComplete)
         {
-            var callDetails = bs.CallChoices.BestCall;
+            var choices = bs.GetCallChoices();
+            var callDetails = choices.BestCall;
+            if (callDetails == null)
+            {
+                if (!bs.GetCallChoices().ContainsKey(Call.Pass))
+                {
+                    Console.WriteLine("*** OUCH!  NO PASS CHOICE AND NO BEST CALL!");
+                }
+                Console.WriteLine("ERROR:  No BestCall for call choices.");
+                Console.WriteLine("Auction so far...");
+                DisplayBiddingState(bs);
+                choices = bs.DEBUG_ReEvaluateCallChoices();
+                callDetails = choices.BestCall;
+                if (callDetails == null)
+                {
+                    if (choices.ContainsKey(Call.Pass))
+                    {
+                        callDetails = choices[Call.Pass];
+                    }
+                    else 
+                    {
+                        choices.AddPassRule();
+                        callDetails = choices[Call.Pass];
+                    }
+                }
+            }
             bs.MakeCall(callDetails);
         }
-        var game = new Game();
-        game.Update(bs);
-        var testEditor = new TestEditor(game);
-        game.Tags["Event"] = "Test new display game code";
-        testEditor.DisplayGame();
+        DisplayBiddingState(bs);
         /*
 
 
@@ -171,6 +192,15 @@ public class Program
         Console.WriteLine("Dummy's known hand summary:");
         Console.WriteLine(bs.Contract.Declarer.Partner.PublicHandSummary.ToString());
         */                
+    }
+
+    private static void DisplayBiddingState(BiddingState bs)
+    {
+        var game = new Game();
+        game.Update(bs);
+        var testEditor = new TestEditor(game);
+        game.Tags["Event"] = "Test new display game code";
+        testEditor.DisplayGame();
     }
 
 

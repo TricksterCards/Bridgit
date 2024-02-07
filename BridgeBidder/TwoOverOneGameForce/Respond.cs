@@ -424,6 +424,7 @@ namespace BridgeBidding
                 Forcing(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
                 Forcing(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
 
+      
                 // TODO: Perhaps show new 5+ card suit forcing here?  Only if not passed.
 
 				// Now cuebid raises are next in priority - RaisePartner calls ShowTrump()
@@ -453,6 +454,9 @@ namespace BridgeBidding
 
 				Signoff(Bid._4H, RaisePartner(raise: 3, fit: 10), DummyPoints(Weak4Level)),
                 Signoff(Bid._4S, RaisePartner(raise: 3, fit: 10), DummyPoints(Weak4Level)),
+
+                Nonforcing(Bid._1NT, OppsStopped(), Points(Raise1)),
+                Nonforcing(Bid._2NT, OppsStopped(), Points(LimitRaise)),
 
                 PartnerBids(Call.Pass, OpenBid2.ResponderPassedInCompetition),
                 Signoff(Bid.Pass),  // May have enought points to respond but no good call, so can't specify points.
