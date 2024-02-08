@@ -32,7 +32,7 @@ namespace BridgeBidding
 				keyCards = hs.Suits[(Suit)_trumpSuit].KeyCards;
 			}
 			if (keyCards == null) return true;	// If we don't know, we don't know
-			return _count.Intersect(hs.CountAces).Count() > 0;
+			return _count.Intersect(keyCards).Count() > 0;
 		}
 
 		public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)

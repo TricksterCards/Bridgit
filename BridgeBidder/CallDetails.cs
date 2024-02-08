@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace BridgeBidding
@@ -81,6 +82,11 @@ namespace BridgeBidding
 			}
 	    }
 
+
+		public List<List<string>> GetDescriptions()
+		{
+			throw new NotImplementedException();
+		}
 
 		public PositionCallsFactory GetBidsFactory()
 		{

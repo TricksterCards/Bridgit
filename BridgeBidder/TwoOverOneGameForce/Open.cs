@@ -28,7 +28,7 @@ namespace BridgeBidding
         public static DynamicConstraint Medium = Points(17, 18);
 		public static DynamicConstraint DummyMedium = DummyPoints(17, 18);
         public static DynamicConstraint Maximum = Points(19, 21);
-		public static DynamicConstraint DummyMaximum = DummyPoints(19, 12);
+		public static DynamicConstraint DummyMaximum = DummyPoints(19, 26);	// Can get higher than 21 points when counted as dummy
 		public static DynamicConstraint MediumOrBetter = Points(17, 21);
 
         public static DynamicConstraint Weak = Points(5, 11);

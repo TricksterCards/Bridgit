@@ -107,6 +107,11 @@ namespace BridgeBidding
 			};
 		}
 
+		//public static PositionCalls ResponderBidInCompetition(PositionState ps)
+		//{
+
+		//}
+
 		public static PositionCalls OneNTOverMajorOpen(PositionState ps)
 		{
 			return ResponderChangedSuits(ps);

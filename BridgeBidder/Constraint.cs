@@ -55,6 +55,11 @@ namespace BridgeBidding
         void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements);
     }
 
+    // This is a place-holder for getting desc
+    public interface IDescribe
+    {
+        string Describe(Call call, PositionState ps);
+    }
 
 }
 

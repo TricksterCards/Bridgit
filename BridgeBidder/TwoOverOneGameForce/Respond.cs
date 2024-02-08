@@ -418,6 +418,10 @@ namespace BridgeBidding
             choices.AddRules(WeakJumpShift(openSuit));
             choices.AddRules(new CallFeature[]
             {
+                // TODO: Need to handle response after interferrence.  Right now just using comp bidding..
+                ///PartnerBids(OpenBid2.ResponderBidInCompetition),
+
+                // Negative double may have made these bids irrelevant
                 Forcing(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
                 Forcing(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
 
@@ -431,6 +435,7 @@ namespace BridgeBidding
                 Forcing(Bid._2D, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
                 Forcing(Bid._2H, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
                 Forcing(Bid._2S, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Forcing(Bid._3C, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
 
                 // TODO: Weak jumps here take precedence over simple raise
                

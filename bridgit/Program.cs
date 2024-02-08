@@ -8,27 +8,22 @@ using BridgeBidding.PBN;
 
 namespace bridgit;
 
+/*
+Interesting deals
+     "commandLineArgs": "bid --deal \"N:9643.T4.QT8.T542 AQ7.AKJ5.K2.AQ97 KT852.Q3.7643.K8 J.98762.AJ95.J63\""
+*/
+
 public class Program
 {
     static async Task<int> Main(string[] args)
     {
-        
+        // JUST FOR FUN...
+       // EditGame.TryItOut();
 
         var rootCommand = new RootCommand("Bridge bidding command line tool.");
         rootCommand.SetHandler(() =>
         {
-            Console.Clear();
-            Console.Title = "Bridgit";
-            Console.Write("How many deals would you like to bid? ");
-            var choice = Console.ReadLine();
-            int numDeals;
-            if (int.TryParse(choice, out numDeals))
-            {
-                for (int i = 0; i < numDeals; i++)
-                {
-                    BidDeal(null, Vulnerable.None, i+1);
-                }
-            }
+            InterractiveApp.Show();
 
         });
 
@@ -56,7 +51,7 @@ public class Program
 
         bidCommand.SetHandler((deal, vulnerable) =>
             {
-                BidDeal(deal, vulnerable, 1);
+                InterractiveApp.BidDeal(deal, vulnerable, 1);
             },
             dealOption, vulnerableOption);
 
@@ -133,75 +128,6 @@ public class Program
         }
     }
     */
-    static void BidDeal(Deal? deal, Vulnerable vul, int boardNumber)
-    {
-        var board = new Board();
-        board.Number = boardNumber;
-        board.Vulnerable = vul;
-        if (deal == null)
-        {
-            board.DealRandomHands();
-            board.Dealer = Direction.N;
-        }
-        else 
-        {
-            board.Hands = deal.Hands;
-            board.Dealer = deal.Dealer;
-        }
-        Console.WriteLine($"bid --deal {new Deal(board).ToString()}");
-        var bidSystem = new TwoOverOneGameForce();
-        var bs = new BiddingState(board, bidSystem, bidSystem);
-        while (!bs.Contract.AuctionComplete)
-        {
-            var choices = bs.GetCallChoices();
-            var callDetails = choices.BestCall;
-            if (callDetails == null)
-            {
-                if (!bs.GetCallChoices().ContainsKey(Call.Pass))
-                {
-                    Console.WriteLine("*** OUCH!  NO PASS CHOICE AND NO BEST CALL!");
-                }
-                Console.WriteLine("ERROR:  No BestCall for call choices.");
-                Console.WriteLine("Auction so far...");
-                DisplayBiddingState(bs);
-                choices = bs.DEBUG_ReEvaluateCallChoices();
-                callDetails = choices.BestCall;
-                if (callDetails == null)
-                {
-                    if (choices.ContainsKey(Call.Pass))
-                    {
-                        callDetails = choices[Call.Pass];
-                    }
-                    else 
-                    {
-                        choices.AddPassRule();
-                        callDetails = choices[Call.Pass];
-                    }
-                }
-            }
-            bs.MakeCall(callDetails);
-        }
-        DisplayBiddingState(bs);
-        /*
-
-
-        Console.WriteLine(game.GetGameText());	
-        Console.WriteLine("Declarer's know hand summary:");
-        Console.WriteLine(bs.Contract.Declarer.PublicHandSummary.ToString());
-        Console.WriteLine();
-        Console.WriteLine("Dummy's known hand summary:");
-        Console.WriteLine(bs.Contract.Declarer.Partner.PublicHandSummary.ToString());
-        */                
-    }
-
-    private static void DisplayBiddingState(BiddingState bs)
-    {
-        var game = new Game();
-        game.Update(bs);
-        var testEditor = new TestEditor(game);
-        game.Tags["Event"] = "Test new display game code";
-        testEditor.DisplayGame();
-    }
 
 
 }

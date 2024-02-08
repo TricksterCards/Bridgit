@@ -19,7 +19,50 @@ public class TestEditor
     private int ActionNextBoard = 0;
     private int ActionEditAuction = -1;
 
-
+    public void RunAuctionTest()
+    {
+        DisplayGame();
+        var board = Game.GetBoard();
+        var bidSystem = new TwoOverOneGameForce();
+        var bs = new BiddingState(board, bidSystem, bidSystem);
+        var auction = Game.GetAuction();
+        var bidIndex = 1;
+        foreach (var a in auction)
+        {
+            var choices = bs.GetCallChoices();
+            if (bs.NextToAct.HasHand)
+            {
+                if (choices.BestCall == null || !choices.BestCall.Call.Equals(a.Call))
+                {
+                    DisplayAuction(auction, false, bidIndex);
+                    if (choices.BestCall == null) 
+                    {
+                        Console.WriteLine(" <- Invalid state.  No call suggested");
+                    }
+                    else
+                    {
+                        Console.WriteLine($" <- bridgit suggested {choices.BestCall.Call}");
+                    }
+                    // NOTE:  PLACE A BREAKPOINT AT THE LINE FOLLOWING THIS COMMENT.  YOU CAN THEN TRACE
+                    // THROUGH THE CREATION OF THE CHOICES AND THE SELECTION OF THE BEST CALL
+                    choices = bs.DEBUG_ReEvaluateCallChoices();
+                    Console.WriteLine($"Forcing {a.Call} to be made and continuing");
+                    bs.MakeCall(a.Call);
+                }
+                else
+                {
+                    bs.MakeCall(choices.BestCall);
+                }
+            } 
+            else 
+            {
+                // As long as the call is valid, we're happy
+                bs.MakeCall(a.Call);
+            }
+            bidIndex++;
+        }
+        DisplayAuction(auction);
+    }
 
 
     public void DisplayGame()
@@ -28,10 +71,8 @@ public class TestEditor
         var board = Game.GetBoard();
         Console.WriteLine($"{board.Dealer} deals, {board.Vulnerable} vulnerable");
         DisplayHands(board.Hands);
-        Console.WriteLine();
-        DisplayAuction();
-        Console.WriteLine();
     }
+
 
     public int GetUserInput()
     {
@@ -50,7 +91,7 @@ public class TestEditor
     private void EditAuction()
     {
         var auction = Auction.FromGame(Game);
-        DisplayAuction();
+        DisplayAuction(auction, true);
         Console.Write("Which bid would you like to change? ");
 
         var choice = Console.ReadLine();
@@ -129,9 +170,8 @@ public class TestEditor
             }
         }
     }
-    public void DisplayAuction(bool showBidNumbers = false)
+    public void DisplayAuction(Auction auction, bool showBidNumbers = false, int stopAtIndex = int.MaxValue)
     {
-        var auction = Auction.FromGame(Game);
         Console.WriteLine(showBidNumbers ? "   West     North    East     South" : "West  North East  South");
         var direction = Direction.W;
         int col = 0;
@@ -145,6 +185,7 @@ public class TestEditor
         foreach (var call in auction.Calls)
         {
             Console.Write(showBidNumbers? $"{bidIndex, 2}:{call, -6}" : $"{call, -6}");
+            if (bidIndex == stopAtIndex) return;
             col ++;
             bidIndex ++;
             if (col % 4 == 0) Console.WriteLine();

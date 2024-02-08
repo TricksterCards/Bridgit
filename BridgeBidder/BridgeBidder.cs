@@ -46,8 +46,8 @@ namespace BridgeBidding
 			return callDetails.Call.ToString();
 		}
 
-		// TODO: Addd bidding system parameters here.  
-		public static CallDetails SuggestCall(Board board, IEnumerable<Call> auction)
+		// TODO: Add bidding system parameters here.  
+		public static CallDetails SuggestCall(Board board, IEnumerable<Call> auction, bool throwExceptionIfNoBestCall = false)
 		{
             IBiddingSystem twoOverOne = new TwoOverOneGameForce();
 			var biddingState = new BiddingState(board, twoOverOne, twoOverOne);
@@ -58,35 +58,16 @@ namespace BridgeBidding
 								"Can not suggest next bid when position has no defined hand.");
 			}
 			var choices = biddingState.GetCallChoices();
-			if (choices.BestCall == null)
-			{
+			if (choices.BestCall != null) return choices.BestCall;
+			if (throwExceptionIfNoBestCall)
 				throw new AuctionException(null, biddingState.NextToAct, biddingState.Contract,
 						"No suggested call given by bidding system.");
-			}
-			return choices.BestCall;
+			//
+			// This is an error, so we will just pass.  If there is a rule for pass then select it,
+			// otherwise create one.
+			if (!choices.ContainsKey(Call.Pass)) choices.AddPassRule();
+			return choices[Call.Pass];
 		}
-
-		// Kind of a hack for now - use for console app...
-		/*
-		public static string FullAuction(string deal, string vulnerable)
-		{
-			var board = PBN.FromString.Board(deal, vulnerable);
-            IBiddingSystem twoOverOne = new TwoOverOneGameForce();
-
-			var biddingState = new BiddingState(board, twoOverOne, twoOverOne);
-			while (!biddingState.Contract.AuctionComplete)
-			{
-				var call = biddingState.GetCallChoices().BestCall;
-				biddingState.MakeCall(call);
-			}
-
-			var game = new PBN.Game();
-			game.Update(biddingState);
-			game.Tags["Event"] = "Full auction";
-
-			return game.GetGameText();		// TODO: Probably better name than this...
-		}
-*/
 
 		public static string[] ExplainHistory(string deal, string auction, string nsSystem = "SAYC", string ewSystem = "SAYC")
 		{
@@ -97,10 +78,6 @@ namespace BridgeBidding
 		{
 			throw new NotImplementedException();
 		}
-
-
-
-
 
 
 

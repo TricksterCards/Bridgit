@@ -259,7 +259,7 @@ namespace BridgeBidding
 						this.Losers == other.Losers &&
 						this.HaveQueen == other.HaveQueen &&
 						this.Stopped == other.Stopped &&
-						this.KeyCards == other.KeyCards &&
+						EqualIntSet(this.KeyCards, other.KeyCards) &&
 						this.RuleOf9Points == other.RuleOf9Points);
             }
         }

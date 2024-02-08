@@ -55,11 +55,18 @@ namespace BridgeBidding
                 {
                     points = hs.Suits[suit].DummyPoints;
                 }
-
             }
             if (points == null)
             {
                 points = hs.Points;
+                // TODO: Carefully consider what this means!  We have to assume that the value of suit points
+                // can be significantly higher than starting points.
+                if (!_useStartingPoints && points != null)
+                {
+                    var newPoints = ((int Min, int Max))points;
+                    newPoints.Max += 8;
+                    points = newPoints;
+                }
             }
             return (points == null) ? (0, 100) : ((int, int))points;
         }

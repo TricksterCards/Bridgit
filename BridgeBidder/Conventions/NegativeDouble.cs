@@ -39,7 +39,7 @@ namespace BridgeBidding
                 {
                     bids.Add(Forcing(Call.Double, Points(NewSuit2Level), Shape(Suit.Clubs, 4, 9), Shape(Suit.Diamonds, 4, 9), ShowsSuit(Suit.Clubs), ShowsSuit(Suit.Diamonds)));
                 }
-                else // 1 minor / 1H overcall.  Now figure out X
+                else // 1 minor / 1S overcall.  Now figure out X
                 {
                     bids.Add(Forcing(Call.Double, Points(Respond1Level), Shape(Suit.Hearts, 4), ShowsSuit(Suit.Hearts)));
                     // TODO: Raise1 Point range name is lame.  Clean this up - shows 6-19 points...

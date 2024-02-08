@@ -25,10 +25,14 @@ namespace BridgeBidding
 		{
 			var ourKeyCards = hs.CountAces;
 			var partnerKeyCards = ps.Partner.PublicHandSummary.CountAces;
+			bool? partnerHasQueen = null;
+			bool? weHaveQueen = null;
 			if (_trumpSuit is Suit suit)
 			{
 				ourKeyCards = hs.Suits[suit].KeyCards;
+				weHaveQueen = hs.Suits[suit].HaveQueen;
 				partnerKeyCards = ps.Partner.PublicHandSummary.Suits[suit].KeyCards;
+				partnerHasQueen = ps.Partner.PublicHandSummary.Suits[suit].HaveQueen;
 			}
 			if (ourKeyCards == null)
 			{
@@ -39,10 +43,9 @@ namespace BridgeBidding
 			{
 				return _count.Max() >= ourKeyCards.Min();
 			}
-			if (_hasQueen != null)
-			{
-				throw new NotImplementedException();
-			}
+			// If someone DOES have a queen and we explictitly want none, then don't conform.
+			if (_hasQueen == false && (weHaveQueen == true || partnerHasQueen == true)) return false;
+			if (_hasQueen == true && (weHaveQueen == false && partnerHasQueen == false)) return false;
 			foreach (var ourCount in ourKeyCards)
 			{
 				foreach (var partnerCount in partnerKeyCards)

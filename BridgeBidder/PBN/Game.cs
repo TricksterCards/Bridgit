@@ -105,12 +105,22 @@ namespace BridgeBidding.PBN
 			}
 			return FromString.Board(deal, vulnerable);
 		}
-/*
-		public Call[] GetAuction()
+
+		// TODO: Decide on the model for this.  Should clients call GetXXX like GetBoard() and GetAuction()
+		// and hide the Auction.FromGame() internally.
+		public Auction GetAuction()
 		{
-			return FromString.Auction(TagData["Auction"]);
+			return Auction.FromGame(this);
 		}
-*/
+
+		// More food for thought.  Should there be a SetAuction() which takes an auction object and updates
+		// the current game?  Seems reasonable.  So instead of auction.Update(game) would be  Game.UpdateFrom(auction)...
+		// This model is all over the place right now.
+
+		// Another idea is that Board, Dealer, etc are not handled as tags and are objects.  So Deal() is the deal.
+		// If you change it and then call game.ToString() the game is changed.  So we parse known things and keep them
+		// as objects that can be directly manipulated.
+
 		private string GetSectionWithNotes(string tagName, Notes notes)
 		{
 			var s = "";

@@ -187,18 +187,17 @@ namespace BridgeBidding
 		}
 
 
+		public static StaticConstraint IsAgreedStrain = new AgreedStrain();
 		public static StaticConstraint AgreedStrain(params Strain[] strains)
 		{
 			return new AgreedStrain(strains);
 		}
 
-		public static StaticConstraint ContractIsAgreedStrain()
-		{
-			return new StaticConstraint((call, ps) =>  
+		public static StaticConstraint ContractIsAgreedStrain = 
+				new StaticConstraint((call, ps) =>  
 					(ps.BiddingState.Contract.Bid is Bid contractBid &&
                     ps.BiddingState.Contract.IsOurs(ps) && 
                     contractBid.Strain == ps.PairState.Agreements.AgreedStrain));
-		}
 
 
 		public static StaticConstraint HasShownSuit(Suit? suit = null, bool eitherPartner = false)
@@ -364,13 +363,18 @@ namespace BridgeBidding
 		}
 
 
-		public static Constraint AgreedAnySuit()
+		public static Constraint AgreedAnySuit =  AgreedStrain(Strain.Clubs, Strain.Diamonds, Strain.Hearts, Strain.Spades);
+
+
+		public static Constraint KeyCards(Suit suit, int a, int b, bool? hasQueen = null)
 		{
-			return AgreedStrain(Strain.Clubs, Strain.Diamonds, Strain.Hearts, Strain.Spades);
+			return new KeyCards(suit, hasQueen, a, b);
 		}
 
-
-
+		public static Constraint PairKeyCards(Suit suit, bool? hasQueen, params int[] count)
+		{
+			return new PairKeyCards(suit, hasQueen, count);
+		}
 
 		public static Constraint Aces(params int[] count)
 		{

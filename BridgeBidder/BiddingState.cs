@@ -62,17 +62,23 @@ namespace BridgeBidding
         {
             foreach (var call in history)
             {
-                Contract.ValidateCall(call, NextToAct);
-                var choices = GetCallChoices();
-                if (!choices.ContainsKey(call))
-                {
-                    // TODO: This is something strange.  A call we don't know
-                    // how to interpret.  Should bidding system get a crack at this
-                    // when we create the placeholder?
-                    choices.CreatePlaceholderCall(call);
-                }
-                MakeCall(choices[call]);
+                MakeCall(call);
             }
+        }
+
+        // Note that this method will alawys make the call specified as long as the call is 
+        public void MakeCall(Call call)
+        {
+            Contract.ValidateCall(call, NextToAct);
+            var choices = GetCallChoices();
+            if (!choices.ContainsKey(call))
+            {
+                // TODO: This is something strange.  A call we don't know
+                // how to interpret.  Should bidding system get a crack at this
+                // when we create the placeholder?
+                choices.CreatePlaceholderCall(call);
+            }
+            MakeCall(choices[call]);
         }
 
         
