@@ -19,27 +19,25 @@ namespace TestBridgeBidder
             foreach (var game in games)
             {
                 var auction = Auction.FromGame(game).Calls;
-                var board = game.GetBoard();
                 var bidHistory = "";
-                var direction = board.Dealer;
+                var direction = game.Dealer;
                 for (var i = 0; i < auction.Length; i++)
                 {
                     var call = auction[i];
-                    if (board.Hands[direction] != null)
+                    if (game.Deal[direction] != null)
                     {
                         var bidNumber = 1 + i / 4;
                         string testName = game.Tags["Event"];
-                        if (board.Number != null)
+                        if (game.BoardNumber != 0)
                         {
-                            testName += $" Board {board.Number}";
-
+                            testName += $" Board {game.BoardNumber}";
                         }
                         tests.Add(
                                 new PBNTest
                                 {
                                     Auction = bidHistory,
-                                    Deal = new Deal(board).ToString(),
-                                    Vulnerable = board.Vulnerable.ToString(),
+                                    Deal = game.Deal.ToString(),
+                                    Vulnerable = game.Vulnerable.ToString(),
                                     ExpectedCall = call.ToString(),
                                     Name = $"{testName} (Seat {direction}, Bid {bidNumber})"
                                 }

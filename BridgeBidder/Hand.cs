@@ -9,8 +9,8 @@ namespace BridgeBidding
 {
 	public class Hand : HashSet<Card>
 	{
-		public Hand() { }
-
+		public Hand() : base() {}
+		public Hand(IEnumerable<Card> cards) : base(cards) {}
 
 		public int HighCardPoints(Suit? suit = null)
 		{

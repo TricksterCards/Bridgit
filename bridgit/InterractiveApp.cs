@@ -31,7 +31,10 @@ public class InterractiveApp
                 {
                     for (int i = 0; i < numDeals; i++)
                     {
-                        BidDeal(null, Vulnerable.None, i+1);
+                        var game = new Game();
+                        game.DealRandomHands();
+                        game.BoardNumber = i+1;
+                        BidDeal(game);
                     }
                 }
             }
@@ -72,24 +75,11 @@ public class InterractiveApp
         }
     }
 
-    public static void BidDeal(Deal? deal, Vulnerable vul, int boardNumber)
+    public static void BidDeal(Game game)
     {
-        var board = new Board();
-        board.Number = boardNumber;
-        board.Vulnerable = vul;
-        if (deal == null)
-        {
-            board.DealRandomHands();
-            board.Dealer = Direction.N;
-        }
-        else 
-        {
-            board.Hands = deal.Hands;
-            board.Dealer = deal.Dealer;
-        }
-        Console.WriteLine($"bid --deal {new Deal(board).ToString()}");
+        Console.WriteLine($"bid --deal {game.Deal.ToString()}");
         var bidSystem = new TwoOverOneGameForce();
-        var bs = new BiddingState(board, bidSystem, bidSystem);
+        var bs = new BiddingState(game, bidSystem, bidSystem);
         while (!bs.Contract.AuctionComplete)
         {
             var choices = bs.GetCallChoices();

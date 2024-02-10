@@ -3,14 +3,25 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
 namespace BridgeBidding.PBN
 {
  
-	public class Game
+	public class Game: Board
 	{
+		// Reflects the "Board" tag.  If 0 then none specified.
+		public int BoardNumber = 0;
+
+		public static new Game Parse(string deal, string vulnerable)
+		{
+			var game = new Game();
+			game._Parse(deal, vulnerable);
+			return game;
+		}
+
 		public class Notes
 		{
 			private List<string> _notes = new List<string>();
@@ -84,6 +95,7 @@ namespace BridgeBidding.PBN
 			"Result"    
 		};
 
+/*	-- There is no GetBoard because a Game is a Board...
 		public Board GetBoard()
 		{
 			int boardNumber = int.MinValue;
@@ -105,7 +117,7 @@ namespace BridgeBidding.PBN
 			}
 			return FromString.Board(deal, vulnerable);
 		}
-
+*/
 		// TODO: Decide on the model for this.  Should clients call GetXXX like GetBoard() and GetAuction()
 		// and hide the Auction.FromGame() internally.
 		public Auction GetAuction()
@@ -180,11 +192,9 @@ namespace BridgeBidding.PBN
         {
             Tags["Dealer"] = bs.Dealer.Direction.ToString();
             Tags["Vulnerable"] = PBN.ToString.Vulnerable(bs);
-            Tags["Deal"] = new Deal(bs.Board).ToString();
-			if (bs.Board.Number != null)
-			{
-				Tags["Board"] = bs.Board.Number.ToString();
-			}
+            Tags["Deal"] = bs.Board.Deal.ToString();
+			this.ParseDeal(bs.Board.Deal.ToString());	// Kind of ugly
+
 			Auction.FromBiddingState(bs).UpdateGame(this);
 		//	UpdateAuction(bs);
 			if (bs.Contract.AuctionComplete)

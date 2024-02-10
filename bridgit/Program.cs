@@ -31,12 +31,12 @@ public class Program
         //    name: "--file",
         //    description: "The file to read for bidding.");
 
-        var dealOption = new Option<Deal>(
+        var dealOption = new Option<Game>(
             name: "--deal",
             description: "Full deal in PBN format.",
             parseArgument: result =>
             {
-                return Deal.Parse(result.Tokens.Single().ToString());
+                return Game.Parse(result.Tokens.Single().ToString(), "None");
             });
 
         var vulnerableOption = new Option<Vulnerable>(
@@ -49,9 +49,10 @@ public class Program
         bidCommand.Add(vulnerableOption);
 
 
-        bidCommand.SetHandler((deal, vulnerable) =>
+        bidCommand.SetHandler((game, vulnerable) =>
             {
-                InterractiveApp.BidDeal(deal, vulnerable, 1);
+                game.Vulnerable = vulnerable;
+                InterractiveApp.BidDeal(game);
             },
             dealOption, vulnerableOption);
 

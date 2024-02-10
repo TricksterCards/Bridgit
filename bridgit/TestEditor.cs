@@ -22,9 +22,8 @@ public class TestEditor
     public void RunAuctionTest()
     {
         DisplayGame();
-        var board = Game.GetBoard();
         var bidSystem = new TwoOverOneGameForce();
-        var bs = new BiddingState(board, bidSystem, bidSystem);
+        var bs = new BiddingState(Game, bidSystem, bidSystem);
         var auction = Game.GetAuction();
         var bidIndex = 1;
         foreach (var a in auction)
@@ -68,9 +67,8 @@ public class TestEditor
     public void DisplayGame()
     {
         Console.WriteLine($"{Game.Tags["Event"]}");
-        var board = Game.GetBoard();
-        Console.WriteLine($"{board.Dealer} deals, {board.Vulnerable} vulnerable");
-        DisplayHands(board.Hands);
+        Console.WriteLine($"{Game.Dealer} deals, {Game.Vulnerable} vulnerable");
+        DisplayHands(Game.Deal);
     }
 
 

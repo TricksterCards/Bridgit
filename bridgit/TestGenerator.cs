@@ -85,9 +85,9 @@ public class TestGenerator
         {
             var board = new Board();
             board.DealRandomHands();
-            board.Hands[Direction.E] = null;
-            board.Hands[Direction.S] = null;
-            board.Hands[Direction.W] = null;
+            board.Deal[Direction.E] = null;
+            board.Deal[Direction.S] = null;
+            board.Deal[Direction.W] = null;
             if (CallsDifferBySeat(board))
             {
                 board.Dealer = Direction.N;
@@ -151,8 +151,7 @@ public class TestGenerator
             //game.Tags["Event"] = eventName;
             game.Tags["Board"] = boardNumber.ToString();
             sb.Append(game.GetGameText());
-            var board = game.GetBoard();
-            sb.Append(HandCommentary(board.Hands[Direction.N]));
+            sb.Append(HandCommentary(game.Deal[Direction.N]));
             boardNumber++;
         }
         return sb.ToString();

@@ -9,161 +9,6 @@ namespace BridgeBidding.PBN
 {
     public static class FromString
     {
-		
-		public static Board Board(string deal, string vulnerable, int? number = null)
-		{
-			var parsedDeal = Deal.Parse(deal);
-			return new Board
-			{
-				Number = number,
-				Dealer = parsedDeal.Dealer,
-				Hands = parsedDeal.Hands,
-				Vulnerable = FromString.Vulnerable(vulnerable)
-			};
-		}
-
-/*
-		public static Deal Deal(string deal)
-		{
-            Direction dealer;
-			if (deal == null)
-			{
-				throw new ArgumentNullException("deal");
-			}
-			if (deal.Length < 9)
-			{
-				throw new ArgumentException("deal paramerter is too short to be valid PBN deal format");
-			}
-			if (deal.Substring(1, 1) != ":" || !Enum.TryParse<Direction>(deal.Substring(0,1), out dealer))
-			{
-				throw new ArgumentException($"Dealer prefix {deal.Substring(0, 2)} is invalid");
-			};
-          	var hands = new Dictionary<Direction, Hand>();
-            var handStrings = deal.Substring(2).Split(' ');
-			if (handStrings.Length != 4) 
-			{
-				throw new ArgumentException("deal must contain 4 hands");
-			}
-			var direction = dealer;
-            foreach (var handString in handStrings)
-            {
-				hands[direction] = FromString.Hand(handString);
-				direction = BridgeBidder.LeftHandOpponent(direction);
-            }
-
-			int totalExpected = 0;
-			var allCards = new HashSet<Card>();
-			foreach (var hand in hands)
-			{
-				if (hand.Value != null) 
-				{
-					allCards.UnionWith(hand.Value);
-					totalExpected += 13;
-					if (allCards.Count < totalExpected)
-					{
-						foreach (var otherHand in hands)
-						{
-							if (otherHand.Key != hand.Key && otherHand.Value != null)
-							{
-								var dup = otherHand.Value.Intersect(hand.Value);
-								if (dup.Count() > 0)
-								{
-									throw new ArgumentException($"{dup.First()} duplicated in {hand.Key} and {otherHand.Key}");
-								}
-							}
-						}
-						// Throw a useful excpetion to help debug problems with 
-						throw new ArgumentException($"One or more duplicated cards in {deal}");
-					}
-				}
-			}
-
-            return new Deal { Dealer = dealer, Hands = hands };
-		}
-*/
-
-/*
-		public static Suit[] HandSuitOrder = new Suit[] { Suit.Spades, Suit.Hearts, Suit.Diamonds, Suit.Clubs };
-
-		public static Hand Hand(string handString)
-		{
-			if (handString == null)
-			{
-				throw new ArgumentNullException("handString");
-			}
-			if (handString == "-") 
-			{
-				return null;
-			}
-
-			var suits = handString.Split('.');
-			if (suits.Length != HandSuitOrder.Length)
-			{
-				throw new ArgumentException("handString does not contain four suits");
-			}
-			Hand hand = new Hand();			
-			for (var i = 0; i < suits.Length; i++)
-				foreach (var rankChar in suits[i])
-				{
-					var card = new Card(Card.ParseRank(rankChar), HandSuitOrder[i]);
-					if (hand.Contains(card))
-					{
-						throw new ArgumentException($"Duplicate card {card} in {handString}");
-					}
-					hand.Add(card);
-				}
-		
-			if (hand.Count != 13)
-			{
-				throw new ArgumentException($"hand {handString} contains {hand.Count} cards.  Should have 13.");
-			}
-
-			return hand;
-		}
-*/
-
-		// TODO: Is this correct?  Should we require a value?
-		// If the null string is passed into this method, Vulnerable.None is returned.
-		public static Vulnerable Vulnerable(string vulnerable)
-		{
-			if (vulnerable == null)
-			{
-				throw new ArgumentNullException("vulnerable");
-			}
-			Vulnerable vulEnum;
-			if (Enum.TryParse<Vulnerable>(vulnerable, out vulEnum))
-			{
-				return vulEnum;
-			}
-            throw new FormatException($"Invalid vulnerablity parameter value {vulnerable}");
-        }
-/*
-        // TODO: Annothations along with the calls???  Seems overkill and silly
-		// null is allowed for the auction string - returns an empty array of Calls.
-		public static Call[] Auction(List<string> auctionData)
-		{
-			return Auction(string.Join(" ", auctionData));
-		}
-
-		// TOOD: Perhaps make public but probably not.   Really want to parse note section too, so probs
-		// need more parameterst to above function
-		public static Call[] Auction(string auction)
-		{	
-			var bidHistory = new List<Call>();
-			if (auction != null) 
-			{
-				var tokens = auction.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-				foreach (var token in tokens)
-				{
-					if (!token.StartsWith("$") && !token.StartsWith("=") && !token.Equals("+"))
-					{
-						bidHistory.Add(Call.Parse(token));
-					}
-				}
-			}
-			return bidHistory.ToArray();
-		}
-*/	
        	public static List<Game> Games(string text)
         {
             var games = new List<Game>();
@@ -189,6 +34,16 @@ namespace BridgeBidding.PBN
 				// TODO: Deal with note in auction and play sections.
 				if (tag.Name != "Note")
 				{
+					if (tag.Name == "Board") 
+					{
+						int.TryParse(tag.Value, out game.BoardNumber);
+					}
+					if (tag.Name == "Deal")
+					{
+						game.ParseDeal(tag.Value);
+					}
+					// TODO: Should tags we parse be added to the dictionary or not?  
+					// For the time being i will say yes.
 					game.Tags[tag.Name] = tag.Value;
 					if (tag.Data.Count > 0)
 					{
@@ -207,14 +62,7 @@ namespace BridgeBidding.PBN
 
 
 
-/*
-        private static List<string> ImportAuction(List<string> bidLines)
-        {
-            return string.Join(" ", bidLines)
-                .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                .ToList();
-        }
-*/
+
 
         private static List<PBNTag> TokenizeTags(string text)
         {

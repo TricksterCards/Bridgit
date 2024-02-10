@@ -40,7 +40,7 @@ namespace BridgeBidding
                 throw new ArgumentException("Bidding system is limited to 2/1");
             }
 
-			var board = PBN.FromString.Board(deal, vulnerable);
+			var board = Board.Parse(deal, vulnerable);
 			var bidHistory = Auction.FromString(board.Dealer, auction);
 			var callDetails = SuggestCall(board, bidHistory.Calls);
 			return callDetails.Call.ToString();

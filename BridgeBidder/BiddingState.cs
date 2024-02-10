@@ -49,7 +49,7 @@ namespace BridgeBidding
             for (int seat = 1; seat <= 4; seat++)
             {
                 Hand hand = null;
-                board.Hands.TryGetValue(d, out hand);
+                board.Deal.TryGetValue(d, out hand);
                 PairState pairState = (d == Direction.N || d == Direction.S) ? ns : ew;
                 this.Positions[d] = new PositionState(this, pairState, d, seat, hand);
                 d = BridgeBidder.LeftHandOpponent(d);
