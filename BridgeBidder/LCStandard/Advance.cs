@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace BridgeBidding
 {
-    public class Advance : TwoOverOneGameForce
+    public class Advance : LCStandard
     {
         public static (int, int) AdvanceNewSuit1Level = (6, 40); // TODO: Highest level for this?
         public static (int, int) NewSuit2Level = (11, 40); // Same here...

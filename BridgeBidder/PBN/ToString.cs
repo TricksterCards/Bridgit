@@ -6,13 +6,13 @@ using System.Text;
 
 namespace BridgeBidding.PBN
 {
-
-    public static class ToString
+/*
+ //   public static class ToString//
 	{  
         public static string Vulnerable(BiddingState bs)
         {
 			// TODO: Really?  Is this necessary?
-			return bs.Board.Vulnerable.ToString();
+			return bs.Game.Vulnerable.ToString();
         }
 
 	//	public static string Direction(Direction direction)
@@ -60,7 +60,7 @@ namespace BridgeBidding.PBN
 			}
 			return s;
 		}
-*/
+
 		public static string Tag(string key, string value)
 		{
 			return $"[{key} \"{value}\"]\n";
@@ -76,7 +76,7 @@ namespace BridgeBidding.PBN
 			return s;
 		}
 	}
-/*
+
 	public class Game
 	{
 		public class Notes

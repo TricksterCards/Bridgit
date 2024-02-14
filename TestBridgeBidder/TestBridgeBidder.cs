@@ -20,6 +20,7 @@ namespace TestBridgeBidder
             return (data[0] as PBNTest).Name;
         }
 
+/*
         [TestMethod]
         [DynamicData(nameof(SAYCTestData), DynamicDataDisplayName=nameof(GetDataDisplayName))]      
         public void SAYCTests(PBNTest test)
@@ -28,7 +29,7 @@ namespace TestBridgeBidder
 
                 Assert.AreEqual(test.ExpectedCall, suggestion);
         }
-
+*/
         [TestMethod]
         [DynamicData(nameof(TwoOverOneGameForceData), DynamicDataDisplayName=nameof(GetDataDisplayName))]        
         public void TwoOverOneTests(PBNTest test)

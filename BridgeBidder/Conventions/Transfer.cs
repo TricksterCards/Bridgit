@@ -80,16 +80,20 @@ namespace BridgeBidding
 			// TODO: Point ranges are not reasonable. GameOrBetter does not
 			// take slam into account...
 			Debug.Assert(ps.RHO.Bid == null);
+			var suit = ps.LastCall == Bid._2D ? Suit.Hearts : Suit.Spades;
 			return new CallFeature[] {
 				PartnerBids(OpenerRebid),
 
-				Nonforcing(Bid._2NT, NTD.RR.InviteGame, OppsStopped()),
-				Nonforcing(Bid._2H, LastBid(Bid._2D), NTD.RR.InviteGame),
-				Nonforcing(Bid._2S, LastBid(Bid._2H), NTD.RR.InviteGame),
-
+				Nonforcing(new Bid(4, suit), NTD.RR.GameOrBetter, OppsStopped(false)),
+				Nonforcing(new Bid(4, suit), Shape(6, 10), NTD.RR.GameOrBetter),
 				Nonforcing(Bid._3NT, NTD.RR.GameOrBetter, OppsStopped()),
-				Nonforcing(Bid._4H, LastBid(Bid._2D), NTD.RR.GameOrBetter),
-				Nonforcing(Bid._4S, LastBid(Bid._2H), NTD.RR.GameOrBetter),
+
+				Nonforcing(new Bid(3, suit), NTD.RR.InviteGame, OppsStopped(false)),
+				Nonforcing(new Bid(3, suit), Shape(6, 10), NTD.RR.InviteGame),
+				Nonforcing(Bid._2NT, NTD.RR.InviteGame, OppsStopped()),
+
+				Signoff(new Bid(2, suit))
+
 			};
 			
 		}

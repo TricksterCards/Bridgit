@@ -1,0 +1,10 @@
+[Event "Transfer passed after lead-directing X with only 2 card support.  Hearts not stopped."]
+[Dealer "S"]
+[Vulnerable "None"]
+[Deal "S:A8543.J2.753.K62 - KJ.Q964.KQJ.A954 -"]
+[Declarer "S"]
+[Contract "2S"]
+[Auction "S"]
+Pass Pass 1NT Pass
+2H X Pass Pass
+2S Pass Pass Pass

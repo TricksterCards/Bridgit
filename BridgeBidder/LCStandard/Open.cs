@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace BridgeBidding
 {
-    public class Open: TwoOverOneGameForce
+    public class Open: LCStandard
 	{
 		
 	//	protected static Constraint Open2In4thSeat = And(Seat(4), Points(12, 15), Shape(6, 10), GoodPlusSuit); 
@@ -36,8 +36,8 @@ namespace BridgeBidding
         public static DynamicConstraint DontOpen = Points(0, 11);
 
 		// Rebid values.
-        public static (int, int) Rebid1NT = (12, 14);
-        public static (int, int) Rebid2NT = (18, 19);
+        public static (int, int) Rebid1NT = (12, 15);	// TODO: Up to 15 starting points since HCP considered when opening
+        public static (int, int) Rebid2NT = (18, 20);	// Same thing here- Could have 20 starting points
 
 
 		public static Constraint ForthSeatOpen2 = Points(12, 15);
@@ -111,7 +111,7 @@ namespace BridgeBidding
 				Nonforcing(Bid._1D, OneLevel, Shape(4, 10), LongerOrEqualTo(Suit.Clubs), LongestMajor(4)),
 
 				// Special case longer hearts than spades, but not enough points to reverse.  Bid spades first.
-				Nonforcing(Bid._1S, Minimum, Shape(5, 10), IsLongestSuit(Suit.Hearts)),
+				Nonforcing(Bid._1S, Minimum, Shape(5, 10), Longer(Suit.Hearts, Suit.Spades)),
 
 				Nonforcing(Bid._1H, OneLevel, Shape(5, 10), LongerThan(Suit.Spades)),
 

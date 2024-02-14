@@ -1,53 +1,69 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 
-namespace BridgeBidding.PBN
+namespace BridgeBidding
 {
  
-	public class Auction: List<Auction.PbnCall>
+	public class Auction: List<Auction.AnnotatedCall>
     {
-        public Direction FirstToAct;
+        public Game Game { get; } 
 
-        public Call[] Calls => this.Select(pbnCall => pbnCall.Call).ToArray();
+        public Call[] Calls => this.Select(annotatedCall => annotatedCall.Call).ToArray();
 
-        public class PbnCall
+        internal Auction(Game game)
+        {
+            this.Game = game;
+        }
+
+        public class AnnotatedCall
         {
             public Call Call;
             public string Note;
-
         }
 
-        public static Auction FromBiddingState(BiddingState bs)
+        public void Add(CallDetails callDetails)
         {
-            var auction = new Auction() { FirstToAct = bs.Dealer.Direction };
+            string note = null;
+            foreach (var annotation in callDetails.Annotations)
+            {
+                if (note == null)
+                {
+                    note = "";
+                }
+                else
+                {
+                    note += ";";
+                }
+                note += $"{annotation.Type}: {annotation.Text}";
+            }
+            Add(callDetails.Call, note);
+        }
+
+        public void Add(Call call, string note = null)
+        {
+            Add(new AnnotatedCall { Call = call, Note = note });
+        }
+/*
+        public void Update(BiddingState bs)
+        {
+            this.Clear();
+            if (bs.Dealer.Direction != Game.Dealer)
+            {
+                throw new Exception($"Game dealer is {Game.Dealer} and bidding state is {bs.Dealer.Direction}.  These must be equal to call Update");
+            }
             var calls = bs.GetAuction();
             foreach (var callDetails in calls)
             {
-                string note = null;
-				foreach (var annotation in callDetails.Annotations)
-				{
-					if (annotation.Type == CallAnnotation.AnnotationType.Alert ||
-						annotation.Type == CallAnnotation.AnnotationType.Announce)
-					{
-						if (note == null)
-                        {
-                            note = "";
-                        }
-                        else
-						{
-							note += ";";
-						}
-						note += $"{annotation.Type} {annotation.Text}";
-					}
-				}
-                auction.Add(new PbnCall { Call = callDetails.Call, Note = note });
+                Add(callDetails);
             }
-            return auction;
         }
-
-
+*/
+/*
         public static Auction FromGame(Game game)
         {
             Direction firstToAct;
@@ -58,8 +74,27 @@ namespace BridgeBidding.PBN
 			var auctionText = string.Join(" ", game.TagData["Auction"]);
             return FromString(firstToAct, auctionText, game.AuctionNotes);
         }
-
-        public static Auction FromString(Direction firstToAct, string auctionText, PBN.Game.Notes notes = null)
+*/
+        // TODO: This really needs to work properly if the full PBN text is passed in.  But for now, we just expect a single
+        // stirng of calls that start with the dealer.
+        internal void Parse(string auctionText)
+        {
+            this.Clear();
+            var tokens = auctionText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			foreach (var token in tokens)
+			{
+			    if (token.StartsWith("="))
+                {
+                    // TODO: Need to keep track of notes.
+                }
+                else if (!token.StartsWith("$") && !token.Equals("+"))
+				{
+                    Add(new AnnotatedCall { Call = Call.Parse(token) });
+				}
+			}
+        }
+/*
+        public static Auction Parse(string auctionText)
         {
             var auction = new Auction { FirstToAct = firstToAct };
 		    var tokens = auctionText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -76,30 +111,38 @@ namespace BridgeBidding.PBN
                 // TODO: We should really remember $annotations too, but for now only notes are supported.
 				else if (!token.StartsWith("$") && !token.Equals("+"))
 				{
-                    auction.Add(new PbnCall { Call = Call.Parse(token) });
+                    auction.Add(new CallWithNote { Call = Call.Parse(token) });
 				}
 			}
 			return auction;
 		}
 
-
-        public void UpdateGame(Game game)
+*/
+        public override string ToString()
         {
+            if (this.Count == 0) return "";
             // TODO: Validate auction.  Use Contract class to make sure bids are correct.
-			game.Tags["Auction"] = FirstToAct.ToString();
-            game.AuctionNotes.Clear();
-			List<string> lines = new List<string>();
-			var curLine = "";
+            var sb = new StringBuilder();
+            var notes = new List<string>();
+            sb.AppendLine($"[Auction \"{Game.Dealer}\"]");
+
             int numPasses = 0;
             int numPassesEndsAuction = 4;
+            int numCallsThisLine = 0;
 			for (int i = 0; i < this.Count; i++)
 			{
                 var call = this[i].Call;
-				curLine += call.ToString();
+                sb.Append(call.ToString());
+                numCallsThisLine++;
                 if (this[i].Note != null)
                 {
-					string noteReference = game.AuctionNotes.Add(this[i].Note);
-					curLine += $" {noteReference}";
+                    var noteIndex = notes.IndexOf(this[i].Note);
+                    if (noteIndex < 0)
+                    {
+                        noteIndex = notes.Count;
+                        notes.Add(this[i].Note);
+                    }
+					sb.Append($" ={noteIndex+1}=");
 				}
                 if (call.Equals(Call.Pass))
                 {
@@ -112,24 +155,28 @@ namespace BridgeBidding.PBN
                 }
 				if (i + 1 == this.Count && numPasses < numPassesEndsAuction)
 				{
-					curLine += " +";
+					sb.Append(" +");
 				}
 
-				if (i % 4 == 3)
+				if (numCallsThisLine == 4)
 				{
-					lines.Add(curLine);
-					curLine = "";
+                    sb.AppendLine();
+                    numCallsThisLine = 0;
 				}
 				else if (i + 1 < this.Count)
 				{
-					curLine += " ";
+					sb.Append(' ');
 				}
 			}
-			if (curLine.Length > 0)
+			if (numCallsThisLine > 0)
 			{
-				lines.Add(curLine);
+				sb.AppendLine();
 			}
-			game.TagData["Auction"] = lines;
+            for (int noteIndex = 0; noteIndex < notes.Count; noteIndex++)
+            {
+                sb.AppendLine($"[Note \"{noteIndex+1}:{notes[noteIndex]}\"]");
+            }
+            return sb.ToString();
 		}
     }
 }

@@ -56,7 +56,7 @@ namespace BridgeBidding
     }
 
     // This is a place-holder for getting desc
-    public interface IDescribe
+    public interface IDescribeConstraint
     {
         string Describe(Call call, PositionState ps);
     }

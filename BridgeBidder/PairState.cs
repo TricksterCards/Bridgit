@@ -3,7 +3,7 @@ using System.Dynamic;
 
 namespace BridgeBidding
 {
-    public enum Pair { NS, EW }
+
 
     public class PairState
     {

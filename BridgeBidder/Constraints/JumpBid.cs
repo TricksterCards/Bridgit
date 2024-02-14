@@ -14,7 +14,7 @@ namespace BridgeBidding
 		{
 			if (call is Bid bid)
 			{
-				return this._jumpLevels.Contains(ps.BiddingState.Contract.Jump(bid));
+				return this._jumpLevels.Contains(ps.BiddingState.Contract.IsJump(bid));
 			}
 			return false;
 		}

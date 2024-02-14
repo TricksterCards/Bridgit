@@ -15,10 +15,10 @@ namespace TestBridgeBidder
         public static PBNTest[] ImportTests(string text)
         {
             var tests = new List<PBNTest>();
-            var games = BridgeBidding.PBN.FromString.Games(text);
+            var games = BridgeBidding.PBN.FromString.ParseGames(text);
             foreach (var game in games)
             {
-                var auction = Auction.FromGame(game).Calls;
+                var auction = game.Auction.Calls;
                 var bidHistory = "";
                 var direction = game.Dealer;
                 for (var i = 0; i < auction.Length; i++)
@@ -28,9 +28,9 @@ namespace TestBridgeBidder
                     {
                         var bidNumber = 1 + i / 4;
                         string testName = game.Tags["Event"];
-                        if (game.BoardNumber != 0)
+                        if (game.Board != 0)
                         {
-                            testName += $" Board {game.BoardNumber}";
+                            testName += $" Board {game.Board}";
                         }
                         tests.Add(
                                 new PBNTest

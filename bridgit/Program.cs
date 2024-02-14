@@ -5,12 +5,17 @@ using System.Diagnostics;
 
 using BridgeBidding;
 using BridgeBidding.PBN;
+using System.Threading.Channels;
+using System.Text;
 
 namespace bridgit;
 
 /*
 Interesting deals
      "commandLineArgs": "bid --deal \"N:9643.T4.QT8.T542 AQ7.AKJ5.K2.AQ97 KT852.Q3.7643.K8 J.98762.AJ95.J63\""
+                         bid --deal N:74.AKT542..98763 QT53.J87.AKQ6.AQ A92.9.JT9732.JT4 KJ86.Q63.854.K52
+                         bid --deal N:J864.AT9543.Q92. Q2.KJ6.K5.KT7543 AKT753.72.A43.J8 9.Q8.JT876.AQ962 -- THIS ONE OPENS WEAK WITH 4 SPADES!
+                         bid --deal N:QJ6.KQ743.A84.Q6 82.AJ9.Q732.KT97 AT74.2.KT95.J843 K953.T865.J6.A52 - passes unpassed responder
 */
 
 public class Program
@@ -19,6 +24,8 @@ public class Program
     {
         // JUST FOR FUN...
        // EditGame.TryItOut();
+
+      //  DoGameHack();
 
         var rootCommand = new RootCommand("Bridge bidding command line tool.");
         rootCommand.SetHandler(() =>
@@ -91,6 +98,7 @@ public class Program
         return await rootCommand.InvokeAsync(args);
             //new string[] { "maketests", "--event", "Open", "--seat", "1" });
             //new string[] {"--poop", "N:K43.QJ3.AK32.Q85 QJT9.K98.JT9.AJ4 765.752.654.T932 A82.AT64.Q87.K76"});
+
     }
 /*
     static void Main(string[] args)
@@ -130,5 +138,86 @@ public class Program
     }
     */
 
+
+    private static void DoGameHack()
+    {
+        var game = new Game();
+        Console.WriteLine("Here's an empty game:");
+        Console.WriteLine(game.ToString());
+        Console.WriteLine();
+
+        game.Board = 5;
+        game.Vulnerable = Vulnerable.EW;
+        game.Dealer = Direction.E;
+        game.Scoring = Scoring.IMP;
+        game.DealRandomHands();
+
+        Console.WriteLine("Board 5, random deal, E deals, EW vul, IMP scoring");
+        Console.WriteLine(game.ToString());
+        Console.WriteLine();
+
+        game.Auction.Add(Call.Pass);
+        game.Auction.Add(Call.Pass);
+        game.Auction.Add(Bid._1H, "Open in 3rd seat");
+        game.Auction.Add(Call.Pass);
+        game.Auction.Add(Bid._2H);
+        game.Auction.Add(Call.Pass);
+        game.Auction.Add(Call.Pass);
+        Console.WriteLine("Now have added:  Pass Pass 1H Pass 2H Pass Pass");
+        Console.WriteLine(game.ToString());
+        Console.WriteLine();
+
+        game.Auction.Add(Call.Pass, "This ends the auction!");
+        game.Contract = Contract.Parse("2NTXX");
+        game.Declarer = Direction.W;
+        Console.WriteLine("Final pass with a silly annotation.");
+        Console.WriteLine(game.ToString());
+        Console.WriteLine();        
+
+        Game clone = game.Clone();
+        Console.WriteLine("Here's the cloned game:");
+        Console.WriteLine(clone.ToString());
+        Console.WriteLine();
+
+
+        Console.WriteLine("Press enter to continue...");
+        Console.ReadLine();
+
+        Console.WriteLine("NOW WE ARE GOING TO TRY TO SAVE SOME DIFFERENT GAMES AND PARSE THEM IN A LIST.");
+        game.Event= "Original game";
+        game.Board = 1;
+        clone.Event = "Cloned game";
+        clone.Board = 2;
+        var thirdGame = new Game();
+        thirdGame.Event = "Third game";
+        thirdGame.Board = 3;
+
+        var sb = new StringBuilder();
+        sb.AppendLine(game.ToString());
+        sb.AppendLine();
+        sb.AppendLine(clone.ToString());
+        sb.AppendLine();
+        sb.AppendLine(thirdGame.ToString());
+        string gameText = sb.ToString();
+
+        Console.WriteLine("Here's the source multi-game file");
+        Console.WriteLine(gameText);
+        Console.WriteLine();
+
+        Console.WriteLine("Now the extracted games from that text");
+        var games = FromString.ParseGames(gameText);
+        Console.WriteLine($"There are {games.Count} games in the file.");
+
+        foreach (var g in games)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"{g}");
+            Console.WriteLine();
+        }
+
+
+        Console.WriteLine("Press enter to continue...");
+        Console.ReadLine();
+    }
 
 }

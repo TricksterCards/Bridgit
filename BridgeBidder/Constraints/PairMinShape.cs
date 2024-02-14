@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace BridgeBidding
 {
@@ -34,7 +35,7 @@ namespace BridgeBidding
             Suit? s = null;
             if (_useContractSuit)
             {
-                if (ps.BiddingState.Contract.IsOurs(ps)) {
+                if (ps.BiddingState.Contract.IsOurs(ps.Direction)) {
                     s = ps.BiddingState.Contract.Bid.Suit;
                 }
                 if (s == null) return false;    
@@ -54,7 +55,7 @@ namespace BridgeBidding
         }
     }
 
-    public class PairShowsMinShape : PairHasMinShape, IShowsState
+    public class PairShowsMinShape : PairHasMinShape, IShowsState, IDescribeConstraint
     {
         public PairShowsMinShape(Suit? suit, int min, bool desiredValue) : base(suit, min, desiredValue) { }
         void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
@@ -74,6 +75,14 @@ namespace BridgeBidding
                     showHand.Suits[suit].ShowShape(newMin, Math.Max(newMin, shape.Max));
                 }
             }
+        }
+        string IDescribeConstraint.Describe(Call call, PositionState ps)
+        {
+            if (GetSuit(_suit, call) is Suit suit)
+            {
+                return $"{_min} {suit} held by {ps.PairState.Pair}";
+            }
+            return null;
         }
     }
 }

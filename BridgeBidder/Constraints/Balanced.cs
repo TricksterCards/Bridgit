@@ -14,7 +14,7 @@
 		}
 	}
 
-	public class ShowsBalanced : IsBalanced, IShowsState
+	public class ShowsBalanced : IsBalanced, IShowsState, IDescribeConstraint
 	{
 		public ShowsBalanced(bool desiredValue) : base(desiredValue) { }
 	    void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
@@ -30,6 +30,11 @@
 				}
 			}
 			
+		}
+
+		string IDescribeConstraint.Describe(Call call, PositionState ps)
+		{
+			return _desiredValue ? "balanced" : "not balanced";
 		}
 	}
 

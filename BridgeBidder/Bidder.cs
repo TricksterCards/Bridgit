@@ -196,7 +196,7 @@ namespace BridgeBidding
 		public static StaticConstraint ContractIsAgreedStrain = 
 				new StaticConstraint((call, ps) =>  
 					(ps.BiddingState.Contract.Bid is Bid contractBid &&
-                    ps.BiddingState.Contract.IsOurs(ps) && 
+                    ps.BiddingState.Contract.IsOurs(ps.Direction) && 
                     contractBid.Strain == ps.PairState.Agreements.AgreedStrain));
 
 
@@ -454,7 +454,6 @@ namespace BridgeBidding
 
 		public static Constraint OppsStopped(bool desired = true)
 		{
-			// TODO: THIS SHOULD REALLY SHOW OPPS STOPPED TOO......
 			return new ShowsOppsStopped(desired);
 		}
 

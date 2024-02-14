@@ -83,9 +83,18 @@ namespace BridgeBidding
 	    }
 
 
-		public List<List<string>> GetDescriptions()
+		public List<List<string>> GetCallDescriptions()
 		{
-			throw new NotImplementedException();
+			var descriptions = new List<List<string>>();
+			foreach (var ri in _ruleInfo)
+			{
+				var d = ri.Rule.ConstraintDescriptions(PositionState);
+				if (d != null)
+				{
+					descriptions.Add(d);
+				}
+			}
+			return descriptions;
 		}
 
 		public PositionCallsFactory GetBidsFactory()

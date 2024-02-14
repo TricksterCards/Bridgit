@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace BridgeBidding
 {
+	/*
     public enum Vulnerable { None, NS, EW, All }
 
 	public class Deal: Dictionary<Direction, Hand>
@@ -62,7 +63,7 @@ namespace BridgeBidding
 
 		protected void _Parse(string deal, string vulnerable)
 		{	
-			ParseDeal(deal);
+			ParseDeal(deal, overrideDealer: true);
 			if (vulnerable == null)
 			{
 				throw new ArgumentNullException("vulnerable");
@@ -76,7 +77,7 @@ namespace BridgeBidding
 			}
 		}
 
-		public void ParseDeal(string deal)
+		public void ParseDeal(string deal, bool overrideDealer = false)
 		{
 			if (deal == null)
 			{
@@ -86,16 +87,25 @@ namespace BridgeBidding
 			{
 				throw new FormatException("deal paramerter is too short to be valid PBN deal format");
 			}
-			if (deal.Substring(1, 1) != ":" || !Enum.TryParse<Direction>(deal.Substring(0,1), out Dealer))
+			Direction direction;
+			if (deal.Substring(1, 1) != ":" || !Enum.TryParse<Direction>(deal.Substring(0,1), out direction))
 			{
-				throw new FormatException($"Dealer prefix {deal.Substring(0, 2)} is invalid");
+				throw new FormatException($"Deal prefix {deal.Substring(0, 2)} is invalid");
 			};
+			if (overrideDealer)
+			{
+				Dealer = direction;
+			}
+			else if (direction != Dealer)
+			{
+				throw new ArgumentException($"Deal direction prefix {direction} does not match game Dealer {Dealer}");
+			}
             var handStrings = deal.Substring(2).Split(' ');
 			if (handStrings.Length != 4) 
 			{
 				throw new ArgumentException("deal must contain 4 hands");
 			}
-			var direction = Dealer;
+			Debug.Assert(direction == Dealer);
             foreach (var handString in handStrings)
             {
 				Deal[direction] = Hand.Parse(handString);
@@ -149,5 +159,6 @@ namespace BridgeBidding
 			DealCards(Card.NewDeck(true));
 		}
     }
+	*/
 }
 

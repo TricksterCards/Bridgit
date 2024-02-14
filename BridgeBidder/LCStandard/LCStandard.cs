@@ -1,7 +1,7 @@
 ﻿namespace BridgeBidding
 {
 
-    public class TwoOverOneGameForce : Bidder, IBiddingSystem
+    public class LCStandard : Bidder, IBiddingSystem
     {
 
         public PositionCalls GetPositionCalls(PositionState ps)

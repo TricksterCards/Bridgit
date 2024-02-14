@@ -33,7 +33,7 @@ public class InterractiveApp
                     {
                         var game = new Game();
                         game.DealRandomHands();
-                        game.BoardNumber = i+1;
+                        game.Board = i+1;
                         BidDeal(game);
                     }
                 }
@@ -64,9 +64,9 @@ public class InterractiveApp
             var line = Console.ReadLine();
             if (string.IsNullOrEmpty(line))
             {
-                var games = BridgeBidding.PBN.FromString.Games(gameText.ToString());
+                var game = Game.Parse(gameText.ToString());
                 Console.WriteLine("PARSED IT !!!");
-                var editor = new TestEditor(games.First());
+                var editor = new TestEditor(game);
                 editor.RunAuctionTest();
                 return;
             }
@@ -77,9 +77,9 @@ public class InterractiveApp
 
     public static void BidDeal(Game game)
     {
-        Console.WriteLine($"bid --deal {game.Deal.ToString()}");
-        var bidSystem = new TwoOverOneGameForce();
-        var bs = new BiddingState(game, bidSystem, bidSystem);
+        Console.WriteLine($"bid --deal {game.Deal}");
+        Display.Game(game);
+        var bs = new BiddingState(game);
         while (!bs.Contract.AuctionComplete)
         {
             var choices = bs.GetCallChoices();
@@ -108,6 +108,17 @@ public class InterractiveApp
                     }
                 }
             }
+            Console.WriteLine($"{bs.NextToAct.Direction}: {callDetails.Call}");
+            foreach (var a in callDetails.Annotations)
+            {
+                Console.WriteLine($"   {a.Type}: {a.Text}");
+            }
+            var desc = callDetails.GetCallDescriptions();
+            foreach (var descList in desc)
+            {
+                var description = string.Join(", ", descList);
+                Console.WriteLine($"      {description}");
+            }
             bs.MakeCall(callDetails);
         }
         DisplayBiddingState(bs);
@@ -127,12 +138,8 @@ public class InterractiveApp
 
     private static void DisplayBiddingState(BiddingState bs)
     {
-        var game = new Game();
-        game.Update(bs);
-        var testEditor = new TestEditor(game);
-        game.Tags["Event"] = "Test new display game code";
-        testEditor.DisplayGame();
-        testEditor.DisplayAuction(game.GetAuction());
+        Display.Game(bs.Game);
+        Display.Auction(bs.Game);
     }
 
 }

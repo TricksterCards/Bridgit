@@ -32,7 +32,7 @@ namespace BridgeBidding
 		}
 	}
 
-	public class ShowsQuality : HasQuality, IShowsState
+	public class ShowsQuality : HasQuality, IShowsState, IDescribeConstraint
 	{
 		public ShowsQuality(Suit? suit, SuitQuality min, SuitQuality max) : base(suit, min, max)
 		{
@@ -44,6 +44,14 @@ namespace BridgeBidding
 			{
 				showHand.Suits[suit].ShowQuality(_min, _max);
 			}
+		}
+		string IDescribeConstraint.Describe(Call call, PositionState ps)
+		{
+			if (GetSuit(_suit, call) is Suit suit)
+			{
+				return _max == SuitQuality.Solid ? $"{suit} quality {_min}+" : $"{suit} suality {_min}-{_max}";
+			}
+			return null;
 		}
 	}
 

@@ -32,7 +32,7 @@ namespace BridgeBidding
                 }
             }
             return new CallFeature[] {
-                Convention(UserText.Stayman),
+                Convention(call, UserText.Stayman),
                 PartnerBids(call, Answer),
 
                 Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), Flat(false), ShowsSuit(Suit.Hearts)),

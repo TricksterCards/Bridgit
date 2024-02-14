@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BridgeBidding
 {
-    public class SolidSuit: TwoOverOneGameForce
+    public class SolidSuit: LCStandard
     {
         public static IEnumerable<CallFeature> Bids(PositionState ps)
         {

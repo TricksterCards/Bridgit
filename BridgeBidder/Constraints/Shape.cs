@@ -31,7 +31,7 @@ namespace BridgeBidding
 
     }
 
-	public class ShowsShape : HasShape, IShowsState
+	public class ShowsShape : HasShape, IShowsState, IDescribeConstraint
 	{
         public ShowsShape(Suit? suit, int min, int max) : base(suit, min, max) { }
 
@@ -43,6 +43,14 @@ namespace BridgeBidding
             }
 		}
 
+        public string Describe(Call call, PositionState ps)
+        {
+            if (GetSuit(_suit, call) is Suit suit)
+            {
+                return _min == _max ? $"{_min} {suit}" : $"{_min}-{_max} {suit}";
+            }
+            return null;
+        }
     }
 
 

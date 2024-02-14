@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 
 namespace BridgeBidding
@@ -30,34 +31,55 @@ namespace BridgeBidding
 
         public PositionState NextToAct { get; private set; }
 
-        public Contract Contract { get; }
+        public ContractState Contract { get; }
 
         public Bid OpeningBid { get; private set; }
 
         public PositionState Opener { get; private set; }
 
-        public Board Board { get; }
+        public Game Game { get; }
 
-        public BiddingState(Board board, IBiddingSystem nsSystem, IBiddingSystem ewSystem)
+        public BiddingState(Game game)
         {
-            this.Board = board;
+            this.Game = game;
             this.Positions = new Dictionary<Direction, PositionState>();
-            this.Contract = new Contract();
-            var d = board.Dealer;
-            var ns = new PairState(Pair.NS, nsSystem, board.Vulnerable);
-            var ew = new PairState(Pair.EW, ewSystem, board.Vulnerable);
+            this.Contract = new ContractState();
+            var d = game.Dealer;
+            var ns = new PairState(Pair.NS, GetBidSystem(game.BidSystemNS), game.Vulnerable);
+            var ew = new PairState(Pair.EW, GetBidSystem(game.BidSystemEW), game.Vulnerable);
             for (int seat = 1; seat <= 4; seat++)
             {
-                Hand hand = null;
-                board.Deal.TryGetValue(d, out hand);
+                Hand hand;
+                game.Deal.TryGetValue(d, out hand);
                 PairState pairState = (d == Direction.N || d == Direction.S) ? ns : ew;
                 this.Positions[d] = new PositionState(this, pairState, d, seat, hand);
                 d = BridgeBidder.LeftHandOpponent(d);
             }
-            this.Dealer = Positions[Board.Dealer];
+            this.Dealer = Positions[Game.Dealer];
             this.NextToAct = Dealer;
+            if (Game.Auction != null && Game.Auction.Count > 0)
+            {
+                var calls = Game.Auction.Calls;
+                Game.Auction.Clear();
+                foreach (var call in calls)
+                {
+                    MakeCall(call);
+                }
+            }
         }
 
+
+        // TODO: In the furutre this code will examine the game's configuration for bidding systems.  
+        // TODO: Perhaps it's more than just a string, but for now we allow only Null, Empty, or "LC-Basic"
+        private static IBiddingSystem GetBidSystem(string bidSystem)
+        {
+            if (string.IsNullOrEmpty(bidSystem) || bidSystem == "LC-Basic")
+            {
+                return new LCStandard();
+            }
+            throw new ArgumentException($"Unknown bidding system {bidSystem}.");
+        }
+/*
         public void ReplayAuction(IEnumerable<Call> history)
         {
             foreach (var call in history)
@@ -65,11 +87,12 @@ namespace BridgeBidding
                 MakeCall(call);
             }
         }
+*/
 
-        // Note that this method will alawys make the call specified as long as the call is 
+        // Note that this method will alawys make the call specified as long as the call is valid
         public void MakeCall(Call call)
         {
-            Contract.ValidateCall(call, NextToAct);
+            Contract.ValidateCall(call, NextToAct.Direction);
             var choices = GetCallChoices();
             if (!choices.ContainsKey(call))
             {
@@ -94,12 +117,23 @@ namespace BridgeBidding
             // TODO: Carefully consider if contract should be updated before or after 
             // PositionState.MakeCall 
             callDetails.PositionState.MakeCall(callDetails);
-            Contract.MakeCall(callDetails); // This also validates the call and will throw if a problem.
+            Contract.MakeCall(callDetails.Call, callDetails.PositionState.Direction); // This also validates the call and will throw if a problem.
 
             if (this.OpeningBid == null && callDetails.Call is Bid bid)
             {
                 this.OpeningBid = bid;
                 this.Opener = NextToAct;
+            }
+
+
+            Game.Auction.Add(callDetails);
+            if (Contract.AuctionComplete)
+            {
+                Game.Contract = Contract;
+                if (!Contract.PassedOut)
+                {
+                    Game.Declarer = Contract.Declarer;
+                }
             }
 
             NextToAct = NextToAct.LeftHandOpponent;

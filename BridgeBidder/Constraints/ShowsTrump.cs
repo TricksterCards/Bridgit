@@ -2,7 +2,7 @@
 
 namespace BridgeBidding
 {
-    public class ShowsTrump : DynamicConstraint, IShowsState
+    public class ShowsTrump : DynamicConstraint, IShowsState, IDescribeConstraint
     {
         private Strain? _trumpStrain;
         public ShowsTrump(Strain? trumpStrain)
@@ -25,6 +25,15 @@ namespace BridgeBidding
             {
                 showAgreements.ShowAgreedStrain(strain);
             }
+        }
+
+        string IDescribeConstraint.Describe(Call call, PositionState ps)
+        {
+            if (GetStrain(_trumpStrain, call) is Strain strain)
+            {
+                return $"agree to play in {strain}";
+            }
+            return null;         
         }
     }
 }

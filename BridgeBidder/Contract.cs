@@ -6,47 +6,112 @@ namespace BridgeBidding
 {
 	public class AuctionException: Exception
 	{
-		public AuctionException(Call call, PositionState by, Contract contract, string description) : 
-			base($"{call} is invalid by {by.Direction} over {contract}:  {description}")
+		public AuctionException(Call call, Direction by, Contract contract, string description) : 
+			base($"{call} is invalid by {by} over {contract}:  {description}")
 		{ }
 	}
+
+	public enum Risk { Undoubled, Doubled, Redoubled }
 	
     public class Contract
     {
         public Bid Bid = null;    
-        public PositionState LastBidBy = null;
-		public PositionState Declarer = null;
-        public bool Doubled = false;
-        public bool Redoubled = false;
+		public Risk Risk = Risk.Undoubled;
+
+		public static Contract Parse(string s)
+		{
+			var contract = new Contract();
+			if (s != "Pass")	// The default is a passed out contract.
+			{
+				if (s.Length < 2)
+				{
+					throw new FormatException($"Invlaid constract {s}");
+				}
+				int bidLength = 2;
+				if (s.Substring(1, 1) == "N")
+				{
+					bidLength += 1;
+				}
+				var call = Bid.Parse(s.Substring(0, bidLength));
+				if (call is Bid bid)
+				{
+					contract.Bid = bid;
+				}
+				else
+				{
+					throw new FormatException($"Contract can not be {s}");
+				}
+				var risk = s.Substring(bidLength).Trim();
+				if (risk == "X")
+				{
+					contract.Risk = Risk.Doubled;
+				}
+				else if (risk == "XX")
+				{
+					contract.Risk = Risk.Redoubled;
+				}
+				else if (!string.IsNullOrEmpty(risk))
+				{
+					throw new FormatException($"Invalid risk {risk}.  Must be X or XX or nothing.");
+				}
+			}
+			return contract;
+		}
+
+        public override string ToString()
+        {
+			var s = "Pass";
+            if (Bid != null)
+			{
+				s = Bid.ToString();
+				if (Risk != Risk.Undoubled)
+				{
+					s += Risk == Risk.Doubled ? "X" : "XX";
+				}
+			}
+			return s;
+        }
+    }
+
+
+
+	public class ContractState: Contract
+	{
+        public Direction? LastBidBy = null;
+		public Direction? Declarer = null;
 		public int CallsRemaining = 4;
-		public Dictionary<Strain, List<PositionState>> FirstToNameStrain = new Dictionary<Strain, List<PositionState>>();
+		public Dictionary<Strain, List<Direction>> FirstToNameStrain = new Dictionary<Strain, List<Direction>>();
 
+		public bool PassEndsAuction => this.CallsRemaining == 1; 
 
-		public bool IsOurs(PositionState ps)
+		public bool AuctionComplete => this.CallsRemaining == 0;
+
+		public bool PassedOut => this.CallsRemaining == 0 && Bid == null;
+		public bool IsOurs(Direction direction)
 		{
-			return (Declarer != null && Declarer.PairState == ps.PairState);
+			return (Declarer != null && (Declarer == direction || Declarer == BridgeBidder.Partner(direction)));
 		}
 
 
-		public bool IsOpponents(PositionState ps)
+		public bool IsOpponents(Direction direction)
 		{
-			return (Declarer != null && Declarer.PairState != ps.PairState);
+			return (Declarer != null && !IsOurs(direction));
 		}
 
 
-		public void ValidateCall(Call call, PositionState by)
+		public void ValidateCall(Call call, Direction by)
 		{
 			var error = CallError(call, by);
 			if (error != null)
 				throw new AuctionException(call, by, this, error);
 		}
 
-		public bool IsValid(Call call, PositionState by)
+		public bool IsValid(Call call, Direction by)
 		{
 			return CallError(call, by) == null;
 		}
 
-		private string CallError(Call call, PositionState by)
+		private string CallError(Call call, Direction by)
 		{
 			if (AuctionComplete) 
 				return "Auction is complete.  No more calls allowed";
@@ -54,18 +119,16 @@ namespace BridgeBidding
 				return null;
 			if (call is Double)
 			{
-				if (Doubled)
-					return "Can not double contract.  Already doubled.";
+				if (Risk != Risk.Undoubled)
+					return $"Can not double contract that is currently {Risk}.";
 				if (IsOurs(by))
 					return "Can not double own side's contract";
 				return null;
 			}
 			if (call is Redouble)
 			{
-				if (Redoubled)
-					return "Can not redouble already redoubled contract.";
-				if (!Doubled)
-					return "Can not redouble contract.  Contract has not been doubled";
+				if (Risk != Risk.Doubled)
+					return $"Can not redouble contract that is currently {Risk}.";
 				if (IsOpponents(by))
 					return "Can not redouble contract.  Contract is opponents.";
 				return null;
@@ -80,12 +143,11 @@ namespace BridgeBidding
 			return "Unknown internal state error";
 		}
 
-		private void MakeBid(Bid bid, PositionState by)
+		private void MakeBid(Bid bid, Direction by)
 		{
             Bid = bid;
             LastBidBy = by;
-            Doubled = false;
-            Redoubled = false;
+            Risk = Risk.Undoubled;
             CallsRemaining = 3;
 			// Now figure out who is declarer.  First of our pair to bid a stain.
 			// For simplicity we assume the current bidder will be declarer.  Code below
@@ -96,9 +158,9 @@ namespace BridgeBidding
 				foreach (var namedStrain in FirstToNameStrain[bid.Strain])
 				{
 					if (namedStrain == by) return;
-					if (namedStrain == by.Partner)
+					if (namedStrain == BridgeBidder.Partner(by))
 					{
-						Declarer = by.Partner;
+						Declarer = BridgeBidder.Partner(by);
 						return;
 					}
 				}
@@ -109,14 +171,14 @@ namespace BridgeBidding
 			}
 			else
 			{
-				FirstToNameStrain[bid.Strain] = new List<PositionState> { by };
+				FirstToNameStrain[bid.Strain] = new List<Direction> { by };
 			}
         }
 
-        public void MakeCall(CallDetails callDetails)
+        public void MakeCall(Call call, Direction by)
 		{
-			var call = callDetails.Call;
-			var by = callDetails.PositionState;
+			//var call = callDetails.Call;
+			//var by = callDetails.PositionState.Direction;
 			ValidateCall(call, by);	// Throws AuctionExeption if invalid call sequence
 			if (call.Equals(Call.Pass))
 			{
@@ -128,53 +190,34 @@ namespace BridgeBidding
 			}
 			else if (call is Double)
 			{
-				Doubled = true;
+				Risk = Risk.Doubled;
 				CallsRemaining = 3;
 			}
 			else if (call is Redouble)
 			{
-				Redoubled = true;
-				Debug.Assert(this.Doubled);
+				Risk = Risk.Redoubled;
 				CallsRemaining = (Bid.Level == 7 && Bid.Strain == Strain.NoTrump) ? 0 : 3;
 			}
 		}
 
-		public int Jump(Bid bid)
+		public int IsJump(Bid bid)
 		{
 			
 			return (this.Bid == null) ? bid.Level - 1 : bid.JumpOver(Bid);
 		}
 
-		public bool PassEndsAuction { get { return this.CallsRemaining == 1; } }
-
-		public bool AuctionComplete { get { return this.CallsRemaining == 0; } }
-
-        public override string ToString()
-        {
-			var s = "";
-            if (Bid == null)
+		public static ContractState FromCalls(Direction dealer, IEnumerable<Call> calls)
+		{
+			var contract = new ContractState();
+			Direction d = dealer;
+			foreach (var call in calls)
 			{
-				s = "Pass";
+				contract.MakeCall(call, d);
 			}
-			else
-			{
-				s = Bid.ToString();
-				if (Doubled)
-				{
-					s += "X";
-				}
-				if (Redoubled)
-				{
-					s += "X";
-				}
-			}
-			return s;
-
-			
+			return contract;
+		}
 
 
-        }
-    }
-
+	}
 
 }

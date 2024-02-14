@@ -18,7 +18,7 @@ namespace BridgeBidding
         {
             // TODO: Need to implement doubles beyond 1 level.
 
-            Debug.Assert(ps.BiddingState.Contract.IsOpponents(ps));
+            Debug.Assert(ps.BiddingState.Contract.IsOpponents(ps.Direction));
             var bids = new List<CallFeature>();
             var contractBid = ps.BiddingState.Contract.Bid;
             if (contractBid != null && contractBid.Level == 1 && contractBid.Strain != Strain.NoTrump)

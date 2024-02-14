@@ -21,32 +21,32 @@ public class TestEditor
 
     public void RunAuctionTest()
     {
-        DisplayGame();
-        var bidSystem = new TwoOverOneGameForce();
-        var bs = new BiddingState(Game, bidSystem, bidSystem);
-        var auction = Game.GetAuction();
+        Display.Game(Game);
+        var calls = Game.Auction.Calls;
+        Game.Auction.Clear();
+        var bs = new BiddingState(Game);
         var bidIndex = 1;
-        foreach (var a in auction)
+        foreach (var call in calls)
         {
             var choices = bs.GetCallChoices();
             if (bs.NextToAct.HasHand)
             {
-                if (choices.BestCall == null || !choices.BestCall.Call.Equals(a.Call))
+                if (choices.BestCall == null || !choices.BestCall.Call.Equals(call))
                 {
-                    DisplayAuction(auction, false, bidIndex);
+                    Display.Auction(Game, false);
                     if (choices.BestCall == null) 
                     {
-                        Console.WriteLine(" <- Invalid state.  No call suggested");
+                        Console.WriteLine($" <- Invalid state.  No call suggested.  {call} expected");
                     }
                     else
                     {
-                        Console.WriteLine($" <- bridgit suggested {choices.BestCall.Call}");
+                        Console.WriteLine($" {call} expected. bridgit suggested {choices.BestCall.Call}");
                     }
                     // NOTE:  PLACE A BREAKPOINT AT THE LINE FOLLOWING THIS COMMENT.  YOU CAN THEN TRACE
                     // THROUGH THE CREATION OF THE CHOICES AND THE SELECTION OF THE BEST CALL
                     choices = bs.DEBUG_ReEvaluateCallChoices();
-                    Console.WriteLine($"Forcing {a.Call} to be made and continuing");
-                    bs.MakeCall(a.Call);
+                    Console.WriteLine($"Forcing {call} to be made and continuing");
+                    bs.MakeCall(call);
                 }
                 else
                 {
@@ -56,20 +56,15 @@ public class TestEditor
             else 
             {
                 // As long as the call is valid, we're happy
-                bs.MakeCall(a.Call);
+                bs.MakeCall(call);
             }
             bidIndex++;
         }
-        DisplayAuction(auction);
+        Display.Auction(Game);
     }
 
 
-    public void DisplayGame()
-    {
-        Console.WriteLine($"{Game.Tags["Event"]}");
-        Console.WriteLine($"{Game.Dealer} deals, {Game.Vulnerable} vulnerable");
-        DisplayHands(Game.Deal);
-    }
+
 
 
     public int GetUserInput()
@@ -88,8 +83,8 @@ public class TestEditor
 
     private void EditAuction()
     {
-        var auction = Auction.FromGame(Game);
-        DisplayAuction(auction, true);
+        var auction = Game.Auction;
+        Display.Auction(Game, true);
         Console.Write("Which bid would you like to change? ");
 
         var choice = Console.ReadLine();
@@ -110,7 +105,7 @@ public class TestEditor
                     if (auction[i].Call.Equals(oldCall))
                     {
                         auction[i].Call = newCall;
-                        auction.UpdateGame(Game);
+                        Game.UpdateContractFromAuction();
                         return;
                     }
                 }
@@ -132,7 +127,7 @@ public class TestEditor
                 if (newBid != null && Call.TryParse(newBid.ToUpper(), out call))
                 {
                     auction[bidIndex - 1].Call = call;
-                    auction.UpdateGame(Game);
+                    Game.UpdateContractFromAuction();
                 }
                 else
                 {
@@ -168,78 +163,11 @@ public class TestEditor
             }
         }
     }
-    public void DisplayAuction(Auction auction, bool showBidNumbers = false, int stopAtIndex = int.MaxValue)
-    {
-        Console.WriteLine(showBidNumbers ? "   West     North    East     South" : "West  North East  South");
-        var direction = Direction.W;
-        int col = 0;
-        int bidIndex = 1;
-        while (direction != auction.FirstToAct)
-        {
-            Console.Write(showBidNumbers? "         " : "      ");
-            col += 1;
-            direction = BridgeBidder.LeftHandOpponent(direction);
-        }
-        foreach (var call in auction.Calls)
-        {
-            Console.Write(showBidNumbers? $"{bidIndex, 2}:{call, -6}" : $"{call, -6}");
-            if (bidIndex == stopAtIndex) return;
-            col ++;
-            bidIndex ++;
-            if (col % 4 == 0) Console.WriteLine();
-        }
-        if (col % 4 != 0) Console.WriteLine();
-    }
+   
 
 
-    public void DisplayHands(Dictionary<Direction, Hand> hands)
-    {
-        Display1Hand(10, hands[Direction.N]);
-        Display2Hands(1, hands[Direction.W], 23, hands[Direction.E]);
-        Display1Hand(10, hands[Direction.S]);        
-    }
 
-    public static string[] SuitRanks(Hand hand)
-    {
-        if (hand == null)
-        {
-            return new string[] { "-", "-", "-", "-" };
-        }
-        return hand.ToString().Split(".");
-    }
 
-    public static void Display1Hand(int indent, Hand hand)
-    {
-        var suitRanks = SuitRanks(hand);
-        Debug.Assert(suitRanks.Length == Hand.SuitOrder.Length);
-        for (var suitIndex = 0; suitIndex < Hand.SuitOrder.Length; suitIndex++)
-        {
-            for (int i = 0; i < indent; i++) Console.Write(" ");
-            var s = Hand.SuitOrder[suitIndex].ToString().Substring(0, 1);
-            Console.WriteLine($"{s}: {suitRanks[suitIndex]}");
-        }
-    }
-
-    public static void Display2Hands(int indentWest, Hand westHand, int indentEast, Hand eastHand)
-    {
-        var westSuitRanks = SuitRanks(westHand);
-        var eastSuitRanks = SuitRanks(eastHand);
-        Debug.Assert(eastSuitRanks.Length == westSuitRanks.Length);
-        Debug.Assert(westSuitRanks.Length == Hand.SuitOrder.Length);
-        for (var suitIndex = 0; suitIndex < Hand.SuitOrder.Length; suitIndex++)
-        {
-            for (int i = 0; i < indentWest; i++) Console.Write(" ");
-            var s = Hand.SuitOrder[suitIndex].ToString().Substring(0, 1);
-            Console.Write($"{s}: {westSuitRanks[suitIndex]}");
-            var curIndent = indentWest + 3 + westSuitRanks[suitIndex].Length;
-            while (curIndent < indentEast)
-            {
-                Console.Write(" ");
-                curIndent++;
-            }
-            Console.WriteLine($"{s}: {eastSuitRanks[suitIndex]}");
-        }
-    }
 
 
 }

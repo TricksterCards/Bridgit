@@ -53,7 +53,7 @@ namespace BridgeBidding
 
 	}
 
-	public class ShowsBetterSuit : IsBetterSuit, IShowsState
+	public class ShowsBetterSuit : IsBetterSuit, IShowsState, IDescribeConstraint
 	{
 		public ShowsBetterSuit(Suit? better, Suit? worse, Suit? defaultIfEqual = null, bool lengthOnly = false) :
 			base(better, worse, defaultIfEqual, lengthOnly)
@@ -77,5 +77,22 @@ namespace BridgeBidding
 
 			}
 		}
+
+		string IDescribeConstraint.Describe(Call call, PositionState ps)
+		{
+			if (GetSuit(_better, call) is Suit better &&
+				GetSuit(_worse, call) is Suit worse &&
+				GetSuit(_defaultIfEqual, call) is Suit defaultIfEqual)
+			{
+				var betterOrEqual = (defaultIfEqual == better);
+				if (_lengthOnly)
+				{
+					return betterOrEqual ? $"{better} longer or equal to {worse}" : $"{better} longer than {worse}";	
+				}
+				return betterOrEqual ? $"{better} better or equal to {worse}" : $"{better} better than {worse}";
+			}
+			return null;
+		}
+
 	}
 }

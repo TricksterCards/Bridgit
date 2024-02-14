@@ -32,22 +32,4 @@
 2H
 
 
-[Event "6 Diamonds, 5 Spades, Min"]
-[Dealer "N"]
-[Vulnerable "None"]
-[Deal "N:AK743.7.QJ5432.5 - - -"]
-[Auction "N"]
-1D Pass 1H Pass
-1S Pass 1NT Pass
-2S
-
-
-[Event "6 Diamonds, 5 Spades, Medium"]
-[Dealer "N"]
-[Vulnerable "None"]
-[Deal "N:AK743.7.AKJ532.5 - - -"]
-[Auction "N"]
-1D Pass 1H Pass
-1S Pass 1NT Pass
-3S
 

@@ -53,5 +53,20 @@ namespace BridgeBidding
 			}
 			return (showHand.HandSummary, showAgreements.PairAgreements);
 		}
+
+		internal List<string> ConstraintDescriptions(PositionState ps)
+		{
+			var descriptions = new List<string>();
+			foreach (var constraint in _constraints)
+			{
+				if (constraint is IDescribeConstraint describe)
+				{
+					var d = describe.Describe(Call, ps);
+					if (d != null)
+						descriptions.Add(d);
+				}
+			}
+			return (descriptions.Count == 0) ? null : descriptions;
+		}
 	}
 }

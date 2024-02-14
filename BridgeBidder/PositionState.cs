@@ -59,12 +59,12 @@ namespace BridgeBidding
 
 		public bool IsOurContract
 		{
-			get { return BiddingState.Contract.IsOurs(this); }
+			get { return BiddingState.Contract.IsOurs(this.Direction); }
 		}
 
         public bool IsOpponentsContract
         {
-			get { return BiddingState.Contract.IsOpponents(this); }
+			get { return BiddingState.Contract.IsOpponents(this.Direction); }
         }
 
         public Call GetBidHistory(int historyLevel)
@@ -158,7 +158,7 @@ namespace BridgeBidding
 		// THIS IS AN INTERNAL FUNCITON:
 		internal void MakeCall(CallDetails callDetails)
 		{
-			BiddingState.Contract.ValidateCall(callDetails.Call, this);
+			BiddingState.Contract.ValidateCall(callDetails.Call, this.Direction);
             if (!callDetails.Call.Equals(Call.Pass) && !this._roleAssigned)
 			{
 				if (Role == PositionRole.Opener)
@@ -273,7 +273,7 @@ namespace BridgeBidding
 
 		public bool IsValidNextCall(Call call)
 		{
-			return BiddingState.Contract.IsValid(call, this);
+			return BiddingState.Contract.IsValid(call, this.Direction);
 		}
 
  

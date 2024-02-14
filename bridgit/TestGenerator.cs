@@ -13,7 +13,7 @@ public class TestGenerator
     public Dictionary<Call, List<Game>> Tests = new Dictionary<Call, List<Game>>();
     public string EventDescription;
 
-    private IBiddingSystem _bidder = new TwoOverOneGameForce();
+
 
     private int _seat;
 
@@ -28,6 +28,7 @@ public class TestGenerator
         }
     }
 
+// REview all the Game -> New Game stuff
     public void GenerateTests(int count)
     {
         //   var auction = new List<Call>();
@@ -41,13 +42,13 @@ public class TestGenerator
         while (needed > 0)
         {
             bool goodTest = true;
-            var board = new Board();
-            board.Dealer = dealer;
-            board.DealRandomHands();
+            var game = new Game();
+            game.Dealer = dealer;
+            game.DealRandomHands();
         //    foreach (Direction noHand in Enum.GetValues<Direction>())
         //        if (noHand != Direction.N)
         //            board.Hands[noHand] = null;
-            var bs = new BiddingState(board, _bidder, _bidder);
+            var bs = new BiddingState(game);
             for (int s = 1; s < _seat; s++)
             {
                 var callDetails = bs.GetCallChoices().BestCall;
@@ -67,8 +68,6 @@ public class TestGenerator
                 if (Tests.ContainsKey(call) && Tests[call].Count < count)
                 {
                     bs.MakeCall(callDetails);
-                    var game = new Game();
-                    game.Update(bs);
                     Tests[call].Add(game);
                     needed--;
                 }
@@ -76,6 +75,8 @@ public class TestGenerator
         }
     }
 
+// TODO: This is probably severly broken due to the fact that Game now is updated to reflect auction
+/*
 
     public Game[] GenerateSeatDependentTests(int count)
     {
@@ -83,53 +84,54 @@ public class TestGenerator
         int needed = Tests.Count * count;
         while (games.Count < count)
         {
-            var board = new Board();
-            board.DealRandomHands();
-            board.Deal[Direction.E] = null;
-            board.Deal[Direction.S] = null;
-            board.Deal[Direction.W] = null;
-            if (CallsDifferBySeat(board))
+            var game = new Game();
+            game.DealRandomHands();
+            game.Deal[Direction.E] = null;
+            game.Deal[Direction.S] = null;
+            game.Deal[Direction.W] = null;
+            if (CallsDifferBySeat(game))
             {
-                board.Dealer = Direction.N;
+                game.Dealer = Direction.N;
                 var seat = 1;
                 var auction = new List<Call>();
                 while (seat <= 4)
                 {
                     foreach (var vul in Enum.GetValues<Vulnerable>())
                     {
-                        board.Vulnerable = vul;
-                        var bs = new BiddingState(board, _bidder, _bidder);
-                        bs.ReplayAuction(auction);
+                        game.Vulnerable = vul;
+                        var bs = new BiddingState(game);
+                      ///  bs.ReplayAuction(auction);
                         bs.MakeCall(bs.GetCallChoices().BestCall);
-                        var game = new Game();
-                        game.Update(bs);
-                        game.Tags["Event"] = $"Seat dependent, seat {seat}, vul {vul}";
+                        var newGame = new Game();
+                        // TODO: THIS SEEMS AWFUL.  NEED TO DUPLICATE GAME SOMEHOW BUT THIS LOOSK BAD...
+                        newGame.Update(bs);
+                        newGame.Tags["Event"] = $"Seat dependent, seat {seat}, vul {vul}";
                         games.Add(game);
                     }
                     seat++;
                     auction.Add(Call.Pass);
-                    board.Dealer = BridgeBidder.RightHandOpponent(board.Dealer);
+                    game.Dealer = BridgeBidder.RightHandOpponent(game.Dealer);
                 }
             }
         }
         return games.ToArray();
     }
 
-    private bool CallsDifferBySeat(Board board)
+// TODO: This seems to be modifiyting game in place.  That's not good.  
+    private bool CallsDifferBySeat(Game game)
     {
-        Debug.Assert(board.Dealer == Direction.N);
-        var bs = new BiddingState(board, _bidder, _bidder);
+        Debug.Assert(game.Dealer == Direction.N);
+        var bs = new BiddingState(game);
         CallDetails lastCall = bs.GetCallChoices().BestCall;
         var auction = new List<Call>();
-        while (board.Dealer != Direction.E)
+        while (game.Dealer != Direction.E)
         {
-
-            board.Dealer = BridgeBidder.RightHandOpponent(board.Dealer);
+            game.Dealer = BridgeBidder.RightHandOpponent(game.Dealer);
             auction.Add(Call.Pass);
             foreach (var vul in Enum.GetValues<Vulnerable>())
             {
-                board.Vulnerable = vul;
-                bs = new BiddingState(board, _bidder, _bidder);
+                game.Vulnerable = vul;
+                bs = new BiddingState(game);
                 bs.ReplayAuction(auction);
                 CallDetails posCall = bs.GetCallChoices().BestCall;
                 if (!posCall.Call.Equals(lastCall.Call) &&
@@ -141,7 +143,7 @@ public class TestGenerator
         }
         return false;
     }
-
+*/
     public string GamesToString(string eventName, Game[] games)
     {
         int boardNumber = 1;
@@ -149,8 +151,8 @@ public class TestGenerator
         foreach (var game in games)
         {
             //game.Tags["Event"] = eventName;
-            game.Tags["Board"] = boardNumber.ToString();
-            sb.Append(game.GetGameText());
+            game.Board = boardNumber;
+            sb.Append(game.ToString());
             sb.Append(HandCommentary(game.Deal[Direction.N]));
             boardNumber++;
         }
@@ -168,7 +170,7 @@ public class TestGenerator
             {
                 game.Tags["Event"] = eventName;
                 game.Tags["Board"] = boardNumber.ToString();
-                sb.Append(game.GetGameText());
+                sb.Append(game.ToString());
         //         var board = game.GetBoard();
         //          sb.Append(HandCommentary(board.Hands[Direction.N]));
                 sb.AppendLine();
@@ -200,9 +202,9 @@ public class TestGenerator
     {
         for (int i = 0; i < count; i ++)
         {
-            var board = new Board();
-            board.DealRandomHands();
-            var bs = new BiddingState(board, _bidder, _bidder);
+            var game = new Game();
+            game.DealRandomHands();
+            var bs = new BiddingState(game);
             var auction = bs.GetAuction();
         }
     }

@@ -3,7 +3,7 @@
 
 namespace BridgeBidding
 {
-    public class Overcall: TwoOverOneGameForce
+    public class Overcall: LCStandard
     {
 
         public static new PositionCalls GetPositionCalls(PositionState ps)

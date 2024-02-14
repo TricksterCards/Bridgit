@@ -8,11 +8,15 @@ using BridgeBidding.PBN;
 
 namespace BridgeBidding
 {
-
     public enum Direction { N = 0, E = 1, S = 2, W = 3 }
 
 	// TODO: DO something with this...
 	public enum Scoring { MP, IMP };
+
+   	public enum Vulnerable { None, NS, EW, All }
+
+    public enum Pair { NS, EW }
+
 
 	public static class BridgeBidder
 	{
@@ -40,27 +44,25 @@ namespace BridgeBidding
                 throw new ArgumentException("Bidding system is limited to 2/1");
             }
 
-			var board = Board.Parse(deal, vulnerable);
-			var bidHistory = Auction.FromString(board.Dealer, auction);
-			var callDetails = SuggestCall(board, bidHistory.Calls);
+			var game = Game.Parse(deal, vulnerable);
+			game.ParseAuction(auction);
+			var callDetails = SuggestCall(game);
 			return callDetails.Call.ToString();
 		}
 
 		// TODO: Add bidding system parameters here.  
-		public static CallDetails SuggestCall(Board board, IEnumerable<Call> auction, bool throwExceptionIfNoBestCall = false)
+		public static CallDetails SuggestCall(Game game, bool throwExceptionIfNoBestCall = false)
 		{
-            IBiddingSystem twoOverOne = new TwoOverOneGameForce();
-			var biddingState = new BiddingState(board, twoOverOne, twoOverOne);
-			biddingState.ReplayAuction(auction);
+			var biddingState = new BiddingState(game);
 			if (!biddingState.NextToAct.HasHand)
 			{
-				throw new AuctionException(null, biddingState.NextToAct, biddingState.Contract,
+				throw new AuctionException(null, biddingState.NextToAct.Direction, biddingState.Contract,
 								"Can not suggest next bid when position has no defined hand.");
 			}
 			var choices = biddingState.GetCallChoices();
 			if (choices.BestCall != null) return choices.BestCall;
 			if (throwExceptionIfNoBestCall)
-				throw new AuctionException(null, biddingState.NextToAct, biddingState.Contract,
+				throw new AuctionException(null, biddingState.NextToAct.Direction, biddingState.Contract,
 						"No suggested call given by bidding system.");
 			//
 			// This is an error, so we will just pass.  If there is a rule for pass then select it,

@@ -63,7 +63,7 @@ namespace BridgeBidding
 
     }
 
-    class ShowsPoints : HasPoints, IShowsState
+    class ShowsPoints : HasPoints, IShowsState, IDescribeConstraint
     {
         public ShowsPoints(Suit? trumpSuit, int min, int max, PointType pointType) : base(trumpSuit, min, max, pointType) { }
 
@@ -93,6 +93,32 @@ namespace BridgeBidding
                     Debug.Assert(false);
                     break;
             }
+        }
+    
+
+        public string Describe(Call call, PositionState ps)
+        {
+            switch (_pointType)
+            {
+                case PointType.HighCard:
+                    return $"{_min}-{_max} high card points";
+
+                case PointType.Starting:
+                    return $"{_min}-{_max} starting points";
+
+                case PointType.Dummy:
+                    if (GetSuit(_trumpSuit, call) is Suit suit)
+                    {
+                        return $"{_min}-{_max} dummy points";
+                    }
+                    Debug.Fail("Need to specify a suit.");
+                    return null;
+                
+                default:
+                    Debug.Fail("Internal error.  ");
+                    return null;
+            }
+
         }
     }
 

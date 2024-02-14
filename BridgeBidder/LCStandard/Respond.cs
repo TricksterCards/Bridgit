@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace BridgeBidding
 {
-    public class Respond : TwoOverOneGameForce
+    public class Respond : LCStandard
     {
 
         static protected (int, int) RespondPass = (0, 5);
