@@ -1,12 +1,12 @@
 # Bridgit
 
-Bridgit is a bot (computer algorithm) for bidding Bridge hands. It has been developed by [Ralph Lipe](https://github.com/RalphLipe) in collaboration with Trickster Cards. Bridgit currently supports SAYC. Other systems and configurable conventions are planned for future updates.
+Bridgit is a bot (computer algorithm) for bidding Bridge hands. It has been developed by [Ralph Lipe](https://github.com/RalphLipe) in collaboration with Trickster Cards. Bridgit currently supports a basic 2/1 system, implementing a subset of "[LC Standard](https://www.larryco.com/bridge-articles/lc-standard-overview)". Other systems and configurable conventions are planned for future updates.
 
 ## Usage
 
 ### For Play
 
-Bridgit will soon be available in preview as part of [Trickster Cards](https://www.trickstercards.com/). Once it is, go to "More Games / Rules" and set "Use bidding bot" to "Bridgit" before creating your game. Then all bids by computer opponents/partners as well as suggestions for your own bids will be provided by Bridgit.
+Bridgit will soon be available in preview as part of [Trickster Cards](https://www.trickstercards.com/). Once it is, go to "More Games / Rules" and set "Bidding" to "2/1" before creating your game. Then all bids by computer opponents/partners as well as suggestions for your own bids will be provided by Bridgit.
 
 ### As a Library
 
