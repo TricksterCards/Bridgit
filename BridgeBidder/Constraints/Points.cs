@@ -98,18 +98,20 @@ namespace BridgeBidding
 
         public string Describe(Call call, PositionState ps)
         {
+            var range = Range.GetString(_min, _max, 40);
+
             switch (_pointType)
             {
                 case PointType.HighCard:
-                    return $"{_min}-{_max} high card points";
+                    return $"{range} HCP";
 
                 case PointType.Starting:
-                    return $"{_min}-{_max} starting points";
+                    return $"{range} points";
 
                 case PointType.Dummy:
                     if (GetSuit(_trumpSuit, call) is Suit suit)
                     {
-                        return $"{_min}-{_max} dummy points";
+                        return $"{range} dummy points";
                     }
                     Debug.Fail("Need to specify a suit.");
                     return null;

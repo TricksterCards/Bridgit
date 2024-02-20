@@ -84,12 +84,14 @@ namespace BridgeBidding
 				GetSuit(_worse, call) is Suit worse &&
 				GetSuit(_defaultIfEqual, call) is Suit defaultIfEqual)
 			{
+				var betterSymbol = Card.SuitToSymbol[better];
+				var worseSymbol = Card.SuitToSymbol[worse];
 				var betterOrEqual = (defaultIfEqual == better);
 				if (_lengthOnly)
 				{
-					return betterOrEqual ? $"{better} longer or equal to {worse}" : $"{better} longer than {worse}";	
+					return betterOrEqual ? $"{betterSymbol} longer or equal to {worseSymbol}" : $"{betterSymbol} longer than {worseSymbol}";	
 				}
-				return betterOrEqual ? $"{better} better or equal to {worse}" : $"{better} better than {worse}";
+				return betterOrEqual ? $"{betterSymbol} better or equal to {worseSymbol}" : $"{betterSymbol} better than {worseSymbol}";
 			}
 			return null;
 		}

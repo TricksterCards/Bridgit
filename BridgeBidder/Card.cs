@@ -16,7 +16,6 @@ namespace BridgeBidding
 	{
 		public static Suit[] Suits = { Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades };
 
-
 		public static Rank ParseRank(char rankString)
 		{
 			Rank rank;
@@ -38,6 +37,7 @@ namespace BridgeBidding
 		{
 			return (int)Rank * 32 + (int)Suit;
 		}
+
 		public override bool Equals(object obj) 
 		{
 			return (obj is Card card && card.Rank == Rank && card.Suit == Suit);
@@ -80,9 +80,10 @@ namespace BridgeBidding
 
         public override string ToString()
         {
-            return $"{RankToSymbol[Rank]}{SuitToSymbol[Suit]}";
+            return $"{RankToLetter[Rank]}{SuitToLetter[Suit]}";
 		}
-		public static Dictionary<Rank, string> RankToSymbol = new Dictionary<Rank, string>
+
+		public static Dictionary<Rank, string> RankToLetter = new Dictionary<Rank, string>
 		{
 			{ Rank.Two,   "2" },
 			{ Rank.Three, "3" },
@@ -99,12 +100,29 @@ namespace BridgeBidding
 			{ Rank.Ace,   "A" }
 		};
 
-        public static Dictionary<Suit, string> SuitToSymbol = new Dictionary<Suit, string>
+        public static Dictionary<Suit, string> SuitToLetter = new Dictionary<Suit, string>
 		{
 			{ Suit.Clubs,    "C" },
 			{ Suit.Diamonds, "D" },
 			{ Suit.Hearts,   "H" },
 			{ Suit.Spades,   "S" }
+		};
+
+		public static Dictionary<Suit, string> SuitToSymbol = new Dictionary<Suit, string>
+		{
+			{ Suit.Clubs,    "♣" },
+			{ Suit.Diamonds, "♦" },
+			{ Suit.Spades,   "♠" },
+			{ Suit.Hearts,   "♥" }
+		};
+
+		public static Dictionary<Strain, string> StrainToSymbol = new Dictionary<Strain, string>
+		{
+			{ Strain.Clubs,    "♣" },
+			{ Strain.Diamonds, "♦" },
+			{ Strain.Spades,   "♠" },
+			{ Strain.Hearts,   "♥" },
+			{ Strain.NoTrump, "NT" }
 		};
 
 	}

@@ -80,7 +80,7 @@ namespace BridgeBidding
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
-                return $"{_min} {suit} held by {ps.PairState.Pair}";
+                return $"{_min} {Card.SuitToSymbol[suit]} held by partnership";
             }
             return null;
         }
