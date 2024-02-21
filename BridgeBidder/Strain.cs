@@ -25,8 +25,9 @@ namespace BridgeBidding
 			{
 				case Strain.Clubs:    return "♣";
 				case Strain.Diamonds: return "♦";
-				case Strain.Hearts:   return "♠";
-				case Strain.Spades:   return "♥";
+				case Strain.Hearts:   return "♥";
+				case Strain.Spades:   return "♠";
+				case Strain.NoTrump:  return "NT";
 			}
 			return "";
 		}
