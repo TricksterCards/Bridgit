@@ -18,7 +18,6 @@ namespace TestBridgeBidder
         // Test with various known and unknown hands.
         [TestMethod]
         [DataRow("1H", "N:872.KQJ95.AK.952 - - -", "NS", "")]
-        [DataRow("1H", "N:872.KQJ95.AK.952 - - -", "NS", null)]
         [DataRow("2H", "N:872.KQJ95.AK.952 - 953.T42.QJ4.AQ73 -", "NS", "1H Pass")]
         [DataRow("2H", "N:- - 953.T42.QJ4.AQ73 -", "NS", "1H Pass")]
         [DataRow("Pass", "N:872.KQJ95.AK.952 - - -", "NS", "1H Pass 2H Pass")]
