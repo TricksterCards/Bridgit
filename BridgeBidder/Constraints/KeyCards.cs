@@ -37,10 +37,10 @@ namespace BridgeBidding
 
 		public string Describe(Call call, PositionState ps)
 		{
-			var sum = _count.Sum();
+			var s = _count.Count == 1 && _count.Contains(1) ? "" : "s";
 			if (_trumpSuit is Suit)
 			{
-				var str = $"{sum} key card{(sum == 1 ? "" : "s")}";
+				var str = $"{string.Join(" or ", _count)} key card{s}";
 				if (_haveQueen is bool haveQueen)
 				{
 					str += haveQueen ? " and queen" : " no queen";
@@ -49,7 +49,7 @@ namespace BridgeBidding
 			}
 			else
 			{
-				return $"{sum} Ace{(sum == 1 ? "" : "s")}";
+				return $"{string.Join(" or ", _count)} Ace{s}";
 			}
 		}
 
@@ -92,8 +92,8 @@ namespace BridgeBidding
 
 		public string Describe(Call call, PositionState ps)
 		{
-			var sum = _count.Sum();
-			return $"{sum} King{(sum == 1 ? "" : "s")}";
+			var s = _count.Count == 1 && _count.Contains(1) ? "" : "s";
+			return $"{string.Join(" or ", _count)} King{s}";
 		}
 
         public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
