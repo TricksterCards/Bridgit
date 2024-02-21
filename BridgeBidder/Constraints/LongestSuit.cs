@@ -40,7 +40,7 @@ namespace BridgeBidding
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
-                return $"longest suit is {Card.SuitToSymbol[suit]}";
+                return $"longest suit is {suit.ToSymbol()}";
             }
             return null;
         }

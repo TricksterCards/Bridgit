@@ -7,11 +7,6 @@ using System.Linq;
 namespace BridgeBidding
 {
 
-    public enum Suit { Clubs = 0, Diamonds = 1, Hearts = 2, Spades = 3 }
-
-	public enum Rank { Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace }
-
-
 	public class Card
 	{
 		public static Suit[] Suits = { Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades };
@@ -80,50 +75,7 @@ namespace BridgeBidding
 
         public override string ToString()
         {
-            return $"{RankToLetter[Rank]}{SuitToLetter[Suit]}";
+            return $"{Rank.ToLetter()}{Suit.ToLetter()}";
 		}
-
-		public static Dictionary<Rank, string> RankToLetter = new Dictionary<Rank, string>
-		{
-			{ Rank.Two,   "2" },
-			{ Rank.Three, "3" },
-			{ Rank.Four,  "4" },
-			{ Rank.Five,  "5" },
-			{ Rank.Six,   "6"},
-		    { Rank.Seven, "7" },
-			{ Rank.Eight, "8" },
-			{ Rank.Nine,  "9" },
-			{ Rank.Ten,   "T" },
-			{ Rank.Jack,  "J" },
-			{ Rank.Queen, "Q" },
-			{ Rank.King,  "K" },
-			{ Rank.Ace,   "A" }
-		};
-
-        public static Dictionary<Suit, string> SuitToLetter = new Dictionary<Suit, string>
-		{
-			{ Suit.Clubs,    "C" },
-			{ Suit.Diamonds, "D" },
-			{ Suit.Hearts,   "H" },
-			{ Suit.Spades,   "S" }
-		};
-
-		public static Dictionary<Suit, string> SuitToSymbol = new Dictionary<Suit, string>
-		{
-			{ Suit.Clubs,    "♣" },
-			{ Suit.Diamonds, "♦" },
-			{ Suit.Spades,   "♠" },
-			{ Suit.Hearts,   "♥" }
-		};
-
-		public static Dictionary<Strain, string> StrainToSymbol = new Dictionary<Strain, string>
-		{
-			{ Strain.Clubs,    "♣" },
-			{ Strain.Diamonds, "♦" },
-			{ Strain.Spades,   "♠" },
-			{ Strain.Hearts,   "♥" },
-			{ Strain.NoTrump, "NT" }
-		};
-
 	}
 }

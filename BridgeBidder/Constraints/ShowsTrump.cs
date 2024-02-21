@@ -31,7 +31,7 @@ namespace BridgeBidding
         {
             if (GetStrain(_trumpStrain, call) is Strain strain)
             {
-                return $"agree on {Card.StrainToSymbol[strain]}";
+                return $"agree on {strain.ToSymbol()}";
             }
             return null;
         }

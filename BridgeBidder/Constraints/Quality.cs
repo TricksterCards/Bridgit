@@ -49,7 +49,7 @@ namespace BridgeBidding
 		{
 			if (GetSuit(_suit, call) is Suit suit)
 			{
-				var suitSymbol = Card.SuitToSymbol[suit];
+				var suitSymbol = suit.ToSymbol();
 				var minStr = _min.ToString().ToLowerInvariant();
 				var maxStr = _max.ToString().ToLowerInvariant();
 
