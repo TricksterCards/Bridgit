@@ -49,7 +49,17 @@ namespace BridgeBidding
 		{
 			if (GetSuit(_suit, call) is Suit suit)
 			{
-				return _max == SuitQuality.Solid ? $"{suit} quality {_min}+" : $"{suit} suality {_min}-{_max}";
+				var suitSymbol = suit.ToSymbol();
+				var minStr = _min.ToString().ToLowerInvariant();
+				var maxStr = _max.ToString().ToLowerInvariant();
+
+				if (_max == SuitQuality.Solid)
+					return $"{suitSymbol} quality {minStr}+";
+					
+				if (_min == _max)
+					return $"{suitSymbol} quality {minStr}";
+
+				return $"{suitSymbol} quality {minStr}–{maxStr}";
 			}
 			return null;
 		}

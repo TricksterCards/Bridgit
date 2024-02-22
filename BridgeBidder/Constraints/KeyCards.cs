@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BridgeBidding
 {
-    public class KeyCards : DynamicConstraint, IShowsState
+    public class KeyCards : DynamicConstraint, IShowsState, IDescribeConstraint
 	{
 		HashSet<int> _count;
 		Suit? _trumpSuit;
@@ -35,6 +35,24 @@ namespace BridgeBidding
 			return _count.Intersect(keyCards).Count() > 0;
 		}
 
+		public string Describe(Call call, PositionState ps)
+		{
+			var s = _count.Count == 1 && _count.Contains(1) ? "" : "s";
+			if (_trumpSuit is Suit)
+			{
+				var str = $"{string.Join(" or ", _count)} key card{s}";
+				if (_haveQueen is bool haveQueen)
+				{
+					str += haveQueen ? " and queen" : " no queen";
+				}
+				return str;
+			}
+			else
+			{
+				return $"{string.Join(" or ", _count)} Ace{s}";
+			}
+		}
+
 		public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
 		{
 			if (_trumpSuit is Suit suit)
@@ -53,7 +71,7 @@ namespace BridgeBidding
 	}
 
 
-	public class Kings : DynamicConstraint, IShowsState
+	public class Kings : DynamicConstraint, IShowsState, IDescribeConstraint
 	{
 		HashSet<int> _count;
 
@@ -72,7 +90,13 @@ namespace BridgeBidding
 			return true;	// If we don't know then we don't know...
 		}
 
-		public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+		public string Describe(Call call, PositionState ps)
+		{
+			var s = _count.Count == 1 && _count.Contains(1) ? "" : "s";
+			return $"{string.Join(" or ", _count)} King{s}";
+		}
+
+        public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
 		{
 			showHand.ShowCountKings(_count);
 		}

@@ -5,9 +5,6 @@ using System.Diagnostics;
 
 namespace BridgeBidding
 {
-    public enum Strain { Clubs = 0, Diamonds = 1, Hearts = 2, Spades = 3, NoTrump = 4 }
-
-
 
     public abstract class Call : IEquatable<Call>, IComparable<Call>
     {

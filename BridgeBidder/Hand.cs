@@ -153,7 +153,7 @@ namespace BridgeBidding
 				{
 					foreach (var card in suitCards[suit])
 					{
-						sb.Append(Card.RankToSymbol[card.Rank]);
+						sb.Append(card.Rank.ToLetter());
 					}
 				}
                 if (suit != Suit.Clubs) sb.Append(".");
