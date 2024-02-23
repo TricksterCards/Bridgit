@@ -115,6 +115,46 @@ namespace TestBridgeBidder
             Assert.AreEqual(game.Vulnerable, Vulnerable.NS);   
         }
 
+        // Test the game auction
+        [TestMethod]
+        public void TestAuction()
+        {
+            var game = new Game();
+            game.SetStandardBoard(1);
+            Assert.AreEqual(game.Dealer, Direction.N);
+            game.Auction.Add(Bid._1H);
+            game.Auction.Add(Call.Pass);
+            game.Auction.Add(Call.Pass);
+            game.Auction.Add(Call.Pass);
+            Assert.AreEqual(game.Auction.Count, 4);
+            Assert.AreEqual(game.Auction[0].Call, Bid._1H);
+            Assert.AreEqual(game.Auction[1].Call, Call.Pass);
+            Assert.AreEqual(game.Auction[2].Call, Call.Pass);
+            Assert.AreEqual(game.Auction[3].Call, Bid.Pass);
+            Assert.AreEqual(game.Auction[0].HasNote, false);
+            Assert.AreEqual(game.Auction[1].HasNote, false);
+            Assert.AreEqual(game.Auction[2].HasNote, false);
+            Assert.AreEqual(game.Auction[3].HasNote, false);
+            game.Auction[0].Note = "Note 1";
+            game.Auction[2].Note = "Note 2";
+            Assert.AreEqual(game.Auction[0].HasNote, true);
+            Assert.AreEqual(game.Auction[1].HasNote, false);
+            Assert.AreEqual(game.Auction[2].HasNote, true);
+            Assert.AreEqual(game.Auction[3].HasNote, false);
+            Assert.AreEqual(game.Auction[0].Note, "Note 1");
+            Assert.AreEqual(game.Auction[2].Note, "Note 2");
+            
+            Assert.IsTrue(game.Auction.IsValid());
+            game.Auction[2].Call = Call.Double;
+            Assert.IsFalse(game.Auction.IsValid());
+            game.Auction[2].Call = Bid._2H;
+            Assert.IsTrue(game.Auction.IsValid());
+            game.Auction[1].Call = Bid._3NT;
+            Assert.IsFalse(game.Auction.IsValid());
+            game.Auction[2].Call = Call.Pass;
+            Assert.IsTrue(game.Auction.IsValid());
+        }
+
     }
 }
   
