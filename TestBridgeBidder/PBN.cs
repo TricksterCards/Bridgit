@@ -43,7 +43,7 @@ namespace TestBridgeBidder
                                 }
                                 );
                     }
-                    direction = BridgeBidder.LeftHandOpponent(direction);
+                    direction = direction.LeftHandOpponent();
                     bidHistory += $"{call} ";
                 }
             }

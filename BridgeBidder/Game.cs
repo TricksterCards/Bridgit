@@ -196,7 +196,7 @@ namespace BridgeBidding
             foreach (var handString in handStrings)
             {
 				Deal[direction] = Hand.Parse(handString);
-				direction = BridgeBidder.LeftHandOpponent(direction);
+				direction = direction.LeftHandOpponent();
             }
 
 			int totalExpected = 0;
@@ -237,7 +237,7 @@ namespace BridgeBidding
 			for (int h = 0; h < 4; h++)
 			{
 				Deal[direction] =  new Hand(deck.GetRange(h * 13, 13));
-				direction = BridgeBidder.LeftHandOpponent(direction);
+				direction = direction.LeftHandOpponent();
 			}
 		}
 

@@ -89,7 +89,7 @@ namespace BridgeBidding
 		public bool PassedOut => this.CallsRemaining == 0 && Bid == null;
 		public bool IsOurs(Direction direction)
 		{
-			return (Declarer != null && (Declarer == direction || Declarer == BridgeBidder.Partner(direction)));
+			return (Declarer != null && (Declarer == direction || Declarer == direction.Partner()));
 		}
 
 
@@ -158,9 +158,9 @@ namespace BridgeBidding
 				foreach (var namedStrain in FirstToNameStrain[bid.Strain])
 				{
 					if (namedStrain == by) return;
-					if (namedStrain == BridgeBidder.Partner(by))
+					if (namedStrain == by.Partner())
 					{
-						Declarer = BridgeBidder.Partner(by);
+						Declarer = by.Partner();
 						return;
 					}
 				}
@@ -213,7 +213,7 @@ namespace BridgeBidding
 			foreach (var call in calls)
 			{
 				contract.MakeCall(call, d);
-				d = BridgeBidder.LeftHandOpponent(d);
+				d = d.LeftHandOpponent();
 			}
 			return contract;
 		}
@@ -231,7 +231,7 @@ namespace BridgeBidding
 					return false;
 				}
 				contract.MakeCall(call, d);
-				d = BridgeBidder.LeftHandOpponent(d);
+				d = d.LeftHandOpponent();
 			}
 			return true;
 		}

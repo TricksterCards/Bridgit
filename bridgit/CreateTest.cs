@@ -62,7 +62,7 @@ public static class CreateTest
                 }
                 bs.MakeCall(bestCall);
             }
-            d = BridgeBidder.LeftHandOpponent(d);
+            d = d.LeftHandOpponent();
         }
         var finalCall = bs.GetCallChoices().BestCall;
         // TODO: finalCall == null is bad.  Need to do something more here...

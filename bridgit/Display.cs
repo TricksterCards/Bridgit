@@ -115,7 +115,7 @@ static class Display
         {
             Console.Write(showBidNumbers? "         " : "      ");
             col += 1;
-            direction = BridgeBidder.LeftHandOpponent(direction);
+            direction = direction.LeftHandOpponent();
         }
         foreach (var call in game.Auction.Calls)
         {

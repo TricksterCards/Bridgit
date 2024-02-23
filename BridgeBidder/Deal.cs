@@ -27,7 +27,7 @@ namespace BridgeBidding
 			while (true)
 			{
 				sb.Append(this[direction] == null ? "-" : this[direction].ToString());
-				direction = BridgeBidder.LeftHandOpponent(direction);
+				direction = direction.LeftHandOpponent();
 				if (direction == dealer)
 				{
 					return sb.ToString();
