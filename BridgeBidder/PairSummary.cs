@@ -98,10 +98,10 @@ namespace BridgeBidding
             foreach (Suit suit in Card.Suits)
             {
                 Suits[suit] = new SuitSummary(hs1.Suits[suit], hs2.Suits[suit]);
-                if (pa.Strains[Call.SuitToStrain(suit)].LongHand != null)
+                if (pa.Strains[suit.ToStrain()].LongHand != null)
                 { 
                     ShownSuits.Add(suit);
-                    ShownStrains.Add(Call.SuitToStrain(suit));
+                    ShownStrains.Add(suit.ToStrain());
                 }
             }
             // TODO: Need to show NT if that has been bid...  ShownStrains.Add(...)

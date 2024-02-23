@@ -120,7 +120,7 @@ namespace BridgeBidding
             {
                 if (AgreedStrain is Strain strain)
                 {
-                    return Call.StrainToSuit(strain);
+                    return strain.ToSuit();
                 }
                 return null;
             }

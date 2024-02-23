@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using System.Threading;
+
 namespace BridgeBidding
 {
 	public enum Suit { Clubs = 0, Diamonds = 1, Hearts = 2, Spades = 3 }
@@ -27,6 +30,18 @@ namespace BridgeBidding
 				case Suit.Spades:   return "♠";
 			}
 			return "";
+		}
+
+		public static Strain ToStrain(this Suit s)
+		{
+			switch (s)
+			{
+				case Suit.Clubs:    return Strain.Clubs;
+				case Suit.Diamonds: return Strain.Diamonds;
+				case Suit.Hearts:   return Strain.Hearts;
+				case Suit.Spades:   return Strain.Spades;
+			}
+			throw new System.Exception("Invalid suit");
 		}
 	}
 }

@@ -25,13 +25,13 @@ namespace BridgeBidding
             if (_showBidSuit &&
                 GetSuit(null, call) is Suit suit)
             {
-                showAgreements.Strains[Call.SuitToStrain(suit)].ShowLongHand(ps);
+                showAgreements.Strains[suit.ToStrain()].ShowLongHand(ps);
             }
             if (_suits != null)
             {
                 foreach (var s in _suits)
                 {
-                    showAgreements.Strains[Call.SuitToStrain(s)].ShowLongHand(ps);
+                    showAgreements.Strains[s.ToStrain()].ShowLongHand(ps);
                 }
             }
         }

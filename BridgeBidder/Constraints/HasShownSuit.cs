@@ -15,7 +15,7 @@ namespace BridgeBidding
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
-                var strain = Call.SuitToStrain(suit);
+                var strain = suit.ToStrain();
                 if (_eitherPartner) {
                     return ps.PairState.Agreements.Strains[strain].Shown;
                 }

@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace BridgeBidding
 {
 
@@ -30,6 +32,19 @@ namespace BridgeBidding
 				case Strain.NoTrump:  return "NT";
 			}
 			return "";
+		}
+
+		public static Suit? ToSuit(this Strain s)
+		{
+			switch (s)
+			{
+				case Strain.Clubs:    return Suit.Clubs;
+				case Strain.Diamonds: return Suit.Diamonds;
+				case Strain.Hearts:   return Suit.Hearts;
+				case Strain.Spades:   return Suit.Spades;
+			}
+			Debug.Assert(s == Strain.NoTrump);
+			return null;
 		}
 	}
 }

@@ -358,8 +358,7 @@ namespace BridgeBidding
 
 		public static Constraint ShowsTrumpSuit(Suit? trumpSuit)
 		{
-			if (trumpSuit == null) return ShowsTrump;
-			return AgreeOnStrain(Call.SuitToStrain(trumpSuit));
+			return (trumpSuit is Suit s) ? AgreeOnStrain(s.ToStrain()) : ShowsTrump;
 		}
 
 
