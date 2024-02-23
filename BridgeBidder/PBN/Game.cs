@@ -7,12 +7,8 @@ using System.Threading;
 
 namespace BridgeBidding
 {
- 
-
-
 	public class Game
 	{
-
 		public string Event = null;
 		public int Board = 0;	
 		public Scoring Scoring = Scoring.MP;
@@ -82,10 +78,6 @@ namespace BridgeBidding
 			var game = new Game();
             var tags = PBN.FromString.TokenizeTags(pbnGame);
 
-			// This code is not completely correct in that it triggers off of the [Event] tag to indicate the
-			// start of a game section of a afile.
-
-
             foreach (var tag in tags)
             {
 				if (tag.Name != "Note")
@@ -112,7 +104,6 @@ namespace BridgeBidding
 					}
 					if (tag.Name == "Deal")
 					{
-                        // TODO: THIS IS WRONG.  WE SHOULD NOT OVERRIDE DEALER.
 						game.ParseDeal(tag.Value);
 					}
 					if (tag.Name == "Auction")
@@ -257,55 +248,6 @@ namespace BridgeBidding
     
 
 
-/*
-
-
-		public class Notes
-		{
-			private List<string> _notes = new List<string>();
-
-			public string GetValue(string noteReference)
-			{
-				int i;
-				if (noteReference.Length < 3 || !noteReference.StartsWith("=") || !noteReference.EndsWith("=") ||
-				   (!int.TryParse(noteReference.Substring(1, noteReference.Length - 2), out i)))
-				{
-					throw new FormatException($"Note reference {noteReference} is not properly formed.");
-				}
-				if (i < 1 || i > _notes.Count)
-				{
-					throw new FormatException($"Note reference {noteReference} refers to a non-existant note.");
-				}
-				return _notes[i - 1];
-			}
-
-			// Returns a note ID reference in the form "=x=" where x is an integer starting with 1.
-			public string Add(string note)
-			{
-				var i = _notes.IndexOf(note);
-				if (i == -1)
-				{
-					i = _notes.Count;
-					_notes.Add(note);
-				}
-				return $"={i+1}=";
-			}
-			public List<string> GetValues()
-			{
-				var values = new List<String>(_notes.Count);
-				for (int i = 0; i < _notes.Count; i++)
-				{
-					values.Add($"{i+1}:{_notes[i]}");
-				}
-				return values;
-			}
-            public void Clear()
-            {
-                _notes.Clear();
-			}
-		}
-
-*/
 
 		public Dictionary<string, string> Tags = new Dictionary<string, string>();
 		public Dictionary<string, List<String>> TagData = new Dictionary<string, List<string>>();
@@ -334,34 +276,7 @@ namespace BridgeBidding
 		};
 
 
-		// TODO: Decide on the model for this.  Should clients call GetXXX like GetBoard() and GetAuction()
-		// and hide the Auction.FromGame() internally.
 
-
-		// More food for thought.  Should there be a SetAuction() which takes an auction object and updates
-		// the current game?  Seems reasonable.  So instead of auction.Update(game) would be  Game.UpdateFrom(auction)...
-		// This model is all over the place right now.
-
-		// Another idea is that Board, Dealer, etc are not handled as tags and are objects.  So Deal() is the deal.
-		// If you change it and then call game.ToString() the game is changed.  So we parse known things and keep them
-		// as objects that can be directly manipulated.
-
-/*
-		private string GetSectionWithNotes(string tagName, Notes notes)
-		{
-			var s = "";
-			if (Tags.ContainsKey(tagName))
-			{
-				s += TagString(tagName, Tags[tagName]);
-				s += GetTagData(tagName);
-				foreach (var note in notes.GetValues())
-				{
-					s += TagString("Note", note);
-				}
-			}
-			return s;
-		}
-*/
 		private string GetTagData(string tagName)
 		{
 			var s = "";
@@ -467,76 +382,5 @@ namespace BridgeBidding
 			}
 		}
 
-  //      public void Update(BiddingState bs)
-  //      {
-//			this.Dealer = bs.Dealer.Direction;
-  //          this.Vulnerable = bs.Game.Vulnerable;
-//			this.ParseDeal(bs.Game.Deal.ToString());	// Kind of ugly
-
-//			Auction.Update(bs);
-	
-//			if (bs.Contract.AuctionComplete)
-//			{
-//				// TODO: Should contract and declarer be elevated to structured properties???
-//				Tags["Contract"] = bs.Contract.ToString();
-//				if (bs.Contract.Declarer != null)
-//				{
-//					Tags["Declarer"] = bs.Contract.Declarer.Direction.ToString();
-//				}
-//			}
-  //      }
-
-/*
-		private void UpdateAuction(BiddingState bs)
-		{
-			Tags["Auction"] = bs.Dealer.Direction.ToString();
-            AuctionNotes.Clear();
-			var auction = bs.GetAuction();
-			List<string> lines = new List<string>();
-			var curLine = "";
-			for (int i = 0; i < auction.Count; i++)
-			{
-				curLine += auction[i].Call.ToString();
-				string note = "";
-				foreach (var annotation in auction[i].Annotations)
-				{
-					if (annotation.Type == CallAnnotation.AnnotationType.Alert ||
-						annotation.Type == CallAnnotation.AnnotationType.Announce)
-					{
-						if (note.Length > 0)
-						{
-							note += ";";
-						}
-						note += $"{annotation.Type} {annotation.Text}";
-					}
-				}
-				if (note.Length > 0)
-				{
-					string noteReference = AuctionNotes.Add(note);
-					curLine += $" {noteReference}";
-				}
-
-				if (i + 1 == auction.Count && !bs.Contract.AuctionComplete)
-				{
-					curLine += " +";
-				}
-
-				if (i % 4 == 3)
-				{
-					lines.Add(curLine);
-					curLine = "";
-				}
-				else if (i + 1 < auction.Count)
-				{
-					curLine += " ";
-				}
-			}
-			if (curLine.Length > 0)
-			{
-				lines.Add(curLine);
-			}
-			TagData["Auction"] = lines;
-		}
-*/
     }
 }
