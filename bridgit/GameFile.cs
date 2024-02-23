@@ -8,6 +8,7 @@ using BridgeBidding;
 using BridgeBidding.PBN;
 using System.Text;
 
+
 namespace bridgit;
 
 public class GameFile: List<Game>
@@ -17,7 +18,28 @@ public class GameFile: List<Game>
 
     public bool Loaded = false;
 
-    public GameFile(string filePath)
+    private static string GetTestDirPath()
+    {
+        var execDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        var dir = Path.Combine(execDir, "..", "..", "..", "..", "TestBridgeBidder");
+        return Path.GetFullPath(dir);
+    }
+
+    public static GameFile NewGame(string subdirectory, string fileName)
+    {
+        var testDir = GetTestDirPath();
+        var filePath = Path.Combine(testDir, subdirectory, $"{fileName}.pbn");
+        return new GameFile(filePath);
+    }
+
+    public static bool FileExists(string subdirectory, string fileName)
+    {
+        var testDir = GetTestDirPath();
+        var filePath = Path.Combine(testDir, subdirectory, $"{fileName}.pbn");
+        return File.Exists(filePath);
+    }
+
+    private GameFile(string filePath)
     {
         this.FilePath = filePath;
         this.FileName = Path.GetFileNameWithoutExtension(filePath);
@@ -39,10 +61,7 @@ public class GameFile: List<Game>
             sb.Append(game.ToString());
             sb.AppendLine();
         }
-        Console.WriteLine("*** FOR SAFETY JUST PRINTING OUT GAME FILE CONTENTS FIRST! ***");
-        Console.WriteLine(sb.ToString());
-        Console.ReadLine();
-       // File.WriteAllText(FilePath, sb.ToString());
+        File.WriteAllText(FilePath, sb.ToString());
     }
 
     public void RenumberBoards()
@@ -56,9 +75,7 @@ public class GameFile: List<Game>
     public static GameFile[] EnumDirectory(string subdirectory)
     {
         var gameFiles = new List<GameFile>();
-        var execDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var dir = Path.Combine(execDir, "..", "..", "..", "..", "TestBridgeBidder");
-        dir = Path.GetFullPath(dir);
+        var dir = GetTestDirPath();
         var files = Directory.GetFiles(Path.Combine(dir, subdirectory), "*.pbn");
         foreach (var file in files)
         {

@@ -14,6 +14,8 @@ public class InterractiveApp
 {
 
     
+    public static string TestDirectory = "TwoOverOneGameForce";
+
     private GameFile _gameFile = null;
 
     private Game[] _failedTests = new Game[0];
@@ -181,13 +183,21 @@ public class InterractiveApp
         bool singleOnly = ReadYesNo("Single hand only");
         var numTests = ReadPostiveInt("Number of tests: ");
 
-        var fileName = "Auction";
-        foreach (Call call in initialAuction)
-        {
-            fileName += $" {call}";
-        }
+        var fileName = string.Join(' ', initialAuction.Select(c => c.ToString()));
+        if (fileName == "") fileName = "Open";
 
-        var gameFile = new GameFile(fileName);
+        Console.Write($"Filename (blank for default \"{fileName}\"): ");
+        var input = Console.ReadLine();
+        if (!string.IsNullOrEmpty(input)) fileName = input;
+
+        if (GameFile.FileExists(TestDirectory, fileName))
+        {
+            if (!Confirm("File already exists.  Overwrite (Y/N)? "))
+            {
+                return;
+            }
+        }
+        var gameFile = GameFile.NewGame(TestDirectory, fileName);
         for (int i = 0; i < numTests; i++)
         {
             gameFile.Add(CreateTest.NewTest(i+1, singleOnly, initialAuction, desiredCalls));
@@ -202,7 +212,7 @@ public class InterractiveApp
     private void LoadTests()
     {
         Console.Clear();
-        var gameFiles = GameFile.EnumDirectory("TwoOverOneGameForce");
+        var gameFiles = GameFile.EnumDirectory(TestDirectory);
         for (int i = 0; i < gameFiles.Length; i++)
         {
             Console.WriteLine($"{i + 1, 3}: {gameFiles[i].FileName}");
