@@ -213,6 +213,7 @@ namespace BridgeBidding
 			foreach (var call in calls)
 			{
 				contract.MakeCall(call, d);
+				d = BridgeBidder.LeftHandOpponent(d);
 			}
 			return contract;
 		}
@@ -230,6 +231,7 @@ namespace BridgeBidding
 					return false;
 				}
 				contract.MakeCall(call, d);
+				d = BridgeBidder.LeftHandOpponent(d);
 			}
 			return true;
 		}
