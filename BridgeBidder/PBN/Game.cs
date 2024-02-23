@@ -37,6 +37,19 @@ namespace BridgeBidding
 			Auction = new Auction(this);
 		}
 
+		public void SetStandardBoard(int board)
+		{
+			if (board <= 0)
+			{
+				throw new ArgumentException($"Board number must be >=0.  Value is {board}");
+			}
+			this.Board = board;
+			this.Dealer = (Direction)((board - 1) % 4);	// Deal goes N, E, S, W as does enum.
+			int vulOffset = ((board - 1) / 4);
+			this.Vulnerable = (Vulnerable)((board - 1 + vulOffset) % 4);
+		}
+
+
 
 		public Game Clone()
 		{
