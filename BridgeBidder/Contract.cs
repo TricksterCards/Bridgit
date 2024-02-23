@@ -217,6 +217,22 @@ namespace BridgeBidding
 			return contract;
 		}
 
+		public static bool IsValidAuction(Direction dealer, IEnumerable<Call> calls, out string error)
+		{
+			error = null;
+			var contract = new ContractState();
+			Direction d = dealer;
+			foreach (var call in calls)
+			{
+				error = contract.CallError(call, d);
+				if (error != null)
+				{
+					return false;
+				}
+				contract.MakeCall(call, d);
+			}
+			return true;
+		}
 
 	}
 

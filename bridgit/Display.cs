@@ -1,37 +1,77 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO.Compression;
-using System.Xml.Schema;
 using BridgeBidding;
 using BridgeBidding.PBN;
 
-namespace bridgit;
+
+
+
 
 static class Display
 {
     public static void Game(Game game)
     {
-        Console.WriteLine($"{game.Event}");
+        Console.WriteLine($"Board {game.Board} - {game.Event}");
         Console.WriteLine($"{game.Dealer} deals, {game.Vulnerable} vulnerable");
+        Console.WriteLine();
         Hands(game.Deal);
     }
     public static void Hands(Dictionary<Direction, Hand> hands)
     {
+        var hcp = new Dictionary<Direction, int>();
+        foreach (var d in Enum.GetValues<Direction>())
+        {
+            hcp[d] = hands[d] != null ? hands[d].HighCardPoints() : -1;
+        }
         Display1Hand(10, hands[Direction.N]);
         Display2Hands(1, hands[Direction.W], 23, hands[Direction.E]);
-        Display1Hand(10, hands[Direction.S]);        
+        Display1Hand(10, hands[Direction.S], hcp);        
     }
 
-    public static void Display1Hand(int indent, Hand hand)
+    private static void DisplayHCP(int p)
+    {
+        Console.ForegroundColor = ConsoleColor.DarkBlue;
+        Console.Write(p < 0 ? " -" : $"{p, 2}");
+        Console.ForegroundColor = ConsoleColor.White;
+    }
+
+    public static void Display1Hand(int indent, Hand hand, Dictionary<Direction, int>? hcp = null)
     {
         var suitRanks = SuitRanks(hand);
         Debug.Assert(suitRanks.Length == Hand.SuitOrder.Length);
         for (var suitIndex = 0; suitIndex < Hand.SuitOrder.Length; suitIndex++)
         {
-            for (int i = 0; i < indent; i++) Console.Write(" ");
-            var s = Hand.SuitOrder[suitIndex].ToString().Substring(0, 1);
-            Console.WriteLine($"{s}: {suitRanks[suitIndex]}");
+            var i = 0;
+            if (hcp != null)
+            {
+                switch (suitIndex)
+                {
+                    case 1:
+                        Console.Write("   ");
+                        DisplayHCP(hcp[Direction.N]);
+                        i = 5;
+                        break;
+                    case 2:
+                        Console.Write(" ");
+                        DisplayHCP(hcp[Direction.W]);
+                        Console.Write("  ");
+                        DisplayHCP(hcp[Direction.E]);
+                        i = 7;
+                        break;
+                    case 3:
+                        Console.Write("   ");
+                        DisplayHCP(hcp[Direction.S]);
+                        i = 5;
+                        break;
+                }
+            }
+            while (i < indent) 
+            {
+                Console.Write(" ");
+                i++;
+            }
+            var s = Hand.SuitOrder[suitIndex];
+            Console.WriteLine($"{s.ToSymbol()}: {suitRanks[suitIndex], -13}");
         }
     }
 
@@ -44,7 +84,7 @@ static class Display
         for (var suitIndex = 0; suitIndex < Hand.SuitOrder.Length; suitIndex++)
         {
             for (int i = 0; i < indentWest; i++) Console.Write(" ");
-            var s = Hand.SuitOrder[suitIndex].ToString().Substring(0, 1);
+            var s = Hand.SuitOrder[suitIndex].ToSymbol();
             Console.Write($"{s}: {westSuitRanks[suitIndex]}");
             var curIndent = indentWest + 3 + westSuitRanks[suitIndex].Length;
             while (curIndent < indentEast)
@@ -67,7 +107,7 @@ static class Display
 
     public static void Auction(Game game, bool showBidNumbers = false, int stopAtIndex = int.MaxValue)
     {
-        Console.WriteLine(showBidNumbers ? "   West     North    East     South" : "West  North East  South");
+        AuctionTitles(game.Vulnerable, showBidNumbers);
         var direction = Direction.W;
         int col = 0;
         int bidIndex = 1;
@@ -86,6 +126,29 @@ static class Display
             if (col % 4 == 0) Console.WriteLine();
         }
         if (col % 4 != 0) Console.WriteLine();
+    }
+
+    public static void AuctionTitles(Vulnerable vul, bool showBidNumbers)
+    {
+        var titles = new String[] { "WEST", "NORTH", "EAST", "SOUTH" };
+        var ewColor = vul == Vulnerable.All || vul == Vulnerable.EW ? ConsoleColor.Red : ConsoleColor.White;
+        var nsColor = vul == Vulnerable.All || vul == Vulnerable.NS ? ConsoleColor.Red : ConsoleColor.White;
+        int i = 0;
+        foreach (var title in titles)
+        {
+            Console.BackgroundColor = (i % 2 == 0) ? ewColor : nsColor;
+            if (showBidNumbers)
+            {
+                Console.Write($"{title, -9}");
+            }
+            else
+            {
+                Console.Write($"{title, -6}");
+            }  
+            i++;
+        }
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.WriteLine();
     }
 
 }

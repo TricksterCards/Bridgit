@@ -72,7 +72,8 @@ namespace BridgeBidding
         }
         static public Call Parse(string str)
         {
-            if (str == "Pass") { return Pass; }
+            // TODO: Determine if all of these are case insensitive.  I think they should be.
+            if (str == "Pass" || str == "PASS") { return Pass; }
             if (str == "X") { return Double; }
             if (str == "XX") { return Redouble; }
             int level;

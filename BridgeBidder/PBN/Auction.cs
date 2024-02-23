@@ -13,7 +13,7 @@ namespace BridgeBidding
     {
         public Game Game { get; } 
 
-        public Call[] Calls => this.Select(annotatedCall => annotatedCall.Call).ToArray();
+        public List<Call> Calls => this.Select(annotatedCall => annotatedCall.Call).ToList();
 
         internal Auction(Game game)
         {

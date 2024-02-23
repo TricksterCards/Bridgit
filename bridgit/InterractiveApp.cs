@@ -6,36 +6,86 @@ using System.Diagnostics;
 using BridgeBidding;
 using BridgeBidding.PBN;
 using System.Text;
+using System.Data;
 
 namespace bridgit;
 
 public class InterractiveApp
 {
+
+    
+    private GameFile _gameFile = null;
+
+    private Game[] _failedTests = new Game[0];
+    private int _selectedGame = 0;
+
     public static void Show()
     {
-        Console.Clear();
+        var app = new InterractiveApp();
         Console.Title = "Bridgit Command Line Test Tool";
+        app.RunCommandLoop();
+    }
+
+    private string PromptForInput(string prompt, params string[] valid)
+    {
         while (true)
         {
-            Console.WriteLine("Your choices are:");
-            Console.WriteLine("   Enter a number to bid random deals");
-            Console.WriteLine("   Paste PBN text and run a test");
-            Console.WriteLine("   \"Q\" to Quit");
+            Console.Write(prompt);
             var input = Console.ReadLine();
-            if (input == null) input = "";
+            if (input != null)
+            {
+                input = input.ToUpper();
+                if (valid.Contains(input)) return input;
+            }
+        }
+    }
+
+    private bool Confirm(string prompt)
+    {
+        return (PromptForInput(prompt, "Y", "N") == "Y");
+    }
+
+    private void RunCommandLoop()
+    {
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("Bridgit Test Editor");
+            Console.WriteLine();
+            Console.WriteLine("L: Load a test file");
+            Console.WriteLine("C: Create a new test file");
+            Console.WriteLine("Q: Quit this program");
+            var input = PromptForInput("Command: ", "L", "C", "Q");
+            switch (input)
+            {
+                case "L":
+                    LoadTests();
+                    break;
+                case "C":
+                    CreateTests();
+                    break;
+                case "Q": return;
+            }
+        }
+    }
+/*
+
+
             int numDeals;
-            if (input.ToUpper().Equals("Q")) return;
+            if (input.Equals("Q")) return;
             if (int.TryParse(input, out numDeals))
             {
-                if (int.TryParse(input, out numDeals))
+                Console.Write("Initial auction: ");
+                var auction = Console.ReadLine();
+                Console.Write("Final call: ");
+                var call = Console.ReadLine();
+                var gen = new CreateTestXXX(auction, call, false);
+                for (int i = 0; i < numDeals; i++)
                 {
-                    for (int i = 0; i < numDeals; i++)
-                    {
-                        var game = new Game();
-                        game.DealRandomHands();
-                        game.Board = i+1;
-                        BidDeal(game);
-                    }
+                    var g = gen.Generate();
+                    Display.Game(g);
+                    Display.Auction(g);
+                    Console.WriteLine();
                 }
             }
             else if (input.StartsWith("["))
@@ -48,15 +98,221 @@ public class InterractiveApp
             }
             Console.WriteLine();
         }
+
+    }
+*/
+
+    private int ReadPostiveInt(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            int i;
+            if (int.TryParse(input, out i) && i > 0) return i;
+        }
+    }
+
+    private bool ReadYesNo(string prompt)
+    {
+        while (true)
+        {
+            Console.Write($"{prompt} (Y/N)? ");
+            var input = Console.ReadLine();
+            if (input != null)
+            {
+                input = input.ToUpper();
+                if (input == "Y") return true;
+                if (input == "N") return false;
+            }
+        }
+    }
+
+    private List<Call> ReadAuction(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            var game = new Game();
+            game.ParseAuction(input);
+            return game.Auction.Calls;
+        }
+    }
+
+    private HashSet<Call> ReadCalls(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            var error = false;
+            var calls = new HashSet<Call>();
+            if (!string.IsNullOrEmpty(input))
+            {
+                var callStrings = input.Split(' ');
+                foreach (var c in callStrings)
+                {
+                    Call call;
+                    if (Call.TryParse(c, out call))
+                    {
+                        calls.Add(call);
+                    }
+                    else
+                    {
+                        error = true;
+                    }
+                }
+            }
+            if (!error) return calls;
+        }
+    }
+
+    private void CreateTests()
+    {
+        Console.Clear();
+        Console.WriteLine("Create a new test file");
+    //    Console.Write("Filename (blank for default): ");
+    //    var filename = Console.ReadLine();
+        Console.WriteLine();
+        
+        var initialAuction = ReadAuction("Initial auction: ");
+        var desiredCalls = ReadCalls("Desired calls (leave blank for any): ");
+        bool singleOnly = ReadYesNo("Single hand only");
+        var numTests = ReadPostiveInt("Number of tests: ");
+
+        var fileName = "Auction";
+        foreach (Call call in initialAuction)
+        {
+            fileName += $" {call}";
+        }
+
+        var gameFile = new GameFile(fileName);
+        for (int i = 0; i < numTests; i++)
+        {
+            gameFile.Add(CreateTest.NewTest(i+1, singleOnly, initialAuction, desiredCalls));
+        }
+
+        this._failedTests = new Game[0];
+        this._gameFile = gameFile;
+        this._selectedGame = 0;
+        EditGameFile();
+    }
+
+    private void LoadTests()
+    {
+        Console.Clear();
+        var gameFiles = GameFile.EnumDirectory("TwoOverOneGameForce");
+        for (int i = 0; i < gameFiles.Length; i++)
+        {
+            Console.WriteLine($"{i + 1, 3}: {gameFiles[i].FileName}");
+        }
+        Console.WriteLine();
+        Console.Write("Number of file to load or 0 to exit: ");
+        while (true)
+        {
+            var input = Console.ReadLine();
+            if (input == null) input = "";
+            int selected;
+            if (int.TryParse(input, out selected) && selected >= 0 && selected <= gameFiles.Length + 1)
+            {
+                if (selected == 0) return;
+                this._gameFile = gameFiles[selected - 1];
+                this._gameFile.Load();
+                this._selectedGame = 0;
+                this._failedTests = TestEditor.FailingTests(_gameFile);
+                EditGameFile();
+                return;
+            }
+        }
+    }
+
+    private void EditGameFile()
+    {
+        while (true)
+        {
+            Console.Clear();
+            if (_failedTests.Length > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{_failedTests.Length} auction are failing.");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            Console.WriteLine($"Editing {_gameFile.FileName}, Board {_gameFile[_selectedGame].Board}, {_selectedGame + 1} of {_gameFile.Count}");
+            var testEditor = new TestEditor(_gameFile[_selectedGame]);
+            testEditor.RunAuctionTest();
+            Console.WriteLine();
+
+            var input = PromptForInput("E: Edit, D: Delete, A: Add, R: Re-run auction, ?: Details, #: Renumber S: Save, N: Next, Q: Quit ",
+                                        "E", "D", "A", "R", "S", "?", "N", "", "Q", "P", "#", "PBN");
+            // TOOD: All of the commands...
+            switch (input)
+            {
+                case "Q":
+                    return;
+
+                case "PBN":
+                    Console.WriteLine();
+                    Console.WriteLine(_gameFile[_selectedGame].ToString());
+                    Console.ReadLine();
+                    break;
+
+                case "E":
+                    var editor = new TestEditor(_gameFile[_selectedGame]);
+                    editor.EditAuction();
+                    break;
+
+                case "#":
+                    _gameFile.RenumberBoards();
+                    break;
+
+                case "S":
+                    if (Confirm("Are you sure you want to save (Y/N)? "))
+                    {
+                        _gameFile.Save();
+                        Console.WriteLine("File saved");
+                    }
+                    break;
+                
+                case "":
+                case "N":
+                    _selectedGame += _selectedGame < _gameFile.Count - 1 ? 1 : 0;
+                    break;
+
+                case "P":
+                    _selectedGame -= _selectedGame > 0 ? 1 : 0;
+                    break;
+
+                case "D":
+                    if (Confirm("Delete this test (Y/N)? "))
+                    {
+                        // TODO: Need to delete the test here..
+                        Console.WriteLine("Should have deleted a test.  Write code Ralph!");
+                    }
+                    break;
+
+                case "A":
+                    Console.WriteLine("Should add test here!!!");
+                    break;
+
+                case "?":
+                    break;
+            }
+
+          
+        }
+    }
+
+
+
+    private InterractiveApp()
+    {
+
     }
 
     static void ProcessPbnText(string firstLine)
     {
         var gameText = new StringBuilder();
-        if (!firstLine.StartsWith("[Event"))
-        {
-            gameText.Append("[Event \"\"]\n");
-        }
         gameText.Append(firstLine);
         gameText.Append('\n');
         while (true)
@@ -141,5 +397,7 @@ public class InterractiveApp
         Display.Game(bs.Game);
         Display.Auction(bs.Game);
     }
+
+
 
 }

@@ -19,6 +19,39 @@ public class TestEditor
     private int ActionNextBoard = 0;
     private int ActionEditAuction = -1;
 
+    public static Game[] FailingTests(IEnumerable<Game> games)
+    {
+        var failures = new List<Game>();
+        foreach (var game in games)
+        {
+            if (!AuctionPasses(game))
+            {
+                failures.Add(game);
+            }
+        }
+        return failures.ToArray();
+    }
+
+    public static bool AuctionPasses(Game game)
+    {
+        var testGame = game.Clone();
+        testGame.Auction.Clear();
+        var bs = new BiddingState(testGame);
+        foreach (var call in game.Auction.Calls)
+        {
+            var choices = bs.GetCallChoices();
+            if (bs.NextToAct.HasHand)
+            {
+                if (choices.BestCall == null || !choices.BestCall.Call.Equals(call))
+                {
+                    return false;
+                }
+            }
+            bs.MakeCall(call);
+        }
+        return true;
+    }
+
     public void RunAuctionTest()
     {
         Display.Game(Game);
@@ -81,64 +114,109 @@ public class TestEditor
     }
 
 
-    private void EditAuction()
+    public void EditAuction()
     {
-        var auction = Game.Auction;
-        Display.Auction(Game, true);
-        Console.Write("Which bid would you like to change? ");
+        while (true)
+        {
+            Console.Clear();
+            Display.Game(Game);
+            var auction = Game.Auction;
+            Display.Auction(Game, true);
+            Console.WriteLine();
+            Console.Write("Enter bid #, (oldbid) (newbid), +call or enter to quit: ");
 
-        var choice = Console.ReadLine();
-        // If there is no space then it is a number that selects the bid.  If there is a single space
-        // then it should be in the form "cur-bid new-call" where cur-bid is the current bid
-        // and new-call is the value to replace that bid with.  Note that cur-bid must be a unique
-        // bid in the auction so can't just be Pass or, if X is repeated that would simply replace the
-        // first one.
-        if (choice != null && choice.Split(" ").Length == 2)
-        {
-            var calls = choice.ToUpper().Split(" ");
-            Call oldCall;
-            Call newCall;
-            if (Call.TryParse(calls[0], out oldCall) && Call.TryParse(calls[1], out newCall))
+            var choice = Console.ReadLine();
+            if (string.IsNullOrEmpty(choice) || choice == "Q" || choice == "q") return;
+            choice = choice.ToUpper();
+            if (choice.StartsWith("+"))
             {
-                for (int i = 0; i < auction.Count; i++)
+                Call newCall;
+                if (Call.TryParse(choice.Substring(1), out newCall))
                 {
-                    if (auction[i].Call.Equals(oldCall))
-                    {
-                        auction[i].Call = newCall;
-                        Game.UpdateContractFromAuction();
-                        return;
-                    }
+                    TryUpdateAuction(Game.Auction.Count, newCall);
                 }
-                Console.WriteLine($"ERROR: Did not find {oldCall}");
             }
-            else
+            // If there is no space then it is a number that selects the bid.  If there is a single space
+            // then it should be in the form "cur-bid new-call" where cur-bid is the current bid
+            // and new-call is the value to replace that bid with.  Note that cur-bid must be a unique
+            // bid in the auction so can't just be Pass or, if X is repeated that would simply replace the
+            // first one.
+            else if (choice.Split(" ").Length == 2)
             {
-                Console.WriteLine("ERROR: Unable to parse calls.");
-            }
-        }
-        else
-        {
-            int bidIndex;
-            if (int.TryParse(choice, out bidIndex) && bidIndex > 0 && bidIndex <= auction.Count)
-            {
-                Console.Write($"What bid should replace {auction[bidIndex-1].Call}? ");
-                var newBid = Console.ReadLine();
-                Call call;
-                if (newBid != null && Call.TryParse(newBid.ToUpper(), out call))
+                var calls = choice.ToUpper().Split(" ");
+                Call oldCall;
+                Call newCall;
+                if (Call.TryParse(calls[0], out oldCall) && Call.TryParse(calls[1], out newCall))
                 {
-                    auction[bidIndex - 1].Call = call;
-                    Game.UpdateContractFromAuction();
+                    for (int i = 0; i < auction.Count; i++)
+                    {
+                        if (auction[i].Call.Equals(oldCall))
+                        {
+                            TryUpdateAuction(i, newCall);
+                        }
+                    }
+                    Console.WriteLine($"ERROR: Did not find {oldCall}");
                 }
                 else
                 {
-                    Console.WriteLine("ERROR: Call value not recognized");
+                    Console.WriteLine("ERROR: Unable to parse calls.");
                 }
             }
             else
             {
-                Console.WriteLine("ERROR:  Input should be bid index or of form \"oldbid newbid\"");
+                int bidIndex;
+                if (int.TryParse(choice, out bidIndex) && bidIndex > 0 && bidIndex <= auction.Count)
+                {
+                    Console.Write($"What bid should replace {bidIndex}:{auction[bidIndex-1].Call}? ");
+                    var newBid = Console.ReadLine();
+                    Call call;
+                    if (newBid != null && Call.TryParse(newBid.ToUpper(), out call))
+                    {
+                        TryUpdateAuction(bidIndex - 1, call);
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERROR: Call value not recognized");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("ERROR:  Input should be bid index or of form \"oldbid newbid\"");
+                }
             }
         }
+    }
+
+    private bool TryUpdateAuction(int index, Call newCall)
+    {
+        if (index < 0 || index > Game.Auction.Count) return false;
+        var calls = Game.Auction.Calls;
+        if (index == Game.Auction.Count)
+        {
+            calls.Add(newCall);
+        }
+        else
+        {
+            calls[index] = newCall;
+        }
+        string error;
+        if (!ContractState.IsValidAuction(Game.Dealer, calls, out error))
+        {
+            Console.WriteLine($"Unable to update auction: {error}");
+            Console.Write("Press enter to continue: ");
+            Console.ReadLine();
+            return false;
+        }
+        if (index == Game.Auction.Count)
+        {
+            Game.Auction.Add(newCall);
+        }
+        else
+        {
+            Game.Auction[index] = new Auction.AnnotatedCall { Call = newCall, Note = null };
+        }
+        Game.UpdateContractFromAuction();
+        return true;
     }
 
     private int GetUserAction()
