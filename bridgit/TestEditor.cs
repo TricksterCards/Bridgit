@@ -52,8 +52,17 @@ public class TestEditor
         return true;
     }
 
+    private class FailedCall
+    {
+        public Call DesiredCall;
+        public CallDetails? CallDetails;
+        public string Error;
+        public int Index;
+    }
+
     public void RunAuctionTest()
     {
+        var failingCalls = new List<FailedCall>();
         Display.Game(Game);
         var calls = Game.Auction.Calls;
         Game.Auction.Clear();
@@ -64,36 +73,32 @@ public class TestEditor
             var choices = bs.GetCallChoices();
             if (bs.NextToAct.HasHand)
             {
-                if (choices.BestCall == null || !choices.BestCall.Call.Equals(call))
+                if (choices.BestCall == null)
                 {
-                    Display.Auction(Game, false);
-                    if (choices.BestCall == null) 
-                    {
-                        Console.WriteLine($" <- Invalid state.  No call suggested.  {call} expected");
-                    }
-                    else
-                    {
-                        Console.WriteLine($" {call} expected. bridgit suggested {choices.BestCall.Call}");
-                    }
-                    // NOTE:  PLACE A BREAKPOINT AT THE LINE FOLLOWING THIS COMMENT.  YOU CAN THEN TRACE
-                    // THROUGH THE CREATION OF THE CHOICES AND THE SELECTION OF THE BEST CALL
-                    choices = bs.DEBUG_ReEvaluateCallChoices();
-                    Console.WriteLine($"Forcing {call} to be made and continuing");
-                    bs.MakeCall(call);
+                    var fc = new FailedCall { DesiredCall = call, CallDetails = null, Error = "No call available", Index = bidIndex };
+                    failingCalls.Add(fc);
                 }
-                else
+                else if (!choices.BestCall.Call.Equals(call))
                 {
-                    bs.MakeCall(choices.BestCall);
+                    var fc = new FailedCall { DesiredCall = call, CallDetails = choices.BestCall, Error = "Suggested call is " + choices.BestCall.Call, Index = bidIndex };
+                    failingCalls.Add(fc);
                 }
             } 
-            else 
-            {
-                // As long as the call is valid, we're happy
-                bs.MakeCall(call);
-            }
+            bs.MakeCall(call);
             bidIndex++;
+        } 
+        Display.Auction(Game, failingCalls.Count > 0, failingCalls.Select(f => f.Index));
+        if (failingCalls.Count > 0)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Auction fails");
+            Console.ResetColor();
+            foreach (var fc in failingCalls)
+            {
+                Console.WriteLine($"  {fc.Index}: Should be {fc.DesiredCall} - {fc.Error}");
+            }
         }
-        Display.Auction(Game);
     }
 
 

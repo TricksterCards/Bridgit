@@ -105,7 +105,7 @@ static class Display
         return hand.ToString().Split(".");
     }
 
-    public static void Auction(Game game, bool showBidNumbers = false, int stopAtIndex = int.MaxValue)
+    public static void Auction(Game game, bool showBidNumbers = false, IEnumerable<int> invalidBids = null)
     {
         AuctionTitles(game.Vulnerable, showBidNumbers);
         var direction = Direction.W;
@@ -119,8 +119,12 @@ static class Display
         }
         foreach (var call in game.Auction.Calls)
         {
+            if (invalidBids != null && invalidBids.Contains(bidIndex))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
             Console.Write(showBidNumbers? $"{bidIndex, 2}:{call, -6}" : $"{call, -6}");
-            if (bidIndex == stopAtIndex) return;
+            Console.ForegroundColor = ConsoleColor.White;
             col ++;
             bidIndex ++;
             if (col % 4 == 0) Console.WriteLine();

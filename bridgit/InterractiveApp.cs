@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Linq;
 using System.CommandLine;
 using System.Diagnostics;
 
@@ -142,14 +143,14 @@ public class InterractiveApp
         }
     }
 
-    private HashSet<Call> ReadCalls(string prompt)
+    private List<Call> ReadCalls(string prompt)
     {
         while (true)
         {
             Console.Write(prompt);
             var input = Console.ReadLine();
             var error = false;
-            var calls = new HashSet<Call>();
+            var calls = new List<Call>();
             if (!string.IsNullOrEmpty(input))
             {
                 var callStrings = input.Split(' ');
@@ -180,8 +181,15 @@ public class InterractiveApp
         
         var initialAuction = ReadAuction("Initial auction: ");
         var desiredCalls = ReadCalls("Desired calls (leave blank for any): ");
+        string error;
+        if (!CreateTest.IsValidAuction(initialAuction, desiredCalls, out error))
+        {
+            Console.WriteLine($"Invalid auction: {error}");
+            Console.ReadLine();
+            return;
+        }
         bool singleOnly = ReadYesNo("Single hand only");
-        var numTests = ReadPostiveInt("Number of tests: ");
+        var numTests = ReadPostiveInt(desiredCalls.Count == 0 ? "Number of tests: " : "Number of tests (per call): ");
 
         var fileName = string.Join(' ', initialAuction.Select(c => c.ToString()));
         if (fileName == "") fileName = "Open";
@@ -198,9 +206,25 @@ public class InterractiveApp
             }
         }
         var gameFile = GameFile.NewGame(TestDirectory, fileName);
-        for (int i = 0; i < numTests; i++)
+
+        if (desiredCalls.Count == 0)
         {
-            gameFile.Add(CreateTest.NewTest(i+1, singleOnly, initialAuction, desiredCalls));
+            for (int i = 0; i < numTests; i++)
+            {
+                gameFile.Add(CreateTest.NewTest(i+1, singleOnly, initialAuction, null));
+            }
+        }
+        else
+        {
+            int boardNumber = 1;
+            foreach (var call in desiredCalls)
+            {
+                for (int i = 0; i < numTests; i++)
+                {                
+                    gameFile.Add(CreateTest.NewTest(boardNumber, singleOnly, initialAuction, call));
+                    boardNumber++;
+                }
+            }
         }
 
         this._failedTests = new Game[0];

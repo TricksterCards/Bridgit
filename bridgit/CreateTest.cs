@@ -18,8 +18,27 @@ public static class CreateTest
         return (Direction)(((int)d + offset) % 4);
     }
 
+    public static bool IsValidAuction(List<Call> initialAuction, IEnumerable<Call> desiredCalls, out string error)
+    {
+        if (!ContractState.IsValidAuction(Direction.N, initialAuction, out error))
+        {
+            return false;
+        }
+        foreach (var call in desiredCalls)
+        {
+            var newAuction = new List<Call>(initialAuction);
+            newAuction.Add(call);
+            if (!ContractState.IsValidAuction(Direction.N, newAuction, out error))
+            {
+                return false;
+            }
+        }
+        error = null;
+        return true;
+    }
+
     public static Game NewTest(int boardNumber, bool singleHand, List<Call> initialAuction,
-                            HashSet<Call> desiredCalls)
+                            Call? desiredCall = null)
     {
         while (true)
         {
@@ -34,11 +53,11 @@ public static class CreateTest
                     if (d != bidder) game.Deal[d] = null;
                 }
             }
-            if (Matches(game, initialAuction, desiredCalls)) return game;
+            if (Matches(game, initialAuction, desiredCall)) return game;
         }
     }
 
-    private static bool Matches(Game game, List<Call> initialAuction, HashSet<Call> desiredCalls)
+    private static bool Matches(Game game, List<Call> initialAuction, Call? desiredCall)
     {
         var bs = new BiddingState(game);
         // Here we simply replay the auction up to the point of the desired bid.  If
@@ -67,7 +86,7 @@ public static class CreateTest
         var finalCall = bs.GetCallChoices().BestCall;
         // TODO: finalCall == null is bad.  Need to do something more here...
         if (finalCall == null || 
-            (desiredCalls.Count > 0 && !desiredCalls.Contains(finalCall.Call)))
+            (desiredCall != null && !finalCall.Call.Equals(desiredCall)))
         {
             return false;
         }
