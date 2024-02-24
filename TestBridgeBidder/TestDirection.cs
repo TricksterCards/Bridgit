@@ -32,5 +32,14 @@ namespace TestBridgeBidder
             Assert.AreEqual(Direction.E, Direction.S.RightHandOpponent());
             Assert.AreEqual(Direction.S, Direction.W.RightHandOpponent());
         }
+
+        [TestMethod]
+        public void TestPair()
+        {
+            Assert.AreEqual(Pair.NS, Direction.N.Pair());
+            Assert.AreEqual(Pair.EW, Direction.E.Pair());
+            Assert.AreEqual(Pair.NS, Direction.S.Pair());
+            Assert.AreEqual(Pair.EW, Direction.W.Pair());
+        }
     }
 }

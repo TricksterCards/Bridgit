@@ -18,5 +18,10 @@ namespace BridgeBidding
 		{
 			return (Direction)(((int)d + 1) % 4);
 		}
+
+		public static Pair Pair(this Direction d)
+		{
+			return (Pair)((int)d % 2);
+		}
     }
 }
