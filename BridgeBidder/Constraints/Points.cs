@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 
 namespace BridgeBidding
 {
@@ -63,7 +65,7 @@ namespace BridgeBidding
 
     }
 
-    class ShowsPoints : HasPoints, IShowsState, IDescribeConstraint
+    class ShowsPoints : HasPoints, IShowsState, IDescribeMultipleConstraints
     {
         public ShowsPoints(Suit? trumpSuit, int min, int max, PointType pointType) : base(trumpSuit, min, max, pointType) { }
 
@@ -95,8 +97,38 @@ namespace BridgeBidding
             }
         }
     
+        // IDescribeMultipleConstraints
+        public List<string> Describe(Call call, PositionState ps, List<Constraint> constraints)
+        {
+            Debug.Assert(constraints.Contains(this));
 
-        public string Describe(Call call, PositionState ps)
+            // This code favors Dummy points first, then HCP, then starting points.  It only ever returns
+            // a single string.
+            var descriptions = new List<string>();
+            ShowsPoints best = this;
+            if (constraints.Count > 1)
+            {
+                foreach (var constraint in constraints)
+                {
+                    if (constraint is ShowsPoints sp)
+                    {
+                        if (sp._pointType == PointType.Dummy ||
+                            (sp._pointType == PointType.HighCard && best._pointType != PointType.Starting))
+                        {
+                            best = sp;
+                        }
+                    }
+                    else
+                    {
+                        Debug.Fail("Internal error.  Should only be called with constraints of type ShowsPoints.");
+                    }
+                }
+            }
+            descriptions.Add(best.DescribeThis(call, ps));     
+            return descriptions;
+        }
+
+        private string DescribeThis(Call call, PositionState ps)
         {
             var range = Range.GetString(_min, _max, 40);
 
