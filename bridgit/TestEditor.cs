@@ -128,7 +128,7 @@ public class TestEditor
             var auction = Game.Auction;
             Display.Auction(Game, true);
             Console.WriteLine();
-            Console.Write("Enter bid #, (oldbid) (newbid), +call or enter to quit: ");
+            Console.Write("Enter bid #, (oldbid) (newbid), +call, -bid# or enter to quit: ");
 
             var choice = Console.ReadLine();
             if (string.IsNullOrEmpty(choice) || choice == "Q" || choice == "q") return;
@@ -170,18 +170,22 @@ public class TestEditor
             else
             {
                 int bidIndex;
-                if (int.TryParse(choice, out bidIndex) && bidIndex > 0 && bidIndex <= auction.Count)
+                if (int.TryParse(choice, out bidIndex) && bidIndex != 0 && Math.Abs(bidIndex) <= auction.Count)
                 {
-                    Console.Write($"What bid should replace {bidIndex}:{auction[bidIndex-1].Call}? ");
-                    var newBid = Console.ReadLine();
-                    Call call;
-                    if (newBid != null && Call.TryParse(newBid.ToUpper(), out call))
+                    if (bidIndex < 0)
                     {
-                        TryUpdateAuction(bidIndex - 1, call);
+                        Game.Auction.RemoveAt(-bidIndex - 1);
+                        // TODO: Need to update contract if we remove a bid
                     }
                     else
                     {
-                        Console.WriteLine("ERROR: Call value not recognized");
+                        Console.Write($"What bid should replace {bidIndex}:{auction[bidIndex-1].Call}? ");
+                        var newBid = Console.ReadLine();
+                        Call call;
+                        if (newBid != null && Call.TryParse(newBid.ToUpper(), out call))
+                        {
+                            TryUpdateAuction(bidIndex - 1, call);
+                        }
                     }
                 }
                 else

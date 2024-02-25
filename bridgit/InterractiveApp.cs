@@ -189,6 +189,12 @@ public class InterractiveApp
             return;
         }
         bool singleOnly = ReadYesNo("Single hand only");
+        bool completeAuction = false;
+        if (!singleOnly)
+        {
+            completeAuction = ReadYesNo("Complete auction");
+        }
+
         var numTests = ReadPostiveInt(desiredCalls.Count == 0 ? "Number of tests: " : "Number of tests (per call): ");
 
         var fileName = string.Join(' ', initialAuction.Select(c => c.ToString()));
@@ -211,7 +217,7 @@ public class InterractiveApp
         {
             for (int i = 0; i < numTests; i++)
             {
-                gameFile.Add(CreateTest.NewTest(i+1, singleOnly, initialAuction, null));
+                gameFile.Add(CreateTest.NewTest(i+1, singleOnly, initialAuction, null, completeAuction));
             }
         }
         else
@@ -221,7 +227,7 @@ public class InterractiveApp
             {
                 for (int i = 0; i < numTests; i++)
                 {                
-                    gameFile.Add(CreateTest.NewTest(boardNumber, singleOnly, initialAuction, call));
+                    gameFile.Add(CreateTest.NewTest(boardNumber, singleOnly, initialAuction, call, completeAuction));
                     boardNumber++;
                 }
             }

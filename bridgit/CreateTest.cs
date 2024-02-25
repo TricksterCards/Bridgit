@@ -38,7 +38,7 @@ public static class CreateTest
     }
 
     public static Game NewTest(int boardNumber, bool singleHand, List<Call> initialAuction,
-                            Call? desiredCall = null)
+                            Call? desiredCall, bool completeAuction)
     {
         while (true)
         {
@@ -53,11 +53,11 @@ public static class CreateTest
                     if (d != bidder) game.Deal[d] = null;
                 }
             }
-            if (Matches(game, initialAuction, desiredCall)) return game;
+            if (Matches(game, initialAuction, desiredCall, completeAuction)) return game;
         }
     }
 
-    private static bool Matches(Game game, List<Call> initialAuction, Call? desiredCall)
+    private static bool Matches(Game game, List<Call> initialAuction, Call? desiredCall, bool completeAuction)
     {
         var bs = new BiddingState(game);
         // Here we simply replay the auction up to the point of the desired bid.  If
@@ -91,6 +91,31 @@ public static class CreateTest
             return false;
         }
         bs.MakeCall(finalCall);
+        while (completeAuction && !bs.Contract.AuctionComplete)
+        {
+            var choices = bs.GetCallChoices();
+            if (choices.BestCall == null)
+            {
+                // TODO: This is not good.  Need to do something more here...
+                return false;
+            }
+            bs.MakeCall(choices.BestCall);
+        }
         return true;
+    }
+
+    public static void CompleteAuction(Game game)
+    {
+        var bs = new BiddingState(game);
+        while (!bs.Contract.AuctionComplete)
+        {
+            var choices = bs.GetCallChoices();
+            if (choices.BestCall == null)
+            {
+                // TODO: Maybe don't throw here, but do something else...
+                throw new Exception("No call available");
+            }
+            bs.MakeCall(choices.BestCall);
+        }
     }
 }
