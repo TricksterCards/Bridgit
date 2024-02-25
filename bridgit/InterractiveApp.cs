@@ -276,7 +276,7 @@ public class InterractiveApp
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{_failedTests.Length} auction are failing.");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ResetColor();
             }
             Console.WriteLine($"Editing {_gameFile.FileName}, Board {_gameFile[_selectedGame].Board}, {_selectedGame + 1} of {_gameFile.Count}");
             var testEditor = new TestEditor(_gameFile[_selectedGame]);

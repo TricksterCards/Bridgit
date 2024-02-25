@@ -30,9 +30,9 @@ static class Display
 
     private static void DisplayHCP(int p)
     {
-        Console.ForegroundColor = ConsoleColor.DarkBlue;
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.Write(p < 0 ? " -" : $"{p, 2}");
-        Console.ForegroundColor = ConsoleColor.White;
+        Console.ResetColor();
     }
 
     public static void Display1Hand(int indent, Hand hand, Dictionary<Direction, int>? hcp = null)
@@ -124,7 +124,7 @@ static class Display
                 Console.ForegroundColor = ConsoleColor.Red;
             }
             Console.Write(showBidNumbers? $"{bidIndex, 2}:{call, -6}" : $"{call, -6}");
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ResetColor();
             col ++;
             bidIndex ++;
             if (col % 4 == 0) Console.WriteLine();
@@ -151,7 +151,7 @@ static class Display
             }  
             i++;
         }
-        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ResetColor();
         Console.WriteLine();
     }
 
