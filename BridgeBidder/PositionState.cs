@@ -19,7 +19,8 @@ namespace BridgeBidding
 		private int _roleAssignedOffset = 0;
 		private bool _roleAssigned = false;
 
-		private HandSummary _privateHandSummary;
+		// TODO: Think through what is best about this.  Rename and make public or keep private?
+		public HandSummary _privateHandSummary;
 
 		public bool HasHand => _privateHandSummary != null;
 
@@ -270,7 +271,7 @@ namespace BridgeBidding
 			return (this._privateHandSummary == null) ? false : rule.SatisifiesDynamicConstraints(this, this._privateHandSummary);
 		}
 
-
+	
 		public bool IsValidNextCall(Call call)
 		{
 			return BiddingState.Contract.IsValid(call, this.Direction);

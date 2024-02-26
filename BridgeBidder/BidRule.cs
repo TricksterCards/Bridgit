@@ -22,7 +22,7 @@ namespace BridgeBidding
 
         public bool SatisifiesDynamicConstraints(PositionState ps, HandSummary hs)
         {
-            foreach (Constraint constraint in _constraints)
+            foreach (Constraint constraint in Constraints)
             {
                 if (constraint is DynamicConstraint dynamicConstraint &&
 					!dynamicConstraint.Conforms(Call, ps, hs)) 
@@ -38,7 +38,7 @@ namespace BridgeBidding
 			bool showedSuit = false;
 			var showHand = new HandSummary.ShowState();
 			var showAgreements = new PairAgreements.ShowState();
-			foreach (Constraint constraint in _constraints)
+			foreach (Constraint constraint in Constraints)
 			{
 				if (constraint is IShowsState showsState)
 				{
@@ -57,7 +57,7 @@ namespace BridgeBidding
 		internal List<string> ConstraintDescriptions(PositionState ps)
 		{
 			var descriptions = new List<string>();
-			foreach (var constraint in _constraints)
+			foreach (var constraint in Constraints)
 			{
 				if (constraint is IDescribeConstraint describe)
 				{
@@ -68,5 +68,13 @@ namespace BridgeBidding
 			}
 			return (descriptions.Count == 0) ? null : descriptions;
 		}
-	}
+
+		public string GetDescription(PositionState ps)
+		{
+			var desc = ConstraintDescriptions(ps);
+			if (desc == null)
+				return "";
+			return string.Join(", ", desc);
+		}
+    }
 }

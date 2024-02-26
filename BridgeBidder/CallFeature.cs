@@ -7,13 +7,12 @@ namespace BridgeBidding
 	public abstract class CallFeature
 	{
 		public Call Call { get; }
-		protected List<Constraint> _constraints = new List<Constraint>();
+		public List<Constraint> Constraints = new List<Constraint>();
 
 
 		protected CallFeature(Call call, params Constraint[] constraints)
 		{
 			this.Call = call;
-            // TODO: Need to get rid of goofy side-effect
 			foreach (Constraint constraint in constraints)
 			{
 				AddConstraint(constraint);
@@ -32,13 +31,13 @@ namespace BridgeBidding
 			}
 			else
 			{
-				this._constraints.Add(constraint);
+				this.Constraints.Add(constraint);
 			}
 		}
 
 		public bool SatisifiesStaticConstraints(PositionState ps)
 		{
-			foreach (var constraint in _constraints)
+			foreach (var constraint in Constraints)
 			{
 				if (constraint is StaticConstraint staticConstraint)
 				{

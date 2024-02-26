@@ -16,7 +16,9 @@
             }
             else
             {
-                return new PositionCalls(ps, Compete.CompBids);
+                var calls = new PositionCalls(ps);
+                calls.AddRules(Compete.CompBids);
+                return calls;
             }
         }
 

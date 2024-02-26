@@ -54,6 +54,7 @@ public class TestEditor
 
     private class FailedCall
     {
+        public PositionCalls PositionCalls;
         public Call DesiredCall;
         public CallDetails? CallDetails;
         public string Error;
@@ -75,12 +76,12 @@ public class TestEditor
             {
                 if (choices.BestCall == null)
                 {
-                    var fc = new FailedCall { DesiredCall = call, CallDetails = null, Error = "No call available", Index = bidIndex };
+                    var fc = new FailedCall { PositionCalls = choices, DesiredCall = call, CallDetails = null, Error = "No call available", Index = bidIndex };
                     failingCalls.Add(fc);
                 }
                 else if (!choices.BestCall.Call.Equals(call))
                 {
-                    var fc = new FailedCall { DesiredCall = call, CallDetails = choices.BestCall, Error = "Suggested call is " + choices.BestCall.Call, Index = bidIndex };
+                    var fc = new FailedCall { PositionCalls = choices, DesiredCall = call, CallDetails = choices.BestCall, Error = "Suggested call is " + choices.BestCall.Call, Index = bidIndex };
                     failingCalls.Add(fc);
                 }
             } 
@@ -96,11 +97,27 @@ public class TestEditor
             Console.ResetColor();
             foreach (var fc in failingCalls)
             {
-                Console.WriteLine($"  {fc.Index}: Should be {fc.DesiredCall} - {fc.Error}");
+                ShowFailingCall(fc);
+                //Console.WriteLine($"  {fc.Index}: Should be {fc.DesiredCall} - {fc.Error}");
             }
         }
     }
 
+    static void ShowFailingCall(FailedCall fc)
+    {
+        Console.WriteLine($"  {fc.Index, 2}: Should be {fc.DesiredCall} - {fc.Error}");
+        if (fc.CallDetails != null)
+        {
+            Console.WriteLine($"      Calls from: {fc.PositionCalls.Log.CallerMemberName}");
+            foreach (var le in fc.PositionCalls.Log)
+            {
+                if (le.BidRule.Call.Equals(fc.DesiredCall) || le.BidRule.Call.Equals(fc.CallDetails.Call))
+                {
+                    Console.WriteLine($"      {le.GetDescription(fc.PositionCalls.PositionState)}");
+                }
+            }
+        }
+    }
 
 
 

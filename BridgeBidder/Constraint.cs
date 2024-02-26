@@ -27,6 +27,16 @@ namespace BridgeBidding
             if (call is Bid bid) { return bid.Strain; }
             return null;
         }
+
+        public string GetDescription(PositionState ps)
+        {
+            if (this is IDescribeConstraint describeConstraint)
+            {
+                return describeConstraint.Describe(null, ps);
+            }
+            return "*";
+        }
+
     }
 
     public class StaticConstraint: Constraint

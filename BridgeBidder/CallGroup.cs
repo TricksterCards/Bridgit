@@ -2,10 +2,14 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
+using static BridgeBidding.PositionCalls.BidRuleLog;
 
 namespace BridgeBidding
 {
+
+
     public class CallGroup : Dictionary<Call, CallDetails>
     {
         public PositionCalls PositionCalls { get; }
@@ -18,6 +22,7 @@ namespace BridgeBidding
 
 
 
+
         public static CallGroup Create(PositionCalls positionCalls, IEnumerable<CallFeature> rules)
         {
             var group = new CallGroup(positionCalls);
@@ -27,10 +32,10 @@ namespace BridgeBidding
 
         private CallGroup(PositionCalls positionCalls)
         {
-            this.PositionCalls = positionCalls;
+            PositionCalls = positionCalls;
             Annotations = new List<CallAnnotation>();
         }
-
+       
         // Add only calls that are not already defined in the PositionCalls
         private void AddRules(IEnumerable<CallFeature> features)
         {
@@ -57,6 +62,7 @@ namespace BridgeBidding
                 }
                 else
                 {
+                    LogBidRule(feature);
                     if (PositionState.IsValidNextCall(feature.Call) &&
                         !PositionCalls.ContainsKey(feature.Call))
                     {
@@ -89,5 +95,59 @@ namespace BridgeBidding
             }
         }
 
+
+        // IF this feature is a BidRule then examine all of the things that the selection code will and
+        // log the results.  In the future we may want to disalbe logging globally, so this function could
+        // check a flag in BiddingState before doing all this workl
+        private void LogBidRule(CallFeature feature)
+        {
+            BidRule rule = feature as BidRule;
+            if (rule == null) return;
+
+            var entry = new Entry { BidRule = rule };
+            if (!PositionState.IsValidNextCall(rule.Call))
+            {
+                entry.Action = Action.Illegal;
+            }
+            else if (PositionCalls.ContainsKey(rule.Call))
+            {
+                entry.Action = Action.Duplicate;
+            }
+            else
+            {
+                foreach (var constraint in rule.Constraints)
+                if (constraint is StaticConstraint staticConstraint)
+                {
+                    if (!staticConstraint.Conforms(feature.Call, PositionState))
+                    {
+                        entry.FailingConstraints.Add(staticConstraint);
+                    }
+                }
+                if (entry.FailingConstraints.Count > 0)
+                {
+                    entry.Action = Action.Rejected;
+                }
+                else
+                {
+                    entry.Action = Action.Accepted;
+                }
+            }
+            if (entry.Action == Action.Accepted)
+            {
+                entry.Action = Action.Chosen;
+                foreach (var constraint in rule.Constraints)
+                {
+                    if (constraint is DynamicConstraint dynamicConstraint)
+                    {
+                        if (!dynamicConstraint.Conforms(feature.Call, PositionState, PositionState._privateHandSummary))
+                        {
+                            entry.Action = Action.NotChosen;
+                            entry.FailingConstraints.Add(constraint);
+                        }
+                    }
+                }
+            }
+            PositionCalls.Log.Add(entry);
+        }
     }
 }
