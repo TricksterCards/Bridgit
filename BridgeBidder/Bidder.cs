@@ -12,22 +12,22 @@ namespace BridgeBidding
 
     public abstract class Bidder
 	{
-		public static CallFeature PartnerBids(CallFeaturesFactory brf)
+		public static CallFeature PartnerBids(CallFeaturesFactory cff)
 		{
-			return PartnerBids(PositionCalls.FromCallFeaturesFactory(brf));
+			return PartnerBids(PositionCalls.FromCallFeaturesFactory(cff));
 		}
 
-        public static CallFeature PartnerBids(PositionCallsFactory bcf)
+        public static CallFeature PartnerBids(PositionCallsFactory pcf)
         {
-            return _PartnerBids(null, bcf, new StaticConstraint[0]);
+            return _PartnerBids(null, pcf, new StaticConstraint[0]);
         }
 
 	
 
-		public static CallFeature PartnerBids(Call call, CallFeaturesFactory brf, params StaticConstraint[] constraints)
+		public static CallFeature PartnerBids(Call call, CallFeaturesFactory cff, params StaticConstraint[] constraints)
 		{
 			Debug.Assert(call != null);
-			return _PartnerBids(call, PositionCalls.FromCallFeaturesFactory(brf), constraints);
+			return _PartnerBids(call, PositionCalls.FromCallFeaturesFactory(cff), constraints);
 		}
 		public static CallFeature PartnerBids(Call call, PositionCallsFactory choicesFactory)
 		{
