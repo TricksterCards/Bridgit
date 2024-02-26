@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace BridgeBidding
@@ -29,18 +32,28 @@ namespace BridgeBidding
         }
     }
 
-    public class StaticConstraint: Constraint
+    public class StaticConstraint: Constraint, IDescribeConstraint
     {
         Func<Call, PositionState, bool> _eval;
+        Func<Call, PositionState, string> _getDescription;
 
-        public StaticConstraint(Func<Call, PositionState, bool> eval = null)
+        public StaticConstraint(Func<Call, PositionState, bool> eval = null,
+                                Func<Call, PositionState, string> getDescription = null,
+                                string description = null)
         {
+            Debug.Assert(getDescription == null || description == null, "Cannot specify both getDescription and description");
             _eval = eval != null ? eval : (call, ps) => true;
+            _getDescription = getDescription != null ? getDescription : (call, ps) => description;
         }
-
+       
         public virtual bool Conforms(Call call, PositionState ps)
         {
             return _eval(call, ps);
+        }
+
+        public virtual string Describe(Call call, PositionState ps)
+        {
+            return _getDescription(call, ps);
         }
     }
 
@@ -55,10 +68,15 @@ namespace BridgeBidding
         void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements);
     }
 
-    // This is a place-holder for getting desc
+    
     public interface IDescribeConstraint
     {
         string Describe(Call call, PositionState ps);
+    }
+
+    public interface IDescribeMultipleConstraints
+    {
+        List<string> Describe(Call call, PositionState ps, List<Constraint> constraints);
     }
 
 }
