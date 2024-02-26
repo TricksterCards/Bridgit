@@ -56,6 +56,7 @@ namespace BridgeBidding
 
 		internal List<string> ConstraintDescriptions(PositionState ps)
 		{
+			HashSet<Type> didMultiDescribe = new HashSet<Type>();
 			var descriptions = new List<string>();
 			foreach (var constraint in Constraints)
 			{
@@ -64,6 +65,15 @@ namespace BridgeBidding
 					var d = describe.Describe(Call, ps);
 					if (d != null)
 						descriptions.Add(d);
+				}
+				else if (constraint is IDescribeMultipleConstraints describeMultiple)
+				{
+					if (!didMultiDescribe.Contains(constraint.GetType()))
+					{
+						didMultiDescribe.Add(constraint.GetType());
+						List<Constraint> sameConstraint = _constraints.FindAll(c => c.GetType() == constraint.GetType());
+						descriptions.AddRange(describeMultiple.Describe(Call, ps, sameConstraint));
+					}
 				}
 			}
 			return (descriptions.Count == 0) ? null : descriptions;

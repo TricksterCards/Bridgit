@@ -108,7 +108,7 @@ namespace BridgeBidding
 
 		public static StaticConstraint Seat(params int[] seats)
 		{
-			return new StaticConstraint((call, ps) => seats.Contains(ps.Seat));
+			return new StaticConstraint((call, ps) => seats.Contains(ps.Seat), getDescription: (call, ps) => $"seat {ps.Seat}");
 		}
 		public static StaticConstraint LastBid(Call call)
 		{
@@ -138,12 +138,12 @@ namespace BridgeBidding
 		}
 
 		// Various vulnerability constraints.  Be careful with Not()
-		public static StaticConstraint IsVul = new StaticConstraint((call, ps) => ps.IsVulnerable);
-		public static StaticConstraint IsNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable);
-		public static StaticConstraint IsFavVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && ps.RHO.IsVulnerable);
-		public static StaticConstraint IsUnfavVul = new StaticConstraint((call, ps) => ps.IsVulnerable && !ps.RHO.IsVulnerable);
-		public static StaticConstraint BothVul = new StaticConstraint((call, ps) => ps.IsVulnerable && ps.RHO.IsVulnerable);
-		public static StaticConstraint BothNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && !ps.RHO.IsVulnerable);
+		public static StaticConstraint IsVul = new StaticConstraint((call, ps) => ps.IsVulnerable, description: "vul");
+		public static StaticConstraint IsNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable, description: "not vul");
+		public static StaticConstraint IsFavVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && ps.RHO.IsVulnerable, description: "favorable vul");
+		public static StaticConstraint IsUnfavVul = new StaticConstraint((call, ps) => ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "unfavorable vul");
+		public static StaticConstraint BothVul = new StaticConstraint((call, ps) => ps.IsVulnerable && ps.RHO.IsVulnerable, description: "all vul");
+		public static StaticConstraint BothNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "none vul");
 		
 		/*	-- TODO Figure out what we want to do about constraint groups.  Specifically static constraint groups.
 		public static StaticConstraint StaticAnd(params StaticConstraint[] constraints)
@@ -157,13 +157,17 @@ namespace BridgeBidding
 			});
 		}
 		*/ 
-		public static StaticConstraint IsReverse = new StaticConstraint((call, ps) => ps.IsOpenerReverseBid(call));
+		public static StaticConstraint IsReverse = new StaticConstraint((call, ps) => ps.IsOpenerReverseBid(call), description: "reverse");
 		public static StaticConstraint ForcedToBid = new StaticConstraint((call, ps) => ps.ForcedToBid);
 
 
 		public static StaticConstraint Not(StaticConstraint c)
 		{
-			return new StaticConstraint((call, ps) => !c.Conforms(call, ps));
+			return new StaticConstraint(eval: (call, ps) => !c.Conforms(call, ps),
+										getDescription: (call, ps) => { 
+											var desc = c.Describe(call, ps);
+											return string.IsNullOrEmpty(desc) ? null : $"not {desc}";
+										});
 		}
 
 		public static StaticConstraint Partner(Constraint constraint)

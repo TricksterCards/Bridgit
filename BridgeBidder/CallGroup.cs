@@ -92,6 +92,11 @@ namespace BridgeBidding
                     Debug.Assert(BestCall == null || !call.Equals(BestCall.Call));
                     this.Remove(call);
                 }
+                else
+                {
+                    // Add any group annotations to every call
+                    this[call].Annotations.AddRange(this.Annotations);
+                }
             }
         }
 
