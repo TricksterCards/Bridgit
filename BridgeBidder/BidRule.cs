@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace BridgeBidding
 {
@@ -58,7 +59,8 @@ namespace BridgeBidding
 		{
 			HashSet<Type> didMultiDescribe = new HashSet<Type>();
 			var descriptions = new List<string>();
-			foreach (var constraint in Constraints)
+
+			foreach (var constraint in Constraints.OrdefBy(ConstraintSort.ForDescription)
 			{
 				// If a constraint implements IDescribeMultipleConstraints it should also implement IDescribeConstraint
 				// so that a test tool can get the description of every constraint.
