@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace BridgeBidding
 {
@@ -58,7 +59,7 @@ namespace BridgeBidding
 		{
 			HashSet<Type> didMultiDescribe = new HashSet<Type>();
 			var descriptions = new List<string>();
-			foreach (var constraint in _constraints)
+			foreach (var constraint in _constraints.OrderBy(ConstraintSort.ForDescription))
 			{
 				if (constraint is IDescribeConstraint describe)
 				{
