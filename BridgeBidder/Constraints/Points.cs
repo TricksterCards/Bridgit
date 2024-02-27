@@ -64,7 +64,7 @@ namespace BridgeBidding
 
     }
 
-    class ShowsPoints : HasPoints, IShowsState, IDescribeMultipleConstraints
+    class ShowsPoints : HasPoints, IShowsState, IDescribeConstraint, IDescribeMultipleConstraints
     {
         public ShowsPoints(Suit? trumpSuit, int min, int max, PointType pointType) : base(trumpSuit, min, max, pointType) { }
 
@@ -123,11 +123,11 @@ namespace BridgeBidding
                     }
                 }
             }
-            descriptions.Add(best.DescribeThis(call, ps));     
+            descriptions.Add(best.Describe(call, ps));     
             return descriptions;
         }
 
-        private string DescribeThis(Call call, PositionState ps)
+        public string Describe(Call call, PositionState ps)
         {
             var range = Range.GetString(_min, _max, 40);
 

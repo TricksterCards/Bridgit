@@ -60,21 +60,24 @@ namespace BridgeBidding
 			var descriptions = new List<string>();
 			foreach (var constraint in Constraints)
 			{
-				if (constraint is IDescribeConstraint describe)
+				// If a constraint implements IDescribeMultipleConstraints it should also implement IDescribeConstraint
+				// so that a test tool can get the description of every constraint.
+			  	if (constraint is IDescribeMultipleConstraints describeMultiple)
+				{
+					if (!didMultiDescribe.Contains(constraint.GetType()))
+					{
+						didMultiDescribe.Add(constraint.GetType());
+						List<Constraint> sameConstraint = Constraints.FindAll(c => c.GetType() == constraint.GetType());
+						descriptions.AddRange(describeMultiple.Describe(Call, ps, sameConstraint));
+					}
+				}
+				else if (constraint is IDescribeConstraint describe)
 				{
 					var d = describe.Describe(Call, ps);
 					if (d != null)
 						descriptions.Add(d);
 				}
-				else if (constraint is IDescribeMultipleConstraints describeMultiple)
-				{
-					if (!didMultiDescribe.Contains(constraint.GetType()))
-					{
-						didMultiDescribe.Add(constraint.GetType());
-						List<Constraint> sameConstraint = _constraints.FindAll(c => c.GetType() == constraint.GetType());
-						descriptions.AddRange(describeMultiple.Describe(Call, ps, sameConstraint));
-					}
-				}
+				
 			}
 			return (descriptions.Count == 0) ? null : descriptions;
 		}

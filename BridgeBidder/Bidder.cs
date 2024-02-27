@@ -108,7 +108,7 @@ namespace BridgeBidding
 
 		public static StaticConstraint Seat(params int[] seats)
 		{
-			return new StaticConstraint((call, ps) => seats.Contains(ps.Seat), getDescription: (call, ps) => $"seat {ps.Seat}");
+			return new SimpleStaticConstraint((call, ps) => seats.Contains(ps.Seat), getDescription: (call, ps) => $"seat {ps.Seat}");
 		}
 		public static StaticConstraint LastBid(Call call)
 		{
@@ -124,7 +124,7 @@ namespace BridgeBidding
 		}
 		public static StaticConstraint OpeningBid(Bid bid)
 		{
-			return new StaticConstraint((call, ps) => ps.BiddingState.OpeningBid == bid);
+			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.OpeningBid == bid);
 		}
 
 
@@ -138,12 +138,12 @@ namespace BridgeBidding
 		}
 
 		// Various vulnerability constraints.  Be careful with Not()
-		public static StaticConstraint IsVul = new StaticConstraint((call, ps) => ps.IsVulnerable, description: "vul");
-		public static StaticConstraint IsNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable, description: "not vul");
-		public static StaticConstraint IsFavVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && ps.RHO.IsVulnerable, description: "favorable vul");
-		public static StaticConstraint IsUnfavVul = new StaticConstraint((call, ps) => ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "unfavorable vul");
-		public static StaticConstraint BothVul = new StaticConstraint((call, ps) => ps.IsVulnerable && ps.RHO.IsVulnerable, description: "all vul");
-		public static StaticConstraint BothNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "none vul");
+		public static StaticConstraint IsVul = new SimpleStaticConstraint((call, ps) => ps.IsVulnerable, description: "vul");
+		public static StaticConstraint IsNotVul = new SimpleStaticConstraint((call, ps) => !ps.IsVulnerable, description: "not vul");
+		public static StaticConstraint IsFavVul = new SimpleStaticConstraint((call, ps) => !ps.IsVulnerable && ps.RHO.IsVulnerable, description: "favorable vul");
+		public static StaticConstraint IsUnfavVul = new SimpleStaticConstraint((call, ps) => ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "unfavorable vul");
+		public static StaticConstraint BothVul = new SimpleStaticConstraint((call, ps) => ps.IsVulnerable && ps.RHO.IsVulnerable, description: "all vul");
+		public static StaticConstraint BothNotVul = new SimpleStaticConstraint((call, ps) => !ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "none vul");
 		
 		/*	-- TODO Figure out what we want to do about constraint groups.  Specifically static constraint groups.
 		public static StaticConstraint StaticAnd(params StaticConstraint[] constraints)
@@ -157,16 +157,20 @@ namespace BridgeBidding
 			});
 		}
 		*/ 
-		public static StaticConstraint IsReverse = new StaticConstraint((call, ps) => ps.IsOpenerReverseBid(call), description: "reverse");
-		public static StaticConstraint ForcedToBid = new StaticConstraint((call, ps) => ps.ForcedToBid);
+		public static StaticConstraint IsReverse = new SimpleStaticConstraint((call, ps) => ps.IsOpenerReverseBid(call), description: "reverse");
+		public static StaticConstraint ForcedToBid = new SimpleStaticConstraint((call, ps) => ps.ForcedToBid);
 
 
 		public static StaticConstraint Not(StaticConstraint c)
 		{
-			return new StaticConstraint(eval: (call, ps) => !c.Conforms(call, ps),
+			return new SimpleStaticConstraint(eval: (call, ps) => !c.Conforms(call, ps),
 										getDescription: (call, ps) => { 
-											var desc = c.Describe(call, ps);
-											return string.IsNullOrEmpty(desc) ? null : $"not {desc}";
+											if (c is IDescribeConstraint dc)
+											{
+												var desc = dc.Describe(call, ps);
+												return string.IsNullOrEmpty(desc) ? null : $"not {desc}";
+											}
+											return null;
 										});
 		}
 
@@ -177,17 +181,17 @@ namespace BridgeBidding
 
 		public static StaticConstraint PassEndsAuction()
 		{
-			return new StaticConstraint((call, ps) => ps.BiddingState.Contract.PassEndsAuction);
+			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.Contract.PassEndsAuction, description: "pass ends auction");
 		}
 
 		public static StaticConstraint BidAvailable(int level, Suit suit)
 		{ 
-			return new StaticConstraint((call, ps) => ps.IsValidNextCall(new Bid(level, suit)));
+			return new SimpleStaticConstraint((call, ps) => ps.IsValidNextCall(new Bid(level, suit)));
 	 	}
 
 		public static StaticConstraint OppsContract()
 		{ 
-			return new StaticConstraint((call, ps) => ps.IsOpponentsContract); 
+			return new SimpleStaticConstraint((call, ps) => ps.IsOpponentsContract, description: "opps contract"); 
 		}
 
 
@@ -198,7 +202,7 @@ namespace BridgeBidding
 		}
 
 		public static StaticConstraint ContractIsAgreedStrain = 
-				new StaticConstraint((call, ps) =>  
+				new SimpleStaticConstraint((call, ps) =>  
 					(ps.BiddingState.Contract.Bid is Bid contractBid &&
                     ps.BiddingState.Contract.IsOurs(ps.Direction) && 
                     contractBid.Strain == ps.PairState.Agreements.AgreedStrain));

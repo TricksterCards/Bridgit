@@ -137,7 +137,7 @@ namespace BridgeBidding
                     entry.Action = Action.Accepted;
                 }
             }
-            if (entry.Action == Action.Accepted)
+            if (entry.Action == Action.Accepted && PositionState.HasHand)
             {
                 entry.Action = Action.Chosen;
                 foreach (var constraint in rule.Constraints)

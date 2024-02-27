@@ -42,21 +42,26 @@ namespace BridgeBidding
 
     }
 
-    public class StaticConstraint: Constraint, IDescribeConstraint
+    public abstract class StaticConstraint: Constraint
+    {
+        public abstract bool Conforms(Call call, PositionState ps);
+    }
+
+    public class SimpleStaticConstraint: StaticConstraint, IDescribeConstraint
     {
         Func<Call, PositionState, bool> _eval;
         Func<Call, PositionState, string> _getDescription;
 
-        public StaticConstraint(Func<Call, PositionState, bool> eval = null,
-                                Func<Call, PositionState, string> getDescription = null,
-                                string description = null)
+        public SimpleStaticConstraint(Func<Call, PositionState, bool> eval = null,
+                                      Func<Call, PositionState, string> getDescription = null,
+                                      string description = null)
         {
             Debug.Assert(getDescription == null || description == null, "Cannot specify both getDescription and description");
             _eval = eval != null ? eval : (call, ps) => true;
             _getDescription = getDescription != null ? getDescription : (call, ps) => description;
         }
        
-        public virtual bool Conforms(Call call, PositionState ps)
+        public override bool Conforms(Call call, PositionState ps)
         {
             return _eval(call, ps);
         }
