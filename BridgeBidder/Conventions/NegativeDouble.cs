@@ -25,6 +25,7 @@ namespace BridgeBidding
             {
                 var overcallSuit = contractBid.Suit;
                 var openSuit = ((Bid)ps.Partner.LastCall).Suit;
+                bids.Add(Convention(Call.Double, UserText.NegativeDouble));
                 if (overcallSuit == Suit.Diamonds)
                 {
                     Debug.Assert(openSuit == Suit.Clubs);

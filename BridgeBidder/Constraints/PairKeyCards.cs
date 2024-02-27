@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BridgeBidding
 {
-    internal class PairKeyCards : DynamicConstraint
+    internal class PairKeyCards : DynamicConstraint, IDescribeConstraint
 	{
 		int[] _count;
 		Suit? _trumpSuit;
@@ -55,9 +55,27 @@ namespace BridgeBidding
 			}
 			return false;
 		}
+
+		string IDescribeConstraint.Describe(Call call, PositionState ps)
+		{
+			var s = _count.Length == 1 && _count.Contains(1) ? "" : "s";
+			if (_trumpSuit is Suit)
+			{
+				var str = $"{string.Join(" or ", _count)} key card{s}";
+				if (_hasQueen is bool hasQueen)
+				{
+					str += hasQueen ? " and queen" : " no queen";
+				}
+				return str;
+			}
+			else
+			{
+				return $"{string.Join(" or ", _count)} Ace{s}";
+			}
+		}
 	}
 
-	public class PairKings : DynamicConstraint
+	public class PairKings : DynamicConstraint, IDescribeConstraint
 	{
 		private int[] _count;
 		public PairKings(params int[] count)
@@ -86,6 +104,12 @@ namespace BridgeBidding
 				}
 			}
 			return false;
+		}
+		
+		string IDescribeConstraint.Describe(Call call, PositionState ps)
+		{
+			var s = _count.Length == 1 && _count.Contains(1) ? "" : "s";
+			return $"{string.Join(" or ", _count)} King{s}";
 		}
 	}
 }

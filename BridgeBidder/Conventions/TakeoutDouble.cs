@@ -32,6 +32,7 @@ namespace BridgeBidding
         {
             var bids = new List<CallFeature>
             {
+                Convention(Call.Double, UserText.TakeoutDouble),
                 PartnerBids(Call.Double, Respond),
                 Forcing(Bid.Double, Points(StrongTakeout))
 			};

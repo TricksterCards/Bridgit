@@ -1,6 +1,6 @@
 ﻿namespace BridgeBidding
 {
-    public class RuleOf9 : DynamicConstraint
+    public class RuleOf9 : DynamicConstraint, IDescribeConstraint
 	{
 		public override bool Conforms(Call call, PositionState ps, HandSummary hs)
 		{
@@ -15,6 +15,11 @@
 				// it is possible that it could conform.
 			}
 			return false;
+		}
+		
+		string IDescribeConstraint.Describe(Call call, PositionState ps)
+		{
+			return "rule of 9";
 		}
 	}
 }

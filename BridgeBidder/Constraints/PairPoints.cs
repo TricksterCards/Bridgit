@@ -71,6 +71,12 @@ namespace BridgeBidding
             return (points == null) ? (0, 100) : ((int, int))points;
         }
 
+        public string Describe(Call call, PositionState ps)
+        {
+            var range = Range.GetString(_min, _max, 40);
+            return $"{range} pair points";
+        }
+
         public bool DynamicallyConforms(Call call, PositionState ps, HandSummary hs)
         {
             var positionPoints = GetPoints(call, ps, hs);
@@ -165,7 +171,7 @@ namespace BridgeBidding
 		}
 	}
 
-    public class PairShowsPoints : DynamicConstraint, IShowsState
+    public class PairShowsPoints : DynamicConstraint, IShowsState, IDescribeConstraint
     {
         private PairPoints _pairPoints;
         public PairShowsPoints(Suit? suit, int min, int max)
@@ -181,6 +187,11 @@ namespace BridgeBidding
         public override bool Conforms(Call call, PositionState ps, HandSummary hs)
         {
             return _pairPoints.DynamicallyConforms(call, ps, hs);
+        }
+    
+        string IDescribeConstraint.Describe(Call call, PositionState ps)
+        {
+            return _pairPoints.Describe(call, ps);
         }
 
         void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
