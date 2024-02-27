@@ -280,11 +280,11 @@ public class InterractiveApp
             }
             Console.WriteLine($"Editing {_gameFile.FileName}, Board {_gameFile[_selectedGame].Board}, {_selectedGame + 1} of {_gameFile.Count}");
             var testEditor = new TestEditor(_gameFile[_selectedGame]);
-            testEditor.RunAuctionTest();
+            testEditor.RunAuctionTest(false);
             Console.WriteLine();
 
             var input = PromptForInput("E: Edit, D: Delete, A: Add, R: Re-run auction, ?: Details, #: Renumber S: Save, N: Next, Q: Quit ",
-                                        "E", "D", "A", "R", "S", "?", "N", "", "Q", "P", "#", "PBN");
+                                        "E", "D", "A", "R", "S", "?", "??", "N", "", "Q", "P", "#", "PBN");
             // TOOD: All of the commands...
             switch (input)
             {
@@ -336,7 +336,18 @@ public class InterractiveApp
                     break;
 
                 case "?":
+                    testEditor.RunAuctionTest(true);
+                    Console.WriteLine();
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
                     break;
+
+                case "??":
+                    testEditor.RunAuctionTest(true, true);
+                    Console.WriteLine();
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
+                    break;    
             }
 
           
@@ -363,7 +374,7 @@ public class InterractiveApp
                 var game = Game.Parse(gameText.ToString());
                 Console.WriteLine("PARSED IT !!!");
                 var editor = new TestEditor(game);
-                editor.RunAuctionTest();
+                editor.RunAuctionTest(false);
                 return;
             }
             gameText.Append(line);

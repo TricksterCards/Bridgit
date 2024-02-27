@@ -16,43 +16,30 @@ namespace BridgeBidding
 
     public class PositionCalls: Dictionary<Call, CallDetails>
     {
-    // TODO: Move this to another file when it gets nailed down.
-
-        public class BidRuleLog : List<BidRuleLog.Entry>
+        public enum LogAction { Illegal, Duplicate, Rejected, Accepted, Chosen, NotChosen };
+        public class LogEntry
         {
-            public string CallerMemberName { get; }
-            public string CallerSourceFilePath { get; }
-            public int CallerSourceLineNumber { get; }
-            public enum Action { Illegal, Duplicate, Rejected, Accepted, Chosen, NotChosen };
-            public class Entry
+            public LogAction Action;
+
+            public BidRule BidRule;
+
+            public List<Constraint> FailingConstraints = new List<Constraint>();
+
+            /*
+            public string GetDescription(PositionState ps)
             {
-                public Action Action;
-
-                public BidRule BidRule;
-
-                public List<Constraint> FailingConstraints = new List<Constraint>();
-
-                public string GetDescription(PositionState ps)
+                if (Action == Action.Accepted || Action == Action.Chosen || Action == Action.NotChosen)
                 {
-                    if (Action == Action.Accepted || Action == Action.Chosen || Action == Action.NotChosen)
-                    {
-                        return $"{BidRule.Call} {Action} {BidRule.GetDescription(ps)}";
-                    }
-                    var descriptions = new List<string>();
-                    foreach (var constraint in FailingConstraints)
-                    {
-                        descriptions.Add(constraint.GetDescription(ps));
-                    }
-                    return $"{BidRule.Call} {Action} {string.Join(", ", descriptions)}";
+                    return $"{BidRule.Call} {Action} {BidRule.GetDescription(ps)}";
                 }
+                var descriptions = new List<string>();
+                foreach (var constraint in FailingConstraints)
+                {
+                    descriptions.Add(constraint.GetDescription(ps));
+                }
+                return $"{BidRule.Call} {Action} {string.Join(", ", descriptions)}";
             }
-
-            public BidRuleLog(string callerMemberName, string callerSourceFilePath, int callerSourceLineNumber)
-            {
-                CallerMemberName = callerMemberName;
-                CallerSourceFilePath = callerSourceFilePath;
-                CallerSourceLineNumber = callerSourceLineNumber;
-            }
+            */
         }
 
 
@@ -60,7 +47,14 @@ namespace BridgeBidding
         public PositionState PositionState { get; }
         public CallDetails BestCall { get; private set; } 
 
-        public BidRuleLog Log { get; }
+        // The following fields are only used for diagnoitic purposes.
+        public List<LogEntry> BidRuleLog { get; } = new List<LogEntry>();
+
+        public string CallerMemberName { get; }
+        public string CallerSourceFilePath { get; }
+        public int CallerSourceLineNumber { get; }
+
+
 
         public static PositionCallsFactory FromCallFeaturesFactory(CallFeaturesFactory CallFeatures)
         {
@@ -82,19 +76,11 @@ namespace BridgeBidding
                 [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
             PositionState = ps;
-            Log = new BidRuleLog(memberName, sourceFilePath, sourceLineNumber);
+            CallerMemberName = memberName;
+            CallerSourceFilePath = sourceFilePath;
+            CallerSourceLineNumber = sourceLineNumber;
         }
 
-/*        public PositionCalls(PositionState ps, CallFeaturesFactory rulesFactory) : this(ps)
-        {
-            AddRules(rulesFactory);
-        }
-
-        public PositionCalls(PositionState ps, IEnumerable<CallFeature> rules) : this(ps)
-        {
-            AddRules(rules);
-        }
-*/
         public void AddRules(CallFeaturesFactory factory)
         {
             AddRules(factory(PositionState));

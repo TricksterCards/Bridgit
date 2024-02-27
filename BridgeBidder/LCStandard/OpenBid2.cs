@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 namespace BridgeBidding
 {
     public class OpenBid2: Open
 	{
+
+		public static StaticConstraint NewSuit = Not(new HasShownSuit(null, true));
         public static PositionCalls ResponderChangedSuits(PositionState ps)
 		{
 			var choices = new PositionCalls(ps);
@@ -70,10 +73,26 @@ namespace BridgeBidding
 				Nonforcing(Bid._3H, Rebid, Shape(6, 11), Medium),
 				Nonforcing(Bid._3S, Rebid, Shape(6, 11), Medium),
 
-				// TODO: Need jump shifts here....
-
+	
 				Nonforcing(Bid._2H, LastBid(Bid._1S), Shape(4, 6), Points(LessThanJumpShift)),
 				Nonforcing(Bid._3H, LastBid(Bid._1S), Shape(4, 5), Points(JumpShift)),
+
+				// TODO: Need to jump-shift only if this is the 2nd longest suit.  Perhaps this is good enough.  
+				Forcing(Bid._2H, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._2S, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3C, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3D, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3H, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3S, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
+
+				// We have tried every possible way to show a strong hand by reversing or jump shifting.  If we get here
+				// and have not found a bid but we are very strong then we just need to bid 3 or 4 of our suit.
+				Nonforcing(Bid._4H, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
+				Nonforcing(Bid._3H, Shape(6, 11), Points(JumpShift)),
+				Nonforcing(Bid._4S, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
+				Nonforcing(Bid._3S, Shape(6, 11), Points(JumpShift)),
+				// TODO: Need to implement minors here too.  Long, strong minors need a backup if no reverse available.
+				// 
 
 				// TODO: Need to implement 3NT bid if long running minor.  Suits stopped????
 
@@ -82,7 +101,7 @@ namespace BridgeBidding
 				Nonforcing(Bid._2NT, Balanced(), Points(Rebid2NT)),
 
             });
-			choices.AddRules(Compete.CompBids(ps));
+		// REMOVED THIS CRUTCH ---	choices.AddRules(Compete.CompBids(ps));
 			return choices;
 		}
 

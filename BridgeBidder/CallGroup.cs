@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
-using static BridgeBidding.PositionCalls.BidRuleLog;
+using static BridgeBidding.PositionCalls;
 
 namespace BridgeBidding
 {
@@ -109,14 +109,14 @@ namespace BridgeBidding
             BidRule rule = feature as BidRule;
             if (rule == null) return;
 
-            var entry = new Entry { BidRule = rule };
+            var entry = new LogEntry { BidRule = rule };
             if (!PositionState.IsValidNextCall(rule.Call))
             {
-                entry.Action = Action.Illegal;
+                entry.Action = LogAction.Illegal;
             }
             else if (PositionCalls.ContainsKey(rule.Call))
             {
-                entry.Action = Action.Duplicate;
+                entry.Action = LogAction.Duplicate;
             }
             else
             {
@@ -130,29 +130,29 @@ namespace BridgeBidding
                 }
                 if (entry.FailingConstraints.Count > 0)
                 {
-                    entry.Action = Action.Rejected;
+                    entry.Action = LogAction.Rejected;
                 }
                 else
                 {
-                    entry.Action = Action.Accepted;
+                    entry.Action = LogAction.Accepted;
                 }
             }
-            if (entry.Action == Action.Accepted && PositionState.HasHand)
+            if (entry.Action == LogAction.Accepted && PositionState.HasHand)
             {
-                entry.Action = Action.Chosen;
+                entry.Action = LogAction.Chosen;
                 foreach (var constraint in rule.Constraints)
                 {
                     if (constraint is DynamicConstraint dynamicConstraint)
                     {
                         if (!dynamicConstraint.Conforms(feature.Call, PositionState, PositionState._privateHandSummary))
                         {
-                            entry.Action = Action.NotChosen;
+                            entry.Action = LogAction.NotChosen;
                             entry.FailingConstraints.Add(constraint);
                         }
                     }
                 }
             }
-            PositionCalls.Log.Add(entry);
+            PositionCalls.BidRuleLog.Add(entry);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace BridgeBidding
 			HashSet<Type> didMultiDescribe = new HashSet<Type>();
 			var descriptions = new List<string>();
 
-			foreach (var constraint in Constraints.OrdefBy(ConstraintSort.ForDescription)
+			foreach (var constraint in Constraints.OrderBy(ConstraintSort.ForDescription))
 			{
 				// If a constraint implements IDescribeMultipleConstraints it should also implement IDescribeConstraint
 				// so that a test tool can get the description of every constraint.
@@ -70,7 +70,7 @@ namespace BridgeBidding
 					{
 						didMultiDescribe.Add(constraint.GetType());
 						List<Constraint> sameConstraint = Constraints.FindAll(c => c.GetType() == constraint.GetType());
-						descriptions.AddRange(describeMultiple.Describe(Call, ps, sameConstraint));
+						descriptions.Add(describeMultiple.Describe(Call, ps, sameConstraint));
 					}
 				}
 				else if (constraint is IDescribeConstraint describe)

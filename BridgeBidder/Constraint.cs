@@ -10,9 +10,6 @@ namespace BridgeBidding
 
     public abstract class Constraint
     {
-      //  public bool StaticConstraint = false;
-      //  public abstract bool Conforms(Call call, PositionState ps, HandSummary hs);
-
 
         public static Suit? GetSuit(Suit? s, Call call)
         {
@@ -31,15 +28,18 @@ namespace BridgeBidding
             return null;
         }
 
-        public string GetDescription(PositionState ps)
+        // This method is intended to be used by logging and debugging software.
+        // There may be some implementations that only want descriptions for logging and debugging but don't want to 
+        // show up in the UI.  These constraints should override this method instead of implementing IDescribeConstraint.
+        public virtual string GetLogDescription(Call call, PositionState ps)
         {
             if (this is IDescribeConstraint describeConstraint)
             {
-                return describeConstraint.Describe(null, ps);
+                var desc = describeConstraint.Describe(call, ps);
+                if (!string.IsNullOrEmpty(desc)) { return desc; }
             }
-            return "*";
+            return this.GetType().Name;
         }
-
     }
 
     public abstract class StaticConstraint: Constraint
@@ -91,7 +91,7 @@ namespace BridgeBidding
 
     public interface IDescribeMultipleConstraints
     {
-        List<string> Describe(Call call, PositionState ps, List<Constraint> constraints);
+        string Describe(Call call, PositionState ps, List<Constraint> constraints);
     }
 
 }

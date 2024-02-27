@@ -6,6 +6,8 @@ using System.Xml.Schema;
 using BridgeBidding;
 using BridgeBidding.PBN;
 
+using static BridgeBidding.PositionCalls;
+
 namespace bridgit;
 
 public class TestEditor 
@@ -52,18 +54,19 @@ public class TestEditor
         return true;
     }
 
-    private class FailedCall
+    private class CallRecord
     {
         public PositionCalls PositionCalls;
         public Call DesiredCall;
-        public CallDetails? CallDetails;
+        public CallDetails? CallDetails = null;
+        public bool Failed => CallDetails == null || !CallDetails.Call.Equals(DesiredCall);
         public string Error;
         public int Index;
     }
 
-    public void RunAuctionTest()
+    public void RunAuctionTest(bool verbose, bool allCallDetails = false)
     {
-        var failingCalls = new List<FailedCall>();
+        var callRecords = new List<CallRecord>();
         Display.Game(Game);
         var calls = Game.Auction.Calls;
         Game.Auction.Clear();
@@ -72,53 +75,136 @@ public class TestEditor
         foreach (var call in calls)
         {
             var choices = bs.GetCallChoices();
+            var callRecord = new CallRecord { PositionCalls = choices, DesiredCall = call, Index = bidIndex };
             if (bs.NextToAct.HasHand)
             {
                 if (choices.BestCall == null)
                 {
-                    var fc = new FailedCall { PositionCalls = choices, DesiredCall = call, CallDetails = null, Error = "No call available", Index = bidIndex };
-                    failingCalls.Add(fc);
+                    callRecord.Error = "No call available";
                 }
-                else if (!choices.BestCall.Call.Equals(call))
+                else
                 {
-                    var fc = new FailedCall { PositionCalls = choices, DesiredCall = call, CallDetails = choices.BestCall, Error = "Suggested call is " + choices.BestCall.Call, Index = bidIndex };
-                    failingCalls.Add(fc);
+                    callRecord.CallDetails = choices.BestCall;
+                    if (!choices.BestCall.Call.Equals(call))
+                    {
+                        callRecord.Error = $"suggested {choices.BestCall.Call}";
+                    }
                 }
-            } 
+            }
+            else 
+            {
+                if (choices.ContainsKey(call))
+                {
+                    callRecord.CallDetails = choices[call];
+                }
+                else
+                {
+                    callRecord.Error = $"No rule for {call}";
+                }
+            }
+            callRecords.Add(callRecord);
             bs.MakeCall(call);
             bidIndex++;
-        } 
-        Display.Auction(Game, failingCalls.Count > 0, failingCalls.Select(f => f.Index));
+        }
+        var failingCalls = callRecords.Where(cr => cr.Failed).ToList();
+        Display.Auction(Game, true, failingCalls.Select(c => c.Index));
         if (failingCalls.Count > 0)
         {
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Auction fails");
             Console.ResetColor();
-            foreach (var fc in failingCalls)
+            if (verbose)
             {
-                ShowFailingCall(fc);
-                //Console.WriteLine($"  {fc.Index}: Should be {fc.DesiredCall} - {fc.Error}");
-            }
-        }
-    }
-
-    static void ShowFailingCall(FailedCall fc)
-    {
-        Console.WriteLine($"  {fc.Index, 2}: Should be {fc.DesiredCall} - {fc.Error}");
-        if (fc.CallDetails != null)
-        {
-            Console.WriteLine($"      Calls from: {fc.PositionCalls.Log.CallerMemberName}");
-            foreach (var le in fc.PositionCalls.Log)
-            {
-                if (le.BidRule.Call.Equals(fc.DesiredCall) || le.BidRule.Call.Equals(fc.CallDetails.Call))
+                foreach (var cr in callRecords)
                 {
-                    Console.WriteLine($"      {le.GetDescription(fc.PositionCalls.PositionState)}");
+                    ShowCallRecord(cr, allCallDetails);
+                }
+            }
+            else 
+            {
+                foreach (var fc in failingCalls)
+                {
+                    ShowCallRecord(fc, allCallDetails);
                 }
             }
         }
+        else if (verbose)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Auction passes");
+            Console.ResetColor();
+            foreach (var cr in callRecords)
+            {
+                ShowCallRecord(cr, allCallDetails);
+            }
+        }
     }
 
+    static void ShowCallRecord(CallRecord cr, bool allCallDetails)
+    {
+        if (cr.Failed)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"  {cr.Index, 2}: Expected {cr.DesiredCall} - {cr.Error}");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"  {cr.Index, 2}: {cr.DesiredCall}");
+        }
+        Console.ResetColor();
+        Console.WriteLine($"      Rule from {Path.GetFileName(cr.PositionCalls.CallerSourceFilePath)}, {cr.PositionCalls.CallerMemberName}, line: {cr.PositionCalls.CallerSourceLineNumber}");
+        foreach (var le in cr.PositionCalls.BidRuleLog)
+        {
+            if (allCallDetails || le.BidRule.Call.Equals(cr.DesiredCall) || (cr.CallDetails != null && le.BidRule.Call.Equals(cr.CallDetails.Call)))
+            {
+                DisplayLogEntry(le, cr.PositionCalls.PositionState);
+            }
+        }
+    }
+
+
+    private static void DisplayLogEntry(LogEntry le, PositionState ps)
+    {
+        switch (le.Action)
+        {
+            case LogAction.Illegal:
+            case LogAction.Duplicate:
+                Console.ForegroundColor = ConsoleColor.White;
+                break;
+            case LogAction.Rejected:
+                Console.ForegroundColor = ConsoleColor.Red;
+                break;
+            case LogAction.Accepted:
+            case LogAction.Chosen:
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.ForegroundColor = ConsoleColor.Green;
+                break;
+            case LogAction.NotChosen:
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                break;
+        }
+        if (le.Action == LogAction.Chosen || le.Action == LogAction.Accepted)
+        {
+            Console.WriteLine($"      {le.BidRule.Call} {le.Action} - {le.BidRule.GetDescription(ps)}");
+        }
+        else if (le.Action == LogAction.Illegal || le.Action == LogAction.Duplicate)
+        {
+            Console.WriteLine($"      {le.BidRule.Call} {le.Action}");
+        }
+        else
+        {
+            Console.Write($"      {le.BidRule.Call} {le.Action} - Not conforming: ");
+            foreach (var constraint in le.FailingConstraints)
+            {
+                Console.Write($"{constraint.GetLogDescription(le.BidRule.Call, ps)} ");
+            }
+            Console.WriteLine();
+        }
+        Console.ResetColor();
+    }
 
 
 
@@ -249,21 +335,21 @@ public class TestEditor
     {
         while (true)
         {
-            Console.Write("Press enter for next board, E to edit, or enter a board #: ");
+            Console.Write("Press enter for next board, E to edit, or enter a bid # to examine: ");
             var c = Console.ReadLine();
             if (string.IsNullOrEmpty(c))
             {
                 return ActionNextBoard;
             }
-            int jumpToBoard;
+            int bidIndex;
             c = c.ToUpper();
             if (c.Equals("E"))
             {
                 return ActionEditAuction;
             }
-            else if (int.TryParse(c, out jumpToBoard) && jumpToBoard > 0)
+            else if (int.TryParse(c, out bidIndex) && bidIndex > 0)
             {
-                return jumpToBoard;
+                return bidIndex;
             }
         }
     }
