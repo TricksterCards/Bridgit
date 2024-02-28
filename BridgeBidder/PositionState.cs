@@ -9,18 +9,16 @@ namespace BridgeBidding
 	public enum PositionRole { Opener, Overcaller, Responder, Advancer }
 
 
-
-
 	public class PositionState
 	{
 		// When the first bid is made for a role, this variable is assigned to the length of _bids.  This allows
 		// the property RoleRound to return the proper value.  For example, if a position has passed twice and then
-		// places a bid as Advancer, the offset would be 2, indicating that advancer has 
+		// places a bid as Advancer, the offset would be 2, indicating that the position became the Advancer on the
+		// third round of bidding.  This allows us to property compute the "RoleRound" property.
 		private int _roleAssignedOffset = 0;
 		private bool _roleAssigned = false;
 
-		// TODO: Think through what is best about this.  Rename and make public or keep private?
-		public HandSummary _privateHandSummary;
+		private HandSummary _privateHandSummary;
 
 		public bool HasHand => _privateHandSummary != null;
 
@@ -82,19 +80,14 @@ namespace BridgeBidding
 
 		public CallDetails GetCallDetails(int index) => _bids[index];
 
-		private Direction OffsetDirection(int offset)
-		{
-			return (Direction)(((int)Direction + offset) % 4);
-		}
 
-		public PositionState Partner => BiddingState.Positions[OffsetDirection(2)];
-		public PositionState RightHandOpponent => BiddingState.Positions[OffsetDirection(3)];
-		public PositionState LeftHandOpponent => BiddingState.Positions[OffsetDirection(1)];
+
+		public PositionState Partner => BiddingState.Positions[Direction.Partner()];
+		public PositionState RightHandOpponent => BiddingState.Positions[Direction.RightHandOpponent()];
+		public PositionState LeftHandOpponent => BiddingState.Positions[Direction.LeftHandOpponent()];
 
 
 		public PositionState RHO => RightHandOpponent;
-
-		// TODO: Potentially LHO Interferred...  Maybe just in 
 
 
 		public PositionState(BiddingState biddingState, PairState pairState, Direction direction, int seat, Hand hand)
@@ -155,8 +148,6 @@ namespace BridgeBidding
 		}
 	
 
-
-		// THIS IS AN INTERNAL FUNCITON:
 		internal void MakeCall(CallDetails callDetails)
 		{
 			BiddingState.Contract.ValidateCall(callDetails.Call, this.Direction);
@@ -166,7 +157,6 @@ namespace BridgeBidding
 				{
 					AssignRole(PositionRole.Opener);
 					Partner.AssignRole(PositionRole.Responder);
-					// The opponenents are now 
 					LeftHandOpponent.Role = PositionRole.Overcaller;
 					RightHandOpponent.Role = PositionRole.Overcaller;
 				}
@@ -266,17 +256,23 @@ namespace BridgeBidding
 		}
 
 
+		// TODO: This logic is spread out across several classes.  Think about how to consolidate it.
 		public bool PrivateHandConforms(BidRule rule)
 		{
-			return (this._privateHandSummary == null) ? false : rule.SatisifiesDynamicConstraints(this, this._privateHandSummary);
+			return HasHand ? rule.SatisifiesDynamicConstraints(this, this._privateHandSummary) : false;
 		}
 
-	
+		// Returns a list of dynamic constraints that do not conform to the private hand.
+		// If the list is empty, then the hand conforms.  Any caller should check HasHand first.
+		public List<Constraint> PrivateHandFailingConstraints(BidRule rule)
+		{
+			Debug.Assert(HasHand);
+			return rule.FailingDynamicConstraints(this, this._privateHandSummary);
+		}
+
 		public bool IsValidNextCall(Call call)
 		{
 			return BiddingState.Contract.IsValid(call, this.Direction);
-		}
-
- 
+		} 
 	}
 }

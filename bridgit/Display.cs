@@ -105,7 +105,7 @@ static class Display
         return hand.ToString().Split(".");
     }
 
-    public static void Auction(Game game, bool showBidNumbers = false, IEnumerable<int> invalidBids = null)
+    public static void Auction(Game game, bool showBidNumbers = false, IEnumerable<int>? invalidBids = null)
     {
         AuctionTitles(game.Vulnerable, showBidNumbers);
         var direction = Direction.W;

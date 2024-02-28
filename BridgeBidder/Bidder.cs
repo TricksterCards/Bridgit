@@ -263,7 +263,7 @@ namespace BridgeBidding
 
 		public static StaticConstraint RHO(Constraint constraint)
 		{
-			return new PositionProxy(PositionProxy.RelativePosition.RightHandOpponent, constraint);
+			return new PositionProxy(PositionProxy.RelativePosition.RHO, constraint);
 		}
 
 		public static Constraint HasShape(int count)

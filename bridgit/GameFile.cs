@@ -21,6 +21,7 @@ public class GameFile: List<Game>
     private static string GetTestDirPath()
     {
         var execDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        if (execDir == null) throw new Exception("Could not find executing directory");
         var dir = Path.Combine(execDir, "..", "..", "..", "..", "TestBridgeBidder");
         return Path.GetFullPath(dir);
     }

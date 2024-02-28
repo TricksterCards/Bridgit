@@ -1,9 +1,5 @@
 using System;
-using System.Reflection;
-using System.Linq;
-using System.CommandLine;
 using System.Diagnostics;
-
 using BridgeBidding;
 using BridgeBidding.PBN;
 using System.Text;
@@ -17,7 +13,7 @@ public class InterractiveApp
     
     public static string TestDirectory = "TwoOverOneGameForce";
 
-    private GameFile _gameFile = null;
+    private GameFile? _gameFile = null;
 
     private Game[] _failedTests = new Game[0];
     private int _selectedGame = 0;
@@ -71,39 +67,7 @@ public class InterractiveApp
             }
         }
     }
-/*
 
-
-            int numDeals;
-            if (input.Equals("Q")) return;
-            if (int.TryParse(input, out numDeals))
-            {
-                Console.Write("Initial auction: ");
-                var auction = Console.ReadLine();
-                Console.Write("Final call: ");
-                var call = Console.ReadLine();
-                var gen = new CreateTestXXX(auction, call, false);
-                for (int i = 0; i < numDeals; i++)
-                {
-                    var g = gen.Generate();
-                    Display.Game(g);
-                    Display.Auction(g);
-                    Console.WriteLine();
-                }
-            }
-            else if (input.StartsWith("["))
-            {
-                ProcessPbnText(input);
-            }
-            else
-            {
-                Console.WriteLine($"Unknonwn command {input}");
-            }
-            Console.WriteLine();
-        }
-
-    }
-*/
 
     private int ReadPostiveInt(string prompt)
     {
@@ -175,8 +139,6 @@ public class InterractiveApp
     {
         Console.Clear();
         Console.WriteLine("Create a new test file");
-    //    Console.Write("Filename (blank for default): ");
-    //    var filename = Console.ReadLine();
         Console.WriteLine();
         
         var initialAuction = ReadAuction("Initial auction: ");

@@ -58,10 +58,18 @@ public class TestEditor
     {
         public PositionCalls PositionCalls;
         public Call DesiredCall;
+        public int Index;
+        
         public CallDetails? CallDetails = null;
         public bool Failed => CallDetails == null || !CallDetails.Call.Equals(DesiredCall);
-        public string Error;
-        public int Index;
+        public string Error = String.Empty;
+
+        public CallRecord(PositionCalls positionCalls, Call desiredCall, int index)
+        {
+            PositionCalls = positionCalls;
+            DesiredCall = desiredCall;
+            Index = index;
+        }
     }
 
     public void RunAuctionTest(bool verbose, bool allCallDetails = false)
@@ -75,7 +83,7 @@ public class TestEditor
         foreach (var call in calls)
         {
             var choices = bs.GetCallChoices();
-            var callRecord = new CallRecord { PositionCalls = choices, DesiredCall = call, Index = bidIndex };
+            var callRecord = new CallRecord(choices, call, bidIndex);
             if (bs.NextToAct.HasHand)
             {
                 if (choices.BestCall == null)
@@ -186,23 +194,7 @@ public class TestEditor
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 break;
         }
-        if (le.Action == LogAction.Chosen || le.Action == LogAction.Accepted)
-        {
-            Console.WriteLine($"      {le.BidRule.Call} {le.Action} - {le.BidRule.GetDescription(ps)}");
-        }
-        else if (le.Action == LogAction.Illegal || le.Action == LogAction.Duplicate)
-        {
-            Console.WriteLine($"      {le.BidRule.Call} {le.Action}");
-        }
-        else
-        {
-            Console.Write($"      {le.BidRule.Call} {le.Action} - Not conforming: ");
-            foreach (var constraint in le.FailingConstraints)
-            {
-                Console.Write($"{constraint.GetLogDescription(le.BidRule.Call, ps)} ");
-            }
-            Console.WriteLine();
-        }
+        Console.WriteLine($"      {le}");
         Console.ResetColor();
     }
 

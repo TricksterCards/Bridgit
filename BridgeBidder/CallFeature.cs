@@ -39,12 +39,22 @@ namespace BridgeBidding
 		{
 			foreach (var constraint in Constraints)
 			{
-				if (constraint is StaticConstraint staticConstraint)
-				{
-					if (!staticConstraint.Conforms(Call, ps)) return false;
-				}
+				if (constraint is StaticConstraint sc && !sc.Conforms(Call, ps)) return false;
 			}
 			return true;
+		}
+
+		public List<Constraint> FailingStaticConstraints(PositionState ps)
+		{
+			var failingConstraints = new List<Constraint>();
+			foreach (var constraint in Constraints)
+			{
+				if (constraint is StaticConstraint sc && !sc.Conforms(Call, ps)) 
+				{
+					failingConstraints.Add(sc);
+				}
+			}
+			return failingConstraints;
 		}
     }
 }

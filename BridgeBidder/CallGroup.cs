@@ -62,7 +62,10 @@ namespace BridgeBidding
                 }
                 else
                 {
-                    LogBidRule(feature);
+                    if (feature is BidRule bidRule)
+                    {
+                        PositionCalls.LogBidRule(bidRule);
+                    }
                     if (PositionState.IsValidNextCall(feature.Call) &&
                         !PositionCalls.ContainsKey(feature.Call))
                     {
@@ -101,58 +104,5 @@ namespace BridgeBidding
         }
 
 
-        // IF this feature is a BidRule then examine all of the things that the selection code will and
-        // log the results.  In the future we may want to disalbe logging globally, so this function could
-        // check a flag in BiddingState before doing all this workl
-        private void LogBidRule(CallFeature feature)
-        {
-            BidRule rule = feature as BidRule;
-            if (rule == null) return;
-
-            var entry = new LogEntry { BidRule = rule };
-            if (!PositionState.IsValidNextCall(rule.Call))
-            {
-                entry.Action = LogAction.Illegal;
-            }
-            else if (PositionCalls.ContainsKey(rule.Call))
-            {
-                entry.Action = LogAction.Duplicate;
-            }
-            else
-            {
-                foreach (var constraint in rule.Constraints)
-                if (constraint is StaticConstraint staticConstraint)
-                {
-                    if (!staticConstraint.Conforms(feature.Call, PositionState))
-                    {
-                        entry.FailingConstraints.Add(staticConstraint);
-                    }
-                }
-                if (entry.FailingConstraints.Count > 0)
-                {
-                    entry.Action = LogAction.Rejected;
-                }
-                else
-                {
-                    entry.Action = LogAction.Accepted;
-                }
-            }
-            if (entry.Action == LogAction.Accepted && PositionState.HasHand)
-            {
-                entry.Action = LogAction.Chosen;
-                foreach (var constraint in rule.Constraints)
-                {
-                    if (constraint is DynamicConstraint dynamicConstraint)
-                    {
-                        if (!dynamicConstraint.Conforms(feature.Call, PositionState, PositionState._privateHandSummary))
-                        {
-                            entry.Action = LogAction.NotChosen;
-                            entry.FailingConstraints.Add(constraint);
-                        }
-                    }
-                }
-            }
-            PositionCalls.BidRuleLog.Add(entry);
-        }
     }
 }

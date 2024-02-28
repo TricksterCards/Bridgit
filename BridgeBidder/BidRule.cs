@@ -34,6 +34,21 @@ namespace BridgeBidding
             return true;
         }
 
+		public List<Constraint> FailingDynamicConstraints(PositionState ps, HandSummary hs)
+		{
+			var failingConstraints = new List<Constraint>();
+			foreach (var constraint in Constraints)
+			{
+				if (constraint is DynamicConstraint dynamicConstraint && 
+					!dynamicConstraint.Conforms(Call, ps, hs)) 
+				{
+					failingConstraints.Add(constraint);
+				}
+			}
+			return failingConstraints;
+		}
+	
+
 		public (HandSummary, PairAgreements) ShowState(PositionState ps)
 		{
 			bool showedSuit = false;

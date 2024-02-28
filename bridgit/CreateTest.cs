@@ -33,7 +33,7 @@ public static class CreateTest
                 return false;
             }
         }
-        error = null;
+        error = string.Empty;
         return true;
     }
 
