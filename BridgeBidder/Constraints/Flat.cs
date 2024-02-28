@@ -14,7 +14,7 @@
 		}
 	}
 
-	public class ShowsFlat: IsFlat, IShowsState
+	public class ShowsFlat: IsFlat, IShowsState, IDescribeConstraint
 	{
 		public ShowsFlat(bool desiredValue = true) : base(desiredValue) { }
 		void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
@@ -30,5 +30,10 @@
             }
 			*/
         }
+
+		string IDescribeConstraint.Describe(Call call, PositionState ps)
+		{
+			return _desiredValue ? "flat" : "not flat";
+		}
 	}
 }

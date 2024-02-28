@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BridgeBidding
 {
@@ -22,6 +21,7 @@ namespace BridgeBidding
 
         {
             return new CallFeature[] {
+                Convention(Bid._2C, UserText.Strong),
                 PartnerBids(Bid._2C, Respond),
 
                 // TODO: Other reasons for 2-club opening...

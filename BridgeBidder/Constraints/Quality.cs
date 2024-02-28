@@ -45,6 +45,7 @@ namespace BridgeBidding
 				showHand.Suits[suit].ShowQuality(_min, _max);
 			}
 		}
+		
 		string IDescribeConstraint.Describe(Call call, PositionState ps)
 		{
 			if (GetSuit(_suit, call) is Suit suit)
@@ -54,12 +55,12 @@ namespace BridgeBidding
 				var maxStr = _max.ToString().ToLowerInvariant();
 
 				if (_max == SuitQuality.Solid)
-					return $"{suitSymbol} quality {minStr}+";
+					return $"{suitSymbol} {minStr}+";
 					
 				if (_min == _max)
-					return $"{suitSymbol} quality {minStr}";
+					return $"{suitSymbol} {minStr}";
 
-				return $"{suitSymbol} quality {minStr}–{maxStr}";
+				return $"{suitSymbol} {minStr}–{maxStr}";
 			}
 			return null;
 		}

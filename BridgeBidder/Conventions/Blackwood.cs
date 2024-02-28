@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 
 
 namespace BridgeBidding
@@ -22,6 +21,7 @@ namespace BridgeBidding
 			}
 			if (strain != null && ((Strain)strain).ToSuit() is Suit suit)
 			{
+				bids.Add(Convention(Bid._4NT, UserText.Blackwood));
 				bids.Add(Forcing(Bid._4NT, ShowsTrumpSuit(suit), PairPoints(suit, SlamOrBetter)));
 				bids.Add(PartnerBids(Bid._4NT, RespondKeyCards));
 				// TODO: Add DOPI and DEPO but for now just ignore double and punt on interference...
