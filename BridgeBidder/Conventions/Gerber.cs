@@ -19,6 +19,7 @@ namespace BridgeBidding
 		{
 			return new CallFeature[]
 			{
+				Convention(Bid._4C, UserText.Gerber),
 				PartnerBids(Bid._4C, RespondAces, Gerber.Applies),
 				Forcing(Bid._4C, Gerber.Applies, PairPoints(SlamOrBetter))
 			};

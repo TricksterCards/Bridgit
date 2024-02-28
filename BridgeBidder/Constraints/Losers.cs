@@ -59,7 +59,7 @@ namespace BridgeBidding
         }
     }
 
-    public class ShowsLosers : HasLosers, IShowsState
+    public class ShowsLosers : HasLosers, IShowsState, IDescribeConstraint
     {
         public ShowsLosers(bool handLosers, Suit? suit, int min, int max) : base(handLosers, suit, min, max)
         {
@@ -78,6 +78,22 @@ namespace BridgeBidding
                     showHand.Suits[suit].ShowLosers(_min, _max);
                 }
             }
+        }
+        
+        string IDescribeConstraint.Describe(Call call, PositionState ps)
+        {
+            var range = Range.GetString(_min, _max, 13);
+            var s = _min == 1 && _min == _max ? "" : "s";
+            if (_handLosers) {
+                return $"{range} loser{s} in hand";
+            }
+            else
+            {
+                if (GetSuit(_suit, call) is Suit suit) {
+                    return $"{range} loser{s} in {suit}";
+                }
+            }
+            return null;
         }
     }
 }

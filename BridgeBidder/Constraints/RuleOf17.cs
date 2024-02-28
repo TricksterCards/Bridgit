@@ -2,7 +2,7 @@
 
 namespace BridgeBidding
 {
-    public class RuleOf17 : DynamicConstraint
+    public class RuleOf17 : DynamicConstraint, IDescribeConstraint
     {
         private Suit? _suit;
 
@@ -27,5 +27,10 @@ namespace BridgeBidding
             Debug.Fail("Need to specify suit for rule of 17");
             return false;
         }
+		
+		string IDescribeConstraint.Describe(Call call, PositionState ps)
+		{
+			return "rule of 17";
+		}
     }
 }

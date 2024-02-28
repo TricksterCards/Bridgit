@@ -76,11 +76,12 @@ namespace BridgeBidding
                 }
             }
         }
+
         string IDescribeConstraint.Describe(Call call, PositionState ps)
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
-                return $"{_min}+ {suit.ToSymbol()} held by partnership";
+                return $"{_min}+ pair {suit.ToSymbol()}";
             }
             return null;
         }
