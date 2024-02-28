@@ -112,15 +112,15 @@ namespace BridgeBidding
 		}
 		public static StaticConstraint LastBid(Call call)
 		{
-			return new BidHistory(0, call, true);
+			return new BidHistory(0, call);
 		}
-		public static StaticConstraint LastBid(int level, Suit suit, bool desired = true)
+		public static StaticConstraint LastBid(int level, Suit suit)
 		{
-			return new BidHistory(0, new Bid(level, suit), desired);
+			return new BidHistory(0, new Bid(level, suit));
 		}
-		public static StaticConstraint LastBid(int level, Strain strain, bool desired = true)
+		public static StaticConstraint LastBid(int level, Strain strain)
 		{
-			return new BidHistory(0, new Bid(level, strain), desired);
+			return new BidHistory(0, new Bid(level, strain));
 		}
 		public static StaticConstraint OpeningBid(Bid bid)
 		{
@@ -128,7 +128,7 @@ namespace BridgeBidding
 		}
 
 
-		public static StaticConstraint Rebid = new BidHistory(0, null, true);
+		public static StaticConstraint Rebid = new BidHistory(0, null);
 		public static StaticConstraint NotRebid = Not(Rebid);
 
 
@@ -425,7 +425,7 @@ namespace BridgeBidding
 
 		public static Constraint Fit(int count = 8, Suit? suit = null, bool desiredValue = true)
 		{
-			return And(Partner(HasShownSuit(suit, eitherPartner: true)), new PairShowsMinShape(suit, count, desiredValue));
+			return And(HasShownSuit(suit, eitherPartner: true), new PairShowsMinShape(suit, count, desiredValue));
 		}
 
 		public static Constraint Fit(Suit suit, bool desiredValue = true)
