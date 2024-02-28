@@ -2,7 +2,7 @@
 
 namespace BridgeBidding
 {
-    public class HasShownSuit : StaticConstraint
+    public class HasShownSuit : StaticConstraint, IDescribeConstraint
     {
         Suit? _suit;
         bool _eitherPartner;
@@ -26,18 +26,14 @@ namespace BridgeBidding
             return false;
         }
 
-        public string GetDescription(Call call, PositionState ps)
+        public string Describe(Call call, PositionState ps)
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
                 var strain = suit.ToStrain();
                 if (_eitherPartner) 
                 {
-                    if (ps.PairState.Agreements.Strains[strain].Shown)
-                    {
-                        return $"one of more of the partners has shown {suit.ToSymbol()}";
-                    }
-                    return $"neither partner has shown {suit.ToSymbol()}";
+                    return $"{ps.Direction.Pair()} has shown {suit.ToSymbol()}";
                 }
                 return $"{ps.Direction} has shown {suit.ToSymbol()}";
             }
