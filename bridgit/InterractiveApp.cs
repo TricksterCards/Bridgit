@@ -231,6 +231,7 @@ public class InterractiveApp
 
     private void EditGameFile()
     {
+        if (_gameFile == null) throw new InvalidOperationException("No game file loaded");
         while (true)
         {
             Console.Clear();

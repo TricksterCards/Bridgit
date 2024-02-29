@@ -2,13 +2,11 @@
 {
     // TODO: For now this just allows the last bid to be examined...  In the future may need to look back in
     // bid history.  But this works for now...
-    public class BidHistory : StaticConstraint, IDescribeConstraint
+    public class BidHistory : StaticConstraint
 	{
 		private int _bidIndex;
 		private Call _call;
-	//	private Suit? _suit;
-	//	private int _level;
-	//	private bool _compareSuit;
+
 
 
 		// If call is null then this class will return true if the spcified call
@@ -38,7 +36,7 @@
 			}
 			return false;
 		}
-		public string Describe(Call call, PositionState ps)
+		public override string GetLogDescription(Call call, PositionState ps)
 		{
 			if (_call != null && _bidIndex == 0) return $"last call was {_call}";
 			if (_call == null && call is Bid bid && bid.Suit is Suit suit) return $"last bid suit was {suit.ToSymbol()}";
