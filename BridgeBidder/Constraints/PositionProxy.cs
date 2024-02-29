@@ -30,11 +30,18 @@ namespace BridgeBidding
 			return _constraint.Conforms(call, GetPosition(ps));
 		}
 
+		private string GetPositionName()
+		{
+			if (_relativePosition == RelativePosition.Partner) { return "partner"; }
+			if (_relativePosition == RelativePosition.LHO) { return "LHO"; }
+			return "RHO";
+		}
+
 		public string Describe(Call call, PositionState ps)
 		{
 			if (_constraint is IDescribeConstraint describeConstraint)
 			{
-				return $"{_relativePosition} {describeConstraint.Describe(call, GetPosition(ps))}";
+				return $"{GetPositionName()} {describeConstraint.Describe(call, GetPosition(ps))}";
 			}
 			return null;
 		}
@@ -42,7 +49,7 @@ namespace BridgeBidding
 		public override string GetLogDescription(Call call, PositionState ps)
 		{
 			string desc = Describe(call, ps);
-			return desc == null ? $"{_relativePosition} {_constraint.GetLogDescription(call, GetPosition(ps))}" : desc;
+			return desc == null ? $"{GetPositionName()} {_constraint.GetLogDescription(call, GetPosition(ps))}" : desc;
 		}	
 	}
 }
