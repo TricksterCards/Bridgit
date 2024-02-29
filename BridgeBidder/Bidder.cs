@@ -131,7 +131,13 @@ namespace BridgeBidding
 		public static StaticConstraint Rebid = new BidHistory(0, null);
 		public static StaticConstraint NotRebid = Not(Rebid);
 
-
+		public static StaticConstraint NewSuit = new NewSuit(null);
+		
+		public static StaticConstraint ID(string id)
+		{
+			return new LogID(id);
+		}
+		
 		public static StaticConstraint Jump(params int[] jumpLevels)
 		{
 			return new JumpBid(jumpLevels);

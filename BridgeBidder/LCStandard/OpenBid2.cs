@@ -7,7 +7,6 @@ namespace BridgeBidding
     public class OpenBid2: Open
 	{
 
-		public static StaticConstraint NewSuit = Not(new HasShownSuit(null, true));
         public static PositionCalls ResponderChangedSuits(PositionState ps)
 		{
 			var choices = new PositionCalls(ps);

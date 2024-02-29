@@ -34,18 +34,20 @@ namespace BridgeBidding
 
             public override string ToString()
             {
+                string id = LogID.GetID(BidRule);
+                string call = id == null ? $"{BidRule.Call, 3}" : $"{BidRule.Call, 3} {id}";
                 switch (Action)
                 {
                     case LogAction.Illegal:
                     case LogAction.Duplicate:
-                        return $"{BidRule.Call} {Action}";
+                        return $"{call} {Action}";
                     
                     case LogAction.Chosen:
                     case LogAction.Accepted:
-                        return $"{BidRule.Call} {Action}: {BidRule.GetDescription(PositionCalls.PositionState)}";
+                        return $"{call} {Action}: {BidRule.GetDescription(PositionCalls.PositionState)}";
 
                     default:    // This is the case for LogAction.Rejected and LogAction.NotChosen
-                        return $"{BidRule.Call} {Action}, not comforming: {string.Join(", ", FailingConstraints.Select(c => c.GetLogDescription(BidRule.Call, PositionCalls.PositionState)))}";
+                        return $"{call} {Action}, not comforming: {string.Join(", ", FailingConstraints.Select(c => c.GetLogDescription(BidRule.Call, PositionCalls.PositionState)))}";
                 }
             
             }
