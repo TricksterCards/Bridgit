@@ -13,7 +13,7 @@ namespace BridgeBidding
 		public static StaticConstraint Applies = new SimpleStaticConstraint((call, ps) => 
 				ps.Partner.Bid is Bid partnerBid &&
 				partnerBid.Strain == Strain.NoTrump && partnerBid.Level < 3, 
-				description: "partner has bid 1NT or 2NT");
+				logDescription: "partner's last bid was 1NT or 2NT");
 
 
 		public static IEnumerable<CallFeature> InitiateConvention(PositionState ps)

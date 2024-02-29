@@ -52,13 +52,17 @@ namespace BridgeBidding
         Func<Call, PositionState, bool> _eval;
         Func<Call, PositionState, string> _getDescription;
 
+        string LogDescription { get; }
+
         public SimpleStaticConstraint(Func<Call, PositionState, bool> eval = null,
                                       Func<Call, PositionState, string> getDescription = null,
-                                      string description = null)
+                                      string description = null,
+                                      string logDescription = null)
         {
             Debug.Assert(getDescription == null || description == null, "Cannot specify both getDescription and description");
             _eval = eval != null ? eval : (call, ps) => true;
             _getDescription = getDescription != null ? getDescription : (call, ps) => description;
+            LogDescription = logDescription;
         }
        
         public override bool Conforms(Call call, PositionState ps)
@@ -69,6 +73,11 @@ namespace BridgeBidding
         public virtual string Describe(Call call, PositionState ps)
         {
             return _getDescription(call, ps);
+        }
+        public override string GetLogDescription(Call call, PositionState ps)
+        {
+            if (LogDescription != null) { return LogDescription; }
+            return base.GetLogDescription(call, ps);
         }
     }
 
