@@ -82,7 +82,7 @@ namespace BridgeBidding
         
         string IDescribeConstraint.Describe(Call call, PositionState ps)
         {
-            var range = Range.GetString(_min, _max, 13);
+            var range = Range.GetString(_min, _max, 10);
             var s = _min == 1 && _min == _max ? "" : "s";
             if (_handLosers) {
                 return $"{range} loser{s} in hand";

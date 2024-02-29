@@ -47,7 +47,7 @@ namespace BridgeBidding
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
-                return $"{Range.GetString(_min, _max, 13)} {suit.ToSymbol()}";
+                return $"{Range.GetString(_min, _max, 10)} {suit.ToSymbol()}";
             }
             return null;
         }
