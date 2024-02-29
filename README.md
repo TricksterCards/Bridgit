@@ -6,7 +6,7 @@ Bridgit is a bot (computer algorithm) for bidding Bridge hands. It has been deve
 
 ### For Play
 
-Bridgit will soon be available in preview as part of [Trickster Cards](https://www.trickstercards.com/). Once it is, go to "More Games / Rules" and set "Bidding" to "2/1" before creating your game. Then all bids by computer opponents/partners as well as suggestions for your own bids will be provided by Bridgit.
+Bridgit is available in preview as part of [Trickster Cards](https://www.trickstercards.com/). To use it, go to "More Games / Rules" and set "Bidding" to "2/1" before creating your game. Then all bids by computer opponents/partners as well as suggestions for your own bids will be provided by Bridgit.
 
 ### As a Library
 
