@@ -2,7 +2,7 @@
 
 namespace BridgeBidding
 {
-    public class HasShownSuit : StaticConstraint, IDescribeConstraint
+    public class HasShownSuit : StaticConstraint
     {
         Suit? _suit;
         bool _eitherPartner;
@@ -26,7 +26,7 @@ namespace BridgeBidding
             return false;
         }
 
-        public string Describe(Call call, PositionState ps)
+        public override string GetLogDescription(Call call, PositionState ps)
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
