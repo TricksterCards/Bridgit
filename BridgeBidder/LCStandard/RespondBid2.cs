@@ -43,10 +43,10 @@ namespace BridgeBidding
                 Signoff(Bid._2H, Fit(), ForcedToBid, Points(MinimumHand)),
                 Signoff(Bid._2S, Fit(), ForcedToBid, Points(MinimumHand)),
 
-                Signoff(Bid._3C, Fit(), Jump(0), ForcedToBid, Points(MinimumHand)),
-                Signoff(Bid._3D, Fit(), Jump(0), ForcedToBid, Points(MinimumHand)),
-                Signoff(Bid._3H, Fit(), Jump(0), ForcedToBid, Points(MinimumHand)),
-                Signoff(Bid._3S, Fit(), Jump(0), ForcedToBid, Points(MinimumHand))
+                Signoff(Bid._3C, Fit(), NonJump, ForcedToBid, Points(MinimumHand)),
+                Signoff(Bid._3D, Fit(), NonJump, ForcedToBid, Points(MinimumHand)),
+                Signoff(Bid._3H, Fit(), NonJump, ForcedToBid, Points(MinimumHand)),
+                Signoff(Bid._3S, Fit(), NonJump, ForcedToBid, Points(MinimumHand))
 
 
             };

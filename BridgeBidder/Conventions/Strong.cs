@@ -99,12 +99,12 @@ namespace BridgeBidding
 				Forcing(Bid._3C, Shape(5, 11)),
                 Forcing(Bid._3D, Shape(5, 11)),
                 Forcing(Bid._3H, Shape(5, 11)),
-                Forcing(Bid._3S, Jump(0), Shape(5, 11)),
+                Forcing(Bid._3S, NonJump, Shape(5, 11)),
 
                 Nonforcing(Bid._3NT, Balanced(true)),
 
-              // TODO: 3 NT>>>  Forcing(Bid.ThreeUnknown, Jump(0)),
-                Forcing(Bid._4C, Shape(5, 11), Jump(0)),
+              // TODO: 3 NT>>>  Forcing(Bid.ThreeUnknown, NonJump),
+                Forcing(Bid._4C, Shape(5, 11), NonJump),
               
 
 			});
@@ -164,17 +164,17 @@ namespace BridgeBidding
 			// TODO: Perhaps gerber too???  Not sure...
 			bids.AddRange(new CallFeature[]
 			{
-				Signoff(Bid._4H,   LastBid(Bid._2H), Points(GameInHand)),
-				Signoff(Bid._4S,   LastBid(Bid._2S), Points(GameInHand)),
-                Signoff(Bid._5C,    LastBid(Bid._3C), Shape(7, 11), Points(GameInHand)),
+				Signoff(Bid._4H, LastBid(Bid._2H), Points(GameInHand)),
+				Signoff(Bid._4S, LastBid(Bid._2S), Points(GameInHand)),
+                Signoff(Bid._5C, LastBid(Bid._3C), Shape(7, 11), Points(GameInHand)),
                 Signoff(Bid._5D, LastBid(Bid._3D), Shape(7, 11), Points(GameInHand)),
 
                 Signoff(Bid._3NT, Points(GameInHand)),
 
                 // Bust partner so return to or original suit...
-                Signoff(Bid._3H,  Rebid),
-                Signoff(Bid._3S,  Rebid),
-                Signoff(Bid._4C,    Rebid),
+                Signoff(Bid._3H, Rebid),
+                Signoff(Bid._3S, Rebid),
+                Signoff(Bid._4C, Rebid),
                 Signoff(Bid._4D, Rebid)
 			});
 			return bids;

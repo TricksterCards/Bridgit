@@ -132,7 +132,9 @@ namespace BridgeBidding
 		public static StaticConstraint NotRebid = Not(Rebid);
 
 		public static StaticConstraint NewSuit = new NewSuit(null);
-		
+
+		public static StaticConstraint IsNewSuit(Suit suit) { return new NewSuit(suit); }
+
 		public static StaticConstraint ID(string id)
 		{
 			return new LogID(id);
@@ -142,6 +144,10 @@ namespace BridgeBidding
 		{
 			return new JumpBid(jumpLevels);
 		}
+
+		public static StaticConstraint NonJump = Jump(0);
+		public static StaticConstraint SingleJump = Jump(1);
+		public static StaticConstraint DoubleJump = Jump(2);
 
 		// Various vulnerability constraints.  Be careful with Not()
 		public static StaticConstraint IsVul = new SimpleStaticConstraint((call, ps) => ps.IsVulnerable, description: "vul");
@@ -449,12 +455,12 @@ namespace BridgeBidding
 			return And(IsReverse, new ShowsReverseShape());
 		}
 
-		public static Constraint PairPoints((int Min, int Max) range)
+		public static DynamicConstraint PairPoints((int Min, int Max) range)
 		{
 			return PairPoints(null, range);
 		}
 
-		public static Constraint PairPoints(Suit? suit, (int Min, int Max) range)
+		public static DynamicConstraint PairPoints(Suit? suit, (int Min, int Max) range)
 		{
 			return new PairShowsPoints(suit, range.Min, range.Max);
 		}

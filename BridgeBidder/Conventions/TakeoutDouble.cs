@@ -89,12 +89,12 @@ namespace BridgeBidding
                 Nonforcing(Bid._1NT, Balanced(), OppsStopped(), Points(NoTrump1)),
 
                 Nonforcing(Bid._2C, TakeoutSuit(), Points(MinLevel)),
-                Nonforcing(Bid._2D, TakeoutSuit(), Jump(0), Points(MinLevel)),
-                Nonforcing(Bid._2D, TakeoutSuit(), Jump(1), Points(InviteLevel)),
-                Nonforcing(Bid._2H, TakeoutSuit(), Jump(0), Points(MinLevel)),
-                Nonforcing(Bid._2H, TakeoutSuit(), Jump(1), Points(InviteLevel)),
-                Nonforcing(Bid._2S, TakeoutSuit(), Jump(0), Points(MinLevel)),
-                Nonforcing(Bid._2S, TakeoutSuit(), Jump(1), Points(InviteLevel)),
+                Nonforcing(Bid._2D, TakeoutSuit(), NonJump,    Points(MinLevel)),
+                Nonforcing(Bid._2D, TakeoutSuit(), SingleJump, Points(InviteLevel)),
+                Nonforcing(Bid._2H, TakeoutSuit(), NonJump, Points(MinLevel)),
+                Nonforcing(Bid._2H, TakeoutSuit(), SingleJump,   Points(InviteLevel)),
+                Nonforcing(Bid._2S, TakeoutSuit(), NonJump, Points(MinLevel)),
+                Nonforcing(Bid._2S, TakeoutSuit(), SingleJump,   Points(InviteLevel)),
 
 
                 Nonforcing(Bid._2NT, Balanced(), OppsStopped(), Points(NoTrump2)),
@@ -148,8 +148,8 @@ namespace BridgeBidding
                 Invitational(Bid._1S, Shape(5, 11), Points(MediumTakeout)),
                 Invitational(Bid._2C, Shape(5, 11), Points(MediumTakeout)),
                 Invitational(Bid._2D, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid._2H, Jump(0), Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid._2S, Jump(0), Shape(5, 11), Points(MediumTakeout)),
+                Invitational(Bid._2H, NonJump, Shape(5, 11), Points(MediumTakeout)),
+                Invitational(Bid._2S, NonJump, Shape(5, 11), Points(MediumTakeout)),
 
                 // TODO: Need stronger bids here...
 

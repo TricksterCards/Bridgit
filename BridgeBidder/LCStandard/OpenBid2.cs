@@ -42,9 +42,9 @@ namespace BridgeBidding
 				Forcing(Bid._2H, Reverse(), MediumOrBetter),
 				Forcing(Bid._2S, Reverse(), MediumOrBetter),
 
-		//		Forcing(3, Strain.Diamonds, Jump(0), Reverse(), Maximum),
-		//		Forcing(3, Strain.Hearts, Jump(0), Reverse(), Maximum),
-		//		Forcing(3, Strain.Spades, Jump(0), Reverse(), Maximum),
+		//		Forcing(3, Strain.Diamonds, NonJump, Reverse(), Maximum),
+		//		Forcing(3, Strain.Hearts, NonJump, Reverse(), Maximum),
+		//		Forcing(3, Strain.Spades, NonJump, Reverse(), Maximum),
 
 				// TODO: What about minors.  This is bad. Think we want to fall through to 3NT...
                 //Nonforcing(4, Strain.Clubs, DefaultPriority + 10, Fit(), ShowsTrump, Points(MediumOpener)),
@@ -77,12 +77,12 @@ namespace BridgeBidding
 				Nonforcing(Bid._3H, LastBid(Bid._1S), Shape(4, 5), Points(JumpShift)),
 
 				// TODO: Need to jump-shift only if this is the 2nd longest suit.  Perhaps this is good enough.  
-				Forcing(Bid._2H, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._2S, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3C, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3D, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3H, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3S, Jump(1), NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._2H, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._2S, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3C, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3D, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3H, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3S, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
 
 				// We have tried every possible way to show a strong hand by reversing or jump shifting.  If we get here
 				// and have not found a bid but we are very strong then we just need to bid 3 or 4 of our suit.

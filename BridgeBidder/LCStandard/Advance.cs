@@ -52,10 +52,10 @@ namespace BridgeBidding
                     Nonforcing(Bid._2C, Points(NewSuit2Level), Shape(6, 11)),
                     Nonforcing(Bid._2D, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
                     Nonforcing(Bid._2D, Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid._2H, Jump(0), Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2H, Jump(0), Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid._2S, Jump(0), Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2S, Jump(0), Points(NewSuit2Level), Shape(6, 11)),
+                    Nonforcing(Bid._2H, NonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Nonforcing(Bid._2H, NonJump, Points(NewSuit2Level), Shape(6, 11)),
+                    Nonforcing(Bid._2S, NonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Nonforcing(Bid._2S, NonJump, Points(NewSuit2Level), Shape(6, 11)),
 
 
 
@@ -67,10 +67,10 @@ namespace BridgeBidding
 
  
 
-                    Nonforcing(Bid._3C, Jump(1), Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
-                    Nonforcing(Bid._3D, Jump(1), Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
-                    Nonforcing(Bid._3H, Jump(1), Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
-                    Nonforcing(Bid._3S, Jump(1), Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
+                    Nonforcing(Bid._3C, SingleJump, Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
+                    Nonforcing(Bid._3D, SingleJump, Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
+                    Nonforcing(Bid._3H, SingleJump, Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
+                    Nonforcing(Bid._3S, SingleJump, Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
 
 
                     // Need to differentiate between weak and strong overcalls and advance properly.

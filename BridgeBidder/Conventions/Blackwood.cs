@@ -73,7 +73,7 @@ namespace BridgeBidding
 					Signoff(Call.Pass, ContractIsAgreedStrain, PairKeyCards(suit, null, 0, 1, 2, 3)),
 
 					Signoff(new Bid(5, suit), PairKeyCards(suit, null, 0, 1, 2, 3)),
-					Signoff(new Bid(6, suit), Jump(0), PairKeyCards(suit, null, 0, 1, 2, 3))
+					Signoff(new Bid(6, suit), NonJump, PairKeyCards(suit, null, 0, 1, 2, 3))
 /*
 					Signoff(Bid._6C, IsAgreedStrain, PairPoints(SlamOrBetter), PairKeyCards(suit, null, 4, 5)),
 					Signoff(Bid._6D, IsAgreedStrain, PairPoints(SlamOrBetter), PairAces(3, 4)),
@@ -86,9 +86,9 @@ namespace BridgeBidding
 					Signoff(Bid._5H, IsAgreedStrain, PairAces(0, 1, 2)),
 					Signoff(Bid._5S, IsAgreedStrain, PairAces(0, 1, 2)),
 
-					Signoff(Bid._6C, Jump(0), IsAgreedStrain),
-					Signoff(Bid._6D, Jump(0), IsAgreedStrain),
-					Signoff(Bid._6H, Jump(0), IsAgreedStrain),
+					Signoff(Bid._6C, NonJump, IsAgreedStrain),
+					Signoff(Bid._6D, NonJump, IsAgreedStrain),
+					Signoff(Bid._6H, NonJump, IsAgreedStrain),
 					*/
 				};
 			}

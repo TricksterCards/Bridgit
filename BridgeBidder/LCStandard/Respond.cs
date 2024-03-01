@@ -55,8 +55,8 @@ namespace BridgeBidding
             {
                 if (suit != openSuit)
                 {
-                    bids.Add(Signoff(new Bid (2, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentPlusSuit));
-                    bids.Add(Signoff(new Bid (3, suit), Jump(1), Points(WeakJumpShiftPoints), Shape(6, 10), DecentPlusSuit));
+                    bids.Add(Signoff(new Bid (2, suit), SingleJump, Points(WeakJumpShiftPoints), Shape(6, 10), DecentPlusSuit));
+                    bids.Add(Signoff(new Bid (3, suit), SingleJump, Points(WeakJumpShiftPoints), Shape(6, 10), DecentPlusSuit));
                 }
             }
             return bids;
@@ -439,8 +439,8 @@ namespace BridgeBidding
 
                 // TODO: Weak jumps here take precedence over simple raise
                
-				Nonforcing(Bid._3H, Fit(9), Jump(1), DummyPoints(WeakJumpRaise)),
-                Nonforcing(Bid._3S, Fit(9), Jump(1), DummyPoints(WeakJumpRaise)),
+				Nonforcing(Bid._3H, Fit(9), SingleJump, DummyPoints(WeakJumpRaise)),
+                Nonforcing(Bid._3S, Fit(9), SingleJump, DummyPoints(WeakJumpRaise)),
 
 
                 // Now time for invitational bids.
@@ -503,10 +503,10 @@ namespace BridgeBidding
                 Nonforcing(Bid._2C, Shape(5, 11), Points(RespondX1Level)),
 
                 Nonforcing(Bid._2D, Partner(HasShownSuit()), Fit(), Points(RespondX1Level)),
-                Nonforcing(Bid._2D, Jump(0), Shape(5, 11), Points(RespondX1Level)),
+                Nonforcing(Bid._2D, NonJump, Shape(5, 11), Points(RespondX1Level)),
 
                 Nonforcing(Bid._2H, Partner(HasShownSuit()), Fit(), Points(RespondX1Level)),
-                Nonforcing(Bid._2H, Jump(0), Shape(5, 11), Points(RespondX1Level)),
+                Nonforcing(Bid._2H, NonJump, Shape(5, 11), Points(RespondX1Level)),
 
                 Nonforcing(Bid._2S, Partner(HasShownSuit()), Fit(), Points(RespondX1Level)),
 
