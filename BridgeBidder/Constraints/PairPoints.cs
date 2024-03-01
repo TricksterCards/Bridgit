@@ -47,11 +47,11 @@ namespace BridgeBidding
             var points = hs.StartingPoints;
             if (!_useStartingPoints && GetSuit(ps, _suit, call) is Suit suit)
             {
-                if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].LongHand == ps)
+                if (ps.PairState.Agreements.Strains[suit.ToStrain()].LongHand == ps)
                 {
                     points = hs.Suits[suit].LongHandPoints;
                 }
-                else if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].Dummy == ps)
+                else if (ps.PairState.Agreements.Strains[suit.ToStrain()].Dummy == ps)
                 {
                     points = hs.Suits[suit].DummyPoints;
                 }
@@ -92,6 +92,12 @@ namespace BridgeBidding
             return (minPoints >= _min && minPoints <= _max);
         }
 
+        private Strain ToStrain(Suit? suit)
+        {
+            if (suit is Suit s) return s.ToStrain();
+            return Strain.NoTrump;
+        }
+
         public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
         {
             var pointsThis = GetPoints(call, ps, ps.PublicHandSummary);
@@ -99,11 +105,11 @@ namespace BridgeBidding
             var suit = Constraint.GetSuit(_suit, call);
             int showMin = Math.Max(_min - pointsPartner.Min, 0);
             int showMax = Math.Max(_max - pointsPartner.Min, 0);
-            if (this._useStartingPoints || suit == null || ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].LongHand == null)
+            if (this._useStartingPoints || suit == null || ps.PairState.Agreements.Strains[ToStrain(suit)].LongHand == null)
             {
                 showHand.ShowStartingPoints(showMin, showMax);
             }
-            else if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].LongHand == ps)
+            else if (ps.PairState.Agreements.Strains[ToStrain(suit)].LongHand == ps)
             {
                 showHand.Suits[(Suit)suit].ShowLongHandPoints(showMin, showMax);
             }

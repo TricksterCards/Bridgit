@@ -51,9 +51,8 @@ namespace BridgeBidding
             {
                 Hand hand;
                 game.Deal.TryGetValue(d, out hand);
-                PairState pairState = (d == Direction.N || d == Direction.S) ? ns : ew;
-                this.Positions[d] = new PositionState(this, pairState, d, seat, hand);
-                d = BridgeBidder.LeftHandOpponent(d);
+                this.Positions[d] = new PositionState(this, d.Pair() == Pair.NS ? ns : ew, d, seat, hand);
+                d = d.LeftHandOpponent();
             }
             this.Dealer = Positions[Game.Dealer];
             this.NextToAct = Dealer;

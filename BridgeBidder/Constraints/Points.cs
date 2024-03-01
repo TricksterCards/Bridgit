@@ -64,7 +64,7 @@ namespace BridgeBidding
 
     }
 
-    class ShowsPoints : HasPoints, IShowsState, IDescribeMultipleConstraints
+    class ShowsPoints : HasPoints, IShowsState, IDescribeConstraint, IDescribeMultipleConstraints
     {
         public ShowsPoints(Suit? trumpSuit, int min, int max, PointType pointType) : base(trumpSuit, min, max, pointType) { }
 
@@ -97,13 +97,11 @@ namespace BridgeBidding
         }
     
         // IDescribeMultipleConstraints
-        public List<string> Describe(Call call, PositionState ps, List<Constraint> constraints)
+        public string Describe(Call call, PositionState ps, List<Constraint> constraints)
         {
             Debug.Assert(constraints.Contains(this));
 
-            // This code favors Dummy points first, then HCP, then starting points.  It only ever returns
-            // a single string.
-            var descriptions = new List<string>();
+            // This code favors Dummy points first, then HighCard points, then Starting points.
             ShowsPoints best = this;
             if (constraints.Count > 1)
             {
@@ -123,11 +121,12 @@ namespace BridgeBidding
                     }
                 }
             }
-            descriptions.Add(best.DescribeThis(call, ps));     
-            return descriptions;
+            return best.Describe(call, ps);
         }
 
-        private string DescribeThis(Call call, PositionState ps)
+        // IDescribeConstraint - This will typically only be called by logging tools since the UI will use the IDescribeMultipleConstraints
+        // interface. 
+        public string Describe(Call call, PositionState ps)
         {
             var range = Range.GetString(_min, _max, 40);
 
@@ -154,18 +153,5 @@ namespace BridgeBidding
 
         }
     }
-
-/*  --- THIS IS THE CODE SNIPPET FOR "SUIT" POINTS
-                        if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].LongHand == ps)
-                        {
-                            points = hs.Suits[suit].LongHandPoints;
-                        }
-                        else if (ps.PairState.Agreements.Strains[Call.SuitToStrain(suit)].Dummy == ps)
-                        {
-                            points = hs.Suits[suit].DummyPoints;
-                        }
-
-*/
-
 
 }

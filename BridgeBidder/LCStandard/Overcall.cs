@@ -44,6 +44,10 @@ namespace BridgeBidding
                 Nonforcing(Bid._1H, Points(Overcall1Level), Shape(5), DecentPlusSuit),
                 Nonforcing(Bid._1S, Points(Overcall1Level), Shape(5), DecentPlusSuit),
 
+                Nonforcing(Bid._1D, Points(10, 16), Shape(5)),
+                Nonforcing(Bid._1H, Points(10, 16), Shape(5)),
+                Nonforcing(Bid._1S, Points(10, 16), Shape(5)),
+
 
                 Nonforcing(Bid._2C, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
                 Nonforcing(Bid._2D, Jump(0), CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),

@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TestBridgeBidder
 {
     [TestClass]
-    public class TestBridgeBidder
+    public class BiddingTests
     {
         public static IEnumerable<object[]> SAYCTestData => PBNTest.LoadTests("SAYC");
         public static IEnumerable<object[]> TwoOverOneGameForceData => PBNTest.LoadTests("TwoOverOneGameForce");

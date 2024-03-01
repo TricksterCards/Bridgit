@@ -8,12 +8,9 @@ using BridgeBidding.PBN;
 
 namespace BridgeBidding
 {
-    public enum Direction { N = 0, E = 1, S = 2, W = 3 }
-
-	// TODO: DO something with this...
 	public enum Scoring { MP, IMP };
 
-   	public enum Vulnerable { None, NS, EW, All }
+   	public enum Vulnerable { None = 0, NS = 1, EW = 2, All = 3 }
 
     public enum Pair { NS, EW }
 
@@ -83,20 +80,6 @@ namespace BridgeBidding
 
 
 
-		public static Direction Partner(Direction direction)
-		{
-			return (Direction)(((int)direction + 2) % 4);
-		}
-
-		public static Direction RightHandOpponent(Direction direction)
-		{
-			return (Direction)(((int)direction + 3) % 4);
-		}
-
-		public static Direction LeftHandOpponent(Direction direction)
-		{
-			return (Direction)(((int)direction + 1) % 4);
-		}
 
 
 

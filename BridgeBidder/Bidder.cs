@@ -12,22 +12,22 @@ namespace BridgeBidding
 
     public abstract class Bidder
 	{
-		public static CallFeature PartnerBids(CallFeaturesFactory brf)
+		public static CallFeature PartnerBids(CallFeaturesFactory cff)
 		{
-			return PartnerBids(PositionCalls.FromCallFeaturesFactory(brf));
+			return PartnerBids(PositionCalls.FromCallFeaturesFactory(cff));
 		}
 
-        public static CallFeature PartnerBids(PositionCallsFactory bcf)
+        public static CallFeature PartnerBids(PositionCallsFactory pcf)
         {
-            return _PartnerBids(null, bcf, new StaticConstraint[0]);
+            return _PartnerBids(null, pcf, new StaticConstraint[0]);
         }
 
 	
 
-		public static CallFeature PartnerBids(Call call, CallFeaturesFactory brf, params StaticConstraint[] constraints)
+		public static CallFeature PartnerBids(Call call, CallFeaturesFactory cff, params StaticConstraint[] constraints)
 		{
 			Debug.Assert(call != null);
-			return _PartnerBids(call, PositionCalls.FromCallFeaturesFactory(brf), constraints);
+			return _PartnerBids(call, PositionCalls.FromCallFeaturesFactory(cff), constraints);
 		}
 		public static CallFeature PartnerBids(Call call, PositionCallsFactory choicesFactory)
 		{
@@ -108,42 +108,48 @@ namespace BridgeBidding
 
 		public static StaticConstraint Seat(params int[] seats)
 		{
-			return new StaticConstraint((call, ps) => seats.Contains(ps.Seat), getDescription: (call, ps) => $"seat {ps.Seat}");
+			return new SimpleStaticConstraint((call, ps) => seats.Contains(ps.Seat), getDescription: (call, ps) => $"seat {ps.Seat}");
 		}
 		public static StaticConstraint LastBid(Call call)
 		{
-			return new BidHistory(0, call, true);
+			return new BidHistory(0, call);
 		}
-		public static StaticConstraint LastBid(int level, Suit suit, bool desired = true)
+		public static StaticConstraint LastBid(int level, Suit suit)
 		{
-			return new BidHistory(0, new Bid(level, suit), desired);
+			return new BidHistory(0, new Bid(level, suit));
 		}
-		public static StaticConstraint LastBid(int level, Strain strain, bool desired = true)
+		public static StaticConstraint LastBid(int level, Strain strain)
 		{
-			return new BidHistory(0, new Bid(level, strain), desired);
+			return new BidHistory(0, new Bid(level, strain));
 		}
 		public static StaticConstraint OpeningBid(Bid bid)
 		{
-			return new StaticConstraint((call, ps) => ps.BiddingState.OpeningBid == bid);
+			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.OpeningBid == bid);
 		}
 
 
-		public static StaticConstraint Rebid = new BidHistory(0, null, true);
+		public static StaticConstraint Rebid = new BidHistory(0, null);
 		public static StaticConstraint NotRebid = Not(Rebid);
 
-
+		public static StaticConstraint NewSuit = new NewSuit(null);
+		
+		public static StaticConstraint ID(string id)
+		{
+			return new LogID(id);
+		}
+		
 		public static StaticConstraint Jump(params int[] jumpLevels)
 		{
 			return new JumpBid(jumpLevels);
 		}
 
 		// Various vulnerability constraints.  Be careful with Not()
-		public static StaticConstraint IsVul = new StaticConstraint((call, ps) => ps.IsVulnerable, description: "vul");
-		public static StaticConstraint IsNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable, description: "not vul");
-		public static StaticConstraint IsFavVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && ps.RHO.IsVulnerable, description: "favorable vul");
-		public static StaticConstraint IsUnfavVul = new StaticConstraint((call, ps) => ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "unfavorable vul");
-		public static StaticConstraint BothVul = new StaticConstraint((call, ps) => ps.IsVulnerable && ps.RHO.IsVulnerable, description: "all vul");
-		public static StaticConstraint BothNotVul = new StaticConstraint((call, ps) => !ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "none vul");
+		public static StaticConstraint IsVul = new SimpleStaticConstraint((call, ps) => ps.IsVulnerable, description: "vul");
+		public static StaticConstraint IsNotVul = new SimpleStaticConstraint((call, ps) => !ps.IsVulnerable, description: "not vul");
+		public static StaticConstraint IsFavVul = new SimpleStaticConstraint((call, ps) => !ps.IsVulnerable && ps.RHO.IsVulnerable, description: "favorable vul");
+		public static StaticConstraint IsUnfavVul = new SimpleStaticConstraint((call, ps) => ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "unfavorable vul");
+		public static StaticConstraint BothVul = new SimpleStaticConstraint((call, ps) => ps.IsVulnerable && ps.RHO.IsVulnerable, description: "all vul");
+		public static StaticConstraint BothNotVul = new SimpleStaticConstraint((call, ps) => !ps.IsVulnerable && !ps.RHO.IsVulnerable, description: "none vul");
 		
 		/*	-- TODO Figure out what we want to do about constraint groups.  Specifically static constraint groups.
 		public static StaticConstraint StaticAnd(params StaticConstraint[] constraints)
@@ -157,16 +163,20 @@ namespace BridgeBidding
 			});
 		}
 		*/ 
-		public static StaticConstraint IsReverse = new StaticConstraint((call, ps) => ps.IsOpenerReverseBid(call), description: "reverse");
-		public static StaticConstraint ForcedToBid = new StaticConstraint((call, ps) => ps.ForcedToBid);
+		public static StaticConstraint IsReverse = new SimpleStaticConstraint((call, ps) => ps.IsOpenerReverseBid(call), description: "reverse");
+		public static StaticConstraint ForcedToBid = new SimpleStaticConstraint((call, ps) => ps.ForcedToBid);
 
 
 		public static StaticConstraint Not(StaticConstraint c)
 		{
-			return new StaticConstraint(eval: (call, ps) => !c.Conforms(call, ps),
+			return new SimpleStaticConstraint(eval: (call, ps) => !c.Conforms(call, ps),
 										getDescription: (call, ps) => { 
-											var desc = c.Describe(call, ps);
-											return string.IsNullOrEmpty(desc) ? null : $"not {desc}";
+											if (c is IDescribeConstraint dc)
+											{
+												var desc = dc.Describe(call, ps);
+												return string.IsNullOrEmpty(desc) ? null : $"not {desc}";
+											}
+											return null;
 										});
 		}
 
@@ -177,17 +187,17 @@ namespace BridgeBidding
 
 		public static StaticConstraint PassEndsAuction()
 		{
-			return new StaticConstraint((call, ps) => ps.BiddingState.Contract.PassEndsAuction);
+			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.Contract.PassEndsAuction, description: "pass ends auction");
 		}
 
 		public static StaticConstraint BidAvailable(int level, Suit suit)
 		{ 
-			return new StaticConstraint((call, ps) => ps.IsValidNextCall(new Bid(level, suit)));
+			return new SimpleStaticConstraint((call, ps) => ps.IsValidNextCall(new Bid(level, suit)));
 	 	}
 
 		public static StaticConstraint OppsContract()
 		{ 
-			return new StaticConstraint((call, ps) => ps.IsOpponentsContract); 
+			return new SimpleStaticConstraint((call, ps) => ps.IsOpponentsContract, description: "opps contract"); 
 		}
 
 
@@ -198,7 +208,7 @@ namespace BridgeBidding
 		}
 
 		public static StaticConstraint ContractIsAgreedStrain = 
-				new StaticConstraint((call, ps) =>  
+				new SimpleStaticConstraint((call, ps) =>  
 					(ps.BiddingState.Contract.Bid is Bid contractBid &&
                     ps.BiddingState.Contract.IsOurs(ps.Direction) && 
                     contractBid.Strain == ps.PairState.Agreements.AgreedStrain));
@@ -259,7 +269,7 @@ namespace BridgeBidding
 
 		public static StaticConstraint RHO(Constraint constraint)
 		{
-			return new PositionProxy(PositionProxy.RelativePosition.RightHandOpponent, constraint);
+			return new PositionProxy(PositionProxy.RelativePosition.RHO, constraint);
 		}
 
 		public static Constraint HasShape(int count)
@@ -362,8 +372,7 @@ namespace BridgeBidding
 
 		public static Constraint ShowsTrumpSuit(Suit? trumpSuit)
 		{
-			if (trumpSuit == null) return ShowsTrump;
-			return AgreeOnStrain(Call.SuitToStrain(trumpSuit));
+			return (trumpSuit is Suit s) ? AgreeOnStrain(s.ToStrain()) : ShowsTrump;
 		}
 
 
@@ -422,7 +431,7 @@ namespace BridgeBidding
 
 		public static Constraint Fit(int count = 8, Suit? suit = null, bool desiredValue = true)
 		{
-			return And(Partner(HasShownSuit(suit, eitherPartner: true)), new PairShowsMinShape(suit, count, desiredValue));
+			return And(HasShownSuit(suit, eitherPartner: true), new PairShowsMinShape(suit, count, desiredValue));
 		}
 
 		public static Constraint Fit(Suit suit, bool desiredValue = true)

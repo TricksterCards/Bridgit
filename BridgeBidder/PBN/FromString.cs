@@ -47,66 +47,6 @@ namespace BridgeBidding.PBN
             return games;
         }
 
-/*
-       	public static List<Game> Games(string text)
-        {
-            var games = new List<Game>();
-			Game game = null; 
-            var tags = TokenizeTags(text);
-
-			// This code is not completely correct in that it triggers off of the [Event] tag to indicate the
-			// start of a game section of a afile.
-
-
-            foreach (var tag in tags)
-            {
-				if (tag.Name == "Event")
-				{		
-					if (game != null)
-					{
-						games.Add(game);
-					}
-					game = new Game();
-				}
-				Debug.Assert(game != null);
-				// For now we will not import Note tags.  Ignored.  They are the only tags allowed to be duplicates.
-				// TODO: Deal with note in auction and play sections.
-				if (tag.Name != "Note")
-				{
-                    if (tag.Name == "Dealer")
-                    {
-                        Enum.TryParse<Direction>(tag.Value, out game.Dealer);
-                    }
-					if (tag.Name == "Board") 
-					{
-						int.TryParse(tag.Value, out game.Board);
-					}
-					if (tag.Name == "Deal")
-					{
-                        // TODO: THIS IS WRONG.  WE SHOULD NOT OVERRIDE DEALER.
-						game.ParseDeal(tag.Value);
-					}
-					// TODO: Should tags we parse be added to the dictionary or not?  
-					// For the time being i will say yes.
-					game.Tags[tag.Name] = tag.Value;
-					if (tag.Data.Count > 0)
-					{
-						game.TagData[tag.Name] = tag.Data;
-					}
-				}
-            }
-
-			if (game != null)
-			{
-				games.Add(game);
-			}
-
-            return games;
-        }
-
-*/
-
-
 
         internal static List<PBNTag> TokenizeTags(string text)
         {

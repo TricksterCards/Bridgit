@@ -35,8 +35,7 @@ public class TestGenerator
         var dealer = Direction.N;
         for (int s = 1; s < _seat; s++)
         {
-    //        auction.Add(Call.Pass);
-            dealer = BridgeBidder.RightHandOpponent(dealer);
+            dealer = dealer.RightHandOpponent();
         }
         int needed = Tests.Count * count;
         while (needed > 0)

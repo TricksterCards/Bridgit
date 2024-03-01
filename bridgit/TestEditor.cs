@@ -6,6 +6,8 @@ using System.Xml.Schema;
 using BridgeBidding;
 using BridgeBidding.PBN;
 
+using static BridgeBidding.PositionCalls;
+
 namespace bridgit;
 
 public class TestEditor 
@@ -19,8 +21,60 @@ public class TestEditor
     private int ActionNextBoard = 0;
     private int ActionEditAuction = -1;
 
-    public void RunAuctionTest()
+    public static Game[] FailingTests(IEnumerable<Game> games)
     {
+        var failures = new List<Game>();
+        foreach (var game in games)
+        {
+            if (!AuctionPasses(game))
+            {
+                failures.Add(game);
+            }
+        }
+        return failures.ToArray();
+    }
+
+    public static bool AuctionPasses(Game game)
+    {
+        var testGame = game.Clone();
+        testGame.Auction.Clear();
+        var bs = new BiddingState(testGame);
+        foreach (var call in game.Auction.Calls)
+        {
+            var choices = bs.GetCallChoices();
+            if (bs.NextToAct.HasHand)
+            {
+                if (choices.BestCall == null || !choices.BestCall.Call.Equals(call))
+                {
+                    return false;
+                }
+            }
+            bs.MakeCall(call);
+        }
+        return true;
+    }
+
+    private class CallRecord
+    {
+        public PositionCalls PositionCalls;
+        public Call DesiredCall;
+        public int Index;
+        
+        public CallDetails? CallDetails = null;
+        public bool Failed => CallDetails == null || !CallDetails.Call.Equals(DesiredCall);
+        public string Error = String.Empty;
+
+        public CallRecord(PositionCalls positionCalls, Call desiredCall, int index)
+        {
+            PositionCalls = positionCalls;
+            DesiredCall = desiredCall;
+            Index = index;
+        }
+    }
+
+    public void RunAuctionTest(bool verbose, bool allCallDetails = false)
+    {
+        var callRecords = new List<CallRecord>();
         Display.Game(Game);
         var calls = Game.Auction.Calls;
         Game.Auction.Clear();
@@ -29,41 +83,120 @@ public class TestEditor
         foreach (var call in calls)
         {
             var choices = bs.GetCallChoices();
+            var callRecord = new CallRecord(choices, call, bidIndex);
             if (bs.NextToAct.HasHand)
             {
-                if (choices.BestCall == null || !choices.BestCall.Call.Equals(call))
+                if (choices.BestCall == null)
                 {
-                    Display.Auction(Game, false);
-                    if (choices.BestCall == null) 
-                    {
-                        Console.WriteLine($" <- Invalid state.  No call suggested.  {call} expected");
-                    }
-                    else
-                    {
-                        Console.WriteLine($" {call} expected. bridgit suggested {choices.BestCall.Call}");
-                    }
-                    // NOTE:  PLACE A BREAKPOINT AT THE LINE FOLLOWING THIS COMMENT.  YOU CAN THEN TRACE
-                    // THROUGH THE CREATION OF THE CHOICES AND THE SELECTION OF THE BEST CALL
-                    choices = bs.DEBUG_ReEvaluateCallChoices();
-                    Console.WriteLine($"Forcing {call} to be made and continuing");
-                    bs.MakeCall(call);
+                    callRecord.Error = "No call available";
                 }
                 else
                 {
-                    bs.MakeCall(choices.BestCall);
+                    callRecord.CallDetails = choices.BestCall;
+                    if (!choices.BestCall.Call.Equals(call))
+                    {
+                        callRecord.Error = $"suggested {choices.BestCall.Call}";
+                    }
                 }
-            } 
+            }
             else 
             {
-                // As long as the call is valid, we're happy
-                bs.MakeCall(call);
+                if (choices.ContainsKey(call))
+                {
+                    callRecord.CallDetails = choices[call];
+                }
+                else
+                {
+                    callRecord.Error = $"No rule for {call}";
+                }
             }
+            callRecords.Add(callRecord);
+            bs.MakeCall(call);
             bidIndex++;
         }
-        Display.Auction(Game);
+        var failingCalls = callRecords.Where(cr => cr.Failed).ToList();
+        Display.Auction(Game, true, failingCalls.Select(c => c.Index));
+        if (failingCalls.Count > 0)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Auction fails");
+            Console.ResetColor();
+            if (verbose)
+            {
+                foreach (var cr in callRecords)
+                {
+                    ShowCallRecord(cr, allCallDetails);
+                }
+            }
+            else 
+            {
+                foreach (var fc in failingCalls)
+                {
+                    ShowCallRecord(fc, allCallDetails);
+                }
+            }
+        }
+        else if (verbose)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Auction passes");
+            Console.ResetColor();
+            foreach (var cr in callRecords)
+            {
+                ShowCallRecord(cr, allCallDetails);
+            }
+        }
+    }
+
+    static void ShowCallRecord(CallRecord cr, bool allCallDetails)
+    {
+        if (cr.Failed)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"  {cr.Index, 2}: Expected {cr.DesiredCall} - {cr.Error}");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"  {cr.Index, 2}: {cr.DesiredCall}");
+        }
+        Console.ResetColor();
+        Console.WriteLine($"      Rule from {Path.GetFileName(cr.PositionCalls.CallerSourceFilePath)}, {cr.PositionCalls.CallerMemberName}, line: {cr.PositionCalls.CallerSourceLineNumber}");
+        foreach (var le in cr.PositionCalls.BidRuleLog)
+        {
+            if (allCallDetails || le.BidRule.Call.Equals(cr.DesiredCall) || (cr.CallDetails != null && le.BidRule.Call.Equals(cr.CallDetails.Call)))
+            {
+                DisplayLogEntry(le, cr.PositionCalls.PositionState);
+            }
+        }
     }
 
 
+    private static void DisplayLogEntry(LogEntry le, PositionState ps)
+    {
+        switch (le.Action)
+        {
+            case LogAction.Illegal:
+            case LogAction.Duplicate:
+                Console.ForegroundColor = ConsoleColor.White;
+                break;
+            case LogAction.Rejected:
+                Console.ForegroundColor = ConsoleColor.Red;
+                break;
+            case LogAction.Accepted:
+            case LogAction.Chosen:
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.ForegroundColor = ConsoleColor.Green;
+                break;
+            case LogAction.NotChosen:
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                break;
+        }
+        Console.WriteLine($"      {le}");
+        Console.ResetColor();
+    }
 
 
 
@@ -81,85 +214,134 @@ public class TestEditor
     }
 
 
-    private void EditAuction()
+    public void EditAuction()
     {
-        var auction = Game.Auction;
-        Display.Auction(Game, true);
-        Console.Write("Which bid would you like to change? ");
+        while (true)
+        {
+            Console.Clear();
+            Display.Game(Game);
+            var auction = Game.Auction;
+            Display.Auction(Game, true);
+            Console.WriteLine();
+            Console.Write("Enter bid #, (oldbid) (newbid), +call, -bid# or enter to quit: ");
 
-        var choice = Console.ReadLine();
-        // If there is no space then it is a number that selects the bid.  If there is a single space
-        // then it should be in the form "cur-bid new-call" where cur-bid is the current bid
-        // and new-call is the value to replace that bid with.  Note that cur-bid must be a unique
-        // bid in the auction so can't just be Pass or, if X is repeated that would simply replace the
-        // first one.
-        if (choice != null && choice.Split(" ").Length == 2)
-        {
-            var calls = choice.ToUpper().Split(" ");
-            Call oldCall;
-            Call newCall;
-            if (Call.TryParse(calls[0], out oldCall) && Call.TryParse(calls[1], out newCall))
+            var choice = Console.ReadLine();
+            if (string.IsNullOrEmpty(choice) || choice == "Q" || choice == "q") return;
+            choice = choice.ToUpper();
+            if (choice.StartsWith("+"))
             {
-                for (int i = 0; i < auction.Count; i++)
+                Call newCall;
+                if (Call.TryParse(choice.Substring(1), out newCall))
                 {
-                    if (auction[i].Call.Equals(oldCall))
-                    {
-                        auction[i].Call = newCall;
-                        Game.UpdateContractFromAuction();
-                        return;
-                    }
+                    TryUpdateAuction(Game.Auction.Count, newCall);
                 }
-                Console.WriteLine($"ERROR: Did not find {oldCall}");
             }
-            else
+            // If there is no space then it is a number that selects the bid.  If there is a single space
+            // then it should be in the form "cur-bid new-call" where cur-bid is the current bid
+            // and new-call is the value to replace that bid with.  Note that cur-bid must be a unique
+            // bid in the auction so can't just be Pass or, if X is repeated that would simply replace the
+            // first one.
+            else if (choice.Split(" ").Length == 2)
             {
-                Console.WriteLine("ERROR: Unable to parse calls.");
-            }
-        }
-        else
-        {
-            int bidIndex;
-            if (int.TryParse(choice, out bidIndex) && bidIndex > 0 && bidIndex <= auction.Count)
-            {
-                Console.Write($"What bid should replace {auction[bidIndex-1].Call}? ");
-                var newBid = Console.ReadLine();
-                Call call;
-                if (newBid != null && Call.TryParse(newBid.ToUpper(), out call))
+                var calls = choice.ToUpper().Split(" ");
+                Call oldCall;
+                Call newCall;
+                if (Call.TryParse(calls[0], out oldCall) && Call.TryParse(calls[1], out newCall))
                 {
-                    auction[bidIndex - 1].Call = call;
-                    Game.UpdateContractFromAuction();
+                    for (int i = 0; i < auction.Count; i++)
+                    {
+                        if (auction[i].Call.Equals(oldCall))
+                        {
+                            TryUpdateAuction(i, newCall);
+                        }
+                    }
+                    Console.WriteLine($"ERROR: Did not find {oldCall}");
                 }
                 else
                 {
-                    Console.WriteLine("ERROR: Call value not recognized");
+                    Console.WriteLine("ERROR: Unable to parse calls.");
                 }
             }
             else
             {
-                Console.WriteLine("ERROR:  Input should be bid index or of form \"oldbid newbid\"");
+                int bidIndex;
+                if (int.TryParse(choice, out bidIndex) && bidIndex != 0 && Math.Abs(bidIndex) <= auction.Count)
+                {
+                    if (bidIndex < 0)
+                    {
+                        Game.Auction.RemoveAt(-bidIndex - 1);
+                        // TODO: Need to update contract if we remove a bid
+                    }
+                    else
+                    {
+                        Console.Write($"What bid should replace {bidIndex}:{auction[bidIndex-1].Call}? ");
+                        var newBid = Console.ReadLine();
+                        Call call;
+                        if (newBid != null && Call.TryParse(newBid.ToUpper(), out call))
+                        {
+                            TryUpdateAuction(bidIndex - 1, call);
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("ERROR:  Input should be bid index or of form \"oldbid newbid\"");
+                }
             }
         }
+    }
+
+    private bool TryUpdateAuction(int index, Call newCall)
+    {
+        if (index < 0 || index > Game.Auction.Count) return false;
+        var calls = Game.Auction.Calls;
+        if (index == Game.Auction.Count)
+        {
+            calls.Add(newCall);
+        }
+        else
+        {
+            calls[index] = newCall;
+        }
+        string error;
+        if (!ContractState.IsValidAuction(Game.Dealer, calls, out error))
+        {
+            Console.WriteLine($"Unable to update auction: {error}");
+            Console.Write("Press enter to continue: ");
+            Console.ReadLine();
+            return false;
+        }
+        if (index == Game.Auction.Count)
+        {
+            Game.Auction.Add(newCall);
+        }
+        else
+        {
+            Game.Auction[index] = new Auction.AnnotatedCall { Call = newCall, Note = null };
+        }
+        Game.UpdateContractFromAuction();
+        return true;
     }
 
     private int GetUserAction()
     {
         while (true)
         {
-            Console.Write("Press enter for next board, E to edit, or enter a board #: ");
+            Console.Write("Press enter for next board, E to edit, or enter a bid # to examine: ");
             var c = Console.ReadLine();
             if (string.IsNullOrEmpty(c))
             {
                 return ActionNextBoard;
             }
-            int jumpToBoard;
+            int bidIndex;
             c = c.ToUpper();
             if (c.Equals("E"))
             {
                 return ActionEditAuction;
             }
-            else if (int.TryParse(c, out jumpToBoard) && jumpToBoard > 0)
+            else if (int.TryParse(c, out bidIndex) && bidIndex > 0)
             {
-                return jumpToBoard;
+                return bidIndex;
             }
         }
     }

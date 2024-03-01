@@ -2,10 +2,14 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
+using static BridgeBidding.PositionCalls;
 
 namespace BridgeBidding
 {
+
+
     public class CallGroup : Dictionary<Call, CallDetails>
     {
         public PositionCalls PositionCalls { get; }
@@ -18,6 +22,7 @@ namespace BridgeBidding
 
 
 
+
         public static CallGroup Create(PositionCalls positionCalls, IEnumerable<CallFeature> rules)
         {
             var group = new CallGroup(positionCalls);
@@ -27,10 +32,10 @@ namespace BridgeBidding
 
         private CallGroup(PositionCalls positionCalls)
         {
-            this.PositionCalls = positionCalls;
+            PositionCalls = positionCalls;
             Annotations = new List<CallAnnotation>();
         }
-
+       
         // Add only calls that are not already defined in the PositionCalls
         private void AddRules(IEnumerable<CallFeature> features)
         {
@@ -57,6 +62,10 @@ namespace BridgeBidding
                 }
                 else
                 {
+                    if (feature is BidRule bidRule)
+                    {
+                        PositionCalls.LogBidRule(bidRule);
+                    }
                     if (PositionState.IsValidNextCall(feature.Call) &&
                         !PositionCalls.ContainsKey(feature.Call))
                     {
@@ -93,6 +102,7 @@ namespace BridgeBidding
                 }
             }
         }
+
 
     }
 }

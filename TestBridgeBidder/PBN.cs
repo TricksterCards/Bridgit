@@ -21,7 +21,7 @@ namespace TestBridgeBidder
                 var auction = game.Auction.Calls;
                 var bidHistory = "";
                 var direction = game.Dealer;
-                for (var i = 0; i < auction.Length; i++)
+                for (var i = 0; i < auction.Count; i++)
                 {
                     var call = auction[i];
                     if (game.Deal[direction] != null)
@@ -43,7 +43,7 @@ namespace TestBridgeBidder
                                 }
                                 );
                     }
-                    direction = BridgeBidder.LeftHandOpponent(direction);
+                    direction = direction.LeftHandOpponent();
                     bidHistory += $"{call} ";
                 }
             }

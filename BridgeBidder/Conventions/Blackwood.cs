@@ -19,7 +19,7 @@ namespace BridgeBidding
 			{
 				strain = ps.PairState.Agreements.LastShownStrain;
 			}
-			if (strain != null && Call.StrainToSuit((Strain)strain) is Suit suit)
+			if (strain != null && ((Strain)strain).ToSuit() is Suit suit)
 			{
 				bids.Add(Convention(Bid._4NT, UserText.Blackwood));
 				bids.Add(Forcing(Bid._4NT, ShowsTrumpSuit(suit), PairPoints(suit, SlamOrBetter)));
@@ -32,7 +32,7 @@ namespace BridgeBidding
 		private static bool TryGetAgreedSuit(PositionState ps, out Suit suit)
 		{
 			Strain? strain = ps.PairState.Agreements.AgreedStrain;
-			if (strain != null && Call.StrainToSuit((Strain)strain) is Suit s)
+			if (strain is Strain st && st.ToSuit() is Suit s)
 			{
 				suit = s;
 				return true;

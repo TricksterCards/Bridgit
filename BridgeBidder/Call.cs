@@ -29,33 +29,6 @@ namespace BridgeBidding
         public static Call Double = new Double();
         public static Call Redouble = new Redouble();
 
-        public static Strain SuitToStrain(Suit? suit)
-        {
-            switch (suit)
-            {
-                case null: return Strain.NoTrump;
-                case Suit.Clubs: return Strain.Clubs;
-                case Suit.Diamonds: return Strain.Diamonds;
-                case Suit.Hearts: return Strain.Hearts;
-                case Suit.Spades: return Strain.Spades;
-                default:
-                    Debug.Fail("Should always be a suit");
-                    return Strain.NoTrump;
-            }
-        }
-
-        public static Suit? StrainToSuit(Strain strain)
-        {
-            switch (strain)
-            {
-                case Strain.Clubs:    return Suit.Clubs;
-                case Strain.Diamonds: return Suit.Diamonds;
-                case Strain.Hearts:   return Suit.Hearts;
-                case Strain.Spades:   return Suit.Spades;
-                default:              return null;
-            }
-        }
-
 
         public static bool TryParse(string str, out Call call)
         {
@@ -72,7 +45,8 @@ namespace BridgeBidding
         }
         static public Call Parse(string str)
         {
-            if (str == "Pass") { return Pass; }
+            // TODO: Determine if all of these are case insensitive.  I think they should be.
+            if (str == "Pass" || str == "PASS") { return Pass; }
             if (str == "X") { return Double; }
             if (str == "XX") { return Redouble; }
             int level;
@@ -145,9 +119,9 @@ namespace BridgeBidding
     {
         public int Level { get; }
         public Strain Strain { get; }
-        public Suit? Suit => StrainToSuit(Strain);
+        public Suit? Suit => Strain.ToSuit();
 
-        public Bid(int level, Suit suit) : this(level, SuitToStrain(suit))
+        public Bid(int level, Suit suit) : this(level, suit.ToStrain())
         { }
 
         public Bid(int level, Strain strain) : base((level - 1) * 5 + (int)strain + 3)

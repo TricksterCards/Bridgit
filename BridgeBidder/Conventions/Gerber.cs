@@ -10,9 +10,10 @@ namespace BridgeBidding
 	//	private static (int, int) SmallSlam = (31, 35);
 		private static (int, int) GrandSlam = (36, 100);
 
-		public static StaticConstraint Applies = new StaticConstraint((call, ps) => 
+		public static StaticConstraint Applies = new SimpleStaticConstraint((call, ps) => 
 				ps.Partner.Bid is Bid partnerBid &&
-				partnerBid.Strain == Strain.NoTrump && partnerBid.Level < 3);
+				partnerBid.Strain == Strain.NoTrump && partnerBid.Level < 3, 
+				logDescription: "partner's last bid was 1NT or 2NT");
 
 
 		public static IEnumerable<CallFeature> InitiateConvention(PositionState ps)

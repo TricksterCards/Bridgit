@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -13,7 +14,7 @@ namespace BridgeBidding
     {
         public Game Game { get; } 
 
-        public Call[] Calls => this.Select(annotatedCall => annotatedCall.Call).ToArray();
+        public List<Call> Calls => this.Select(annotatedCall => annotatedCall.Call).ToList();
 
         internal Auction(Game game)
         {
@@ -24,23 +25,14 @@ namespace BridgeBidding
         {
             public Call Call;
             public string Note;
+
+            public bool HasNote => !string.IsNullOrEmpty(Note);
         }
 
         public void Add(CallDetails callDetails)
         {
-            string note = null;
-            foreach (var annotation in callDetails.Annotations)
-            {
-                if (note == null)
-                {
-                    note = "";
-                }
-                else
-                {
-                    note += ";";
-                }
-                note += $"{annotation.Type}: {annotation.Text}";
-            }
+            // Select the text from every annothation and join them into a single note.
+            string note = string.Join(";", callDetails.Annotations.Select(a => $"{a.Type}: {a.Text}"));
             Add(callDetails.Call, note);
         }
 
@@ -48,33 +40,18 @@ namespace BridgeBidding
         {
             Add(new AnnotatedCall { Call = call, Note = note });
         }
-/*
-        public void Update(BiddingState bs)
+
+        public bool IsValid()
         {
-            this.Clear();
-            if (bs.Dealer.Direction != Game.Dealer)
-            {
-                throw new Exception($"Game dealer is {Game.Dealer} and bidding state is {bs.Dealer.Direction}.  These must be equal to call Update");
-            }
-            var calls = bs.GetAuction();
-            foreach (var callDetails in calls)
-            {
-                Add(callDetails);
-            }
+            string error;
+            return IsValid(out error);
         }
-*/
-/*
-        public static Auction FromGame(Game game)
+
+        public bool IsValid(out string error)
         {
-            Direction firstToAct;
-            if (!Enum.TryParse<Direction>(game.Tags["Auction"], out firstToAct))
-            {
-                throw new FormatException("Auction tag does not specify first to act.");
-            }
-			var auctionText = string.Join(" ", game.TagData["Auction"]);
-            return FromString(firstToAct, auctionText, game.AuctionNotes);
+            return ContractState.IsValidAuction(Game.Dealer, Calls, out error);
         }
-*/
+
         // TODO: This really needs to work properly if the full PBN text is passed in.  But for now, we just expect a single
         // stirng of calls that start with the dealer.
         internal void Parse(string auctionText)
@@ -93,35 +70,13 @@ namespace BridgeBidding
 				}
 			}
         }
-/*
-        public static Auction Parse(string auctionText)
-        {
-            var auction = new Auction { FirstToAct = firstToAct };
-		    var tokens = auctionText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (var token in tokens)
-			{
-                if (token.StartsWith("="))
-                {   
-                    // If we were called from a basic string then note references make no sense and are ignored.
-                    if (notes != null)
-                    {
-                        auction.Last().Note = notes.GetValue(token);
-                    }
-                }
-                // TODO: We should really remember $annotations too, but for now only notes are supported.
-				else if (!token.StartsWith("$") && !token.Equals("+"))
-				{
-                    auction.Add(new CallWithNote { Call = Call.Parse(token) });
-				}
-			}
-			return auction;
-		}
 
-*/
+        // TODO: Should we actually confirm that the auction is valid here?
+        // Perhaps it is right to seraialize the auction even if it is invalid.
         public override string ToString()
         {
             if (this.Count == 0) return "";
-            // TODO: Validate auction.  Use Contract class to make sure bids are correct.
+
             var sb = new StringBuilder();
             var notes = new List<string>();
             sb.AppendLine($"[Auction \"{Game.Dealer}\"]");
@@ -134,7 +89,7 @@ namespace BridgeBidding
                 var call = this[i].Call;
                 sb.Append(call.ToString());
                 numCallsThisLine++;
-                if (this[i].Note != null)
+                if (this[i].HasNote)
                 {
                     var noteIndex = notes.IndexOf(this[i].Note);
                     if (noteIndex < 0)

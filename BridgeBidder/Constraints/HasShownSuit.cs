@@ -15,14 +15,29 @@ namespace BridgeBidding
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
-                var strain = Call.SuitToStrain(suit);
-                if (_eitherPartner) {
+                var strain = suit.ToStrain();
+                if (_eitherPartner)
+                {
                     return ps.PairState.Agreements.Strains[strain].Shown;
                 }
                 return ps.PairState.Agreements.Strains[strain].LongHand == ps;
             }
             Debug.Fail("No suit for call in HasShownSuit constraint.");
             return false;
+        }
+
+        public override string GetLogDescription(Call call, PositionState ps)
+        {
+            if (GetSuit(_suit, call) is Suit suit)
+            {
+                var strain = suit.ToStrain();
+                if (_eitherPartner) 
+                {
+                    return $"{ps.Direction.Pair()} has shown {suit.ToSymbol()}";
+                }
+                return $"{ps.Direction} has shown {suit.ToSymbol()}";
+            }
+            return null;    // This is really an invalid state...
         }
     }
 }
