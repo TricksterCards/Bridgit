@@ -169,7 +169,12 @@ namespace BridgeBidding
 			});
 		}
 		*/ 
-		public static StaticConstraint IsReverse = new SimpleStaticConstraint((call, ps) => ps.IsOpenerReverseBid(call), description: "reverse");
+
+	
+		// The static constaint "IsReverseBid" simply checks if the call is a reverse bid.  The IsReverse also shows the shape of the reverse bid.
+		private static StaticConstraint IsReverseBid = new SimpleStaticConstraint((call, ps) => ps.IsOpenerReverseBid(call), description: "reverse");
+		public static Constraint Reverse = And(IsReverseBid, new ShowsReverseShape());
+		public static StaticConstraint NotReverse = Not(IsReverseBid);
 		public static StaticConstraint ForcedToBid = new SimpleStaticConstraint((call, ps) => ps.ForcedToBid);
 
 
@@ -268,7 +273,9 @@ namespace BridgeBidding
 		public static Constraint Shape(Suit suit, int count) { return new ShowsShape(suit, count, count); }
 		public static Constraint Shape(int min, int max) { return new ShowsShape(null, min, max); }
 		public static Constraint Shape(Suit suit, int min, int max) { return new ShowsShape(suit, min, max); }
-		public static Constraint Balanced(bool desired = true) { return new ShowsBalanced(desired); }
+		public static DynamicConstraint Balanced = new ShowsBalanced(true);
+		public static DynamicConstraint NotBalanced = new ShowsBalanced(false);
+
 		public static Constraint Flat(bool desired = true) { return new ShowsFlat(desired); }
 
 
@@ -450,10 +457,7 @@ namespace BridgeBidding
 			return Fit(8, null, desiredValue);
 		}
 
-		public static Constraint Reverse()
-		{
-			return And(IsReverse, new ShowsReverseShape());
-		}
+
 
 		public static DynamicConstraint PairPoints((int Min, int Max) range)
 		{

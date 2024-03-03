@@ -11,7 +11,7 @@ public class InterractiveApp
 {
 
     
-    public static string TestDirectory = "TwoOverOneGameForce";
+    public static string TestDirectory = "New";
 
     private GameFile? _gameFile = null;
 

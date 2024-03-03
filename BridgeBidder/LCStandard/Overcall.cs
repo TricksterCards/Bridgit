@@ -35,24 +35,26 @@ namespace BridgeBidding
 				Nonforcing(Bid._3H, Jump(1, 2), CueBid(false), Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
 				Nonforcing(Bid._3S, Jump(1, 2), CueBid(false), Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
 
-				Nonforcing(Bid._1D, Points(Overcall1Level), Shape(6, 10)),
-				Nonforcing(Bid._1H, Points(Overcall1Level), Shape(6, 10)),
+                // We want to bid the highest suit first if we have two, so go from spades down to diamonds
+
 				Nonforcing(Bid._1S, Points(Overcall1Level), Shape(6, 10)),
+				Nonforcing(Bid._1H, Points(Overcall1Level), Shape(6, 10)),
+				Nonforcing(Bid._1D, Points(Overcall1Level), Shape(6, 10)),
 
                 // TODO: May want to consider more rules for 1-level overcall.  If you have 10 points an a crummy suit for example...
-                Nonforcing(Bid._1D, Points(Overcall1Level), Shape(5), DecentPlusSuit),
-                Nonforcing(Bid._1H, Points(Overcall1Level), Shape(5), DecentPlusSuit),
                 Nonforcing(Bid._1S, Points(Overcall1Level), Shape(5), DecentPlusSuit),
+                Nonforcing(Bid._1H, Points(Overcall1Level), Shape(5), DecentPlusSuit),
+                Nonforcing(Bid._1D, Points(Overcall1Level), Shape(5), DecentPlusSuit),
 
-                Nonforcing(Bid._1D, Points(10, 16), Shape(5)),
-                Nonforcing(Bid._1H, Points(10, 16), Shape(5)),
                 Nonforcing(Bid._1S, Points(10, 16), Shape(5)),
+                Nonforcing(Bid._1H, Points(10, 16), Shape(5)),
+                Nonforcing(Bid._1D, Points(10, 16), Shape(5)),
 
 
-                Nonforcing(Bid._2C, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
-                Nonforcing(Bid._2D, NonJump, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
-                Nonforcing(Bid._2H, NonJump, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
                 Nonforcing(Bid._2S, NonJump, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
+                Nonforcing(Bid._2H, NonJump, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
+                Nonforcing(Bid._2D, NonJump, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11)),
+                Nonforcing(Bid._2C, CueBid(false), Points(OvercallStrong2Level), Shape(5, 11))
             };
           
         }

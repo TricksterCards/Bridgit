@@ -22,6 +22,7 @@ namespace BridgeBidding
         public static string Stayman = "Stayman";
         public static string Strong = "Strong";
         public static string TakeoutDouble = "Takeout Double";
+        public static string SemiForcing = "semi-forcing";
 
     }
 }

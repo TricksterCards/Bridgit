@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Globalization;
+using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Threading;
 using System.Xml.Serialization;
 
@@ -209,15 +211,14 @@ namespace BridgeBidding
             }
             else 
             {
-                // TODO: Need to do different bids if passed hand....
                 choices.AddRules(SolidSuit.Bids);
                 choices.AddRules(Jacoby2NT.InitiateConvention);
                 choices.AddRules(new CallFeature[]
                 {
                     PartnerBids(OpenBid2.ResponderChangedSuits),
-                    PartnerBids(Bid._2H,   OpenBid2.ResponderRaisedMajor),
+                    PartnerBids(Bid._2H, OpenBid2.ResponderRaisedMajor),
                     PartnerBids(Bid._3H, OpenBid2.ResponderRaisedMajor),
-                    PartnerBids(Bid._4H,  OpenBid2.ResponderRaisedMajor),
+                    PartnerBids(Bid._4H, OpenBid2.ResponderRaisedMajor),
 
                     // TODO: LARRY CONFIRM - With 2/1 game force values bid a minor with 4 spades. 
                     // more spades bid spades regardless of points
@@ -240,7 +241,8 @@ namespace BridgeBidding
 
                     Forcing(Bid._1S, Points(Respond1Level), Shape(4, 10), Shape(Suit.Hearts, 0, 3)),
 
-                    PartnerBids(Bid._1NT, OpenBid2.OneNTOverMajorOpen),
+                    PartnerBids(Bid._1NT, OpenBid2.SemiForcingNT),
+                    Announce(Bid._1NT, UserText.SemiForcing),
                     Semiforcing(Bid._1NT, Points(Respond1NTOverMajor), Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
                     
                     // TODO: Any follow-up to this?  Slam? - or just use compete logic?  
@@ -268,9 +270,9 @@ namespace BridgeBidding
                     PartnerBids(OpenBid2.ResponderChangedSuits),
 
                     // TODO: Are these OK?  Need a "passed" version?
-                    PartnerBids(Bid._2S,   OpenBid2.ResponderRaisedMajor),
+                    PartnerBids(Bid._2S, OpenBid2.ResponderRaisedMajor),
                     PartnerBids(Bid._3S, OpenBid2.ResponderRaisedMajor),
-                    PartnerBids(Bid._4S,  OpenBid2.ResponderRaisedMajor),
+                    PartnerBids(Bid._4S, OpenBid2.ResponderRaisedMajor),
 
                     // TODO: Rules for best suit if 5-5
                     Invitational(Bid._2C, Points(MaxPassed), Shape(5, 10)),
@@ -284,6 +286,7 @@ namespace BridgeBidding
                 
                   // TODO: Where  PartnerBids(Bid._1NT, OpenBid2.OneNTOverMajorOpen),
                     // TODO: Points range name wrong!
+
                     Semiforcing(Bid._1NT, Points(Respond1NTPassedHand), Shape(Suit.Spades, 0, 2)),
                 });
             }
@@ -291,13 +294,12 @@ namespace BridgeBidding
             {
                 choices.AddRules(SolidSuit.Bids);
                 choices.AddRules(Jacoby2NT.InitiateConvention);
-                choices.AddRules(new CallFeature[]
-                {
+                choices.AddRules(
                     PartnerBids(OpenBid2.ResponderChangedSuits),
 
-                    PartnerBids(Bid._2S,   OpenBid2.ResponderRaisedMajor),
+                    PartnerBids(Bid._2S, OpenBid2.ResponderRaisedMajor),
                     PartnerBids(Bid._3S, OpenBid2.ResponderRaisedMajor),
-                    PartnerBids(Bid._4S,  OpenBid2.ResponderRaisedMajor),
+                    PartnerBids(Bid._4S, OpenBid2.ResponderRaisedMajor),
 
                     // 2/1 game force is the highet priority if we can make it.  It is OK to bid this
                     // with game going values even if we have 4 spades.
@@ -321,13 +323,13 @@ namespace BridgeBidding
                     // LARRY: Same issue here - 3-card supprot limit raises or 1NT relay?
                     Signoff(Bid._4S, Points(Weak4Level), Shape(5, 10)),
                 
-                    PartnerBids(Bid._1NT, OpenBid2.OneNTOverMajorOpen),
+                    PartnerBids(Bid._1NT, OpenBid2.SemiForcingNT),
+                    Announce(Bid._1NT, UserText.SemiForcing),
                     Semiforcing(Bid._1NT, Points(Respond1NTOverMajor), Shape(Suit.Spades, 0, 3)),
 
                     // TODO: Partner bids for this- slam or show 4M
                     Signoff(Bid._3NT, Flat(), Points(RaiseTo3NT))
-                });
-
+                );
             }
             // Weak jump shift for passed and unpassed hands
             choices.AddRules(WeakJumpShift(Suit.Spades));
@@ -364,12 +366,24 @@ namespace BridgeBidding
         private static PositionCalls OppsInterferred(PositionState ps, Suit openSuit)
         {
             if (ps.RHO.Doubled)
+            {
                 return OppsDoubled(ps, openSuit);
+            }
             else
-                return OppsOvercalled(ps, openSuit, ps.RHO.Bid);
+            {
+                if (ps.RHO.Bid.Suit is Suit suit)
+                {
+                    return OppsOvercalledSuit(ps, openSuit, ps.RHO.Bid.Level, suit);
+                }
+                return OppsOvercalledNT(ps, openSuit, ps.RHO.Bid.Level);
+            }
         }
  
-
+        // TODO: Actually do something intelligent here...
+        public static PositionCalls OppsOvercalledNT(PositionState ps, Suit openSuit, int rhoBidLevel)
+        {
+            return ps.PairState.BiddingSystem.GetPositionCalls(ps);
+        }
 
 
         // *************************** END OF 2/1 - OLD SAYC CODE ********************************
@@ -409,17 +423,86 @@ namespace BridgeBidding
         }
 
 
-        // TODO: THIS IS SUPER HACKED AND INCOMPLETE - NO TRUMP BIDS FOR ONE THING!
-        public static PositionCalls OppsOvercalled(PositionState ps, Suit openSuit, Bid rhoBid)
+     
+        public static PositionCalls OppsOvercalledSuit(PositionState ps, Suit openSuit, int rhoBidLevel, Suit rhoBidSuit)
         {
             var choices = new PositionCalls(ps);
             choices.AddRules(SolidSuit.Bids);
             choices.AddRules(NegativeDouble.InitiateConvention);
             choices.AddRules(WeakJumpShift(openSuit));
+
+            var raisePartner = ps.BiddingState.Contract.NextAvailableBid(openSuit);
+            var limitRaise = new Bid(rhoBidLevel + 1, rhoBidSuit);
+            var weakRaise = new Bid(raisePartner.Level + 1, openSuit);
+            CallFeaturesFactory raiseHandler =  OpenBid2.ResponderRaisedMajor;
+            if (openSuit.IsMinor())
+            {
+                raiseHandler = OpenBid2.ResponderRaisedMinor;
+            }
+            List<Suit> suits = new List<Suit> { Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades };
+            suits.Remove(openSuit);
+            suits.Remove(rhoBidSuit);
+            var lowerUnbid = suits.First();
+            var higherUnbid = suits.Last();
+            var bidNew1 = ps.BiddingState.Contract.NextAvailableBid(lowerUnbid);
+            var bidNew2 = ps.BiddingState.Contract.NextAvailableBid(higherUnbid);
+
+
+            choices.AddRules(
+                // TODO: Perhaps ResponderChangedSuitsInComp is better here?
+                PartnerBids(OpenBid2.ResponderChangedSuits),
+                PartnerBids(raisePartner, raiseHandler),
+                PartnerBids(limitRaise, raiseHandler),
+                PartnerBids(weakRaise, raiseHandler),
+                PartnerBids(Bid._1NT, OpenBid2.ResponderBidNT),
+                PartnerBids(Bid._2NT, OpenBid2.ResponderBidNT),
+                PartnerBids(Bid._3NT, OpenBid2.ResponderBidNT),
+
+                // Negative double may have made these bids irrelevant
+                Forcing(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
+                Forcing(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
+
+                Forcing(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
+                Forcing(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
+                
+                Nonforcing(raisePartner, Fit(), DummyPoints(Raise1)),
+                Forcing(limitRaise, Fit(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Nonforcing(weakRaise, Fit(9), DummyPoints(WeakJumpRaise)),
+            
+                Nonforcing(Bid._1NT, OppsStopped(), Points(Raise1)),
+                Nonforcing(Bid._2NT, OppsStopped(), Points(11, 12)),
+                // TODO: Still lots more...  3NT.  Bid majors first if they must be bid at 2-level etc.
+
+                Forcing(bidNew1, Shape(4), Shape(higherUnbid, 0, 4), Points(NewSuit2Level)),
+                Forcing(bidNew2, Shape(5, 10), LongerThan(higherUnbid), Points(NewSuit2Level)),
+                Forcing(bidNew2, Shape(4, 10), Shape(lowerUnbid, 0, 3), Points(NewSuit2Level)),
+
+                PartnerBids(Call.Pass, OpenBid2.ResponderPassedInCompetition),
+                Signoff(Bid.Pass)  // May have enought points to respond but no good call, so can't specify points
+                );
+/*
             choices.AddRules(new CallFeature[]
             {
-                // TODO: Need to handle response after interferrence.  Right now just using comp bidding..
-                ///PartnerBids(OpenBid2.ResponderBidInCompetition),
+                PartnerBids(OpenBid2.ResponderBidInCompetition),
+
+                // Negative double may have made these bids irrelevant
+                Forcing(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
+                Forcing(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
+
+                Forcing(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
+                Forcing(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
+        {
+            var choices = new PositionCalls(ps);
+            choices.AddRules(SolidSuit.Bids);
+            choices.AddRules(NegativeDouble.InitiateConvention);
+            choices.AddRules(WeakJumpShift(openSuit));
+            var oppsSuit = rhoBid.Suit;
+            var raisePartner = new Bid(2, openSuit);
+            var limitRaise = new Bid(2, (Suit)oppsSuit);
+
+            choices.AddRules(new CallFeature[]
+            {
+                PartnerBids(OpenBid2.ResponderBidInCompetition),
 
                 // Negative double may have made these bids irrelevant
                 Forcing(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
@@ -469,7 +552,7 @@ namespace BridgeBidding
             });
             // TODO: Need to have opponents stopped?  Maybe those bids go higher up ...
 // TODO: NO TRUMP...            choices.AddRules(NoTrumpResponses(ps));
-
+*/
             return choices;
         }
 

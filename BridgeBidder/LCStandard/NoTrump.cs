@@ -158,7 +158,7 @@ namespace BridgeBidding
                 {
                     Announce(Bid._1NT, UserText.OneNoTrumpRange),
                     PartnerBids(Bid._1NT, ConventionalResponses),
-                    Nonforcing(Bid._1NT, NTD.OR.Open, Balanced())
+                    Nonforcing(Bid._1NT, NTD.OR.Open, Balanced)
                 };
             }
             if (ps.Role == PositionRole.Overcaller && ps.RoleRound == 1)
@@ -168,7 +168,7 @@ namespace BridgeBidding
                     return new CallFeature[]
                     {
                         PartnerBids(Bid._1NT, ConventionalResponses),
-                        // TODO: Perhaps more rules here for balancing but for now this is fine -- Balanced() is not necessary
+                        // TODO: Perhaps more rules here for balancing but for now this is fine -- Balanced is not necessary
                         Nonforcing(Bid._1NT, NTD.OR.Open, PassEndsAuction())
                     };
 				}
@@ -177,7 +177,7 @@ namespace BridgeBidding
                     return new CallFeature[]
                     {
                         PartnerBids(Bid._1NT, ConventionalResponses),
-                        Nonforcing(Bid._1NT, NTD.OR.Open, Balanced(), OppsStopped(), Not(PassEndsAuction()))
+                        Nonforcing(Bid._1NT, NTD.OR.Open, Balanced, OppsStopped(), Not(PassEndsAuction()))
                     };
                 }
 			}
@@ -270,7 +270,7 @@ namespace BridgeBidding
                 Invitational(Bid._4NT, NTD.RR.InviteSlam), // TODO: Any shape stuff here???
 
                 Signoff(Bid._6NT, Flat(), NTD.RR.SmallSlam),
-                Signoff(Bid._6NT, Balanced(), Shape(Suit.Hearts, 2, 3), Shape(Suit.Spades, 2, 3), NTD.RR.SmallSlam),
+                Signoff(Bid._6NT, Balanced, Shape(Suit.Hearts, 2, 3), Shape(Suit.Spades, 2, 3), NTD.RR.SmallSlam),
 
                 Signoff(Bid.Pass, NTD.RR.LessThanInvite),
 

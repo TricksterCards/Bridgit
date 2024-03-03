@@ -12,7 +12,7 @@ namespace BridgeBidding
 	{
 		
 	//	protected static Constraint Open2In4thSeat = And(Seat(4), Points(12, 15), Shape(6, 10), GoodPlusSuit); 
-	//	protected static Constraint OpenIn3rdBal = And(Seat(3), Points(11, 11), Balanced(), DecentPlusSuit);
+	//	protected static Constraint OpenIn3rdBal = And(Seat(3), Points(11, 11), Balanced, DecentPlusSuit);
 	
 	//	protected static Constraint OpenIn3rdUnbalanced = And(Seat(3), Balanced(false), IfElse(IsVul(), Points(9, 11), Points(10, 11));
 
@@ -24,6 +24,7 @@ namespace BridgeBidding
 
         public static DynamicConstraint OneLevel = Points(12, 21);
         public static DynamicConstraint Minimum = Points(12, 16);
+		public static DynamicConstraint CantJumpShift = Points(12, 18);
 		public static DynamicConstraint DummyMinimum = DummyPoints(12, 16);
         public static DynamicConstraint Medium = Points(17, 18);
 		public static DynamicConstraint DummyMedium = DummyPoints(17, 18);
@@ -88,9 +89,9 @@ namespace BridgeBidding
 			if (ps.Seat == 3)
 			{
 				// No special case for vulnerable & balanced.  Same as 1st and 2nd seats...
-				bids.AddRange(ThirdSeat4CardMajor(And(IsVul,    Balanced(false), Points(11, 13))));
-				bids.AddRange(ThirdSeat4CardMajor(And(IsNotVul, Balanced(true),  Points(11, 13))));
-				bids.AddRange(ThirdSeat4CardMajor(And(IsNotVul, Balanced(false), Points(10, 13))));
+				bids.AddRange(ThirdSeat4CardMajor(And(IsVul,    NotBalanced, Points(11, 13))));
+				bids.AddRange(ThirdSeat4CardMajor(And(IsNotVul, Balanced,  Points(11, 13))));
+				bids.AddRange(ThirdSeat4CardMajor(And(IsNotVul, NotBalanced, Points(10, 13))));
 			}
 			bids.AddRange(new CallFeature[]
 			{
@@ -122,9 +123,9 @@ namespace BridgeBidding
 			if (ps.Seat == 3)
 			{
 				// No special case for vulnerable & balanced.  Same as 1st and 2nd seats...
-				bids.AddRange(ThirdSeatWeak(And(IsVul, Balanced(false), Points(11, 11))));
-				bids.AddRange(ThirdSeatWeak(And(IsNotVul, Balanced(true), DecentPlusSuit, Points(11, 11))));
-				bids.AddRange(ThirdSeatWeak(And(IsNotVul, Balanced(false), Points(10, 11))));
+				bids.AddRange(ThirdSeatWeak(And(IsVul, NotBalanced, Points(11, 11))));
+				bids.AddRange(ThirdSeatWeak(And(IsNotVul, Balanced, DecentPlusSuit, Points(11, 11))));
+				bids.AddRange(ThirdSeatWeak(And(IsNotVul, NotBalanced, Points(10, 11))));
 			}
 			// Since this group contians a rule for Pass in 4th seat, we have to define one here 
 			// at the end of the group to catch the cases where we don't want to open because of

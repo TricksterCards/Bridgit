@@ -9,11 +9,13 @@ namespace BridgeBidding
 
         public static PositionCalls ResponderChangedSuits(PositionState ps)
 		{
-			var choices = new PositionCalls(ps);
-			choices.AddRules(new CallFeature[]
+			if (ps.Partner.Bid.Level == 2 && !ps.Partner.IsPassedHand)
 			{
+				return TwoOverOneRebid(ps);
+			}
+			var choices = new PositionCalls(ps);
+			choices.AddRules(
 				PartnerBids(RespondBid2.SecondBid),
-
 
 				// Responder bid a major suits and we have a fit.  Support at appropriate level.
 				// RaisePartner() requires a known 8+ card fit.  If the selected, the rule shows trump
@@ -36,11 +38,14 @@ namespace BridgeBidding
 				Nonforcing(Bid._2D, RaisePartner(), Minimum),
 				Nonforcing(Bid._3D, RaisePartner(2), Medium),
 
+				// If we have a 19 point balanced hand then better to show this with a rebid of 2NT
+				// than a forcing jump shift or reverse.
+				Nonforcing(Bid._2NT, Balanced, Points(Rebid2NT)),
 
 				// With a big hand we need to make a forcing bid.  Reverse if possible.
-				Forcing(Bid._2D, Reverse(), MediumOrBetter),
-				Forcing(Bid._2H, Reverse(), MediumOrBetter),
-				Forcing(Bid._2S, Reverse(), MediumOrBetter),
+				Forcing(Bid._2D, Reverse, MediumOrBetter),
+				Forcing(Bid._2H, Reverse, MediumOrBetter),
+				Forcing(Bid._2S, Reverse, MediumOrBetter),
 
 		//		Forcing(3, Strain.Diamonds, NonJump, Reverse(), Maximum),
 		//		Forcing(3, Strain.Hearts, NonJump, Reverse(), Maximum),
@@ -50,17 +55,13 @@ namespace BridgeBidding
                 //Nonforcing(4, Strain.Clubs, DefaultPriority + 10, Fit(), ShowsTrump, Points(MediumOpener)),
                 //Nonforcing(4, Strain.Diamonds, DefaultPriority + 10, Fit(), ShowsTrump, Points(MediumOpener)),
 
-
-
 				// Show a new suit at an appropriate level...
 	//			Nonforcing(Bid._2C, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
     //            Nonforcing(Bid._2C, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
-                Nonforcing(Bid._2H, Not(Rebid), Not(IsReverse), Balanced(false), Minimum, Shape(4, 6)),
-                Nonforcing(Bid._2C, Not(Rebid), Balanced(false), Minimum, Shape(4, 6)),
-                Nonforcing(Bid._2D, Not(Rebid), Not(IsReverse), Balanced(false), Minimum, Shape(4, 6)),
+                Nonforcing(Bid._2H, NewSuit, NotReverse, NotBalanced, Minimum, Shape(4, 6)),
+                Nonforcing(Bid._2C, NewSuit, NotBalanced, CantJumpShift, Shape(4, 6)),
+                Nonforcing(Bid._2D, NewSuit, NotReverse, NotBalanced, CantJumpShift, Shape(4, 6)),
         
-
-
 				// Rebid a 6 card suit
 				Nonforcing(Bid._2C, Rebid, Shape(6, 11), Minimum),
 				Nonforcing(Bid._2D, Rebid, Shape(6, 11), Minimum),
@@ -73,6 +74,7 @@ namespace BridgeBidding
 				Nonforcing(Bid._3S, Rebid, Shape(6, 11), Medium),
 
 	
+
 				Nonforcing(Bid._2H, LastBid(Bid._1S), Shape(4, 6), Points(LessThanJumpShift)),
 				Nonforcing(Bid._3H, LastBid(Bid._1S), Shape(4, 5), Points(JumpShift)),
 
@@ -96,11 +98,33 @@ namespace BridgeBidding
 				// TODO: Need to implement 3NT bid if long running minor.  Suits stopped????
 
 				// Lowest priority if nothing else fits is bid NT
-				Nonforcing(Bid._1NT, Balanced(), Points(Rebid1NT)),
-				Nonforcing(Bid._2NT, Balanced(), Points(Rebid2NT)),
-
-            });
+				Nonforcing(Bid._1NT, Balanced, Points(Rebid1NT))
+            );
 		// REMOVED THIS CRUTCH ---	choices.AddRules(Compete.CompBids(ps));
+			return choices;
+		}
+
+		private static PositionCalls TwoOverOneRebid(PositionState ps)
+		{
+			var choices = new PositionCalls(ps);
+			var partnerSuit = (Suit)ps.Partner.Bid.Suit;
+			choices.AddRules(
+				// TODO: Need better responses for 2nd bid. PartnerBids(RespondBid2.SecondBid2Over1),
+				Forcing(new Bid(3, partnerSuit), Fit(), ShowsTrump),
+
+				Forcing(Bid._2NT, Balanced),
+
+				Forcing(Bid._2D, Shape(6, 10), LongestSuit),
+				Forcing(Bid._2H, Shape(6, 10), LongestSuit),
+				Forcing(Bid._2S, Shape(6, 10), LongestSuit),
+				Forcing(Bid._3C, Shape(6, 10), LongestSuit),
+
+				Forcing(Bid._2D, NewSuit, Shape(4, 6)),
+				Forcing(Bid._2H, NewSuit, Shape(4, 6)),
+				Forcing(Bid._2S, NewSuit, Shape(4, 6)),
+				Forcing(Bid._3C, NewSuit, Shape(4, 6)),
+				Forcing(Bid._3D, NewSuit, Shape(4, 6))
+			);
 			return choices;
 		}
 
@@ -125,11 +149,29 @@ namespace BridgeBidding
 			};
 		}
 
-		//public static PositionCalls ResponderBidInCompetition(PositionState ps)
-		//{
 
-		//}
 
+		public static PositionCalls SemiForcingNT(PositionState ps)
+		{
+			// TODO: Check for interferrence...  Bid or X.
+			var choices = new PositionCalls(ps);
+			choices.AddRules(
+				Signoff(Call.Pass, Balanced, Points(12, 13)),
+
+				Nonforcing(Bid._2NT, Balanced, Points(Rebid2NT)),
+
+				Nonforcing(Bid._2C, NewSuit, Shape(4, 6), Points(12, 16)),
+				Nonforcing(Bid._2D, NewSuit, Shape(4, 6), Points(12, 16)),
+				Nonforcing(Bid._2H, NewSuit, Shape(4, 6), Points(12, 16)),
+
+				Nonforcing(Bid._2C, Rebid, Shape(6, 11), Points(12, 16)),
+				Nonforcing(Bid._2D, Rebid, Shape(6, 11), Points(12, 16)),
+				Nonforcing(Bid._2H, Rebid, Shape(6, 11), Points(12, 16)),
+				Nonforcing(Bid._2S, Rebid, Shape(6, 11), Points(12, 16))
+
+			);
+			return choices;
+		}
 		public static PositionCalls OneNTOverMajorOpen(PositionState ps)
 		{
 			return ResponderChangedSuits(ps);
@@ -150,6 +192,12 @@ namespace BridgeBidding
 		public static PositionCalls ThreeNTOverClubOpen(PositionState ps)
 		{
 			return ResponderChangedSuits(ps);
+		}
+
+		public static PositionCalls ResponderBidNT(PositionState ps)
+		{
+			// TODO: Think about these NT bids.
+			return ps.PairState.BiddingSystem.GetPositionCalls(ps);
 		}
 
 		public static IEnumerable<CallFeature> ResponderRaisedMinor(PositionState ps)

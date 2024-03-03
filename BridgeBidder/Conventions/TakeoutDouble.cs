@@ -86,7 +86,7 @@ namespace BridgeBidding
                 Nonforcing(Bid._1S, TakeoutSuit(), Points(MinLevel)),
 
 
-                Nonforcing(Bid._1NT, Balanced(), OppsStopped(), Points(NoTrump1)),
+                Nonforcing(Bid._1NT, Balanced, OppsStopped(), Points(NoTrump1)),
 
                 Nonforcing(Bid._2C, TakeoutSuit(), Points(MinLevel)),
                 Nonforcing(Bid._2D, TakeoutSuit(), NonJump,    Points(MinLevel)),
@@ -97,13 +97,13 @@ namespace BridgeBidding
                 Nonforcing(Bid._2S, TakeoutSuit(), SingleJump,   Points(InviteLevel)),
 
 
-                Nonforcing(Bid._2NT, Balanced(), OppsStopped(), Points(NoTrump2)),
+                Nonforcing(Bid._2NT, Balanced, OppsStopped(), Points(NoTrump2)),
 
                 // TODO: Game bids
                 Signoff(Bid._4H, TakeoutSuit(), Points(GameLevel)),
                 Signoff(Bid._4S, TakeoutSuit(), Points(GameLevel)),
 
-                Signoff(Bid._3NT, Balanced(), OppsStopped(), Points(Game3NT)),
+                Signoff(Bid._3NT, Balanced, OppsStopped(), Points(Game3NT)),
 
                 Nonforcing(Call.Pass, Not(RHO(LastBid(Call.Pass))))
             }) ;

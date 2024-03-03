@@ -22,7 +22,7 @@ public class GameFile: List<Game>
     {
         var execDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         if (execDir == null) throw new Exception("Could not find executing directory");
-        var dir = Path.Combine(execDir, "..", "..", "..", "..", "TestBridgeBidder");
+        var dir = Path.Combine(execDir, "..", "..", "..", "..", "TestBridgeBidder", "LCStandard");
         return Path.GetFullPath(dir);
     }
 

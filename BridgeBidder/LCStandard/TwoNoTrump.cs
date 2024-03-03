@@ -28,7 +28,7 @@ namespace BridgeBidding
 			{
                 // TODO: Systems on/off through here --- just like 1NT.....
                 PartnerBids(Bid._2NT, Respond),
-				Nonforcing(Bid._2NT, OpenPoints, Balanced())
+				Nonforcing(Bid._2NT, OpenPoints, Balanced)
 			};
 		}
 

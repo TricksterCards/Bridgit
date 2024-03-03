@@ -236,6 +236,25 @@ namespace BridgeBidding
 			return true;
 		}
 
+		public Bid NextAvailableBid(Suit suit)
+		{
+			return NextAvailableBid(suit.ToStrain());
+		}
+
+		public Bid NextAvailableBid(Strain strain)
+		{
+			Bid bid = null;
+			if (!AuctionComplete && this.Bid != null)
+			{
+				bid = new Bid(Bid.Level, strain);
+				if (bid.CompareTo(this.Bid) <= 0)
+				{
+					bid = bid.Level == 7 ? null : new Bid(Bid.Level + 1, strain);
+				}
+			}
+			return bid;
+		}
+	
 	}
 
 }

@@ -40,7 +40,7 @@ namespace BridgeBidding
 
                     Forcing(Bid._2H,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
                     Forcing(Bid._2S,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
-                    Forcing(Bid._2NT, Points(PositiveResponse), Balanced()),
+                    Forcing(Bid._2NT, Points(PositiveResponse), Balanced),
                     Forcing(Bid._3C,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
                     Forcing(Bid._3D,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
 
@@ -95,13 +95,13 @@ namespace BridgeBidding
                 Forcing(Bid._4D, Fit(), ShowsTrump),
 
 				Forcing(Bid._2S, Shape(5, 11)),
-	// TODO: What about 2NT??			Forcing(Bid.TwoUnknown, Balanced(), Points(Rebid2NT)),
+	// TODO: What about 2NT??			Forcing(Bid.TwoUnknown, Balanced, Points(Rebid2NT)),
 				Forcing(Bid._3C, Shape(5, 11)),
                 Forcing(Bid._3D, Shape(5, 11)),
                 Forcing(Bid._3H, Shape(5, 11)),
                 Forcing(Bid._3S, NonJump, Shape(5, 11)),
 
-                Nonforcing(Bid._3NT, Balanced(true)),
+                Nonforcing(Bid._3NT, Balanced),
 
               // TODO: 3 NT>>>  Forcing(Bid.ThreeUnknown, NonJump),
                 Forcing(Bid._4C, Shape(5, 11), NonJump),
