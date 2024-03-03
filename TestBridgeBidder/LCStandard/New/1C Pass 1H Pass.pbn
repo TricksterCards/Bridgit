@@ -190,13 +190,12 @@ Pass Pass
 [Vulnerable "All"]
 [Deal "E:KJ83.K8.73.AKJT7 AQ.743.QT982.Q92 T4.AJT962.K6.654 97652.Q5.AJ54.83"]
 [Scoring "MP"]
-[Declarer "W"]
-[Contract "2H"]
+[Declarer "S"]
+[Contract "3D"]
 [Result ""]
 [Auction "E"]
-1C Pass 1H Pass
-1S Pass 2H Pass
-Pass Pass
+1C 1D 1H 3D
+Pass Pass Pass
 
 [Event ""]
 [Site ""]
