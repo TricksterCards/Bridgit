@@ -108,6 +108,11 @@ namespace BridgeBidding
             }
         }
 
+        public void AddRules(params CallFeature[] rules)
+        {
+            AddRules(rules.AsEnumerable());
+        }
+
         // Method for adding a stand-alone pass rule.
         public void AddPassRule(params Constraint[] constraints)
         {
