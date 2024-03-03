@@ -43,5 +43,15 @@ namespace BridgeBidding
 			}
 			throw new System.Exception("Invalid suit");
 		}
+
+		public static bool IsMajor(this Suit s)
+		{
+			return s == Suit.Hearts || s == Suit.Spades;
+		}
+
+		public static bool IsMinor(this Suit s)
+		{
+			return s == Suit.Clubs || s == Suit.Diamonds;
+		}
 	}
 }
