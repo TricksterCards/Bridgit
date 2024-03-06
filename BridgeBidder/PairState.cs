@@ -14,6 +14,7 @@ namespace BridgeBidding
         public PairAgreements Agreements { get; set; }
         public IBiddingSystem BiddingSystem { get; }
 
+        private bool _inFirstToShow = false;
         public bool AreVulnerable { get; }
 
         private Dictionary<Suit, PositionState> _firstToShow = new Dictionary<Suit, PositionState>();
@@ -36,11 +37,13 @@ namespace BridgeBidding
         public PositionState FirstToShow(Suit suit)
         {
             if (_firstToShow.ContainsKey(suit)) return _firstToShow[suit];
+            if (_inFirstToShow) return null;
             // Now we must search for the first position that has shown a suit.  "Shown" is
             // defined as bidding a suit and showing a minimum of 2 cards in that suit alone,
             // or any bid that shows a minium of 4 cards in a suit.  All suits are considered
             // shown if they are 4 cards or more (so michaels over a minor shows Hearts and Spades).
             // To determint this, each CallDetails HandSummary is checked.
+            _inFirstToShow = true;  // Kind of a hack but good enough for now...
             foreach (var callDetails in BiddingState.GetAuction())
             {
                 // TODO: This HasRules check may be unnecessary...
@@ -55,11 +58,13 @@ namespace BridgeBidding
                         if (s.Min >= minRequired)
                         {
                             _firstToShow[suit] = callDetails.PositionState;
+                            _inFirstToShow = false;
                             return callDetails.PositionState;
                         }
                     }
                 }
             }
+            _inFirstToShow = false;
             return null;
         }
 
