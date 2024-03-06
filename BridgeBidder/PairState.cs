@@ -14,7 +14,6 @@ namespace BridgeBidding
         public PairAgreements Agreements { get; set; }
         public IBiddingSystem BiddingSystem { get; }
 
-        private bool _inFirstToShow = false;
         public bool AreVulnerable { get; }
 
         private Dictionary<Suit, PositionState> _firstToShow = new Dictionary<Suit, PositionState>();
@@ -34,40 +33,30 @@ namespace BridgeBidding
         //    this.InGameForcingAuction = false;
         }
 
-        public PositionState FirstToShow(Suit suit)
+        internal void UpdateShownSuits(Call call, PositionState ps, HandSummary hs)
         {
-            if (_firstToShow.ContainsKey(suit)) return _firstToShow[suit];
-            if (_inFirstToShow) return null;
-            // Now we must search for the first position that has shown a suit.  "Shown" is
-            // defined as bidding a suit and showing a minimum of 2 cards in that suit alone,
-            // or any bid that shows a minium of 4 cards in a suit.  All suits are considered
-            // shown if they are 4 cards or more (so michaels over a minor shows Hearts and Spades).
-            // To determint this, each CallDetails HandSummary is checked.
-            _inFirstToShow = true;  // Kind of a hack but good enough for now...
-            foreach (var callDetails in BiddingState.GetAuction())
+            foreach (var suit in Card.Suits)
             {
-                // TODO: This HasRules check may be unnecessary...
-                if (callDetails.PositionState.PairState == this && callDetails.HasRules)
+                if (!_firstToShow.ContainsKey(suit) && hs.Suits[suit].Shape != null)
                 {
-                    var handSummary = callDetails.ShowHand();
-                    int minRequired = (callDetails.Call is Bid bid && bid.Suit == suit) ? 2 : 4;
-                    var shape = handSummary.Suits[suit].Shape;
-                    if (shape != null)
+                    int minRequired = (call is Bid bid && bid.Suit == suit) ? 2 : 4;
+                    (int Min, int Max) s = ((int, int))hs.Suits[suit].Shape;
+                    if (s.Min >= minRequired)
                     {
-                        (int Min, int Max) s = ((int, int))shape;
-                        if (s.Min >= minRequired)
-                        {
-                            _firstToShow[suit] = callDetails.PositionState;
-                            _inFirstToShow = false;
-                            return callDetails.PositionState;
-                        }
+                        _firstToShow[suit] = ps;
                     }
                 }
             }
-            _inFirstToShow = false;
-            return null;
         }
 
+        public PositionState FirstToShow(Suit suit)
+        {
+            PositionState firstToShow;
+            _firstToShow.TryGetValue(suit, out firstToShow);
+            return firstToShow;
+        }
+
+        // TODO: Probably update this after MakeCall() instead of this silly search...
         public Strain? LastBidStrain()
         {
             var auction = BiddingState.GetAuction().Reverse<CallDetails>();

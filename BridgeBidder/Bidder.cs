@@ -173,7 +173,7 @@ namespace BridgeBidding
 
 	
 		// The static constaint "IsReverseBid" simply checks if the call is a reverse bid.  The IsReverse also shows the shape of the reverse bid.
-		private static StaticConstraint IsReverseBid = new SimpleStaticConstraint((call, ps) => ps.IsOpenerReverseBid(call), description: "reverse");
+		private static StaticConstraint IsReverseBid = new SimpleStaticConstraint((call, ps) => ps.IsReverse(call), description: "reverse");
 		public static Constraint Reverse = And(IsReverseBid, new ShowsReverseShape());
 		public static StaticConstraint NotReverse = Not(IsReverseBid);
 		public static StaticConstraint ForcedToBid = new SimpleStaticConstraint((call, ps) => ps.ForcedToBid);

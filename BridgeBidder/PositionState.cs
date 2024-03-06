@@ -223,26 +223,13 @@ namespace BridgeBidding
 					return stateChanged;
 				}
 				stateChanged = true;
+				PairState.UpdateShownSuits(callDetails.Call, this, showHand.HandSummary);
 				PublicHandSummary = showHand.HandSummary;
 			}
 			Debug.Assert(false); // This is bad - we had over 1000 state changes.  Infinite loop time...
 			return false;	// Seems the best thing to do to avoid repeated
 		}
 
-
-        public bool IsOpenerReverseBid(Call call)
-        {
-			// TODO: For now only 2-level bids are considered a reverse
-			// When in competition, perhaps allow reverses at higher levels...
-            return (this.Role == PositionRole.Opener &&
-                    this.BiddingState.OpeningBid is Bid openingBid &&
-                	call is Bid thisBid &&
-                    thisBid.Level == 2 &&
-                    thisBid.Strain != Strain.NoTrump && 
-                    openingBid.Strain != Strain.NoTrump &&
-                    thisBid.Suit > openingBid.Suit &&
-                    this.PairState.FirstToShow((Suit)thisBid.Suit) == null);
-        }
 
 		public bool IsOpenerJumpShift(Call call)
 		{
@@ -253,6 +240,23 @@ namespace BridgeBidding
                     openingBid.Strain != Strain.NoTrump &&
                     thisBid.JumpOver(openingBid) == 1 &&
                     PairState.FirstToShow((Suit)thisBid.Suit) == null);
+		}
+
+
+		public bool IsReverse(Call call)
+		{
+			if (call is Bid bid && bid.Suit is Suit bidSuit)
+			{
+				foreach (CallDetails callDetails in _bids.Reverse<CallDetails>())
+				{
+					if (callDetails.Call is Bid lastBid)
+					{
+						return (lastBid.Level < bid.Level && lastBid.Suit != null && lastBid.Suit < bidSuit &&
+							PairState.FirstToShow(bidSuit) == null);
+					}
+				}
+			}
+			return false;
 		}
 
 
