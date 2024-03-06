@@ -6,7 +6,7 @@ namespace BridgeBidding
     public enum SuitQuality { Poor = 0, Decent = 1, Good = 2, Excellent = 3, Solid = 4 }
 
 
-	public class HasQuality : DynamicConstraint
+	public class HasQuality : HandConstraint
 	{
 		protected Suit? _suit;
 		protected SuitQuality _min;
@@ -32,13 +32,13 @@ namespace BridgeBidding
 		}
 	}
 
-	public class ShowsQuality : HasQuality, IShowsState, IDescribeConstraint
+	public class ShowsQuality : HasQuality, IShowsHand, IDescribeConstraint
 	{
 		public ShowsQuality(Suit? suit, SuitQuality min, SuitQuality max) : base(suit, min, max)
 		{
 		}
 
-		void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)	
+		public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)	
 		{
 			if (GetSuit(_suit, call) is Suit suit)
 			{

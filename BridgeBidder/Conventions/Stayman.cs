@@ -35,10 +35,10 @@ namespace BridgeBidding
                 Convention(call, UserText.Stayman),
                 PartnerBids(call, Answer),
 
-                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), Flat(false), ShowsSuit(Suit.Hearts)),
-                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Spades, 4), Shape(Suit.Hearts, 0, 4), Flat(false), ShowsSuit(Suit.Spades)),
-                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5), ShowsSuits(Suit.Hearts, Suit.Spades)),
-                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4), ShowsSuits(Suit.Hearts, Suit.Spades)),
+                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), Flat(false)),
+                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Spades, 4), Shape(Suit.Hearts, 0, 4), Flat(false)),
+                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
+                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4)),
                 
                 Forcing(call, NTD.RR.LessThanInvite, Shape(Suit.Diamonds, 4, 5), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)),
             };
@@ -57,7 +57,7 @@ namespace BridgeBidding
 				// TODO: Deal with interferenceDefaultPartnerBids(goodThrough: Bid.Double, Explain),
 
 				// TODO: Are these bids truly forcing?  Not if garbage stayman...
-				Forcing(Bid._2D, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3), ShowsNoSuit),
+				Forcing(Bid._2D, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
 				Forcing(Bid._2H, Shape(4, 5), LongerOrEqualTo(Suit.Spades)),
                 Forcing(Bid._2S, Shape(4, 5), LongerThan(Suit.Hearts))
             };

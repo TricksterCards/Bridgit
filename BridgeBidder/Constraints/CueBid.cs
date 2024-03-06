@@ -2,14 +2,13 @@
 
 namespace BridgeBidding
 {
-    public class CueBid : StaticConstraint
+    public class IsCueBid : StaticConstraint
     {
         private Suit? _suit;
-        private bool _desiredValue;
-        public CueBid(Suit? suit, bool desiredValue)
+
+        public IsCueBid(Suit? suit)
         {
             this._suit = suit;
-            this._desiredValue = desiredValue;
         }
         public override bool Conforms(Call call, PositionState ps)
         {
@@ -25,12 +24,7 @@ namespace BridgeBidding
             }
 
             var pairSummary = PairSummary.Opponents(ps);
-            if (pairSummary.ShownSuits.Contains((Suit)suit))
-            {
-                // It is a CueBid.  Return TRUE IFF we want a cuebid else false (we don't conform).
-                return _desiredValue;
-            }
-            return !_desiredValue;
+            return pairSummary.ShownSuits.Contains((Suit)suit);
         }
     }
 }

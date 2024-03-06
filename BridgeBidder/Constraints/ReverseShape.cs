@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace BridgeBidding
 {
-    public class HasReverseShape : DynamicConstraint
+    public class HasReverseShape : HandConstraint
     {
 
         protected Suit? OpenSuit(PositionState ps)
@@ -35,9 +35,9 @@ namespace BridgeBidding
         }
     }
 
-	public class ShowsReverseShape : HasReverseShape, IShowsState
+	public class ShowsReverseShape : HasReverseShape, IShowsHand
 	{
-	    void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showArgeements)
+	    public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
 		{
            if (OpenSuit(ps) is Suit openSuit &&
                BidSuit(call) is Suit bidSuit)

@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace BridgeBidding
 {
-    public class TakeoutSuit : DynamicConstraint, IShowsState
+    public class TakeoutSuit : HandConstraint, IShowsHand
     {
         private Suit? _suit;
   
@@ -59,7 +59,7 @@ namespace BridgeBidding
 
         // TODO: This is not exactly right.  We PROBABLY have at least 4 in the suit...
 
-        public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+        public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
         {
             if (GetSuit(_suit, call) is Suit suit)
             {

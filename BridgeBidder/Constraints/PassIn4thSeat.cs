@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace BridgeBidding
 {
-    public class PassIn4thSeat : DynamicConstraint
+    public class PassIn4thSeat : HandConstraint
     {
         public override bool Conforms(Call call, PositionState ps, HandSummary hs)
         {

@@ -1,6 +1,6 @@
 ﻿namespace BridgeBidding
 {
-    public class RuleOf9 : DynamicConstraint, IDescribeConstraint
+    public class RuleOf9 : HandConstraint, IDescribeConstraint
 	{
 		public override bool Conforms(Call call, PositionState ps, HandSummary hs)
 		{

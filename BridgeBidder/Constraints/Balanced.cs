@@ -1,9 +1,9 @@
 ﻿namespace BridgeBidding
 {
-	public class IsBalanced : DynamicConstraint
+	public class ShowsBalanced : HandConstraint, IShowsHand, IDescribeConstraint
 	{
 		protected bool _desiredValue;
-		public IsBalanced(bool desiredValue)
+		public ShowsBalanced(bool desiredValue)
 		{
 			this._desiredValue = desiredValue;
 		}
@@ -12,16 +12,10 @@
 		{
 			return hs.IsBalanced == null || hs.IsBalanced == _desiredValue;
 		}
-	}
 
-	public class ShowsBalanced : IsBalanced, IShowsState, IDescribeConstraint
-	{
-		public ShowsBalanced(bool desiredValue) : base(desiredValue) { }
-	    void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+	    public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
 		{
 			showHand.ShowIsBalanced(_desiredValue);
-			// TODO: I am concerned that when a hand Shows a shape of 5X AND is balanced that the specifi
-			// showing of 5X will be lost.  Think this through carefully.
 			if (_desiredValue == true)
 			{
 				foreach (var suit in Card.Suits)

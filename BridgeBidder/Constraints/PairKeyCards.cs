@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BridgeBidding
 {
-    internal class PairKeyCards : DynamicConstraint, IDescribeConstraint
+    internal class PairKeyCards : HandConstraint, IDescribeConstraint
 	{
 		int[] _count;
 		Suit? _trumpSuit;
@@ -75,7 +75,7 @@ namespace BridgeBidding
 		}
 	}
 
-	public class PairKings : DynamicConstraint, IDescribeConstraint
+	public class PairKings : HandConstraint, IDescribeConstraint
 	{
 		private int[] _count;
 		public PairKings(params int[] count)

@@ -25,7 +25,7 @@ namespace BridgeBidding
                 PartnerBids(Bid._2C, Respond),
 
                 // TODO: Other reasons for 2-club opening...
-                Forcing(Bid._2C, Points(StrongOpenRange), ShowsNoSuit)
+                Forcing(Bid._2C, Points(StrongOpenRange))
             };
     
         }
@@ -44,7 +44,7 @@ namespace BridgeBidding
                     Forcing(Bid._3C,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
                     Forcing(Bid._3D,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
 
-                    Forcing(Bid._2D,  Points(Waiting), ShowsNoSuit),
+                    Forcing(Bid._2D,  Points(Waiting)),
                 });
             }
             else if (ps.RHO.Doubled)
@@ -127,8 +127,8 @@ namespace BridgeBidding
                 // Now show a bust hand by bidding cheapest minor with less 0-4 points
                 PartnerBids(Bid._3C, PartnerIsBust),
                 PartnerBids(Bid._3D, PartnerIsBust, Partner(LastBid(Bid._3C))),
-                Forcing(Bid._3C, ShowsNoSuit, Points(RespondBust)),
-                Forcing(Bid._3D, Partner(LastBid(Bid._3C)), ShowsNoSuit, Points(RespondBust)),
+                Forcing(Bid._3C, Points(RespondBust)),
+                Forcing(Bid._3D, Partner(LastBid(Bid._3C)), Points(RespondBust)),
 
                 // Show a 5 card major if we have one.
                 Forcing(Bid._3H, Shape(5, 11), Points(RespondSuitNotBust)),

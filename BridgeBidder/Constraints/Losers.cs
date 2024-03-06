@@ -5,7 +5,7 @@ namespace BridgeBidding
 {
 
 
-    public class HasLosers : DynamicConstraint
+    public class HasLosers : HandConstraint
     {
         protected int _min;
         protected int _max;
@@ -59,13 +59,13 @@ namespace BridgeBidding
         }
     }
 
-    public class ShowsLosers : HasLosers, IShowsState, IDescribeConstraint
+    public class ShowsLosers : HasLosers, IShowsHand, IDescribeConstraint
     {
         public ShowsLosers(bool handLosers, Suit? suit, int min, int max) : base(handLosers, suit, min, max)
         {
         }
 
-        public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+        public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
         {
             if (_handLosers) 
             {

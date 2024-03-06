@@ -99,6 +99,9 @@ namespace BridgeBidding
                 {
                     // Add any group annotations to every call
                     this[call].Annotations.AddRange(this.Annotations);
+                    // TODO: This debug code is slow but necessary for finding bugs.
+                    // Perhaps put it under IFDEF DEBUG or something
+        // TODO: Put this validation in!!!            this[call].Validate();
                 }
             }
         }

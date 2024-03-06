@@ -16,13 +16,13 @@ namespace BridgeBidding
         public static (int, int) AdvanceCuebid = (11, 40);
 
 
-        public static IEnumerable<CallFeature> FirstBid(PositionState ps)
+        public static PositionCalls FirstBid(PositionState ps)
         {
+            var choices = new PositionCalls(ps);
             if (ps.Partner.LastCall is Bid partnerBid &&
                 partnerBid.Suit is Suit partnerSuit)
             {
-                var bids = new List<CallFeature>
-                {
+                choices.AddRules(
                     // TODO: What is the level of interference we can take
                     PartnerBids(Overcall.SecondBid),
 
@@ -35,9 +35,9 @@ namespace BridgeBidding
 
 
                     // If we have support for partner
-                    Nonforcing(Bid._2D,  Fit(), DummyPoints(Raise), ShowsTrump),
-                    Nonforcing(Bid._2H,    Fit(), DummyPoints(Raise), ShowsTrump),
-                    Nonforcing(Bid._2S,    Fit(), DummyPoints(Raise), ShowsTrump),
+                    Nonforcing(Bid._2D, RaisePartner(), DummyPoints(Raise), ShowsTrump),
+                    Nonforcing(Bid._2H, RaisePartner(), DummyPoints(Raise), ShowsTrump),
+                    Nonforcing(Bid._2S, RaisePartner(), DummyPoints(Raise), ShowsTrump),
 
 
                     Nonforcing(Bid._1H, Points(AdvanceNewSuit1Level), Shape(5), GoodPlusSuit),
@@ -48,22 +48,22 @@ namespace BridgeBidding
 
                
                     // TODO: Should these be prioirty - 5 - support should be higher priorty.  Seems reasonable
-                    Nonforcing(Bid._2C, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2C, Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid._2D, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2D, Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid._2H, NonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2H, NonJump, Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid._2S, NonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2S, NonJump, Points(NewSuit2Level), Shape(6, 11)),
+                    Nonforcing(Bid._2C, NewSuit, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Nonforcing(Bid._2C, NewSuit, Points(NewSuit2Level), Shape(6, 11)),
+                    Nonforcing(Bid._2D, NewSuit, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Nonforcing(Bid._2D, NewSuit, Points(NewSuit2Level), Shape(6, 11)),
+                    Nonforcing(Bid._2H, NewSuit, NonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Nonforcing(Bid._2H, NewSuit, NonJump, Points(NewSuit2Level), Shape(6, 11)),
+                    Nonforcing(Bid._2S, NewSuit, NonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Nonforcing(Bid._2S, NewSuit, NonJump, Points(NewSuit2Level), Shape(6, 11)),
 
 
 
                     // TODO: Make a special CallFeature here to handle rebid after cuebid...
-                    Forcing(Bid._2C, CueBid(), Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
-                    Forcing(Bid._2D, CueBid(), Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
-                    Forcing(Bid._2H, CueBid(), Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
-                    Forcing(Bid._2S, CueBid(), Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
+                    Forcing(Bid._2C, CueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
+                    Forcing(Bid._2D, CueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
+                    Forcing(Bid._2H, CueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
+                    Forcing(Bid._2S, CueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
 
  
 
@@ -83,17 +83,17 @@ namespace BridgeBidding
 
 
                     // TODO: Any specification of PASS?>>
-                };
+                );
                 // TODO: Should this be higher priority?
                 // TODO: Are there situations where 4NT is not blackwood.  Overcall 4D advanace 4NT?
-                bids.AddRange(Blackwood.InitiateConvention(ps));
-                bids.Add(Nonforcing(Call.Pass));
-                return bids;
+                choices.AddRules(Blackwood.InitiateConvention(ps));
+                choices.AddPassRule();
+                return choices;
             }
             // TODO: Throw?  What?  Perhaps a new exception that just reverts
             // to competition if bidders fail but stop in debug mode...
             Debug.Fail("Partner.LastCall is not a bid.  How in the world did we get here?");
-            return new CallFeature[0];
+            return choices;
         }
 
 

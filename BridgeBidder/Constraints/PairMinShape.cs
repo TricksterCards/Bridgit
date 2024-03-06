@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace BridgeBidding
 {
-    public class PairHasMinShape : DynamicConstraint
+    public class PairHasMinShape : HandConstraint
     {
         protected Suit? _suit;
         protected int _min;
@@ -55,10 +55,10 @@ namespace BridgeBidding
         }
     }
 
-    public class PairShowsMinShape : PairHasMinShape, IShowsState, IDescribeConstraint
+    public class PairShowsMinShape : PairHasMinShape, IShowsHand, IDescribeConstraint
     {
         public PairShowsMinShape(Suit? suit, int min, bool desiredValue) : base(suit, min, desiredValue) { }
-        void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+        public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
         {
             if (GetSuit(_suit, call) is Suit suit)
             {

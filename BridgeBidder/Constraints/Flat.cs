@@ -1,6 +1,6 @@
 ﻿namespace BridgeBidding
 {
-    public class IsFlat : DynamicConstraint
+    public class IsFlat : HandConstraint
 	{
 		protected bool _desiredValue;
 		public IsFlat(bool desiredValue = true)
@@ -14,21 +14,20 @@
 		}
 	}
 
-	public class ShowsFlat: IsFlat, IShowsState, IDescribeConstraint
+	// TODO: Perhaps just make this part of Balanced...
+	public class ShowsFlat: IsFlat, IShowsHand, IDescribeConstraint
 	{
 		public ShowsFlat(bool desiredValue = true) : base(desiredValue) { }
-		void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+		void IShowsHand.ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
 		{
 			showHand.ShowIsBalanced(_desiredValue);
-			/*
             if (_desiredValue == true)
             {
-                foreach (var suit in BasicBidding.BasicSuits)
+                foreach (var suit in Card.Suits)
                 {
                     showHand.Suits[suit].ShowShape(3, 4);
                 }
             }
-			*/
         }
 
 		string IDescribeConstraint.Describe(Call call, PositionState ps)

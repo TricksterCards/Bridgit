@@ -30,15 +30,13 @@ namespace BridgeBidding
                 Nonforcing(Bid._4H, Fit(), PairPoints(CompeteTo4), ShowsTrump),
                 Nonforcing(Bid._4S, Fit(), PairPoints(CompeteTo4), ShowsTrump),
 
-
-
                 Nonforcing(Bid._2C, Fit(), PairPoints(CompeteTo2), ShowsTrump),
                 Nonforcing(Bid._2D, Fit(), PairPoints(CompeteTo2), ShowsTrump),
                 Nonforcing(Bid._2H, Fit(), PairPoints(CompeteTo2), ShowsTrump),
                 Nonforcing(Bid._2S, Fit(), PairPoints(CompeteTo2), ShowsTrump),
 
-                Nonforcing(Bid._3C,  Fit(), PairPoints(CompeteTo3), ShowsTrump),
-                Nonforcing(Bid._3D,  Fit(), PairPoints(CompeteTo3), ShowsTrump),
+                Nonforcing(Bid._3C, Fit(), PairPoints(CompeteTo3), ShowsTrump),
+                Nonforcing(Bid._3D, Fit(), PairPoints(CompeteTo3), ShowsTrump),
                 Nonforcing(Bid._3H, Fit(), PairPoints(CompeteTo3), ShowsTrump),
                 Nonforcing(Bid._3S, Fit(), PairPoints(CompeteTo3), ShowsTrump),
 

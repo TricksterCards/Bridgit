@@ -1,6 +1,6 @@
 ﻿namespace BridgeBidding
 {
-    internal class Break : DynamicConstraint
+    internal class Break : HandConstraint
     {
         // TODO: Implement static break class !!!
         public string Name { get; private set; }

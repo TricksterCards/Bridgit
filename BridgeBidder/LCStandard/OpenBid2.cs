@@ -19,12 +19,12 @@ namespace BridgeBidding
 
 				// Responder bid a major suits and we have a fit.  Support at appropriate level.
 				// RaisePartner() requires a known 8+ card fit.  If the selected, the rule shows trump
-				Nonforcing(Bid._2H, RaisePartner(1), DummyMinimum),
-				Nonforcing(Bid._2S, RaisePartner(1), DummyMinimum),
-				Nonforcing(Bid._3H, RaisePartner(2), DummyMedium),
-				Nonforcing(Bid._3S, RaisePartner(2), DummyMedium),
-                Nonforcing(Bid._4H, RaisePartner(3), DummyMaximum),
-				Nonforcing(Bid._4S, RaisePartner(3), DummyMaximum),
+				Nonforcing(Bid._2H, RaisePartner(), DummyMinimum),
+				Nonforcing(Bid._2S, RaisePartner(), DummyMinimum),
+				Nonforcing(Bid._3H, RaisePartner(jump: 1), DummyMedium),
+				Nonforcing(Bid._3S, RaisePartner(jump: 1), DummyMedium),
+                Nonforcing(Bid._4H, RaisePartner(jump: 2), DummyMaximum),
+				Nonforcing(Bid._4S, RaisePartner(jump: 2), DummyMaximum),
 
 				// TODO: There is the possibility that slam will push us beyond
 				// "maximum" - need to handle in Blackwood...
@@ -36,7 +36,7 @@ namespace BridgeBidding
 
 				// TODO: These need to be lower priority...
 				Nonforcing(Bid._2D, RaisePartner(), Minimum),
-				Nonforcing(Bid._3D, RaisePartner(2), Medium),
+				Nonforcing(Bid._3D, RaisePartner(jump: 1), Medium),
 
 				// If we have a 19 point balanced hand then better to show this with a rebid of 2NT
 				// than a forcing jump shift or reverse.
@@ -88,10 +88,10 @@ namespace BridgeBidding
 
 				// We have tried every possible way to show a strong hand by reversing or jump shifting.  If we get here
 				// and have not found a bid but we are very strong then we just need to bid 3 or 4 of our suit.
-				Nonforcing(Bid._4H, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
-				Nonforcing(Bid._3H, Shape(6, 11), Points(JumpShift)),
-				Nonforcing(Bid._4S, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
-				Nonforcing(Bid._3S, Shape(6, 11), Points(JumpShift)),
+				Nonforcing(Bid._4H, Rebid, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
+				Nonforcing(Bid._3H, Rebid, Shape(6, 11), Points(JumpShift)),
+				Nonforcing(Bid._4S, Rebid, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
+				Nonforcing(Bid._3S, Rebid, Shape(6, 11), Points(JumpShift)),
 				// TODO: Need to implement minors here too.  Long, strong minors need a backup if no reverse available.
 				// 
 

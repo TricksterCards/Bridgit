@@ -22,19 +22,19 @@ namespace BridgeBidding
 		// on vulnerablity and shape of the hand.  
 
 
-        public static DynamicConstraint OneLevel = Points(12, 21);
-        public static DynamicConstraint Minimum = Points(12, 16);
-		public static DynamicConstraint CantJumpShift = Points(12, 18);
-		public static DynamicConstraint DummyMinimum = DummyPoints(12, 16);
-        public static DynamicConstraint Medium = Points(17, 18);
-		public static DynamicConstraint DummyMedium = DummyPoints(17, 18);
-        public static DynamicConstraint Maximum = Points(19, 21);
-		public static DynamicConstraint DummyMaximum = DummyPoints(19, 26);	// Can get higher than 21 points when counted as dummy
-		public static DynamicConstraint MediumOrBetter = Points(17, 21);
+        public static HandConstraint OneLevel = Points(12, 21);
+        public static HandConstraint Minimum = Points(12, 16);
+		public static HandConstraint CantJumpShift = Points(12, 18);
+		public static HandConstraint DummyMinimum = DummyPoints(12, 16);
+        public static HandConstraint Medium = Points(17, 18);
+		public static HandConstraint DummyMedium = DummyPoints(17, 18);
+        public static HandConstraint Maximum = Points(19, 21);
+		public static HandConstraint DummyMaximum = DummyPoints(19, 26);	// Can get higher than 21 points when counted as dummy
+		public static HandConstraint MediumOrBetter = Points(17, 21);
 
-        public static DynamicConstraint Weak = Points(5, 11);
-		public static DynamicConstraint VeryWeak = Points(3, 11);
-        public static DynamicConstraint DontOpen = Points(0, 11);
+        public static HandConstraint Weak = Points(5, 11);
+		public static HandConstraint VeryWeak = Points(3, 11);
+        public static HandConstraint DontOpen = Points(0, 11);
 
 		// Rebid values.
         public static (int, int) Rebid1NT = (12, 15);	// TODO: Up to 15 starting points since HCP considered when opening

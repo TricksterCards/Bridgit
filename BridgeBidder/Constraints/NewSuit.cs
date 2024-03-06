@@ -14,7 +14,7 @@ namespace BridgeBidding
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
-                return !ps.PairState.Agreements.Strains[suit.ToStrain()].Shown;
+                return ps.PairState.FirstToShow(suit) == null;
             }
             Debug.Fail("No suit for call in NewSuit constraint.");
             return false;

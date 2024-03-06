@@ -17,18 +17,19 @@ namespace BridgeBidding
 		public static IEnumerable<CallFeature> InitiateConvention(PositionState ps)
 		{
             Debug.Assert(!ps.IsPassedHand && ps.RHO.Passed);
-
-			return new CallFeature[]
+            if (ps.Partner.Bid.Suit is Suit suit && suit.IsMajor())
             {
-                Convention(Bid._2NT, UserText.Jacoby2NT),
-                Alert(Bid._2NT, UserText.Jacoby2NTDescription),
+                return new CallFeature[]
+                {
+                    Convention(Bid._2NT, UserText.Jacoby2NT),
+                    Alert(Bid._2NT, UserText.Jacoby2NTDescription),
 
-                PartnerBids(Bid._2NT, OpenerRebid),
+                    PartnerBids(Bid._2NT, OpenerRebid),
 
-                Forcing(Bid._2NT, Fit(Suit.Hearts), Shape(Suit.Hearts, 4, 10), DummyPoints(Suit.Hearts, RespondPoints), ShowsTrumpSuit(Suit.Hearts)),
-                Forcing(Bid._2NT, Fit(Suit.Spades), Shape(Suit.Spades, 4, 10), DummyPoints(Suit.Spades, RespondPoints), ShowsTrumpSuit(Suit.Spades))
-            };
-
+                    Forcing(Bid._2NT, Fit(suit), Shape(suit, 4, 10), DummyPoints(suit, RespondPoints), ShowsTrumpSuit(suit)),
+                };
+            }
+            return new CallFeature[0];
 		}
 
         public static IEnumerable<CallFeature> OpenerRebid(PositionState ps)

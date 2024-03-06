@@ -3,7 +3,7 @@
 namespace BridgeBidding
 {
 
-    public class HasOppsStopped : DynamicConstraint
+    public class HasOppsStopped : HandConstraint
     {
         protected bool _desiredValue;
         public HasOppsStopped(bool desiredValue)
@@ -34,11 +34,11 @@ namespace BridgeBidding
         }
     }
 
-    public class ShowsOppsStopped : HasOppsStopped, IShowsState, IDescribeConstraint
+    public class ShowsOppsStopped : HasOppsStopped, IShowsHand, IDescribeConstraint
     {
         public ShowsOppsStopped(bool desiredValue) : base(desiredValue) { }
 
-        public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+        public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
         {
             if (_desiredValue)
             {

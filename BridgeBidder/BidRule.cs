@@ -21,12 +21,12 @@ namespace BridgeBidding
 			this.Force = force;
 		}
 
-        public bool SatisifiesDynamicConstraints(PositionState ps, HandSummary hs)
+        public bool SatisifiesHandConstraints(PositionState ps, HandSummary hs)
         {
             foreach (Constraint constraint in Constraints)
             {
-                if (constraint is DynamicConstraint dynamicConstraint &&
-					!dynamicConstraint.Conforms(Call, ps, hs)) 
+                if (constraint is HandConstraint HandConstraint &&
+					!HandConstraint.Conforms(Call, ps, hs)) 
 				{
 					return false;
 				}
@@ -34,13 +34,13 @@ namespace BridgeBidding
             return true;
         }
 
-		public List<Constraint> FailingDynamicConstraints(PositionState ps, HandSummary hs)
+		public List<Constraint> FailingHandConstraints(PositionState ps, HandSummary hs)
 		{
 			var failingConstraints = new List<Constraint>();
 			foreach (var constraint in Constraints)
 			{
-				if (constraint is DynamicConstraint dynamicConstraint && 
-					!dynamicConstraint.Conforms(Call, ps, hs)) 
+				if (constraint is HandConstraint HandConstraint && 
+					!HandConstraint.Conforms(Call, ps, hs)) 
 				{
 					failingConstraints.Add(constraint);
 				}
@@ -48,26 +48,38 @@ namespace BridgeBidding
 			return failingConstraints;
 		}
 	
+	// TODO:  THIS IS FUNDAMENTAL TO THIS CHANGE.  DO NOT CHECK IN WITHOUT FIXING THIS!!!!!
 
-		public (HandSummary, PairAgreements) ShowState(PositionState ps)
+		public PairAgreements ShowAgreements(PositionState ps)
 		{
-			bool showedSuit = false;
-			var showHand = new HandSummary.ShowState();
-			var showAgreements = new PairAgreements.ShowState();
+		//	bool showedSuit = false;
+			var showAgreements = new PairAgreements.ShowState(ps.PairState.Agreements);
 			foreach (Constraint constraint in Constraints)
 			{
-				if (constraint is IShowsState showsState)
+			if (constraint is IShowsAgreement sa)
 				{
-					showsState.ShowState(Call, ps, showHand, showAgreements);
+					sa.ShowAgreement(Call, ps, showAgreements);
 				}
-				if (constraint is ShowsSuit) { showedSuit = true; }
+		//		showedSuit |= (constraint is ShowsSuit);
 			}
-			if (!showedSuit && Call is Bid)		// TODO: Should this be the case for Suit.Unknown too?  Think this through.  Right now I think yes.
+		//	if (!showedSuit && Call is Bid)		// TODO: Should this be the case for Suit.Unknown too?  Think this through.  Right now I think yes.
+		//	{
+		//		new ShowsSuit(true).ShowAgreement(Call, ps, showAgreements);
+		//	}
+			return showAgreements.PairAgreements;
+		}
+
+		public HandSummary ShowHand(PositionState ps)
+		{
+			var showHand = new HandSummary.ShowState();
+			foreach (Constraint constraint in Constraints)
 			{
-				var showSuit = new ShowsSuit(true) as IShowsState;
-				showSuit.ShowState(Call, ps, showHand, showAgreements);
+				if (constraint is IShowsHand showsHand)
+				{
+					showsHand.ShowHand(Call, ps, showHand);
+				}
 			}
-			return (showHand.HandSummary, showAgreements.PairAgreements);
+			return showHand.HandSummary;
 		}
 
 		internal List<string> ConstraintDescriptions(PositionState ps)

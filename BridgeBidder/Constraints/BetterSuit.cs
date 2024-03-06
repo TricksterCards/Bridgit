@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace BridgeBidding
 {
-    public class IsBetterSuit : DynamicConstraint
+    public class IsBetterSuit : HandConstraint
 	{
 		protected Suit? _better;
 		protected Suit? _worse;
@@ -53,7 +53,7 @@ namespace BridgeBidding
 
 	}
 
-	public class ShowsBetterSuit : IsBetterSuit, IShowsState, IDescribeConstraint
+	public class ShowsBetterSuit : IsBetterSuit, IShowsHand, IDescribeConstraint
 	{
 		public ShowsBetterSuit(Suit? better, Suit? worse, Suit? defaultIfEqual = null, bool lengthOnly = false) :
 			base(better, worse, defaultIfEqual, lengthOnly)
@@ -61,7 +61,7 @@ namespace BridgeBidding
 
 		// The worse suit can not be longer than thw better one, and the quality can not be higher, so all we can
 		// do here is simply restrict the maximums for both shape and quality.
-		void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+		void IShowsHand.ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
 		{
 			if (GetSuit(_better, call) is Suit better &&
 				ps.PublicHandSummary.Suits[better].Shape != null &&

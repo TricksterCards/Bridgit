@@ -80,9 +80,9 @@ namespace BridgeBidding
         }
 
         public PositionCalls(PositionState ps,
-                [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
-                [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
-                [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
         {
             PositionState = ps;
             CallerMemberName = memberName;

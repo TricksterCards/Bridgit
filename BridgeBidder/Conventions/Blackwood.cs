@@ -17,7 +17,7 @@ namespace BridgeBidding
 			Strain? strain = ps.PairState.Agreements.AgreedStrain;
 			if (strain == null)
 			{
-				strain = ps.PairState.Agreements.LastShownStrain;
+				strain = ps.PairState.LastBidStrain();
 			}
 			if (strain != null && ((Strain)strain).ToSuit() is Suit suit)
 			{
@@ -48,10 +48,10 @@ namespace BridgeBidding
 				return new CallFeature[]
 				{
 					PartnerBids(PlaceContract),
-					Forcing(Bid._5C, ShowsNoSuit, KeyCards(suit, 1, 4)),
-					Forcing(Bid._5D, ShowsNoSuit, KeyCards(suit, 0, 3)),
-					Forcing(Bid._5H, ShowsNoSuit, KeyCards(suit, 2, 5, hasQueen: false)),
-					Forcing(Bid._5S, ShowsNoSuit, KeyCards(suit, 2, 5, hasQueen: true))
+					Forcing(Bid._5C, KeyCards(suit, 1, 4)),
+					Forcing(Bid._5D, KeyCards(suit, 0, 3)),
+					Forcing(Bid._5H, KeyCards(suit, 2, 5, hasQueen: false)),
+					Forcing(Bid._5S, KeyCards(suit, 2, 5, hasQueen: true))
 				};
 			}
 			throw new System.Exception("This should never happen.  No agreed suiit.");
@@ -100,10 +100,10 @@ namespace BridgeBidding
 			return new CallFeature[]
 			{
 				PartnerBids(TryGrandSlam),
-				Forcing(Bid._6C, ShowsNoSuit, Kings(0, 4)),
-				Forcing(Bid._6D, ShowsNoSuit, Kings(1)),
-				Forcing(Bid._6H, ShowsNoSuit, Kings(2)),
-				Forcing(Bid._6S, ShowsNoSuit, Kings(3)),
+				Forcing(Bid._6C, Kings(0, 4)),
+				Forcing(Bid._6D, Kings(1)),
+				Forcing(Bid._6H, Kings(2)),
+				Forcing(Bid._6S, Kings(3)),
 			};
 		}
 

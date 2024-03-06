@@ -131,7 +131,7 @@ namespace BridgeBidding
 		{
 			get
 			{		
-				return ((PairState.InGameForcingAuction || 
+				return ((PairState.Agreements.ForcingToGame || 
 						(Partner._bids.Count > 0 &&
 						Partner._bids.Last().BidForce == BidForce.Forcing1Round)) &&
 						!RightHandOpponent._bids.Last().Equals(Call.Pass));
@@ -167,10 +167,18 @@ namespace BridgeBidding
 				}
 			}
 			_bids.Add(callDetails);
-			if (callDetails.BidForce == BidForce.ForcingToGame)
-			{
-				PairState.InGameForcingAuction = true;
-			}
+
+			// Now show any state changes to the PairAgreements.  This only happens once per call
+			// and does not update dynamically like the PublicHandSummary.
+			// TODO: Should this happen here?  
+			//var showAgreements = new PairAgreements.ShowState(PairState.Agreements);
+			//showAgreements.Combine(callDetails.ShowAgreements(), State.CombineRule.Merge);
+			PairState.Agreements = callDetails.ShowAgreements();
+
+		///	if (callDetails.BidForce == BidForce.ForcingToGame)
+		//	{
+		//		PairState.InGameForcingAuction = true;
+	//		}
 			// Now we prune any rules that do not 
 
 			if (RepeatUpdatesUntilStable(callDetails))
@@ -207,23 +215,15 @@ namespace BridgeBidding
 			{
                 stateChanged |= callDetails.PruneRules(this);
 
-                (HandSummary hs, PairAgreements pa) newState = callDetails.ShowState();
-
 				var showHand = new HandSummary.ShowState(PublicHandSummary);
-				var showAgreements = new PairAgreements.ShowState(PairState.Agreements);
+				showHand.Combine(callDetails.ShowHand(), State.CombineRule.Merge);
 
-				showHand.Combine(newState.hs, State.CombineRule.Merge);
-				showAgreements.Combine(newState.pa, State.CombineRule.Merge);
-
-
-				if (this.PublicHandSummary.Equals(showHand.HandSummary) &&
-					this.PairState.Agreements.Equals(showAgreements.PairAgreements)) 
+				if (this.PublicHandSummary.Equals(showHand.HandSummary)) 
 				{ 
 					return stateChanged;
 				}
 				stateChanged = true;
-				this.PublicHandSummary = showHand.HandSummary;
-				this.PairState.Agreements = showAgreements.PairAgreements;
+				PublicHandSummary = showHand.HandSummary;
 			}
 			Debug.Assert(false); // This is bad - we had over 1000 state changes.  Infinite loop time...
 			return false;	// Seems the best thing to do to avoid repeated
@@ -241,7 +241,7 @@ namespace BridgeBidding
                     thisBid.Strain != Strain.NoTrump && 
                     openingBid.Strain != Strain.NoTrump &&
                     thisBid.Suit > openingBid.Suit &&
-                    !this.PairState.Agreements.Strains[thisBid.Strain].Shown);
+                    this.PairState.FirstToShow((Suit)thisBid.Suit) == null);
         }
 
 		public bool IsOpenerJumpShift(Call call)
@@ -252,14 +252,14 @@ namespace BridgeBidding
                     thisBid.Strain != Strain.NoTrump && 
                     openingBid.Strain != Strain.NoTrump &&
                     thisBid.JumpOver(openingBid) == 1 &&
-                    !this.PairState.Agreements.Strains[thisBid.Strain].Shown);
+                    PairState.FirstToShow((Suit)thisBid.Suit) == null);
 		}
 
 
 		// TODO: This logic is spread out across several classes.  Think about how to consolidate it.
 		public bool PrivateHandConforms(BidRule rule)
 		{
-			return HasHand ? rule.SatisifiesDynamicConstraints(this, this._privateHandSummary) : false;
+			return HasHand ? rule.SatisifiesHandConstraints(this, this._privateHandSummary) : false;
 		}
 
 		// Returns a list of dynamic constraints that do not conform to the private hand.
@@ -267,7 +267,7 @@ namespace BridgeBidding
 		public List<Constraint> PrivateHandFailingConstraints(BidRule rule)
 		{
 			Debug.Assert(HasHand);
-			return rule.FailingDynamicConstraints(this, this._privateHandSummary);
+			return rule.FailingHandConstraints(this, this._privateHandSummary);
 		}
 
 		public bool IsValidNextCall(Call call)

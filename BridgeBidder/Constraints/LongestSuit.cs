@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace BridgeBidding
 {
-    public class LongestSuit : DynamicConstraint, IDescribeConstraint
+    public class LongestSuit : HandConstraint, IDescribeConstraint
     {
         protected Suit? _suit = null;
 
@@ -46,11 +46,11 @@ namespace BridgeBidding
         }
     }
 
-	public class ShowsLongestSuit : LongestSuit, IShowsState
+	public class ShowsLongestSuit : LongestSuit, IShowsHand
 	{
         public ShowsLongestSuit(Suit? suit) : base(suit) { }
 
-	    void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showArgeements)
+	    public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
 		{
             if (GetSuit(_suit, call) is Suit suit)
             {

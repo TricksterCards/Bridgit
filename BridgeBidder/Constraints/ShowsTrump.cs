@@ -2,14 +2,14 @@
 
 namespace BridgeBidding
 {
-    public class ShowsTrump : DynamicConstraint, IShowsState, IDescribeConstraint
+    public class ShowsTrump : StaticConstraint, IShowsAgreement, IDescribeConstraint
     {
         private Strain? _trumpStrain;
         public ShowsTrump(Strain? trumpStrain)
         {
             this._trumpStrain = trumpStrain;
         }
-        public override bool Conforms(Call call, PositionState ps, HandSummary hs)
+        public override bool Conforms(Call call, PositionState ps)
         {
             if (GetStrain(_trumpStrain, call) == null)
             {
@@ -19,7 +19,7 @@ namespace BridgeBidding
             return true;
         }
 
-        void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+        public void ShowAgreement(Call call, PositionState ps, PairAgreements.ShowState showAgreements)
         {
             if (GetStrain(_trumpStrain, call) is Strain strain)
             {

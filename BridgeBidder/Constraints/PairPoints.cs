@@ -47,12 +47,19 @@ namespace BridgeBidding
             var points = hs.StartingPoints;
             if (!_useStartingPoints && GetSuit(ps, _suit, call) is Suit suit)
             {
-                if (ps.PairState.Agreements.Strains[suit.ToStrain()].LongHand == ps)
+                // We want to find the first of a pair who has shown a suit.
+                // Note that this is different from the first BID of a suit since
+                // a transfer shows a suit, but not the strain bid.  Therefore
+                // we must search first position of a pair to show at least 4 cards
+                // in a praritular suit.
+                var firstToShow = ps.PairState.FirstToShow(suit);
+                if (firstToShow == ps)
                 {
                     points = hs.Suits[suit].LongHandPoints;
                 }
-                else if (ps.PairState.Agreements.Strains[suit.ToStrain()].Dummy == ps)
+                else if (firstToShow != null)
                 {
+                    Debug.Assert(firstToShow == ps.Partner);
                     points = hs.Suits[suit].DummyPoints;
                 }
             }
@@ -98,23 +105,25 @@ namespace BridgeBidding
             return Strain.NoTrump;
         }
 
-        public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+        public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
         {
             var pointsThis = GetPoints(call, ps, ps.PublicHandSummary);
             var pointsPartner = GetPoints(call, ps.Partner, ps.Partner.PublicHandSummary);
             var suit = Constraint.GetSuit(_suit, call);
             int showMin = Math.Max(_min - pointsPartner.Min, 0);
             int showMax = Math.Max(_max - pointsPartner.Min, 0);
-            if (this._useStartingPoints || suit == null || ps.PairState.Agreements.Strains[ToStrain(suit)].LongHand == null)
+            PositionState firstToShow = suit == null ? null : ps.PairState.FirstToShow((Suit)suit);
+            if (this._useStartingPoints || firstToShow == null)
             {
                 showHand.ShowStartingPoints(showMin, showMax);
             }
-            else if (ps.PairState.Agreements.Strains[ToStrain(suit)].LongHand == ps)
+            else if (firstToShow == ps)
             {
                 showHand.Suits[(Suit)suit].ShowLongHandPoints(showMin, showMax);
             }
             else
             {
+                Debug.Assert(firstToShow == ps.Partner);
                 showHand.Suits[(Suit)suit].ShowDummyPoints(showMin, showMax);
             }
         }
@@ -177,7 +186,7 @@ namespace BridgeBidding
 		}
 	}
 
-    public class PairShowsPoints : DynamicConstraint, IShowsState, IDescribeConstraint
+    public class PairShowsPoints : HandConstraint, IShowsHand, IDescribeConstraint
     {
         private PairPoints _pairPoints;
         public PairShowsPoints(Suit? suit, int min, int max)
@@ -200,9 +209,9 @@ namespace BridgeBidding
             return _pairPoints.Describe(call, ps);
         }
 
-        void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+        public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
         {
-            _pairPoints.ShowState(call, ps, showHand, showAgreements);
+            _pairPoints.ShowHand(call, ps, showHand);
         }
     }
 }

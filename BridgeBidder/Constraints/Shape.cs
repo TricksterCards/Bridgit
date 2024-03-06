@@ -2,7 +2,7 @@
 
 namespace BridgeBidding
 {
-    public class HasShape : DynamicConstraint
+    public class HasShape : HandConstraint
     {
         protected Suit? _suit = null;
         protected int _min;
@@ -31,11 +31,11 @@ namespace BridgeBidding
 
     }
 
-	public class ShowsShape : HasShape, IShowsState, IDescribeConstraint
+	public class ShowsShape : HasShape, IShowsHand, IDescribeConstraint
 	{
         public ShowsShape(Suit? suit, int min, int max) : base(suit, min, max) { }
 
-	    void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showArgeements)
+	    public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
 		{
             if (GetSuit(_suit, call) is Suit suit)
             {
@@ -55,7 +55,7 @@ namespace BridgeBidding
 
 
 
-    public class HasMinShape : DynamicConstraint
+    public class HasMinShape : HandConstraint
     {
         protected Suit? _suit;
         protected int _min;

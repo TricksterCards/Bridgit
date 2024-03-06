@@ -5,7 +5,7 @@ namespace BridgeBidding
 {
 
 
-    public class HasPoints : DynamicConstraint
+    public class HasPoints : HandConstraint
     {
         protected int _min;
         protected int _max;
@@ -64,12 +64,12 @@ namespace BridgeBidding
 
     }
 
-    class ShowsPoints : HasPoints, IShowsState, IDescribeConstraint, IDescribeMultipleConstraints
+    class ShowsPoints : HasPoints, IShowsHand, IDescribeConstraint, IDescribeMultipleConstraints
     {
         public ShowsPoints(Suit? trumpSuit, int min, int max, PointType pointType) : base(trumpSuit, min, max, pointType) { }
 
 
-        void IShowsState.ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+        public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
         {
             switch (_pointType)
             {

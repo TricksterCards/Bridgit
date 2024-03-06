@@ -1,34 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace BridgeBidding
 {
 
     public class CallDetails
     {
-		protected class RuleInfo
-		{
-			public RuleInfo(BidRule rule)
-			{
-				this.Rule = rule;
-				this.HandSummary = null;
-				this.PairAgreements = null;
-			}
-			public BidRule Rule;
-			public HandSummary HandSummary;
-			public PairAgreements PairAgreements;
-		}
+
         public Call Call { get; }
 		public BidForce BidForce { get; private set; }
 		public List<CallAnnotation> Annotations = new List<CallAnnotation>();
 
 		private PartnerCalls _partnerCalls = null;
 
-        private List<RuleInfo> _ruleInfo = new List<RuleInfo>();
+        private List<BidRule> _rules = new List<BidRule>();
 
 
-        public bool HasRules {  get {  return _ruleInfo.Count > 0; } }
+        public bool HasRules {  get {  return _rules.Count > 0; } }
 
 		public CallGroup Group { get; }
 
@@ -40,7 +30,6 @@ namespace BridgeBidding
 			this.Group = group;
             this.Call = call;
 			this.BidForce = BidForce.Unknown;
-            this._ruleInfo = new List<RuleInfo>();
         }
 
 
@@ -55,21 +44,10 @@ namespace BridgeBidding
 				}
 				else
 				{
-					/*
-					if (this.BidForce == BidForce.Forcing1Round && rule.Force != BidForce.Forcing1Round)
-
-						throw new System.Exception($"{rule.Call} not forcing but prior rule was");
-					if (rule.Force == BidForce.Forcing1Round && this.BidForce != BidForce.Forcing1Round)
-						throw new System.Exception($"{rule.Call} is forcing but prior rule was not");
-					// TODO: This may blow up in some cases.  If so then deal with it!!!
-					// TODO: FIX!! Debug.Assert(this.BidForce == rule.Force);
-					*/
-					// TODO: Need to turn the rules above back on and catch all the errors
-					// For now just try not to blow up.
 					if (rule.Force == BidForce.Forcing1Round)
 						this.BidForce = BidForce.Forcing1Round;
 				}
-				_ruleInfo.Add(new RuleInfo(rule));
+				_rules.Add(rule);
 			}
 			else if (feature is PartnerCalls partnerCalls)
 			{
@@ -86,9 +64,9 @@ namespace BridgeBidding
 		public List<List<string>> GetCallDescriptions()
 		{
 			var descriptions = new List<List<string>>();
-			foreach (var ri in _ruleInfo)
+			foreach (var rule in _rules)
 			{
-				var d = ri.Rule.ConstraintDescriptions(PositionState);
+				var d = rule.ConstraintDescriptions(PositionState);
 				if (d != null)
 				{
 					descriptions.Add(d);
@@ -111,43 +89,73 @@ namespace BridgeBidding
 		}
 
 
-        public (HandSummary, PairAgreements) ShowState()
-        {
-			// TODO: This is a hack. Need to understand what's going on here.  But for now if empty rules
-			// just return the current state...
-			if (!HasRules) { return (PositionState.PublicHandSummary, PositionState.PairState.Agreements); }
-
-            var showHand = new HandSummary.ShowState();
-            var showAgreements = new PairAgreements.ShowState();
+        public PairAgreements ShowAgreements()
+        {  
+			return _rules[0].ShowAgreements(PositionState);
+			/*
             bool firstRule = true;
             foreach (var ri in _ruleInfo)
             {
-                (HandSummary hs, PairAgreements pa) newState = ri.Rule.ShowState(PositionState);
-				ri.HandSummary = newState.hs;
-				ri.PairAgreements = newState.pa;	
+                PairAgreements pa = ri.Rule.ShowAgreements(PositionState);
+				ri.PairAgreements = pa;	// TODO: REMOVE THIS COMPLETELY??
 				// TODO: This is right to save the state, but needs to be used later WITHOUT calling show.
-                showHand.Combine(newState.hs, firstRule ? State.CombineRule.Show : State.CombineRule.CommonOnly);
-                showAgreements.Combine(newState.pa, firstRule ? State.CombineRule.Show : State.CombineRule.CommonOnly);
+                showAgreements.Combine(pa, firstRule ? State.CombineRule.Show : State.CombineRule.EqualOnly);
                 firstRule = false;
             }
-            // After all of the possible shapes of suits have been unioned we can trim the max length of suits
-           // TODO: NEED TO CALL ON HAND EVEALUATOR HERE... handSummary.TrimShape();
-            return (showHand.HandSummary, showAgreements.PairAgreements);
+            return showAgreements.PairAgreements;
+			*/
+        }
+
+		internal void Validate()
+		{
+			PairAgreements a = null;
+			foreach (var rule in _rules)
+			{
+				var a2 = rule.ShowAgreements(PositionState);
+				if (a == null)
+				{
+					a = a2;
+				}
+				else
+				{
+					Debug.Assert(a.Equals(a2));
+				}
+			}
+		}
+
+
+        public HandSummary ShowHand()
+        {
+			// TODO: This is a hack. Need to understand what's going on here.  But for now if empty rules
+			// just return the current state...
+			if (!HasRules) { return PositionState.PublicHandSummary; }
+
+            var showHand = new HandSummary.ShowState();
+            bool firstRule = true;
+            foreach (var rule in _rules)
+            {
+                HandSummary hs = rule.ShowHand(PositionState);
+				//ri.HandSummary = hs;	
+				// TODO: This is right to save the state, but needs to be used later WITHOUT calling show.
+                showHand.Combine(hs, firstRule ? State.CombineRule.Show : State.CombineRule.CommonOnly);
+                firstRule = false;
+            }
+            return showHand.HandSummary;
         }
 
 
 		public bool PruneRules(PositionState ps)
 		{
-			var rules = new List<RuleInfo>();
-			foreach (var ri in _ruleInfo)
+			var rules = new List<BidRule>();
+			foreach (var rule in _rules)
 			{
-				if (ri.Rule.SatisifiesDynamicConstraints(ps, ps.PublicHandSummary))
+				if (rule.SatisifiesHandConstraints(ps, ps.PublicHandSummary))
 				{
-					rules.Add(ri);
+					rules.Add(rule);
 				}
 			}
-			if (rules.Count == _ruleInfo.Count) { return false; }
-			_ruleInfo = rules;
+			if (rules.Count == _rules.Count) { return false; }
+			_rules = rules;
 			return true;
 		}
 

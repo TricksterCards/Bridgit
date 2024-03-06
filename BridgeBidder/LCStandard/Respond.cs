@@ -194,19 +194,21 @@ namespace BridgeBidding
                     PartnerBids(Bid._4H,  OpenBid2.ResponderRaisedMajor),
 
 
-                    // TODO: Rules for best suit if 5-5
-                    Invitational(Bid._2C, Points(MaxPassed), Shape(5, 10)),
-                    Invitational(Bid._2D, Points(MaxPassed), Shape(5, 10)),
-
                     Invitational(Bid._2H, DummyPoints(Raise1), Shape(3, 5)),
                     Invitational(Bid._3H, DummyPoints(MediumHand), Shape(3, 5)),
                     // TODO: When would we bid 4?
                     Signoff(Bid._4H, Points(Weak4Level), Shape(5, 10)),
                 
                     Nonforcing(Bid._1S, Shape(4, 10), Points(Respond1Level), Shape(Suit.Hearts, 0, 3)),
+
+                    // TODO: Rules for best suit if 5-5
+                    Invitational(Bid._2C, Points(MaxPassed), Shape(5, 10)),
+                    Invitational(Bid._2D, Points(MaxPassed), Shape(5, 10)),
                   // TODO: Where  PartnerBids(Bid._1NT, OpenBid2.OneNTOverMajorOpen),
                     // TODO: Points range name wrong!
-                    Semiforcing(Bid._1NT, Points(Respond1NTPassedHand), Shape(Suit.Hearts, 0, 2)),
+                
+                    Invitational(Bid._1NT, Points(6, 10), Shape(Suit.Hearts, 0, 2)),
+                    Invitational(Bid._2NT, Points(11, 12), Shape(Suit.Hearts, 0, 2)),
                 });
             }
             else 
@@ -274,10 +276,7 @@ namespace BridgeBidding
                     PartnerBids(Bid._3S, OpenBid2.ResponderRaisedMajor),
                     PartnerBids(Bid._4S, OpenBid2.ResponderRaisedMajor),
 
-                    // TODO: Rules for best suit if 5-5
-                    Invitational(Bid._2C, Points(MaxPassed), Shape(5, 10)),
-                    Invitational(Bid._2D, Points(MaxPassed), Shape(5, 10)),
-                    Invitational(Bid._2H, Points(MaxPassed), Shape(5, 10)),
+
 
                     Invitational(Bid._2S, DummyPoints(Raise1), Shape(3, 5)),
                     Invitational(Bid._3S, DummyPoints(MediumHand), Shape(3, 5)),
@@ -286,8 +285,13 @@ namespace BridgeBidding
                 
                   // TODO: Where  PartnerBids(Bid._1NT, OpenBid2.OneNTOverMajorOpen),
                     // TODO: Points range name wrong!
+                    // TODO: Rules for best suit if 5-5
+                    Invitational(Bid._2C, Points(MaxPassed), Shape(5, 10)),
+                    Invitational(Bid._2D, Points(MaxPassed), Shape(5, 10)),
+                    Invitational(Bid._2H, Points(MaxPassed), Shape(5, 10)),
 
-                    Semiforcing(Bid._1NT, Points(Respond1NTPassedHand), Shape(Suit.Spades, 0, 2)),
+                    Invitational(Bid._1NT, Points(6, 10),  Shape(Suit.Spades, 0, 2)),
+                    Invitational(Bid._2NT, Points(11, 12), Shape(Suit.Spades, 0, 2)),
                 });
             }
             else 
@@ -515,10 +519,10 @@ namespace BridgeBidding
                 // TODO: Perhaps show new 5+ card suit forcing here?  Only if not passed.
 
 				// Now cuebid raises are next in priority - RaisePartner calls ShowTrump()
-                Forcing(Bid._2D, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
-                Forcing(Bid._2H, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
-                Forcing(Bid._2S, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
-                Forcing(Bid._3C, CueBid(), RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Forcing(Bid._2D, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Forcing(Bid._2H, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Forcing(Bid._2S, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Forcing(Bid._3C, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
 
                 // TODO: Weak jumps here take precedence over simple raise
                
@@ -527,14 +531,14 @@ namespace BridgeBidding
 
 
                 // Now time for invitational bids.
-                Invitational(Bid._2C, CueBid(false), RaisePartner(), DummyPoints(Raise1)),
-                Invitational(Bid._2C, OppsStopped(false), CueBid(false), RaisePartner(fit: 7), DummyPoints(Raise1)),
+                Invitational(Bid._2C, NotCueBid, RaisePartner(), DummyPoints(Raise1)),
+                Invitational(Bid._2C, OppsStopped(false), NotCueBid, RaisePartner(fit: 7), DummyPoints(Raise1)),
 
-                Invitational(Bid._2D, CueBid(false), RaisePartner(), DummyPoints(Raise1)),
-                Invitational(Bid._2D, OppsStopped(false), CueBid(false), RaisePartner(fit: 7), DummyPoints(Raise1)),
+                Invitational(Bid._2D, NotCueBid, RaisePartner(), DummyPoints(Raise1)),
+                Invitational(Bid._2D, OppsStopped(false), NotCueBid, RaisePartner(fit: 7), DummyPoints(Raise1)),
 
-                Invitational(Bid._2H, CueBid(false), RaisePartner(), DummyPoints(Raise1)),
-                Invitational(Bid._2S, CueBid(false), RaisePartner(), DummyPoints(Raise1)),
+                Invitational(Bid._2H, NotCueBid, RaisePartner(), DummyPoints(Raise1)),
+                Invitational(Bid._2S, NotCueBid, RaisePartner(), DummyPoints(Raise1)),
 
 				// TODO: Still need lots and lots more bid levels here.  But decent start...
 		

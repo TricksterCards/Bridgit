@@ -85,10 +85,13 @@ namespace BridgeBidding
         //public (int Min, int Max) StartingPoints;
         public Dictionary<Suit, SuitSummary> Suits;
         public HashSet<Suit> ShownSuits = new HashSet<Suit>();
-        public HashSet<Strain> ShownStrains = new HashSet<Strain>();
+    //    public HashSet<Strain> ShownStrains = new HashSet<Strain>();
 
-        public PairSummary(HandSummary hs1, HandSummary hs2, PairAgreements pa)
+        public PairSummary(PositionState ps)
+
         {
+            var hs1 = ps.PublicHandSummary;
+            var hs2 = ps.Partner.PublicHandSummary;
             this.Points = AddRange(hs1.Points, hs2.Points, 100);
           //  this.HighCardPoints = AddRange(hs1.GetHighCardPoints(), hs2.GetHighCardPoints(), 40);
            // this.StartingPoints = AddRange(hs1.GetStartingPoints(), hs2.GetStartingPoints(), 100);
@@ -98,16 +101,14 @@ namespace BridgeBidding
             foreach (Suit suit in Card.Suits)
             {
                 Suits[suit] = new SuitSummary(hs1.Suits[suit], hs2.Suits[suit]);
-                if (pa.Strains[suit.ToStrain()].LongHand != null)
-                { 
+                if (ps.PairState.FirstToShow(suit) != null)
+                {   
                     ShownSuits.Add(suit);
-                    ShownStrains.Add(suit.ToStrain());
                 }
             }
             // TODO: Need to show NT if that has been bid...  ShownStrains.Add(...)
         }
 
-        public PairSummary(PositionState ps) : this(ps.PublicHandSummary, ps.Partner.PublicHandSummary, ps.PairState.Agreements) { }
 
         public static PairSummary Opponents(PositionState ps)
         {

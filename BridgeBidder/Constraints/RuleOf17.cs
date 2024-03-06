@@ -2,7 +2,7 @@
 
 namespace BridgeBidding
 {
-    public class RuleOf17 : DynamicConstraint, IDescribeConstraint
+    public class RuleOf17 : HandConstraint, IDescribeConstraint
     {
         private Suit? _suit;
 

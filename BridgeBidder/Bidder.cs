@@ -131,9 +131,10 @@ namespace BridgeBidding
 		public static StaticConstraint Rebid = new BidHistory(0, null);
 		public static StaticConstraint NotRebid = Not(Rebid);
 
-		public static StaticConstraint NewSuit = new NewSuit(null);
+		public static Constraint NewSuit = And(NotCueBid, new NewSuit(null));
 
-		public static StaticConstraint IsNewSuit(Suit suit) { return new NewSuit(suit); }
+
+//		public static StaticConstraint IsNewSuit(Suit suit) { return new NewSuit(suit); }
 
 		public static StaticConstraint ID(string id)
 		{
@@ -231,29 +232,29 @@ namespace BridgeBidding
 		}
 		
 		// ************************************  DYNAMIC CONSTRAINTS ***
-		public static DynamicConstraint PassIn4thSeat()
+		public static HandConstraint PassIn4thSeat()
 		{
 			return new PassIn4thSeat();
 		}
-		public static DynamicConstraint HighCardPoints(int min, int max)
+		public static HandConstraint HighCardPoints(int min, int max)
 		{
 			 return new ShowsPoints(null, min, max, HasPoints.PointType.HighCard); 
 		
 		}
-		public static DynamicConstraint HighCardPoints((int min, int max) range)
+		public static HandConstraint HighCardPoints((int min, int max) range)
 		{
 			return HighCardPoints(range.min, range.max);
 		}
 
-		public static DynamicConstraint Points(int min, int max)
+		public static HandConstraint Points(int min, int max)
 		{
 			return new ShowsPoints(null, min, max, HasPoints.PointType.Starting);
 		}
 
-		public static DynamicConstraint Points((int min, int max) range) {
+		public static HandConstraint Points((int min, int max) range) {
 			return Points(range.min, range.max); }
 
-		public static DynamicConstraint DummyPoints(int min, int max)
+		public static HandConstraint DummyPoints(int min, int max)
 		{
 			// TODO: Rename this??? SuitPoints???  
 			return new ShowsPoints(null, min, max, HasPoints.PointType.Dummy);
@@ -273,8 +274,8 @@ namespace BridgeBidding
 		public static Constraint Shape(Suit suit, int count) { return new ShowsShape(suit, count, count); }
 		public static Constraint Shape(int min, int max) { return new ShowsShape(null, min, max); }
 		public static Constraint Shape(Suit suit, int min, int max) { return new ShowsShape(suit, min, max); }
-		public static DynamicConstraint Balanced = new ShowsBalanced(true);
-		public static DynamicConstraint NotBalanced = new ShowsBalanced(false);
+		public static HandConstraint Balanced = new ShowsBalanced(true);
+		public static HandConstraint NotBalanced = new ShowsBalanced(false);
 
 		public static Constraint Flat(bool desired = true) { return new ShowsFlat(desired); }
 
@@ -285,31 +286,31 @@ namespace BridgeBidding
 			return new PositionProxy(PositionProxy.RelativePosition.RHO, constraint);
 		}
 
-		public static Constraint HasShape(int count)
+		public static HandConstraint HasShape(int count)
 		{
 			return HasShape(count, count);
 		}
 
-		public static Constraint HasMinShape(int count)
+		public static HandConstraint HasMinShape(int count)
 		{
 			return HasMinShape(null, count);
 		}
 
-		public static Constraint HasMinShape(Suit? suit, int count)
+		public static HandConstraint HasMinShape(Suit? suit, int count)
 		{
 			return new HasMinShape(suit, count);
 		}
 
 
-		public static Constraint HasShape(int min, int max)
+		public static HandConstraint HasShape(int min, int max)
 		{
 			return new HasShape(null, min, max);
 		}
 
-		public static Constraint Quality(SuitQuality min, SuitQuality max) {
+		public static HandConstraint Quality(SuitQuality min, SuitQuality max) {
 			return new ShowsQuality(null, min, max);
 		}
-		public static Constraint Quality(Suit suit, SuitQuality min, SuitQuality max)
+		public static HandConstraint Quality(Suit suit, SuitQuality min, SuitQuality max)
 		{ return new ShowsQuality(suit, min, max); }
 
 		public static Constraint And(params Constraint[] constraints)
@@ -318,51 +319,51 @@ namespace BridgeBidding
 		}
 
 
-		public static Constraint ExcellentPlusSuit = IsExcellentPlusSuit(null);
-        public static Constraint IsExcellentPlusSuit(Suit? suit = null)
+		public static HandConstraint ExcellentPlusSuit = IsExcellentPlusSuit(null);
+        public static HandConstraint IsExcellentPlusSuit(Suit? suit = null)
         { return new ShowsQuality(suit, SuitQuality.Excellent, SuitQuality.Solid); }
 
-		public static Constraint BadSuit = IsBadSuit(null);
-		public static Constraint IsBadSuit(Suit? suit)
+		public static HandConstraint BadSuit = IsBadSuit(null);
+		public static HandConstraint IsBadSuit(Suit? suit)
 		{ return new ShowsQuality(suit, SuitQuality.Poor, SuitQuality.Poor);
 		}
-        public static Constraint GoodPlusSuit = IsGoodPlusSuit(null);
-		public static Constraint IsGoodPlusSuit(Suit? suit)
+        public static HandConstraint GoodPlusSuit = IsGoodPlusSuit(null);
+		public static HandConstraint IsGoodPlusSuit(Suit? suit)
 		{ return new ShowsQuality(suit, SuitQuality.Good, SuitQuality.Solid); }
 
-		public static Constraint DecentPlusSuit = IsDecentPlusSuit(null);
-		public static Constraint IsDecentPlusSuit(Suit? suit)
+		public static HandConstraint DecentPlusSuit = IsDecentPlusSuit(null);
+		public static HandConstraint IsDecentPlusSuit(Suit? suit)
 		{ return new ShowsQuality(suit, SuitQuality.Decent, SuitQuality.Solid); }
 
-		public static DynamicConstraint SuitLosers(int min, int max, Suit? suit = null)
+		public static HandConstraint SuitLosers(int min, int max, Suit? suit = null)
 		{
 			return new ShowsLosers(false, suit, min, max);
 		}
 
 	
-		public static Constraint Better(Suit better, Suit worse) { return new ShowsBetterSuit(better, worse, worse, false); }
+		public static HandConstraint Better(Suit better, Suit worse) { return new ShowsBetterSuit(better, worse, worse, false); }
 
-		public static Constraint BetterOrEqual(Suit better, Suit worse) { return new ShowsBetterSuit(better, worse, better, false); }
+		public static HandConstraint BetterOrEqual(Suit better, Suit worse) { return new ShowsBetterSuit(better, worse, better, false); }
 
-		public static Constraint BetterThan(Suit worse) { return new ShowsBetterSuit(null, worse, worse, false); }
+		public static HandConstraint BetterThan(Suit worse) { return new ShowsBetterSuit(null, worse, worse, false); }
 
-		public static Constraint BetterOrEqualTo(Suit worse) { return new ShowsBetterSuit(null, worse, null, false); }
+		public static HandConstraint BetterOrEqualTo(Suit worse) { return new ShowsBetterSuit(null, worse, null, false); }
 
-		public static Constraint LongerThan(Suit shorter) { return new ShowsBetterSuit(null, shorter, shorter, true); }
+		public static HandConstraint LongerThan(Suit shorter) { return new ShowsBetterSuit(null, shorter, shorter, true); }
 
-		public static Constraint LongerOrEqualTo(Suit shorter) { return new ShowsBetterSuit(null, shorter, null, true); }
-		public static Constraint Longer(Suit longer, Suit shorter) { return new ShowsBetterSuit(longer, shorter, shorter, true); }
+		public static HandConstraint LongerOrEqualTo(Suit shorter) { return new ShowsBetterSuit(null, shorter, null, true); }
+		public static HandConstraint Longer(Suit longer, Suit shorter) { return new ShowsBetterSuit(longer, shorter, shorter, true); }
 
-		public static Constraint LongerOrEqual(Suit longer, Suit shorter) { return new ShowsBetterSuit(longer, shorter, longer, true); }
+		public static HandConstraint LongerOrEqual(Suit longer, Suit shorter) { return new ShowsBetterSuit(longer, shorter, longer, true); }
 
-		public static DynamicConstraint LongestSuit = IsLongestSuit(null);
-		public static DynamicConstraint IsLongestSuit(Suit? suit)
+		public static HandConstraint LongestSuit = IsLongestSuit(null);
+		public static HandConstraint IsLongestSuit(Suit? suit)
 		{
 			return new ShowsLongestSuit(suit);
 		}
 
 
-		public static Constraint DummyPoints(Suit trumpSuit, (int min, int max) range)
+		public static HandConstraint DummyPoints(Suit trumpSuit, (int min, int max) range)
 		{
 			return new ShowsPoints(trumpSuit, range.min, range.max, HasPoints.PointType.Dummy);
 		}
@@ -422,29 +423,21 @@ namespace BridgeBidding
 			return new PairKings(count);
 		}
 
-		public static Constraint CueBid(bool desiredValue = true)
-		{
-			return CueBid(null, desiredValue);
-		}
-
-		public static Constraint CueBid(Suit? suit, bool desiredValue = true)
-		{
-			return new CueBid(suit, desiredValue);
-		}
+		public static StaticConstraint CueBid = new IsCueBid(null);
+		public static StaticConstraint NotCueBid = Not(CueBid);
 
 		// Perhaps rename this.  Perhaps move this to takeout...
 		public static Constraint TakeoutSuit(Suit? suit = null)
 		{
-			return And(new TakeoutSuit(suit), CueBid(false));
+			return And(new TakeoutSuit(suit), NotCueBid);
 		}
 
 
-		// TODO: Needs to be a version of this that does not check for explicitly
-		// "shown" to make stayman work.
 
 		public static Constraint Fit(int count = 8, Suit? suit = null, bool desiredValue = true)
 		{
-			return And(HasShownSuit(suit, eitherPartner: true), new PairShowsMinShape(suit, count, desiredValue));
+			return new PairShowsMinShape(suit, count, desiredValue);
+			//return And(HasShownSuit(suit, eitherPartner: true), new PairShowsMinShape(suit, count, desiredValue));
 		}
 
 		public static Constraint Fit(Suit suit, bool desiredValue = true)
@@ -459,12 +452,12 @@ namespace BridgeBidding
 
 
 
-		public static DynamicConstraint PairPoints((int Min, int Max) range)
+		public static HandConstraint PairPoints((int Min, int Max) range)
 		{
 			return PairPoints(null, range);
 		}
 
-		public static DynamicConstraint PairPoints(Suit? suit, (int Min, int Max) range)
+		public static HandConstraint PairPoints(Suit? suit, (int Min, int Max) range)
 		{
 			return new PairShowsPoints(suit, range.Min, range.Max);
 		}
@@ -497,25 +490,12 @@ namespace BridgeBidding
 			return new Break(name);
 		}
 
-
-		public static Constraint ShowsSuit(Suit suit)
-		{
-			return new ShowsSuit(true, suit);
-		}
-		public static Constraint ShowsSuits(params Suit[] suits)
-		{
-			return new ShowsSuit(false, suits);
-		}
-
-
-		public static DynamicConstraint ShowsNoSuit = new ShowsSuit(false, null);
-
-		public static DynamicConstraint BetterMinor(Suit? suit = null)
+		public static HandConstraint BetterMinor(Suit? suit = null)
 		{
 			return new BetterMinor(suit);
 		}
 
-		public static DynamicConstraint RuleOf9()
+		public static HandConstraint RuleOf9()
 		{
 			return new RuleOf9();
 		}
@@ -524,18 +504,11 @@ namespace BridgeBidding
 
 
 		// THE FOLLOWING CONSTRAINTS ARE GROUPS OF CONSTRAINTS
-        public static Constraint RaisePartner(Suit? suit = null, int raise = 1, int fit = 8)
+        public static Constraint RaisePartner(Suit? suit = null, int jump = 0, int fit = 8)
         {
-            return And(Partner(HasShownSuit(suit)), Fit(fit, suit), Jump(raise - 1), ShowsTrumpSuit(suit));
+            return And(Partner(HasShownSuit(suit)), Fit(fit, suit), Jump(jump), ShowsTrumpSuit(suit));
         }
-        public static Constraint RaisePartner(int level)
-        {
-            return RaisePartner(null, level);
-        }
-		public static Constraint RaisePartner(Suit suit)
-		{
-			return RaisePartner(suit, 1);
-		}
+   
 
 
     }

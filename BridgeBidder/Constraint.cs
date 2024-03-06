@@ -81,18 +81,23 @@ namespace BridgeBidding
         }
     }
 
-    public abstract class DynamicConstraint: Constraint
+    public abstract class HandConstraint: Constraint
     {
         public abstract bool Conforms(Call call, PositionState ps, HandSummary hs);
     }
 
 
-    public interface IShowsState 
+    public interface IShowsHand 
     {
-        void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements);
+        void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand);
     }
 
-    
+
+    public interface IShowsAgreement
+    {
+        void ShowAgreement(Call call, PositionState ps, PairAgreements.ShowState showAgreements);
+    }
+
     public interface IDescribeConstraint
     {
         string Describe(Call call, PositionState ps);

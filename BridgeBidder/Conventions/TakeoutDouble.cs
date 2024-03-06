@@ -130,16 +130,16 @@ namespace BridgeBidding
 
                 // CANT BE - Invitational(Bid._2C, RaisePartner(), Points(MediumTakeout)),
                 Invitational(Bid._2D, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._2H,   RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._2S,   RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._2H, RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._2S, RaisePartner(), DummyPoints(MediumTakeout)),
 
-                Invitational(Bid._3C,    RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._3C, RaisePartner(), DummyPoints(MediumTakeout)),
                 Invitational(Bid._3D, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._3D, RaisePartner(2), DummyPoints(MaximumTakeout)),
-                Invitational(Bid._3H,   RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._3H,   RaisePartner(2), DummyPoints(MaximumTakeout)),
-                Invitational(Bid._3S,   RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._3S,   RaisePartner(2), DummyPoints(MaximumTakeout)),
+                Invitational(Bid._3D, RaisePartner(jump: 1), DummyPoints(MaximumTakeout)),
+                Invitational(Bid._3H, RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._3H, RaisePartner(jump: 1), DummyPoints(MaximumTakeout)),
+                Invitational(Bid._3S, RaisePartner(), DummyPoints(MediumTakeout)),
+                Invitational(Bid._3S, RaisePartner(jump: 1), DummyPoints(MaximumTakeout)),
                 // TODO: Bid new suits for strong hands...  Bid NT?  
 
                 // TODO: Forcing?  What to do here...

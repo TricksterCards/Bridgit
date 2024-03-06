@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BridgeBidding
 {
-    public class KeyCards : DynamicConstraint, IShowsState, IDescribeConstraint
+    public class KeyCards : HandConstraint, IShowsHand, IDescribeConstraint
 	{
 		HashSet<int> _count;
 		Suit? _trumpSuit;
@@ -53,7 +53,7 @@ namespace BridgeBidding
 			}
 		}
 
-		public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+		public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
 		{
 			if (_trumpSuit is Suit suit)
 			{
@@ -71,7 +71,7 @@ namespace BridgeBidding
 	}
 
 
-	public class Kings : DynamicConstraint, IShowsState, IDescribeConstraint
+	public class Kings : HandConstraint, IShowsHand, IDescribeConstraint
 	{
 		HashSet<int> _count;
 
@@ -96,7 +96,7 @@ namespace BridgeBidding
 			return $"{string.Join(" or ", _count)} King{s}";
 		}
 
-        public void ShowState(Call call, PositionState ps, HandSummary.ShowState showHand, PairAgreements.ShowState showAgreements)
+        public void ShowHand(Call call, PositionState ps, HandSummary.ShowState showHand)
 		{
 			showHand.ShowCountKings(_count);
 		}

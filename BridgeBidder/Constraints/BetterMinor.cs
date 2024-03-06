@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace BridgeBidding
 {
-    public class BetterMinor : DynamicConstraint
+    public class BetterMinor : HandConstraint
 	{
 		Suit? _suit;
 		public BetterMinor(Suit? suit)

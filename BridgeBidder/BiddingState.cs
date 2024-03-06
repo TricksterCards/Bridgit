@@ -45,8 +45,8 @@ namespace BridgeBidding
             this.Positions = new Dictionary<Direction, PositionState>();
             this.Contract = new ContractState();
             var d = game.Dealer;
-            var ns = new PairState(Pair.NS, GetBidSystem(game.BidSystemNS), game.Vulnerable);
-            var ew = new PairState(Pair.EW, GetBidSystem(game.BidSystemEW), game.Vulnerable);
+            var ns = new PairState(this, Pair.NS, GetBidSystem(game.BidSystemNS), game.Vulnerable);
+            var ew = new PairState(this, Pair.EW, GetBidSystem(game.BidSystemEW), game.Vulnerable);
             for (int seat = 1; seat <= 4; seat++)
             {
                 Hand hand;
