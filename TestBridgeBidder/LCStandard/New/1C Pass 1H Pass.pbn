@@ -191,10 +191,10 @@ Pass Pass
 [Deal "E:KJ83.K8.73.AKJT7 AQ.743.QT982.Q92 T4.AJT962.K6.654 97652.Q5.AJ54.83"]
 [Scoring "MP"]
 [Declarer "S"]
-[Contract "3D"]
+[Contract "2D"]
 [Result ""]
 [Auction "E"]
-1C 1D 1H 3D
+1C 1D 1H 2D
 Pass Pass Pass
 
 [Event ""]
@@ -366,13 +366,12 @@ Pass Pass
 [Vulnerable "EW"]
 [Deal "S:AJ.A8.QJ87.AJ732 T53.9743.A9543.6 KQ62.KJT62.K62.9 9874.Q5.T.KQT854"]
 [Scoring "MP"]
-[Declarer "S"]
-[Contract "6D"]
+[Declarer "N"]
+[Contract "3NT"]
 [Result ""]
 [Auction "S"]
 1C Pass 1H Pass
-2D Pass 4NT Pass
-5D Pass 6D Pass
+2D Pass 3NT Pass
 Pass Pass
 
 [Event ""]
