@@ -22,6 +22,7 @@ namespace BridgeBidding
 
 		public void AddConstraint(Constraint constraint)
 		{
+			Debug.Assert(constraint != null);
 			if (constraint is ConstraintGroup group)
 			{
 				foreach (Constraint child in group.ChildConstraints)

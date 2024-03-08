@@ -108,7 +108,7 @@ namespace BridgeBidding
 
 		public static StaticConstraint Seat(params int[] seats)
 		{
-			return new SimpleStaticConstraint((call, ps) => seats.Contains(ps.Seat), getDescription: (call, ps) => $"seat {ps.Seat}");
+			return new SimpleStaticConstraint((call, ps) => seats.Contains(ps.Seat), getDescription: (call, ps) => $"seat {string.Join(",", seats)}");
 		}
 		public static StaticConstraint LastBid(Call call)
 		{
@@ -127,6 +127,9 @@ namespace BridgeBidding
 			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.OpeningBid == bid);
 		}
 
+
+		public static StaticConstraint CueBid = new IsCueBid(null);
+		public static StaticConstraint NotCueBid = Not(CueBid);
 
 		public static StaticConstraint Rebid = new BidHistory(0, null);
 		public static StaticConstraint NotRebid = Not(Rebid);
@@ -422,9 +425,6 @@ namespace BridgeBidding
 		{
 			return new PairKings(count);
 		}
-
-		public static StaticConstraint CueBid = new IsCueBid(null);
-		public static StaticConstraint NotCueBid = Not(CueBid);
 
 		// Perhaps rename this.  Perhaps move this to takeout...
 		public static Constraint TakeoutSuit(Suit? suit = null)

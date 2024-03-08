@@ -230,7 +230,8 @@ namespace BridgeBidding
 			return false;	// Seems the best thing to do to avoid repeated
 		}
 
-
+		// TODO: Perhaps remove this.  Looks like combinations of other 
+		// constraints are used instead.
 		public bool IsOpenerJumpShift(Call call)
 		{
 			return (this.Role == PositionRole.Opener &&
