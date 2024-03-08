@@ -21,6 +21,7 @@ public class TestEditor
     private int ActionNextBoard = 0;
     private int ActionEditAuction = -1;
 
+/*
     public static Game[] FailingTests(IEnumerable<Game> games)
     {
         var failures = new List<Game>();
@@ -33,26 +34,8 @@ public class TestEditor
         }
         return failures.ToArray();
     }
+*/
 
-    public static bool AuctionPasses(Game game)
-    {
-        var testGame = game.Clone();
-        testGame.Auction.Clear();
-        var bs = new BiddingState(testGame);
-        foreach (var call in game.Auction.Calls)
-        {
-            var choices = bs.GetCallChoices();
-            if (bs.NextToAct.HasHand)
-            {
-                if (choices.BestCall == null || !choices.BestCall.Call.Equals(call))
-                {
-                    return false;
-                }
-            }
-            bs.MakeCall(call);
-        }
-        return true;
-    }
 
     private class CallRecord
     {

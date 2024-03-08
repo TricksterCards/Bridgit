@@ -4,18 +4,33 @@ using BridgeBidding;
 using BridgeBidding.PBN;
 using System.Text;
 using System.Data;
+using System.Reflection;
 
 namespace bridgit;
 
 public class InterractiveApp
 {
 
+
+
+    private static string TestDirPath(params string[] dirs)
+    {
+        var execDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        if (execDir == null) throw new Exception("Could not find executing directory");
+        var dir = Path.Combine(execDir, "..", "..", "..", "..", "TestBridgeBidder");
+        foreach (var d in dirs)
+        {
+            dir = Path.Combine(dir, d);
+        }
+        return Path.GetFullPath(dir);
+    }
     
-    public static string TestDirectory = "New";
+    public static string PassingTestsDirectory = TestDirPath("TwoOverOneGameForce");
+    public static string NewTestsDirectory = TestDirPath("LCStandard", "New");
 
-    private GameFile? _gameFile = null;
 
-    private Game[] _failedTests = new Game[0];
+    private TestFile? _testFile = null;
+
     private int _selectedGame = 0;
 
     public static void Show()
@@ -166,20 +181,20 @@ public class InterractiveApp
         var input = Console.ReadLine();
         if (!string.IsNullOrEmpty(input)) fileName = input;
 
-        if (GameFile.FileExists(TestDirectory, fileName))
+        if (TestFile.FileExists(NewTestsDirectory, fileName))
         {
             if (!Confirm("File already exists.  Overwrite (Y/N)? "))
             {
                 return;
             }
         }
-        var gameFile = GameFile.NewGame(TestDirectory, fileName);
+        var testFile = TestFile.CreateNew(NewTestsDirectory, fileName);
 
         if (desiredCalls.Count == 0)
         {
             for (int i = 0; i < numTests; i++)
             {
-                gameFile.Add(CreateTest.NewTest(i+1, singleOnly, initialAuction, null, completeAuction));
+                testFile.Add(CreateTest.NewTest(i+1, singleOnly, initialAuction, null, completeAuction));
             }
         }
         else
@@ -189,14 +204,13 @@ public class InterractiveApp
             {
                 for (int i = 0; i < numTests; i++)
                 {                
-                    gameFile.Add(CreateTest.NewTest(boardNumber, singleOnly, initialAuction, call, completeAuction));
+                    testFile.Add(CreateTest.NewTest(boardNumber, singleOnly, initialAuction, call, completeAuction));
                     boardNumber++;
                 }
             }
         }
 
-        this._failedTests = new Game[0];
-        this._gameFile = gameFile;
+        this._testFile = testFile;
         this._selectedGame = 0;
         EditGameFile();
     }
@@ -204,10 +218,12 @@ public class InterractiveApp
     private void LoadTests()
     {
         Console.Clear();
-        var gameFiles = GameFile.EnumDirectory(TestDirectory);
-        for (int i = 0; i < gameFiles.Length; i++)
+        string type = PromptForInput("N for new tests or P for passing tests: ", "N", "P");
+        string dir = type == "N" ? NewTestsDirectory : PassingTestsDirectory;   
+        var testFiles = TestFile.EnumDirectory(dir);
+        for (int i = 0; i < testFiles.Length; i++)
         {
-            Console.WriteLine($"{i + 1, 3}: {gameFiles[i].FileName}");
+            Console.WriteLine($"{i + 1, 3}: {testFiles[i].FileName}");
         }
         Console.WriteLine();
         Console.Write("Number of file to load or 0 to exit: ");
@@ -216,13 +232,12 @@ public class InterractiveApp
             var input = Console.ReadLine();
             if (input == null) input = "";
             int selected;
-            if (int.TryParse(input, out selected) && selected >= 0 && selected <= gameFiles.Length + 1)
+            if (int.TryParse(input, out selected) && selected >= 0 && selected <= testFiles.Length + 1)
             {
                 if (selected == 0) return;
-                this._gameFile = gameFiles[selected - 1];
-                this._gameFile.Load();
+                this._testFile = testFiles[selected - 1];
+                this._testFile.Load();
                 this._selectedGame = 0;
-                this._failedTests = TestEditor.FailingTests(_gameFile);
                 EditGameFile();
                 return;
             }
@@ -231,18 +246,18 @@ public class InterractiveApp
 
     private void EditGameFile()
     {
-        if (_gameFile == null) throw new InvalidOperationException("No game file loaded");
+        if (_testFile == null) throw new InvalidOperationException("No game file loaded");
         while (true)
         {
             Console.Clear();
-            if (_failedTests.Length > 0)
+            if (_testFile.FailingTests.Count > 0)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{_failedTests.Length} auction are failing.");
+                Console.WriteLine($"{_testFile.FailingTests.Count} auction are failing.");
                 Console.ResetColor();
             }
-            Console.WriteLine($"Editing {_gameFile.FileName}, Board {_gameFile[_selectedGame].Board}, {_selectedGame + 1} of {_gameFile.Count}");
-            var testEditor = new TestEditor(_gameFile[_selectedGame]);
+            Console.WriteLine($"Editing {_testFile.FileName}, Board {_testFile[_selectedGame].Board}, {_selectedGame + 1} of {_testFile.Count}");
+            var testEditor = new TestEditor(_testFile[_selectedGame]);
             testEditor.RunAuctionTest(false);
             Console.WriteLine();
 
@@ -256,30 +271,30 @@ public class InterractiveApp
 
                 case "PBN":
                     Console.WriteLine();
-                    Console.WriteLine(_gameFile[_selectedGame].ToString());
+                    Console.WriteLine(_testFile[_selectedGame].ToString());
                     Console.ReadLine();
                     break;
 
                 case "E":
-                    var editor = new TestEditor(_gameFile[_selectedGame]);
+                    var editor = new TestEditor(_testFile[_selectedGame]);
                     editor.EditAuction();
                     break;
 
                 case "#":
-                    _gameFile.RenumberBoards();
+                    _testFile.RenumberBoards();
                     break;
 
                 case "S":
                     if (Confirm("Are you sure you want to save (Y/N)? "))
                     {
-                        _gameFile.Save();
+                        _testFile.Save();
                         Console.WriteLine("File saved");
                     }
                     break;
                 
                 case "":
                 case "N":
-                    _selectedGame += _selectedGame < _gameFile.Count - 1 ? 1 : 0;
+                    _selectedGame += _selectedGame < _testFile.Count - 1 ? 1 : 0;
                     break;
 
                 case "P":
