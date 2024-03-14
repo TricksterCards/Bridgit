@@ -20,33 +20,29 @@ namespace BridgeBidding
 		{
 			return new CallFeature[]
 			{
-				Convention(Bid._4C, UserText.Gerber),
-				PartnerBids(Bid._4C, RespondAces, Gerber.Applies),
-				Forcing(Bid._4C, Gerber.Applies, PairPoints(SlamOrBetter))
+				Properties(Bid._4C, RespondAces, forcing1Round: true, convention: UserText.Gerber, onlyIf: Gerber.Applies),
+				Shows(Bid._4C, Gerber.Applies, PairPoints(SlamOrBetter))
 			};
 		}
-		public static IEnumerable<CallFeature> RespondAces(PositionState ps)
+		public static PositionCalls RespondAces(PositionState ps)
 		{
-			return new CallFeature[]
-			{
-				PartnerBids(PlaceContract),
+			return new PositionCalls(ps).AddRules(
+				Properties(new Bid[] { Bid._4D, Bid._4H, Bid._4S, Bid._4NT }, PlaceContract, forcing1Round: true),
 				
-				Forcing(Bid._4D,  Aces(0, 4)),
-				Forcing(Bid._4H,  Aces(1)),
-				Forcing(Bid._4S,  Aces(2)),
-				Forcing(Bid._4NT, Aces(3)),
-			};
+				Shows(Bid._4D,  Aces(0, 4)),
+				Shows(Bid._4H,  Aces(1)),
+				Shows(Bid._4S,  Aces(2)),
+				Shows(Bid._4NT, Aces(3))
+			);
 		}
 		// TODO: There needs to be somewhere that we ask for kings...
-		public static IEnumerable<CallFeature> PlaceContract(PositionState ps)
+		public static PositionCalls PlaceContract(PositionState ps)
 		{
-			// TODO: Need to ask about kings..... 
-			return new CallFeature[]
-			{
+			return new PositionCalls(ps).AddRules(
 				Shows(Bid._7NT, PairPoints(GrandSlam), PairAces(4)),
 				Shows(Bid._6NT, PairAces(3, 4)),
 				Shows(Bid._4NT, PairAces(0, 1, 2))
-			};
+			);
 		}
 
 	}

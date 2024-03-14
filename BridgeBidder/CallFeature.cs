@@ -68,11 +68,6 @@ namespace BridgeBidding
 		public CallFeatureGroup(params StaticConstraint[] constraints) : base(null, constraints)
 		{
 		}
-
-		public void Add(CallFeature feature)
-		{
-			Features.Add(feature);
-		}
 	}
 
 

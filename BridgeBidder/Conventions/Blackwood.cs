@@ -21,9 +21,8 @@ namespace BridgeBidding
 			}
 			if (strain != null && ((Strain)strain).ToSuit() is Suit suit)
 			{
-				bids.Add(Convention(Bid._4NT, UserText.Blackwood));
-				bids.Add(Properties(Bid._4NT, RespondKeyCards, forcing1Round: true));
-				bids.Add(Forcing(Bid._4NT, PairPoints(suit, SlamOrBetter)));
+				bids.Add(Properties(Bid._4NT, RespondKeyCards, convention: UserText.Blackwood, forcing1Round: true));
+				bids.Add(Shows(Bid._4NT, PairPoints(suit, SlamOrBetter)));
 				// TODO: Add DOPI and DEPO but for now just ignore double and punt on interference...
 			}
 			return bids;

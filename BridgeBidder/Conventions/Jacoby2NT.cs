@@ -35,28 +35,27 @@ namespace BridgeBidding
         public static IEnumerable<CallFeature> OpenerRebid(PositionState ps)
         {
             return new CallFeature[]
-            {
-                Alert(Bid._3C, UserText.ShowsVoidOrSingleton),
-                Alert(Bid._3D, UserText.ShowsVoidOrSingleton),
-                Alert(Bid._3H, UserText.ShowsVoidOrSingleton, OpeningBid(Bid._1S)),
-                Alert(Bid._3S, UserText.ShowsVoidOrSingleton, OpeningBid(Bid._1H)),
-
-                // TODO: Any other alerts?  3NT?
-                
+            {                
                 PartnerBids(PlaceContract),
 
+                Properties(Bid._3C, alert: UserText.ShowsVoidOrSingleton),
+                Properties(Bid._3D, alert: UserText.ShowsVoidOrSingleton),
+                Properties(Bid._3H, alert: UserText.ShowsVoidOrSingleton, onlyIf: IsOpeningBid(Bid._1S)),
+                Properties(Bid._3S, alert: UserText.ShowsVoidOrSingleton, onlyIf: IsOpeningBid(Bid._1H)),
+
+                // TODO: Any other alerts?  3NT?
                 Forcing(Bid._3C, Shape(0, 1)),
                 Forcing(Bid._3D, Shape(0, 1)),
-                Forcing(Bid._3H, OpeningBid(Bid._1S), Shape(0, 1)),
-                Forcing(Bid._3S, OpeningBid(Bid._1H), Shape(0, 1)),
+                Forcing(Bid._3H, IsOpeningBid(Bid._1S), Shape(0, 1)),
+                Forcing(Bid._3S, IsOpeningBid(Bid._1H), Shape(0, 1)),
 
-                Forcing(Bid._3H, OpeningBid(Bid._1H), Points(OpenerPointsMax)),
-                Forcing(Bid._3S, OpeningBid(Bid._1S), Points(OpenerPointsMax)),
+                Forcing(Bid._3H, IsOpeningBid(Bid._1H), Points(OpenerPointsMax)),
+                Forcing(Bid._3S, IsOpeningBid(Bid._1S), Points(OpenerPointsMax)),
 
                 Forcing(Bid._3NT, Points(OpenerPointsMedium)),
 
-                Shows(Bid._4H, OpeningBid(Bid._1H), Points(OpenerPointsMin)),
-                Shows(Bid._4S, OpeningBid(Bid._1S), Points(OpenerPointsMin)),
+                Shows(Bid._4H, IsOpeningBid(Bid._1H), Points(OpenerPointsMin)),
+                Shows(Bid._4S, IsOpeningBid(Bid._1S), Points(OpenerPointsMin)),
             };
         }
 
@@ -68,8 +67,8 @@ namespace BridgeBidding
             {
                 // TODO: IMPLEMENT RESPONSES!!!
                 // TOOD: What is the thing to do here??  Perhaps bid controls.  
-                Shows(Bid._4H, OpeningBid(Bid._1H)),
-                Shows(Bid._4S, OpeningBid(Bid._1S)),
+                Shows(Bid._4H, IsOpeningBid(Bid._1H)),
+                Shows(Bid._4S, IsOpeningBid(Bid._1S)),
 
                 Shows(Bid.Pass)
             });     

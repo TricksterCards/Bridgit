@@ -3,8 +3,6 @@ using System.Net;
 
 namespace BridgeBidding
 {
-
-
     public class StaymanBidder : OneNoTrumpBidder
 	{
  
@@ -159,7 +157,7 @@ namespace BridgeBidding
         public PositionCalls CheckOpenerSpadeGame(PositionState ps)
         {
             return new PositionCalls(ps).AddRules(
-                Shows(Bid._4S, Fit()),
+                Shows(Bid._4S, Fit8Plus),
                 Shows(Call.Pass)
             );
         }
@@ -167,7 +165,7 @@ namespace BridgeBidding
         public PositionCalls GameNewMajor(PositionState ps, Suit major)
         {
             return new PositionCalls(ps).AddRules(
-                Shows(new Bid(4, major), Fit()),
+                Shows(new Bid(4, major), Fit8Plus),
                 Shows(Bid._3NT)
             );
         }
@@ -178,7 +176,7 @@ namespace BridgeBidding
             choices.AddRules(
                 Shows(Call.Pass, NTD.OR.DontAcceptInvite, Fit(major)),    // TODO: Need to use dummy points here...
                 Shows(Bid._2NT, NTD.OR.DontAcceptInvite),
-                Shows(new Bid(4, major), Fit(), NTD.OR.AcceptInvite),
+                Shows(new Bid(4, major), Fit8Plus, NTD.OR.AcceptInvite),
                 Shows(Bid._3NT, NTD.OR.AcceptInvite)
             );
             return choices;
@@ -189,9 +187,9 @@ namespace BridgeBidding
             return new PositionCalls(ps).AddRules(
 				Properties(Bid._3S, CheckSpadeGame),
                 // This is possible to know we have a fit if partner bid stayman, we respond hearts,
-                Shows(Bid._3S, NTD.OR.DontAcceptInvite, Fit()),
+                Shows(Bid._3S, NTD.OR.DontAcceptInvite, Fit8Plus),
 
-                Shows(Bid._4S, NTD.OR.AcceptInvite, Fit()),
+                Shows(Bid._4S, NTD.OR.AcceptInvite, Fit8Plus),
 
                 Shows(Bid._3NT, NTD.OR.AcceptInvite),
 
@@ -202,7 +200,7 @@ namespace BridgeBidding
         public PositionCalls PlaceContractMajorInvite(PositionState ps, Suit major)
         {
             return new PositionCalls(ps).AddRules(
-				Shows(new Bid(4, major), NTD.OR.AcceptInvite, Fit()),
+				Shows(new Bid(4, major), NTD.OR.AcceptInvite, Fit8Plus),
                 Shows(Call.Pass, NTD.OR.DontAcceptInvite)
             );
 		}
@@ -233,13 +231,13 @@ namespace BridgeBidding
 
 
 
-                Shows(4, Suit.Hearts, NTD.OR.AcceptInvite, Fit()),
+                Shows(4, Suit.Hearts, NTD.OR.AcceptInvite, Fit8Plus),
                //TODO: I think above rule ocvers itl.. Shows(4, Suit.Hearts, IsLastBid(Bid._2D), Partner(IsLastBid(Bid._3H)), Shape(3)),
 
 
-                Shows(Bid._4S, NTD.OR.AcceptInvite, Partner(IsLastBid(Bid._3S)), Fit()),
-                Shows(Bid._4S, NTD.OR.AcceptInvite, Fit()),
-                Shows(Bid._4S, Partner(IsLastBid(Bid.ThreeUnknown)), Fit()),
+                Shows(Bid._4S, NTD.OR.AcceptInvite, Partner(IsLastBid(Bid._3S)), Fit8Plus),
+                Shows(Bid._4S, NTD.OR.AcceptInvite, Fit8Plus),
+                Shows(Bid._4S, Partner(IsLastBid(Bid.ThreeUnknown)), Fit8Plus),
                 Shows(Bid._4S, IsLastBid(Bid._2D), Partner(IsLastBid(Bid._3S)), Shape(3))
             };
         }
@@ -306,8 +304,8 @@ namespace BridgeBidding
                 Shows(Bid._3H, Shape(5), Partner(IsLastBid(Bid._3D))),
                 Shows(Bid._3S, Shape(5), Partner(IsLastBid(Bid._3D))),
 
-                Shows(Bid._4H, Fit()),
-                Shows(Bid._4S, Fit()),
+                Shows(Bid._4H, Fit8Plus),
+                Shows(Bid._4S, Fit8Plus),
                 
                 Shows(Bid._3NT),
             };
@@ -316,9 +314,10 @@ namespace BridgeBidding
         public static PositionCalls OpenerRebid(PositionState ps)
         { 
             return new PositionCalls(ps).AddRules(
-                Shows(Bid._3NT, Fit(Suit.Hearts, false), Fit(Suit.Spades, false)),
-                Shows(Bid._4H, Fit()),
-                Shows(Bid._4S, Fit())
+        
+                Shows(Bid._4H, Fit8Plus),
+                Shows(Bid._4S, Fit8Plus),
+                Shows(Bid._3NT, Fit(Suit.Hearts, false), Fit(Suit.Spades, false))
             );
         }
     }

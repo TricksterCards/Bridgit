@@ -83,33 +83,33 @@ namespace BridgeBidding
 				 	string alert = null, string announce = null, string convention = null, 
 					StaticConstraint onlyIf = null)
 		{
-			var features = new CallFeatureGroup(onlyIf);
-			features.Add(new CallProperties(call, partnerBids, forcing1Round, forcingToGame));
+			var group = new CallFeatureGroup(onlyIf);
+			group.Features.Add(new CallProperties(call, partnerBids, forcing1Round, forcingToGame));
 			if (alert != null)
 			{
-				features.Add(Alert(call, alert, onlyIf));
+				group.Features.Add(Alert(call, alert, onlyIf));
 			}
 			if (announce != null)
 			{
-				features.Add(Announce(call, announce, onlyIf));
+				group.Features.Add(Announce(call, announce, onlyIf));
 			}
 			if (convention != null)
 			{
-				features.Add(Convention(call, convention, onlyIf));
+				group.Features.Add(Convention(call, convention, onlyIf));
 			}
-			return features;
+			return group;
 		}	
 
 		public static CallFeatureGroup Properties(IEnumerable<Call> calls, PositionCallsFactory partnerBids = null, bool forcing1Round = false, bool forcingToGame = false,
 				    string alert = null, string announce = null, string convention = null, 
 					StaticConstraint onlyIf = null)
 		{
-			var features = new CallFeatureGroup(null, onlyIf);
+			var group = new CallFeatureGroup(null, onlyIf);
 			foreach (Call call in calls)
 			{
-				features.Add(Properties(call, partnerBids, forcing1Round, forcingToGame, alert, announce, convention, onlyIf));
+				group.Features.Add(Properties(call, partnerBids, forcing1Round, forcingToGame, alert, announce, convention, onlyIf));
 			}
-			return features;			
+			return group;			
 		}
 
 		public static CallFeature Shows(Call call, params Constraint[] constraints)
@@ -131,11 +131,11 @@ namespace BridgeBidding
 		{
 			return new BidHistory(0, new Bid(level, suit));
 		}
-		public static StaticConstraint LastBid(int level, Strain strain)
+		public static StaticConstraint IsLastBid(int level, Strain strain)
 		{
 			return new BidHistory(0, new Bid(level, strain));
 		}
-		public static StaticConstraint OpeningBid(Bid bid)
+		public static StaticConstraint IsOpeningBid(Bid bid)
 		{
 			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.OpeningBid.Equals(bid));
 		}
