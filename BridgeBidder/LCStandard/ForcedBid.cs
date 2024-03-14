@@ -13,25 +13,25 @@ namespace BridgeBidding
 			if (ps.ForcedToBid)
 			{
 				bids.AddRange(new CallFeature[] {
-					Nonforcing(Bid._2C, Fit(), ShowsTrump),
-					Nonforcing(Bid._2D, Fit(), ShowsTrump),
-					Nonforcing(Bid._2H, Fit(), ShowsTrump),
-					Nonforcing(Bid._2S, Fit(), ShowsTrump),
+					Shows(Bid._2C, Fit()),
+					Shows(Bid._2D, Fit()),
+					Shows(Bid._2H, Fit()),
+					Shows(Bid._2S, Fit()),
 
-					Nonforcing(Bid._3C, NonJump, Fit(), ShowsTrump),
-					Nonforcing(Bid._3D, NonJump, Fit(), ShowsTrump),
-					Nonforcing(Bid._3H, NonJump, Fit(), ShowsTrump),
-					Nonforcing(Bid._3S, NonJump, Fit(), ShowsTrump),
+					Shows(Bid._3C, IsNonJump, Fit()),
+					Shows(Bid._3D, IsNonJump, Fit()),
+					Shows(Bid._3H, IsNonJump, Fit()),
+					Shows(Bid._3S, IsNonJump, Fit()),
 
-					Nonforcing(Bid._4C, NonJump, Fit(), ShowsTrump),
-					Nonforcing(Bid._4D, NonJump, Fit(), ShowsTrump),
-					Nonforcing(Bid._4H, NonJump, Fit(), ShowsTrump),
-					Nonforcing(Bid._4S, NonJump, Fit(), ShowsTrump), 
+					Shows(Bid._4C, IsNonJump, Fit()),
+					Shows(Bid._4D, IsNonJump, Fit()),
+					Shows(Bid._4H, IsNonJump, Fit()),
+					Shows(Bid._4S, IsNonJump, Fit()), 
 
 					// Now the worst possible cases.  NT if no 7-card fit
-					Nonforcing(Bid._1NT),
-					Nonforcing(Bid._2NT, NonJump),
-					Nonforcing(Bid._3NT, NonJump)
+					Shows(Bid._1NT),
+					Shows(Bid._2NT, IsNonJump),
+					Shows(Bid._3NT, IsNonJump)
 				});
 			};
 			return bids;

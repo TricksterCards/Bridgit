@@ -93,10 +93,6 @@ namespace BridgeBidding
     }
 
 
-    public interface IShowsAgreement
-    {
-        void ShowAgreement(Call call, PositionState ps, PairAgreements.ShowState showAgreements);
-    }
 
     public interface IDescribeConstraint
     {

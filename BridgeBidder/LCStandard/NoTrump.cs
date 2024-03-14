@@ -156,9 +156,11 @@ namespace BridgeBidding
             {
                 return new CallFeature[]
                 {
-                    Announce(Bid._1NT, UserText.OneNoTrumpRange),
-                    PartnerBids(Bid._1NT, ConventionalResponses),
-                    Nonforcing(Bid._1NT, NTD.OR.Open, Balanced)
+                  //  Announce(Bid._1NT, UserText.OneNoTrumpRange),
+                  //  PartnerBids(Bid._1NT, ConventionalResponses),
+                  //  Shows(Bid._1NT, NTD.OR.Open, Balanced)
+                    Properties(Bid._1NT, partnerBids: ConventionalResponses, announce: UserText.OneNoTrumpRange),
+                    Rule(Bid._1NT, NTD.OR.Open, Balanced)   
                 };
             }
             if (ps.Role == PositionRole.Overcaller && ps.RoleRound == 1)
@@ -169,7 +171,7 @@ namespace BridgeBidding
                     {
                         PartnerBids(Bid._1NT, ConventionalResponses),
                         // TODO: Perhaps more rules here for balancing but for now this is fine -- Balanced is not necessary
-                        Nonforcing(Bid._1NT, NTD.OR.Open, PassEndsAuction())
+                        Rule(Bid._1NT, NTD.OR.Open, PassEndsAuction())
                     };
 				}
                 else if (NTD.OpenType == "Overcall1NT")
@@ -177,7 +179,7 @@ namespace BridgeBidding
                     return new CallFeature[]
                     {
                         PartnerBids(Bid._1NT, ConventionalResponses),
-                        Nonforcing(Bid._1NT, NTD.OR.Open, Balanced, OppsStopped(), Not(PassEndsAuction()))
+                        Rule(Bid._1NT, NTD.OR.Open, Balanced, OppsStopped(), Not(PassEndsAuction()))
                     };
                 }
 			}
@@ -256,23 +258,23 @@ namespace BridgeBidding
                 PartnerBids(OpenerRebid),
                 PartnerBids(Bid._4NT, Compete.CompBids), // TODO: Handle slam invite better???  Maybe this is ok?
 
-                Signoff(Bid._2C, Shape(5, 11), NTD.RR.LessThanInvite),
-                Signoff(Bid._2D, Shape(5, 11), NTD.RR.LessThanInvite),
-                Signoff(Bid._2H, Shape(5, 11), NTD.RR.LessThanInvite),
-                Signoff(Bid._2S, Shape(5, 11), NTD.RR.LessThanInvite),
+                Shows(Bid._2C, Shape(5, 11), NTD.RR.LessThanInvite),
+                Shows(Bid._2D, Shape(5, 11), NTD.RR.LessThanInvite),
+                Shows(Bid._2H, Shape(5, 11), NTD.RR.LessThanInvite),
+                Shows(Bid._2S, Shape(5, 11), NTD.RR.LessThanInvite),
 
-                Invitational(Bid._2NT, NTD.RR.InviteGame, LongestMajor(4)),
+                Shows(Bid._2NT, NTD.RR.InviteGame, LongestMajor(4)),
                 // TODO: These natural bids are not exactly right....
                 Forcing(Bid._3H, NTD.RR.GameOrBetter, Shape(5, 11)),
                 Forcing(Bid._3S, NTD.RR.GameOrBetter, Shape(5, 11)),
-                Signoff(Bid._3NT, NTD.RR.Game, LongestMajor(4)),
+                Shows(Bid._3NT, NTD.RR.Game, LongestMajor(4)),
 
-                Invitational(Bid._4NT, NTD.RR.InviteSlam), // TODO: Any shape stuff here???
+                Shows(Bid._4NT, NTD.RR.InviteSlam), // TODO: Any shape stuff here???
 
-                Signoff(Bid._6NT, Flat(), NTD.RR.SmallSlam),
-                Signoff(Bid._6NT, Balanced, Shape(Suit.Hearts, 2, 3), Shape(Suit.Spades, 2, 3), NTD.RR.SmallSlam),
+                Shows(Bid._6NT, Flat(), NTD.RR.SmallSlam),
+                Shows(Bid._6NT, Balanced, Shape(Suit.Hearts, 2, 3), Shape(Suit.Spades, 2, 3), NTD.RR.SmallSlam),
 
-                Signoff(Bid.Pass, NTD.RR.LessThanInvite),
+                Shows(Bid.Pass, NTD.RR.LessThanInvite),
 
 
             };
@@ -284,22 +286,22 @@ namespace BridgeBidding
             {
                 PartnerBids(ResponderRebid),
 
-                Signoff(Call.Pass, Partner(LastBid(Bid._3NT))),
-                Signoff(Call.Pass, NTD.OR.DontAcceptInvite, Partner(LastBid(Bid._2NT))),
-                Signoff(Call.Pass, Partner(LastBid(Bid._2C))),
-                Signoff(Call.Pass, Partner(LastBid(Bid._2D))),
-                Signoff(Call.Pass, Partner(LastBid(Bid._2H))),
-                Signoff(Call.Pass, Partner(LastBid(Bid._2S))),
+                Shows(Call.Pass, Partner(IsLastBid(Bid._3NT))),
+                Shows(Call.Pass, NTD.OR.DontAcceptInvite, Partner(IsLastBid(Bid._2NT))),
+                Shows(Call.Pass, Partner(IsLastBid(Bid._2C))),
+                Shows(Call.Pass, Partner(IsLastBid(Bid._2D))),
+                Shows(Call.Pass, Partner(IsLastBid(Bid._2H))),
+                Shows(Call.Pass, Partner(IsLastBid(Bid._2S))),
 
-                Forcing(Bid._3H, Partner(LastBid(Bid._2NT)), NTD.OR.AcceptInvite, Shape(5)),
-                Forcing(Bid._3S, Partner(LastBid(Bid._2NT)), NTD.OR.AcceptInvite, Shape(5)),
+                Forcing(Bid._3H, Partner(IsLastBid(Bid._2NT)), NTD.OR.AcceptInvite, Shape(5)),
+                Forcing(Bid._3S, Partner(IsLastBid(Bid._2NT)), NTD.OR.AcceptInvite, Shape(5)),
 
-                Signoff(Bid._3NT, NTD.OR.AcceptInvite, Partner(LastBid(Bid._2NT))),
-                Signoff(Bid._3NT, Partner(LastBid(Bid._3H)), Shape(Suit.Hearts, 0, 2)),
-                Signoff(Bid._3NT, Partner(LastBid(3, Suit.Spades)), Shape(Suit.Spades, 0, 2)),
+                Shows(Bid._3NT, NTD.OR.AcceptInvite, Partner(IsLastBid(Bid._2NT))),
+                Shows(Bid._3NT, Partner(IsLastBid(Bid._3H)), Shape(Suit.Hearts, 0, 2)),
+                Shows(Bid._3NT, Partner(IsLastBid(3, Suit.Spades)), Shape(Suit.Spades, 0, 2)),
 
-                Nonforcing(Bid._4H, Partner(LastBid(Bid._3H)), Shape(3, 5)),
-                Nonforcing(Bid._4S, Partner(LastBid(Bid._3S)), Shape(3, 5))
+                Shows(Bid._4H, Partner(IsLastBid(Bid._3H)), Shape(3, 5)),
+                Shows(Bid._4S, Partner(IsLastBid(Bid._3S)), Shape(3, 5))
             };
         }
         private IEnumerable<CallFeature> ResponderRebid(PositionState _)
@@ -307,14 +309,13 @@ namespace BridgeBidding
             return new CallFeature[]
             {
                 // TODO: Ideally this would be "Parther(ShowsShape(Hearts, 5)" Better than lastbid...
-                Signoff(Bid._3NT, Partner(LastBid(Bid._3H)), Shape(Suit.Hearts, 0, 2)),
-                Signoff(Bid._3NT, Partner(LastBid(Bid._3S)), Shape(Suit.Spades, 0, 2)),
+                Shows(Bid._3NT, Partner(IsLastBid(Bid._3H)), Shape(Suit.Hearts, 0, 2)),
+                Shows(Bid._3NT, Partner(IsLastBid(Bid._3S)), Shape(Suit.Spades, 0, 2)),
 
+                Shows(Bid._4H, Partner(IsLastBid(Bid._3H)), Shape(3, 4)),
+                Shows(Bid._4S, Partner(IsLastBid(Bid._3S)), Shape(3, 4)),
 
-                Nonforcing(Bid._4H, Partner(LastBid(Bid._3H)), Shape(3, 4)),
-                Nonforcing(Bid._4S, Partner(LastBid(Bid._3S)), Shape(3, 4)),
-
-                Signoff(Call.Pass)
+                Shows(Call.Pass)
             };
         }
     }

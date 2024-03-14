@@ -32,13 +32,12 @@ namespace BridgeBidding
         {
             var bids = new List<CallFeature>
             {
-                Convention(Call.Double, UserText.TakeoutDouble),
-                PartnerBids(Call.Double, Respond),
-                Forcing(Bid.Double, Points(StrongTakeout))
+                Properties(Call.Double, Respond, convention: UserText.TakeoutDouble, forcing1Round: true),
+                Shows(Bid.Double, Points(StrongTakeout))
 			};
 
 
-			var rule = Forcing(Bid.Double, Points(TakeoutRange), BidAvailable(4, Suit.Clubs));
+			var rule = Shows(Bid.Double, Points(TakeoutRange), BidAvailable(4, Suit.Clubs));
 			var oppsSummary = PairSummary.Opponents(ps);
 			foreach (Suit s in Card.Suits)
 			{
@@ -77,35 +76,35 @@ namespace BridgeBidding
             {
                 PartnerBids(DoublerRebid),
 
-                Signoff(Call.Pass, RuleOf9()),
+                Shows(Call.Pass, RuleOf9()),
                 // TODO: FOR NOW WE WILL JUST BID AT THE NEXT LEVEL REGARDLESS OF POINTS...
                 // TODO: Need LongestSuit...
                 // TODO: Should this be TakeoutSuit()...
-                Nonforcing(Bid._1D, TakeoutSuit(), Points(MinLevel)),
-                Nonforcing(Bid._1H, TakeoutSuit(), Points(MinLevel)),
-                Nonforcing(Bid._1S, TakeoutSuit(), Points(MinLevel)),
+                Shows(Bid._1D, TakeoutSuit(), Points(MinLevel)),
+                Shows(Bid._1H, TakeoutSuit(), Points(MinLevel)),
+                Shows(Bid._1S, TakeoutSuit(), Points(MinLevel)),
 
 
-                Nonforcing(Bid._1NT, Balanced, OppsStopped(), Points(NoTrump1)),
+                Shows(Bid._1NT, Balanced, OppsStopped(), Points(NoTrump1)),
 
-                Nonforcing(Bid._2C, TakeoutSuit(), Points(MinLevel)),
-                Nonforcing(Bid._2D, TakeoutSuit(), NonJump,    Points(MinLevel)),
-                Nonforcing(Bid._2D, TakeoutSuit(), SingleJump, Points(InviteLevel)),
-                Nonforcing(Bid._2H, TakeoutSuit(), NonJump, Points(MinLevel)),
-                Nonforcing(Bid._2H, TakeoutSuit(), SingleJump,   Points(InviteLevel)),
-                Nonforcing(Bid._2S, TakeoutSuit(), NonJump, Points(MinLevel)),
-                Nonforcing(Bid._2S, TakeoutSuit(), SingleJump,   Points(InviteLevel)),
+                Shows(Bid._2C, TakeoutSuit(), Points(MinLevel)),
+                Shows(Bid._2D, TakeoutSuit(), IsNonJump,    Points(MinLevel)),
+                Shows(Bid._2D, TakeoutSuit(), IsSingleJump, Points(InviteLevel)),
+                Shows(Bid._2H, TakeoutSuit(), IsNonJump, Points(MinLevel)),
+                Shows(Bid._2H, TakeoutSuit(), IsSingleJump,   Points(InviteLevel)),
+                Shows(Bid._2S, TakeoutSuit(), IsNonJump, Points(MinLevel)),
+                Shows(Bid._2S, TakeoutSuit(), IsSingleJump,   Points(InviteLevel)),
 
 
-                Nonforcing(Bid._2NT, Balanced, OppsStopped(), Points(NoTrump2)),
+                Shows(Bid._2NT, Balanced, OppsStopped(), Points(NoTrump2)),
 
                 // TODO: Game bids
-                Signoff(Bid._4H, TakeoutSuit(), Points(GameLevel)),
-                Signoff(Bid._4S, TakeoutSuit(), Points(GameLevel)),
+                Shows(Bid._4H, TakeoutSuit(), Points(GameLevel)),
+                Shows(Bid._4S, TakeoutSuit(), Points(GameLevel)),
 
-                Signoff(Bid._3NT, Balanced, OppsStopped(), Points(Game3NT)),
+                Shows(Bid._3NT, Balanced, OppsStopped(), Points(Game3NT)),
 
-                Nonforcing(Call.Pass, Not(RHO(LastBid(Call.Pass))))
+                Shows(Call.Pass, Not(RHO(IsLastBid(Call.Pass))))
             }) ;
             // Many strong bids can be done with pure competition.
             // TODO: Think through this - is this really what we want?
@@ -125,35 +124,35 @@ namespace BridgeBidding
 
 
                 // TODO: Clean this up... For now just majors...  Clean up range...
-                Signoff(Bid._4H, Fit(), PairPoints((25, 30))),
-                Signoff(Bid._4S, Fit(), PairPoints((25, 30))),
+                Shows(Bid._4H, Fit(), PairPoints((25, 30))),
+                Shows(Bid._4S, Fit(), PairPoints((25, 30))),
 
-                // CANT BE - Invitational(Bid._2C, RaisePartner(), Points(MediumTakeout)),
-                Invitational(Bid._2D, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._2H, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._2S, RaisePartner(), DummyPoints(MediumTakeout)),
+                // CANT BE - Shows(Bid._2C, RaisePartner(), Points(MediumTakeout)),
+                Shows(Bid._2D, RaisePartner(), DummyPoints(MediumTakeout)),
+                Shows(Bid._2H, RaisePartner(), DummyPoints(MediumTakeout)),
+                Shows(Bid._2S, RaisePartner(), DummyPoints(MediumTakeout)),
 
-                Invitational(Bid._3C, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._3D, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._3D, RaisePartner(jump: 1), DummyPoints(MaximumTakeout)),
-                Invitational(Bid._3H, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._3H, RaisePartner(jump: 1), DummyPoints(MaximumTakeout)),
-                Invitational(Bid._3S, RaisePartner(), DummyPoints(MediumTakeout)),
-                Invitational(Bid._3S, RaisePartner(jump: 1), DummyPoints(MaximumTakeout)),
+                Shows(Bid._3C, RaisePartner(), DummyPoints(MediumTakeout)),
+                Shows(Bid._3D, RaisePartner(), DummyPoints(MediumTakeout)),
+                Shows(Bid._3D, RaisePartner(jump: 1), DummyPoints(MaximumTakeout)),
+                Shows(Bid._3H, RaisePartner(), DummyPoints(MediumTakeout)),
+                Shows(Bid._3H, RaisePartner(jump: 1), DummyPoints(MaximumTakeout)),
+                Shows(Bid._3S, RaisePartner(), DummyPoints(MediumTakeout)),
+                Shows(Bid._3S, RaisePartner(jump: 1), DummyPoints(MaximumTakeout)),
                 // TODO: Bid new suits for strong hands...  Bid NT?  
 
                 // TODO: Forcing?  What to do here...
                 // TODO: What is the lowest suit we could do here?  1C X Pass 1D is all I can think of...
-                Invitational(Bid._1H, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid._1S, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid._2C, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid._2D, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid._2H, NonJump, Shape(5, 11), Points(MediumTakeout)),
-                Invitational(Bid._2S, NonJump, Shape(5, 11), Points(MediumTakeout)),
+                Shows(Bid._1H, Shape(5, 11), Points(MediumTakeout)),
+                Shows(Bid._1S, Shape(5, 11), Points(MediumTakeout)),
+                Shows(Bid._2C, Shape(5, 11), Points(MediumTakeout)),
+                Shows(Bid._2D, Shape(5, 11), Points(MediumTakeout)),
+                Shows(Bid._2H, IsNonJump, Shape(5, 11), Points(MediumTakeout)),
+                Shows(Bid._2S, IsNonJump, Shape(5, 11), Points(MediumTakeout)),
 
                 // TODO: Need stronger bids here...
 
-                Signoff(Call.Pass, Points(MinimumTakeout)),
+                Shows(Call.Pass, Points(MinimumTakeout)),
 
                 // TODO: THIS IS WHERE I START OFF - BB2 - DEAL 21 NEEDS STRONG RESPONSE...
             };
@@ -168,7 +167,7 @@ namespace BridgeBidding
         private static PrescribedBids RespondWithInterference()
         {
             var pb = new PrescribedBids();
-            pb.CallFeatures.Add(Signoff(Bid.Pass, new Constraint[0]));   // TODO: Do something here
+            pb.CallFeatures.Add(Shows(Bid.Pass, new Constraint[0]));   // TODO: Do something here
             return pb;
         }
         */

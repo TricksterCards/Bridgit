@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 
 namespace BridgeBidding
 {
@@ -33,7 +34,7 @@ namespace BridgeBidding
             }
             return new CallFeature[] {
                 Convention(call, UserText.Stayman),
-                PartnerBids(call, Answer),
+                Properties(call, Answer, forcing1Round: true),
 
                 Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), Flat(false)),
                 Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Spades, 4), Shape(Suit.Hearts, 0, 4), Flat(false)),
@@ -46,72 +47,69 @@ namespace BridgeBidding
 		}
 
        
-        public IEnumerable<CallFeature> Answer(PositionState ps)
+        public PositionCalls Answer(PositionState ps)
 		{
-            return new CallFeature[] {
+            return new PositionCalls(ps).AddRules(
                 // TODO: Should we tag this with convention too???
                 PartnerBids(Bid._2D, RespondTo2D),
-				PartnerBids(Bid._2H,   p => RespondTo2M(p, Suit.Hearts)),
-				PartnerBids(Bid._2S,   p => RespondTo2M(p, Suit.Spades)),
+				PartnerBids(Bid._2H, p => RespondTo2M(p, Suit.Hearts)),
+				PartnerBids(Bid._2S, p => RespondTo2M(p, Suit.Spades)),
 
-				// TODO: Deal with interferenceDefaultPartnerBids(goodThrough: Bid.Double, Explain),
-
-				// TODO: Are these bids truly forcing?  Not if garbage stayman...
-				Forcing(Bid._2D, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
-				Forcing(Bid._2H, Shape(4, 5), LongerOrEqualTo(Suit.Spades)),
-                Forcing(Bid._2S, Shape(4, 5), LongerThan(Suit.Hearts))
-            };
+				Shows(Bid._2D, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
+				Shows(Bid._2H, Shape(4, 5), LongerOrEqualTo(Suit.Spades)),
+                Shows(Bid._2S, Shape(4, 5), LongerThan(Suit.Hearts))
+            );
         }
 
 
-        public IEnumerable<CallFeature> RespondTo2D(PositionState ps)
+        public PositionCalls RespondTo2D(PositionState ps)
         {
-            var bids = new List<CallFeature>
-            {
+            var choices = new PositionCalls(ps);
+            choices.AddRules(
+            
                 // TODO: Points 0-7 defined as garbage range...
-                Signoff(Call.Pass, NTD.RR.LessThanInvite),
+                Shows(Call.Pass, NTD.RR.LessThanInvite),
 
-                PartnerBids(Bid._3H, p => GameNewMajor(p, Suit.Hearts)),
-                PartnerBids(Bid._3S, p => GameNewMajor(p, Suit.Spades)),
+                Properties(Bid._3H, p => GameNewMajor(p, Suit.Hearts), forcing1Round: true),
+                Properties(Bid._3S, p => GameNewMajor(p, Suit.Spades), forcing1Round: true),
                 // If we have a 5 card suit and want to go to game then show that suit.
-                Forcing(Bid._3S, NTD.RR.GameOrBetter, Shape(5)),
-				Forcing(Bid._3H, NTD.RR.GameOrBetter, Shape(5)),
+                Shows(Bid._3S, NTD.RR.GameOrBetter, Shape(5)),
+				Shows(Bid._3H, NTD.RR.GameOrBetter, Shape(5)),
 
                 // These show invitational 5/4
                 PartnerBids(Bid._2H,  p => PlaceConractNewMajor(p, Suit.Hearts)),
 				PartnerBids(Bid._2S,  p => PlaceConractNewMajor(p, Suit.Spades)),
-				Invitational(Bid._2H, NTD.RR.InviteGame, Shape(5)),
-				Invitational(Bid._2S, NTD.RR.InviteGame, Shape(5)),
+				Shows(Bid._2H, NTD.RR.InviteGame, Shape(5)),
+				Shows(Bid._2S, NTD.RR.InviteGame, Shape(5)),
 
-                PartnerBids(Bid._2NT, PlaceContract2NTInvite),
-				Invitational(Bid._2NT, ShowsTrump, NTD.RR.InviteGame),
+                Properties(Bid._2NT, PlaceContract2NTInvite),
+				Shows(Bid._2NT, NTD.RR.InviteGame),
 
-                Signoff(Bid._3NT, ShowsTrump, NTD.RR.Game),
+                Shows(Bid._3NT, NTD.RR.Game),
 
                 // TODO: Point ranges - Need to figure out where these...
-                Invitational(Bid._4NT, ShowsTrump, PairPoints((30, 31)))
-			};
-            bids.AddRange(Gerber.InitiateConvention(ps));
-            return bids;
+                Shows(Bid._4NT, PairPoints((30, 31)))
+            );
+            choices.AddRules(Gerber.InitiateConvention(ps));
+            return choices;
         }
 
-        public IEnumerable<CallFeature> RespondTo2M(PositionState _, Suit major)
+        public PositionCalls RespondTo2M(PositionState ps, Suit major)
         {
-            return new CallFeature[]
-            {
+            return new PositionCalls(ps).AddRules(
+                Shows(Call.Pass, NTD.RR.LessThanInvite),
 
-                Signoff(Call.Pass, NTD.RR.LessThanInvite),
+                Shows(new Bid(4, major), Shape(4, 5), NTD.RR.GameAsDummy),
 
-                Signoff(new Bid(4, major), Shape(4, 5), NTD.RR.GameAsDummy, ShowsTrump),
-                PartnerBids(new Bid(3, major), p => PlaceContractMajorInvite(p, major)),
-                Invitational(new Bid(3, major), Shape(4, 5), NTD.RR.InviteAsDummy, ShowsTrump),
+                Properties(new Bid(3, major), p => PlaceContractMajorInvite(p, major)),
+                Shows(new Bid(3, major), Shape(4, 5), NTD.RR.InviteAsDummy),
 
                 PartnerBids(Bid._3NT, CheckOpenerSpadeGame),
-                Signoff(Bid._3NT, NTD.RR.Game, Shape(major, 0, 3)),
+                Shows(Bid._3NT, NTD.RR.Game, Shape(major, 0, 3)),
 
 				PartnerBids(Bid._2NT, PlaceContract2NTInvite),
-				Invitational(Bid._2NT, NTD.RR.InviteGame, Shape(major, 0, 3))
-			};
+				Shows(Bid._2NT, NTD.RR.InviteGame, Shape(major, 0, 3))
+            );
 		}
         /*
         public IEnumerable<CallFeature> Explain(PositionState _)
@@ -120,35 +118,35 @@ namespace BridgeBidding
                 DefaultPartnerBids(Bid.Double, PlaceContract), 
 
                 // TODO: Points 0-7 defined as garbage range...
-                Signoff(Call.Pass, NTD.RR.LessThanInvite),   // Garbage stayman always passes...
+                Shows(Call.Pass, NTD.RR.LessThanInvite),   // Garbage stayman always passes...
 
                 // If we have a 5 card suit and want to go to game then show that suit.
-                Forcing(Bid._3S, NTD.RR.GameOrBetter, Shape(5), Partner(LastBid(Bid._2D))),
-                Forcing(Bid._3H, NTD.RR.GameOrBetter, Shape(5), Partner(LastBid(Bid._2D))),
+                Forcing(Bid._3S, NTD.RR.GameOrBetter, Shape(5), Partner(IsLastBid(Bid._2D))),
+                Forcing(Bid._3H, NTD.RR.GameOrBetter, Shape(5), Partner(IsLastBid(Bid._2D))),
 
 
 				// These show invitational 5/4
-                Invitational(Bid._2H, NTD.RR.InviteGame, Shape(5), Partner(LastBid(Bid._2D))),
-                Invitational(Bid._2S, NTD.RR.InviteGame, Shape(5), Partner(LastBid(Bid._2D))),
+                Shows(Bid._2H, NTD.RR.InviteGame, Shape(5), Partner(IsLastBid(Bid._2D))),
+                Shows(Bid._2S, NTD.RR.InviteGame, Shape(5), Partner(IsLastBid(Bid._2D))),
 
-                Invitational(Bid.TwoUnknown, ShowsTrump, NTD.RR.InviteGame, Partner(LastBid(Bid._2D))),
-                Invitational(Bid.TwoUnknown, ShowsTrump, NTD.RR.InviteGame, Partner(LastBid(Bid._2H)), Shape(Suit.Hearts, 0, 3)),
-                Invitational(Bid.TwoUnknown, ShowsTrump, NTD.RR.InviteGame, Partner(LastBid(Bid._2S)), Shape(Suit.Spades, 0, 3)),
+                Shows(Bid.TwoUnknown, ShowsTrump, NTD.RR.InviteGame, Partner(IsLastBid(Bid._2D))),
+                Shows(Bid.TwoUnknown, ShowsTrump, NTD.RR.InviteGame, Partner(IsLastBid(Bid._2H)), Shape(Suit.Hearts, 0, 3)),
+                Shows(Bid.TwoUnknown, ShowsTrump, NTD.RR.InviteGame, Partner(IsLastBid(Bid._2S)), Shape(Suit.Spades, 0, 3)),
 
 
-                Invitational(Bid._3H, ShowsTrump, NTD.RR.InviteAsDummy, Partner(LastBid(Bid._2H)), Shape(4, 5)),
-                Invitational(Bid._3S, ShowsTrump, NTD.RR.InviteAsDummy, Partner(LastBid(Bid._2S)), Shape(4, 5)),
+                Shows(Bid._3H, ShowsTrump, NTD.RR.InviteAsDummy, Partner(IsLastBid(Bid._2H)), Shape(4, 5)),
+                Shows(Bid._3S, ShowsTrump, NTD.RR.InviteAsDummy, Partner(IsLastBid(Bid._2S)), Shape(4, 5)),
 
 
                 // Prioritize suited contracts over 3NT bid by placing these rules first...
-                Signoff(4, Suit.Hearts, ShowsTrump, NTD.RR.GameAsDummy, Partner(LastBid(Bid._2H)), Shape(4, 5)),
-                Signoff(Bid._4S, ShowsTrump, NTD.RR.GameAsDummy, Partner(LastBid(Bid._2S)), Shape(4, 5)), 
+                Shows(4, Suit.Hearts, ShowsTrump, NTD.RR.GameAsDummy, Partner(IsLastBid(Bid._2H)), Shape(4, 5)),
+                Shows(Bid._4S, ShowsTrump, NTD.RR.GameAsDummy, Partner(IsLastBid(Bid._2S)), Shape(4, 5)), 
 
                 // TODO: After changeover is done an tests are working again, change all of these rules to simply
-                // Signoff(Bid.ThreeUnknown, ShowsTrump, Points(ResponderRange.Game), Fit(Suit.Hearts, false), Fit(Suit.Spades, false)),
-                Signoff(Bid.ThreeUnknown, ShowsTrump, NTD.RR.Game, Partner(LastBid(Bid._2D))),
-                Signoff(Bid.ThreeUnknown, ShowsTrump, NTD.RR.Game, Partner(LastBid(Bid._2H)), Shape(Suit.Hearts, 0, 3)),
-                Signoff(Bid.ThreeUnknown, ShowsTrump, NTD.RR.Game, Partner(LastBid(Bid._2S)), Shape(Suit.Spades, 0, 3)),
+                // Shows(Bid.ThreeUnknown, ShowsTrump, Points(ResponderRange.Game), Fit(Suit.Hearts, false), Fit(Suit.Spades, false)),
+                Shows(Bid.ThreeUnknown, ShowsTrump, NTD.RR.Game, Partner(IsLastBid(Bid._2D))),
+                Shows(Bid.ThreeUnknown, ShowsTrump, NTD.RR.Game, Partner(IsLastBid(Bid._2H)), Shape(Suit.Hearts, 0, 3)),
+                Shows(Bid.ThreeUnknown, ShowsTrump, NTD.RR.Game, Partner(IsLastBid(Bid._2S)), Shape(Suit.Spades, 0, 3)),
 
             };
         }
@@ -158,61 +156,55 @@ namespace BridgeBidding
         //******************** 2nd bid of opener.
 
         // Bid sequence was 1NT/2C/2X/
-        public IEnumerable<CallFeature> CheckOpenerSpadeGame(PositionState ps)
+        public PositionCalls CheckOpenerSpadeGame(PositionState ps)
         {
-            return new CallFeature[]
-            {
-                Signoff(Bid._4S, Fit(), ShowsTrump),
-                Signoff(Call.Pass)
-            };
+            return new PositionCalls(ps).AddRules(
+                Shows(Bid._4S, Fit()),
+                Shows(Call.Pass)
+            );
         }
 
-        public IEnumerable<CallFeature> GameNewMajor(PositionState ps, Suit major)
+        public PositionCalls GameNewMajor(PositionState ps, Suit major)
         {
-            return new CallFeature[]
-            {
-                Signoff(new Bid(4, major), Fit(), ShowsTrump),
-                Signoff(Bid._3NT)
-            };
+            return new PositionCalls(ps).AddRules(
+                Shows(new Bid(4, major), Fit()),
+                Shows(Bid._3NT)
+            );
         }
 
-        public IEnumerable<CallFeature> PlaceConractNewMajor(PositionState ps, Suit major)
+        public PositionCalls PlaceConractNewMajor(PositionState ps, Suit major)
         {
-            return new CallFeature[]
-            {
-                Signoff(Call.Pass, NTD.OR.DontAcceptInvite, Fit(major)),    // TODO: Need to use dummy points here...
-                Signoff(Bid._2NT, NTD.OR.DontAcceptInvite),
-                Signoff(new Bid(4, major), Fit(), ShowsTrump, NTD.OR.AcceptInvite),
-                Signoff(Bid._3NT, ShowsTrump, NTD.OR.AcceptInvite)
-            };
+            var choices = new PositionCalls(ps);
+            choices.AddRules(
+                Shows(Call.Pass, NTD.OR.DontAcceptInvite, Fit(major)),    // TODO: Need to use dummy points here...
+                Shows(Bid._2NT, NTD.OR.DontAcceptInvite),
+                Shows(new Bid(4, major), Fit(), NTD.OR.AcceptInvite),
+                Shows(Bid._3NT, NTD.OR.AcceptInvite)
+            );
+            return choices;
         }
-
-        public IEnumerable<CallFeature> PlaceContract2NTInvite(PositionState ps)
+    
+        public PositionCalls PlaceContract2NTInvite(PositionState ps)
         {
-            return new CallFeature[]
-            {
-				PartnerBids(Bid._3S, CheckSpadeGame),
+            return new PositionCalls(ps).AddRules(
+				Properties(Bid._3S, CheckSpadeGame),
                 // This is possible to know we have a fit if partner bid stayman, we respond hearts,
-                Nonforcing(Bid._3S, NTD.OR.DontAcceptInvite, Fit(), ShowsTrump),
+                Shows(Bid._3S, NTD.OR.DontAcceptInvite, Fit()),
 
+                Shows(Bid._4S, NTD.OR.AcceptInvite, Fit()),
 
-                Signoff(Bid._4S, NTD.OR.AcceptInvite, Fit(), ShowsTrump),
+                Shows(Bid._3NT, NTD.OR.AcceptInvite),
 
-                Signoff(Bid._3NT, NTD.OR.AcceptInvite),
-
-                Signoff(Call.Pass, NTD.OR.DontAcceptInvite)
-			};
-
+                Shows(Call.Pass, NTD.OR.DontAcceptInvite)
+            );
         }
 
-        public IEnumerable<CallFeature> PlaceContractMajorInvite(PositionState ps, Suit major)
+        public PositionCalls PlaceContractMajorInvite(PositionState ps, Suit major)
         {
-			return new CallFeature[]
-            {
-				Signoff(new Bid(4, major), NTD.OR.AcceptInvite, Fit(), ShowsTrump),
-                Signoff(Call.Pass, NTD.OR.DontAcceptInvite)
-            };
-
+            return new PositionCalls(ps).AddRules(
+				Shows(new Bid(4, major), NTD.OR.AcceptInvite, Fit()),
+                Shows(Call.Pass, NTD.OR.DontAcceptInvite)
+            );
 		}
 		/*
         public IEnumerable<CallFeature> PlaceContract(PositionState _)
@@ -220,44 +212,44 @@ namespace BridgeBidding
             return new CallFeature[] {
 				// These rules deal with a 5/4 invitational that we want to reject.  Leave contract in bid suit
 				// if we have 3.  Otherwise put in NT
-				Signoff(Bid.Pass, NTD.OR.DontAcceptInvite,  // TODO: Should check for dummy points...
-                                    Fit(Suit.Hearts), Partner(LastBid(Bid._2H))),
-                Signoff(Bid.Pass, NTD.OR.DontAcceptInvite,
-                                    Fit(Suit.Spades), Partner(LastBid(Bid._2S))),
+				Shows(Bid.Pass, NTD.OR.DontAcceptInvite,  // TODO: Should check for dummy points...
+                                    Fit(Suit.Hearts), Partner(IsLastBid(Bid._2H))),
+                Shows(Bid.Pass, NTD.OR.DontAcceptInvite,
+                                    Fit(Suit.Spades), Partner(IsLastBid(Bid._2S))),
 
-                Signoff(Bid.TwoUnknown, NTD.OR.DontAcceptInvite),
+                Shows(Bid.TwoUnknown, NTD.OR.DontAcceptInvite),
 
 
 
-                Signoff(Bid.ThreeUnknown, NTD.OR.AcceptInvite, Partner(LastBid(Bid.TwoUnknown))),
-                Signoff(Bid.ThreeUnknown, LastBid(Bid._2D), Partner(LastBid(Bid._3H)),
+                Shows(Bid.ThreeUnknown, NTD.OR.AcceptInvite, Partner(IsLastBid(Bid.TwoUnknown))),
+                Shows(Bid.ThreeUnknown, IsLastBid(Bid._2D), Partner(IsLastBid(Bid._3H)),
                             Shape(Suit.Hearts, 2)),
-                Signoff(Bid.ThreeUnknown, NTD.OR.AcceptInvite, LastBid(Bid._2D),
-                                    Partner(LastBid(Bid._2H)), Shape(Suit.Hearts, 2)),
-                Signoff(Bid.ThreeUnknown,  LastBid(Bid._2D), Partner(LastBid(Bid._3S)),
+                Shows(Bid.ThreeUnknown, NTD.OR.AcceptInvite, IsLastBid(Bid._2D),
+                                    Partner(IsLastBid(Bid._2H)), Shape(Suit.Hearts, 2)),
+                Shows(Bid.ThreeUnknown,  IsLastBid(Bid._2D), Partner(IsLastBid(Bid._3S)),
                             Shape(Suit.Spades, 2)),
-                Signoff(Bid.ThreeUnknown, NTD.OR.AcceptInvite, LastBid(Bid._2D),
-                        Partner(LastBid(Bid._2S)), Shape(Suit.Spades, 2)),
+                Shows(Bid.ThreeUnknown, NTD.OR.AcceptInvite, IsLastBid(Bid._2D),
+                        Partner(IsLastBid(Bid._2S)), Shape(Suit.Spades, 2)),
 
 
 
-                Signoff(4, Suit.Hearts, NTD.OR.AcceptInvite, Fit()),
-               //TODO: I think above rule ocvers itl.. Signoff(4, Suit.Hearts, LastBid(Bid._2D), Partner(LastBid(Bid._3H)), Shape(3)),
+                Shows(4, Suit.Hearts, NTD.OR.AcceptInvite, Fit()),
+               //TODO: I think above rule ocvers itl.. Shows(4, Suit.Hearts, IsLastBid(Bid._2D), Partner(IsLastBid(Bid._3H)), Shape(3)),
 
 
-                Signoff(Bid._4S, NTD.OR.AcceptInvite, Partner(LastBid(Bid._3S)), Fit()),
-                Signoff(Bid._4S, NTD.OR.AcceptInvite, Fit()),
-                Signoff(Bid._4S, Partner(LastBid(Bid.ThreeUnknown)), Fit()),
-                Signoff(Bid._4S, LastBid(Bid._2D), Partner(LastBid(Bid._3S)), Shape(3))
+                Shows(Bid._4S, NTD.OR.AcceptInvite, Partner(IsLastBid(Bid._3S)), Fit()),
+                Shows(Bid._4S, NTD.OR.AcceptInvite, Fit()),
+                Shows(Bid._4S, Partner(IsLastBid(Bid.ThreeUnknown)), Fit()),
+                Shows(Bid._4S, IsLastBid(Bid._2D), Partner(IsLastBid(Bid._3S)), Shape(3))
             };
         }
         */
-		public IEnumerable<CallFeature> CheckSpadeGame(PositionState _)
+		public PositionCalls CheckSpadeGame(PositionState ps)
         {
-            return new CallFeature[] {
-                Signoff(Bid._4S, ShowsTrump, NTD.RR.GameAsDummy, Shape(4, 5)),
-                Signoff(Call.Pass)
-            };
+            return new PositionCalls(ps).AddRules(
+                Shows(Bid._4S, NTD.RR.GameAsDummy, Shape(4, 5)),
+                Shows(Call.Pass)
+            );
 		}
 	}
 
@@ -282,7 +274,7 @@ namespace BridgeBidding
             // TODO: This is no longer possible unless convert this to PositionCalls...
             Call call = ps.RightHandOpponent.GetBidHistory(0).Equals(bidStayman) ? Bid.Double : bidStayman;
             return new CallFeature[] {
-                PartnerBids(call, Answer),
+                Properties(call, Answer, forcing1Round: true),
                 Forcing(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Flat(false)),
                 Forcing(call, NTB.RespondGame, Shape(Suit.Spades, 4), Flat(false)),
                 Forcing(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
@@ -291,42 +283,43 @@ namespace BridgeBidding
                 //Forcing(Bid._2C, Points(NTLessThanInvite), Shape(Suit.Diamonds, 4, 5), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)),
             };
         }
-        public IEnumerable<CallFeature> Answer(PositionState _)
+        public PositionCalls Answer(PositionState ps)
         {
-            return new CallFeature[] {
+            var choices = new PositionCalls(ps);
+            choices.AddRules(
                 PartnerBids(ResponderRebid),
 
                 Forcing(Bid._3D, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
 
                 // If we are 4-4 then hearts bid before spades.  Can't be 5-5 or wouldn't be balanced.
-                Forcing(Bid._3H, Shape(4, 5), LongerOrEqualTo(Suit.Spades)),
-                Forcing(Bid._3S, Shape(4, 5), LongerThan(Suit.Hearts))
-            };
+                Shows(Bid._3H, Shape(4, 5), LongerOrEqualTo(Suit.Spades)),
+                Shows(Bid._3S, Shape(4, 5), LongerThan(Suit.Hearts))
+            );
+            return choices;
         }
 
         public static IEnumerable<CallFeature> ResponderRebid(PositionState _)
         {
             return new CallFeature[] {
-                PartnerBids(Bid._3H, OpenerRebid),
-                PartnerBids(Bid._3S, OpenerRebid),
+                Properties(new Bid[] { Bid._3H, Bid._3S }, OpenerRebid, forcing1Round: true),
 
-                Forcing(Bid._3H, Shape(5), Partner(LastBid(Bid._3D))),
-                Forcing(Bid._3S, Shape(5), Partner(LastBid(Bid._3D))),
+                Shows(Bid._3H, Shape(5), Partner(IsLastBid(Bid._3D))),
+                Shows(Bid._3S, Shape(5), Partner(IsLastBid(Bid._3D))),
 
-                Signoff(Bid._4H, Fit()),
-                Signoff(Bid._4S, Fit()),
+                Shows(Bid._4H, Fit()),
+                Shows(Bid._4S, Fit()),
                 
-                Signoff(Bid._3NT),
+                Shows(Bid._3NT),
             };
         }
     
-        public static IEnumerable<CallFeature> OpenerRebid(PositionState _)
+        public static PositionCalls OpenerRebid(PositionState ps)
         { 
-            return new CallFeature[] {
-                Signoff(Bid._3NT, Fit(Suit.Hearts, false), Fit(Suit.Spades, false)),
-                Signoff(Bid._4H, Fit()),
-                Signoff(Bid._4S, Fit()),
-            };
+            return new PositionCalls(ps).AddRules(
+                Shows(Bid._3NT, Fit(Suit.Hearts, false), Fit(Suit.Spades, false)),
+                Shows(Bid._4H, Fit()),
+                Shows(Bid._4S, Fit())
+            );
         }
     }
 

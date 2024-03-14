@@ -8,7 +8,6 @@ namespace BridgeBidding
         public AgreedStrain(params Strain[] strains)
         {
             this._strains = strains;
-
         }
         public override bool Conforms(Call call, PositionState ps)
         {

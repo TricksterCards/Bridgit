@@ -1,4 +1,6 @@
-﻿namespace BridgeBidding
+﻿using System;
+
+namespace BridgeBidding
 {
 
     public class Michaels : Bidder
@@ -10,40 +12,32 @@
              {
                 // TODO: Response with interference???  Lots of work here...
                 // TODO: Need some minimum points...
-                Convention(Bid._2C, UserText.Michaels),
-                PartnerBids(Bid._2C, RespondMajors),
-                Forcing(Bid._2C, CueBid, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 5)),
+                Properties(new Bid[] { Bid._2C, Bid._2D }, RespondMajors, forcing1Round: true, convention: UserText.Michaels, onlyIf: IsCueBid),
+                Shows(Bid._2C, IsCueBid, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 5)),
+                Shows(Bid._2D, IsCueBid, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 5)),
 
-                Convention(Bid._2D, UserText.Michaels),
-                PartnerBids(Bid._2D, RespondMajors),
-                Forcing(Bid._2D, CueBid, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 5)),
+                Properties(Bid._2H, p => ResopondMajorMinor(p, Suit.Spades), forcing1Round: true, convention: UserText.Michaels, onlyIf: IsCueBid),
+                Shows(Bid._2H, IsCueBid, Shape(Suit.Spades, 5), Shape(Suit.Clubs, 5)),
+                Shows(Bid._2H, IsCueBid, Shape(Suit.Spades, 5), Shape(Suit.Diamonds, 5)),
 
-                Convention(Bid._2H, UserText.Michaels),
-                PartnerBids(Bid._2H, (PositionState _) => { return ResopondMajorMinor(Suit.Spades); }),
-                Forcing(Bid._2H, CueBid, Shape(Suit.Spades, 5), Shape(Suit.Clubs, 5)),
-                Forcing(Bid._2H, CueBid, Shape(Suit.Spades, 5), Shape(Suit.Diamonds, 5)),
-
-                Convention(Bid._2S, UserText.Michaels),
-                PartnerBids(Bid._2S, (PositionState _) => { return ResopondMajorMinor(Suit.Hearts); }),
-                Forcing(Bid._2S, CueBid, Shape(Suit.Hearts, 5), Shape(Suit.Clubs, 5)),
-                Forcing(Bid._2S, CueBid, Shape(Suit.Hearts, 5), Shape(Suit.Diamonds, 5)),
-
+                Properties(Bid._2S, p => ResopondMajorMinor(p, Suit.Spades), forcing1Round: true, convention: UserText.Michaels, onlyIf: IsCueBid),
+                Shows(Bid._2S, IsCueBid, Shape(Suit.Hearts, 5), Shape(Suit.Clubs, 5)),
+                Shows(Bid._2S, IsCueBid, Shape(Suit.Hearts, 5), Shape(Suit.Diamonds, 5)),
              };
          }
 
-        private static CallFeature[] RespondMajors(PositionState _)
+        private static PositionCalls RespondMajors(PositionState ps)
         {
-            return new CallFeature[]
-            {
-                Signoff(Bid._2H, BetterThan(Suit.Spades), Points((0, 5))),
-                Signoff(Bid._2S, BetterOrEqualTo(Suit.Hearts), Points((0, 5))),
-            };
+            return new PositionCalls(ps).AddRules(
+                Shows(Bid._2H, BetterThan(Suit.Spades), Points((0, 5))),
+                Shows(Bid._2S, BetterOrEqualTo(Suit.Hearts), Points((0, 5)))
+            );
         }
 
-        private static CallFeature[] ResopondMajorMinor(Suit majorSuit)
+        private static PositionCalls ResopondMajorMinor(PositionState ps, Suit majorSuit)
         {
             // TODO: Do something here ...
-            return new CallFeature[0];
+            return new PositionCalls(ps);
         }
     }
 }

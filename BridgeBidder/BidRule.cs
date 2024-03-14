@@ -6,20 +6,18 @@ using System.Linq;
 namespace BridgeBidding
 {
 	// TODO: Think through "force" vs intent.  
-    public enum BidForce { Unknown, Nonforcing, Invitational, Forcing1Round, ForcingToGame, Signoff }
+  // public enum BidForce { Unknown, Nonforcing, Invitational, Forcing1Round, ForcingToGame, Signoff }
+  
 
 
     public class BidRule : CallFeature
 	{
 
-		public BidForce Force { get; }
 
 
-		public BidRule(Call call, BidForce force, params Constraint[] constraints) :
+		public BidRule(Call call, params Constraint[] constraints) :
 		 	base(call, constraints)
-		{
-			this.Force = force;
-		}
+		{}
 
         public bool SatisifiesHandConstraints(PositionState ps, HandSummary hs)
         {
@@ -49,7 +47,7 @@ namespace BridgeBidding
 		}
 	
 	// TODO:  THIS IS FUNDAMENTAL TO THIS CHANGE.  DO NOT CHECK IN WITHOUT FIXING THIS!!!!!
-
+/*
 		public PairAgreements ShowAgreements(PositionState ps)
 		{
 		//	bool showedSuit = false;
@@ -68,7 +66,7 @@ namespace BridgeBidding
 		//	}
 			return showAgreements.PairAgreements;
 		}
-
+*/
 		public HandSummary ShowHand(PositionState ps)
 		{
 			var showHand = new HandSummary.ShowState();

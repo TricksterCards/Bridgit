@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime;
 
 namespace BridgeBidding
 {
@@ -22,7 +23,7 @@ namespace BridgeBidding
 
 		public void AddConstraint(Constraint constraint)
 		{
-			Debug.Assert(constraint != null);
+			// IT SEEMS THAT NULL IS FINE ... FIGUIRE IT OUT... Debug.Assert(constraint != null);
 			if (constraint is ConstraintGroup group)
 			{
 				foreach (Constraint child in group.ChildConstraints)
@@ -30,7 +31,7 @@ namespace BridgeBidding
 					AddConstraint(child);
 				}
 			}
-			else
+			else if (constraint != null)
 			{
 				this.Constraints.Add(constraint);
 			}
@@ -58,4 +59,66 @@ namespace BridgeBidding
 			return failingConstraints;
 		}
     }
+
+	// TODO: Move this somewhere else.  But for now, it's here.
+	public class CallFeatureGroup : CallFeature
+	{
+		public List<CallFeature> Features = new List<CallFeature>();
+
+		public CallFeatureGroup(params StaticConstraint[] constraints) : base(null, constraints)
+		{
+		}
+
+		public void Add(CallFeature feature)
+		{
+			Features.Add(feature);
+		}
+	}
+
+
 }
+/*
+	public class ShowAgreedStrain : CallAgreement
+	{
+		public Strain? Strain;
+		public ShowAgreedStrain(Call call, Strain? strain, params StaticConstraint[] constraints) : base(call, constraints)
+		{
+			this.Strain = strain;
+		}
+
+		public override void ShowAgreement(Call call, PositionState ps, PairAgreements.ShowState showAgreements)
+		{
+			if (Strain.HasValue)
+			{
+				showAgreements.ShowAgreedStrain(Strain.Value);
+			}
+			else if (call is Bid bid)
+			{
+				showAgreements.ShowAgreedStrain(bid.Strain);
+			}
+		}
+	}
+	public class ShowForcing1Round : CallAgreement
+	{
+		public ShowForcing1Round(Call call, params StaticConstraint[] constraints) : base(call, constraints)
+		{
+		}
+
+		public override void ShowAgreement(Call call, PositionState ps, PairAgreements.ShowState showAgreements)
+		{
+			showAgreements.ShowForcing1Round(ps);
+		}
+	}
+
+	public class ShowForcingToGame : CallAgreement
+	{
+		public ShowForcingToGame(Call call, params StaticConstraint[] constraints) : base(call, constraints)
+		{
+		}
+
+		public override void ShowAgreement(Call call, PositionState ps, PairAgreements.ShowState showAgreements)
+		{
+			showAgreements.ShowForcingToGame();
+		}
+	}
+	*/

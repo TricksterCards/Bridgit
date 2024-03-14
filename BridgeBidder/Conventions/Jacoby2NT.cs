@@ -26,7 +26,7 @@ namespace BridgeBidding
 
                     PartnerBids(Bid._2NT, OpenerRebid),
 
-                    Forcing(Bid._2NT, Fit(suit), Shape(suit, 4, 10), DummyPoints(suit, RespondPoints), ShowsTrumpSuit(suit)),
+                    Forcing(Bid._2NT, Fit(suit), Shape(suit, 4, 10), DummyPoints(suit, RespondPoints)),
                 };
             }
             return new CallFeature[0];
@@ -55,8 +55,8 @@ namespace BridgeBidding
 
                 Forcing(Bid._3NT, Points(OpenerPointsMedium)),
 
-                Nonforcing(Bid._4H, OpeningBid(Bid._1H), Points(OpenerPointsMin)),
-                Nonforcing(Bid._4S, OpeningBid(Bid._1S), Points(OpenerPointsMin)),
+                Shows(Bid._4H, OpeningBid(Bid._1H), Points(OpenerPointsMin)),
+                Shows(Bid._4S, OpeningBid(Bid._1S), Points(OpenerPointsMin)),
             };
         }
 
@@ -68,10 +68,10 @@ namespace BridgeBidding
             {
                 // TODO: IMPLEMENT RESPONSES!!!
                 // TOOD: What is the thing to do here??  Perhaps bid controls.  
-                Signoff(Bid._4H, OpeningBid(Bid._1H)),
-                Signoff(Bid._4S, OpeningBid(Bid._1S)),
+                Shows(Bid._4H, OpeningBid(Bid._1H)),
+                Shows(Bid._4S, OpeningBid(Bid._1S)),
 
-                Signoff(Bid.Pass)
+                Shows(Bid.Pass)
             });     
             return choices;       
         }

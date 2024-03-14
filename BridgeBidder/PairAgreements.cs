@@ -121,7 +121,7 @@ namespace BridgeBidding
         private PositionState _forcedPosition = null;
         private int _forcedThroughRound = 0;
 
-        public bool IsForcedToBid(PositionState ps) => (ps != _forcedPosition || ps.BidRound > _forcedThroughRound);
+        public bool IsForcedToBid(PositionState ps) => (ps == _forcedPosition && ps.BidRound <= _forcedThroughRound);
 
         public Suit? TrumpSuit => AgreedStrain?.ToSuit();
  

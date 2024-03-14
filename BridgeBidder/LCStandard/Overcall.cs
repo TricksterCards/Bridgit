@@ -26,35 +26,35 @@ namespace BridgeBidding
                 PartnerBids(Advance.FirstBid), 
 
                 // Weak overcall takes precedence if good suit and low points
-				Nonforcing(Bid._2D, SingleJump, NotCueBid, Points(OvercallWeak2Level), Shape(6), GoodPlusSuit),
-				Nonforcing(Bid._2H, SingleJump, NotCueBid, Points(OvercallWeak2Level), Shape(6), GoodPlusSuit),
-				Nonforcing(Bid._2S, SingleJump, NotCueBid, Points(OvercallWeak2Level), Shape(6), GoodPlusSuit),
+				Shows(Bid._2D, IsSingleJump, IsNotCueBid, Points(OvercallWeak2Level), Shape(6), GoodPlusSuit),
+				Shows(Bid._2H, IsSingleJump, IsNotCueBid, Points(OvercallWeak2Level), Shape(6), GoodPlusSuit),
+				Shows(Bid._2S, IsSingleJump, IsNotCueBid, Points(OvercallWeak2Level), Shape(6), GoodPlusSuit),
 
-				Nonforcing(Bid._3C, SingleJump, NotCueBid, Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
-				Nonforcing(Bid._3D, Jump(1, 2), NotCueBid, Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
-				Nonforcing(Bid._3H, Jump(1, 2), NotCueBid, Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
-				Nonforcing(Bid._3S, Jump(1, 2), NotCueBid, Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
+				Shows(Bid._3C, IsSingleJump, IsNotCueBid, Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
+				Shows(Bid._3D, IsJump(1, 2), IsNotCueBid, Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
+				Shows(Bid._3H, IsJump(1, 2), IsNotCueBid, Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
+				Shows(Bid._3S, IsJump(1, 2), IsNotCueBid, Points(OvercallWeak3Level), Shape(7), DecentPlusSuit),
 
                 // We want to bid the highest suit first if we have two, so go from spades down to diamonds
 
-				Nonforcing(Bid._1S, Points(Overcall1Level), Shape(6, 10)),
-				Nonforcing(Bid._1H, Points(Overcall1Level), Shape(6, 10)),
-				Nonforcing(Bid._1D, Points(Overcall1Level), Shape(6, 10)),
+				Shows(Bid._1S, Points(Overcall1Level), Shape(6, 10)),
+				Shows(Bid._1H, Points(Overcall1Level), Shape(6, 10)),
+				Shows(Bid._1D, Points(Overcall1Level), Shape(6, 10)),
 
                 // TODO: May want to consider more rules for 1-level overcall.  If you have 10 points an a crummy suit for example...
-                Nonforcing(Bid._1S, Points(Overcall1Level), Shape(5), DecentPlusSuit),
-                Nonforcing(Bid._1H, Points(Overcall1Level), Shape(5), DecentPlusSuit),
-                Nonforcing(Bid._1D, Points(Overcall1Level), Shape(5), DecentPlusSuit),
+                Shows(Bid._1S, Points(Overcall1Level), Shape(5), DecentPlusSuit),
+                Shows(Bid._1H, Points(Overcall1Level), Shape(5), DecentPlusSuit),
+                Shows(Bid._1D, Points(Overcall1Level), Shape(5), DecentPlusSuit),
 
-                Nonforcing(Bid._1S, Points(10, 16), Shape(5)),
-                Nonforcing(Bid._1H, Points(10, 16), Shape(5)),
-                Nonforcing(Bid._1D, Points(10, 16), Shape(5)),
+                Shows(Bid._1S, Points(10, 16), Shape(5)),
+                Shows(Bid._1H, Points(10, 16), Shape(5)),
+                Shows(Bid._1D, Points(10, 16), Shape(5)),
 
 
-                Nonforcing(Bid._2S, NonJump, NotCueBid, Points(OvercallStrong2Level), Shape(5, 11)),
-                Nonforcing(Bid._2H, NonJump, NotCueBid, Points(OvercallStrong2Level), Shape(5, 11)),
-                Nonforcing(Bid._2D, NonJump, NotCueBid, Points(OvercallStrong2Level), Shape(5, 11)),
-                Nonforcing(Bid._2C, NotCueBid, Points(OvercallStrong2Level), Shape(5, 11))
+                Shows(Bid._2S, IsNonJump, IsNotCueBid, Points(OvercallStrong2Level), Shape(5, 11)),
+                Shows(Bid._2H, IsNonJump, IsNotCueBid, Points(OvercallStrong2Level), Shape(5, 11)),
+                Shows(Bid._2D, IsNonJump, IsNotCueBid, Points(OvercallStrong2Level), Shape(5, 11)),
+                Shows(Bid._2C, IsNotCueBid, Points(OvercallStrong2Level), Shape(5, 11))
             };
           
         }
@@ -69,26 +69,26 @@ namespace BridgeBidding
             return new CallFeature[] {
                 PartnerBids(Advance.SecondBid),
 
-                Nonforcing(Bid._2H, NotRebid, Fit(), NonJump, Points(SupportAdvancer), ShowsTrump),
-                Nonforcing(Bid._2S, NotRebid, Fit(), NonJump, Points(SupportAdvancer), ShowsTrump),
-                Nonforcing(Bid._3C, NotRebid, Fit(), NonJump, Points(SupportAdvancer), ShowsTrump),
-                Nonforcing(Bid._3D, NotRebid, Fit(), NonJump, Points(SupportAdvancer), ShowsTrump),
-                Nonforcing(Bid._3H, NotRebid, Fit(), NonJump, Points(SupportAdvancer), ShowsTrump),
-                Nonforcing(Bid._3S, NotRebid, Fit(), NonJump, Points(SupportAdvancer), ShowsTrump),
+                Shows(Bid._2H, IsNotRebid, Fit(), IsNonJump, Points(SupportAdvancer)),
+                Shows(Bid._2S, IsNotRebid, Fit(), IsNonJump, Points(SupportAdvancer)),
+                Shows(Bid._3C, IsNotRebid, Fit(), IsNonJump, Points(SupportAdvancer)),
+                Shows(Bid._3D, IsNotRebid, Fit(), IsNonJump, Points(SupportAdvancer)),
+                Shows(Bid._3H, IsNotRebid, Fit(), IsNonJump, Points(SupportAdvancer)),
+                Shows(Bid._3S, IsNotRebid, Fit(), IsNonJump, Points(SupportAdvancer)),
 
-                Nonforcing(Bid._2H, Rebid, Shape(6, 10)),
-                Nonforcing(Bid._2S, Rebid, Shape(6, 10)),
-                Nonforcing(Bid._3C, Rebid, Shape(6, 10), NonJump),
-                Nonforcing(Bid._3D, Rebid, Shape(6, 10), NonJump),
-                Nonforcing(Bid._3H, Rebid, Shape(6, 10), NonJump),
-                Nonforcing(Bid._3S, Rebid, Shape(6, 10), NonJump),
+                Shows(Bid._2H, IsRebid, Shape(6, 10)),
+                Shows(Bid._2S, IsRebid, Shape(6, 10)),
+                Shows(Bid._3C, IsRebid, Shape(6, 10), IsNonJump),
+                Shows(Bid._3D, IsRebid, Shape(6, 10), IsNonJump),
+                Shows(Bid._3H, IsRebid, Shape(6, 10), IsNonJump),
+                Shows(Bid._3S, IsRebid, Shape(6, 10), IsNonJump),
                
                 // TODO: Pass if appropriate
                 // TODO: Rebid 6+ card suit if appropriate
                 // TODO: Bid some level of NT if appropriate...
 
-                Signoff(Bid._3NT, OppsStopped(), PairPoints((25, 30))),
-                Signoff(Call.Pass)
+                Shows(Bid._3NT, OppsStopped(), PairPoints((25, 30))),
+                Shows(Call.Pass)
             };
         }
 

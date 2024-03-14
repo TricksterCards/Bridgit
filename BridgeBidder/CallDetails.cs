@@ -10,10 +10,11 @@ namespace BridgeBidding
     {
 
         public Call Call { get; }
-		public BidForce BidForce { get; private set; }
+
 		public List<CallAnnotation> Annotations = new List<CallAnnotation>();
 
-		private PartnerCalls _partnerCalls = null;
+		private CallProperties _properties = null;
+
 
         private List<BidRule> _rules = new List<BidRule>();
 
@@ -29,7 +30,6 @@ namespace BridgeBidding
         {
 			this.Group = group;
             this.Call = call;
-			this.BidForce = BidForce.Unknown;
         }
 
 
@@ -38,21 +38,13 @@ namespace BridgeBidding
 			Debug.Assert(feature.Call.Equals(this.Call));
 			if (feature is BidRule rule)
 			{
-				if (BidForce == BidForce.Unknown)
-				{
-					this.BidForce = rule.Force;
-				}
-				else
-				{
-					if (rule.Force == BidForce.Forcing1Round)
-						this.BidForce = BidForce.Forcing1Round;
-				}
 				_rules.Add(rule);
 			}
-			else if (feature is PartnerCalls partnerCalls)
+			else if (feature is CallProperties callProperties)
 			{
-				Debug.Assert(_partnerCalls == null);
-				_partnerCalls = partnerCalls;
+				Debug.Assert(_properties == null);
+
+				_properties = callProperties;
 			}
 			else if (feature is CallAnnotation annotation)
 			{
@@ -77,9 +69,9 @@ namespace BridgeBidding
 
 		public PositionCallsFactory GetBidsFactory()
 		{
-			if (_partnerCalls != null)
+			if (_properties != null && _properties.PartnerBids != null)
 			{
-				return _partnerCalls.PartnerBids;
+				return _properties.PartnerBids;
 			}
 			if (!this.Call.Equals(Call.Pass) && Group.PartnerCalls != null)
 			{
@@ -88,7 +80,7 @@ namespace BridgeBidding
 			return null;
 		}
 
-
+/*
         public PairAgreements ShowAgreements()
         {  
 			return _rules[0].ShowAgreements(PositionState);
@@ -104,24 +96,7 @@ namespace BridgeBidding
             }
             return showAgreements.PairAgreements;
 			*/
-        }
 
-		internal void Validate()
-		{
-			PairAgreements a = null;
-			foreach (var rule in _rules)
-			{
-				var a2 = rule.ShowAgreements(PositionState);
-				if (a == null)
-				{
-					a = a2;
-				}
-				else
-				{
-					Debug.Assert(a.Equals(a2));
-				}
-			}
-		}
 
 
         public HandSummary ShowHand()

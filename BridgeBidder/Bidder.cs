@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -8,10 +10,10 @@ using System.Runtime.CompilerServices;
 namespace BridgeBidding
 {
 
-
-
     public abstract class Bidder
 	{
+		// TODO: These need to implement IShowAgreements, not simple constraint.
+
 		public static CallFeature PartnerBids(CallFeaturesFactory cff)
 		{
 			return PartnerBids(PositionCalls.FromCallFeaturesFactory(cff));
@@ -35,54 +37,27 @@ namespace BridgeBidding
 			return _PartnerBids(call, choicesFactory, new StaticConstraint[0]);
 		}
 
-		private static PartnerCalls _PartnerBids(Call call,
+		private static CallProperties _PartnerBids(Call call,
 											PositionCallsFactory choicesFactory, 
 											params StaticConstraint[] constraints)
 		{
-			return new PartnerCalls(call, choicesFactory, constraints);
+			return new CallProperties(call, choicesFactory, false, false, constraints);
 		}
 
 		public static CallFeature Forcing(Call call, params Constraint[] constraints)
 		{
-			return Rule(call, BidForce.Forcing1Round, constraints);
-		}
-
-		public static CallFeature Semiforcing(Call call, params Constraint[] constraints)
-		{
-			// TODO: What do do about semi-forcing?  
-			return Rule(call, BidForce.Nonforcing, constraints);
-		}
-
-		public static CallFeature ForcingToGame(Call call, params Constraint[] constraints)
-		{
-			return Rule(call, BidForce.ForcingToGame, constraints);
-		}
-
-		// TODO: Need a non-forcing BidMessage...
-
-
-		public static CallFeature Nonforcing(Call call, params Constraint[] constraints)
-		{
-			return Rule(call, BidForce.Nonforcing, constraints);
+			return Rule(call, constraints);
 		}
 
 
 
-		public static CallFeature Invitational(Call call, params Constraint[] constraints)
-		{
-			return Rule(call, BidForce.Invitational, constraints);
-		}
-	
-
-		public static CallFeature Signoff(Call call, params Constraint[] constraints)
-		{
-			return Rule(call, BidForce.Signoff, constraints);
-		}
 
 
-		public static BidRule Rule(Call call, BidForce force, params Constraint[] constraints)
+
+
+		public static BidRule Rule(Call call, params Constraint[] constraints)
 		{
-			return new BidRule(call, force, constraints);
+			return new BidRule(call, constraints);
 		}
 
 		public static CallFeature Alert(Call call, string text, params StaticConstraint[] constraints)
@@ -104,17 +79,55 @@ namespace BridgeBidding
 			return new CallAnnotation(null, CallAnnotation.AnnotationType.Convention, text, constraints);
 		}
 		
+		public static CallFeatureGroup Properties(Call call, PositionCallsFactory partnerBids = null, bool forcing1Round = false, bool forcingToGame = false,
+				 	string alert = null, string announce = null, string convention = null, 
+					StaticConstraint onlyIf = null)
+		{
+			var features = new CallFeatureGroup(onlyIf);
+			features.Add(new CallProperties(call, partnerBids, forcing1Round, forcingToGame));
+			if (alert != null)
+			{
+				features.Add(Alert(call, alert, onlyIf));
+			}
+			if (announce != null)
+			{
+				features.Add(Announce(call, announce, onlyIf));
+			}
+			if (convention != null)
+			{
+				features.Add(Convention(call, convention, onlyIf));
+			}
+			return features;
+		}	
+
+		public static CallFeatureGroup Properties(IEnumerable<Call> calls, PositionCallsFactory partnerBids = null, bool forcing1Round = false, bool forcingToGame = false,
+				    string alert = null, string announce = null, string convention = null, 
+					StaticConstraint onlyIf = null)
+		{
+			var features = new CallFeatureGroup(null, onlyIf);
+			foreach (Call call in calls)
+			{
+				features.Add(Properties(call, partnerBids, forcing1Round, forcingToGame, alert, announce, convention, onlyIf));
+			}
+			return features;			
+		}
+
+		public static CallFeature Shows(Call call, params Constraint[] constraints)
+		{
+			return Rule(call, constraints);
+		}
+
 		// ************************************************************ STATIC CONSTRAINTS ***
 
-		public static StaticConstraint Seat(params int[] seats)
+		public static StaticConstraint IsSeat(params int[] seats)
 		{
 			return new SimpleStaticConstraint((call, ps) => seats.Contains(ps.Seat), getDescription: (call, ps) => $"seat {string.Join(",", seats)}");
 		}
-		public static StaticConstraint LastBid(Call call)
+		public static StaticConstraint IsLastBid(Call call)
 		{
 			return new BidHistory(0, call);
 		}
-		public static StaticConstraint LastBid(int level, Suit suit)
+		public static StaticConstraint IsLastBid(int level, Suit suit)
 		{
 			return new BidHistory(0, new Bid(level, suit));
 		}
@@ -124,17 +137,17 @@ namespace BridgeBidding
 		}
 		public static StaticConstraint OpeningBid(Bid bid)
 		{
-			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.OpeningBid == bid);
+			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.OpeningBid.Equals(bid));
 		}
 
 
-		public static StaticConstraint CueBid = new IsCueBid(null);
-		public static StaticConstraint NotCueBid = Not(CueBid);
+		public static readonly StaticConstraint IsCueBid = new IsCueBid(null);
+		public static readonly StaticConstraint IsNotCueBid = Not(IsCueBid);
 
-		public static StaticConstraint Rebid = new BidHistory(0, null);
-		public static StaticConstraint NotRebid = Not(Rebid);
+		public static readonly StaticConstraint IsRebid = new BidHistory(0, null);
+		public static readonly StaticConstraint IsNotRebid = Not(IsRebid);
 
-		public static Constraint NewSuit = And(NotCueBid, new NewSuit(null));
+		public static readonly StaticConstraint IsNewSuit = new ConstraintGroup(IsNotCueBid, new NewSuit(null));
 
 
 //		public static StaticConstraint IsNewSuit(Suit suit) { return new NewSuit(suit); }
@@ -144,14 +157,14 @@ namespace BridgeBidding
 			return new LogID(id);
 		}
 		
-		public static StaticConstraint Jump(params int[] jumpLevels)
+		public static StaticConstraint IsJump(params int[] jumpLevels)
 		{
 			return new JumpBid(jumpLevels);
 		}
 
-		public static StaticConstraint NonJump = Jump(0);
-		public static StaticConstraint SingleJump = Jump(1);
-		public static StaticConstraint DoubleJump = Jump(2);
+		public static StaticConstraint IsNonJump = IsJump(0);
+		public static StaticConstraint IsSingleJump = IsJump(1);
+		public static StaticConstraint IsDoubleJump = IsJump(2);
 
 		// Various vulnerability constraints.  Be careful with Not()
 		public static StaticConstraint IsVul = new SimpleStaticConstraint((call, ps) => ps.IsVulnerable, description: "vul");
@@ -178,7 +191,7 @@ namespace BridgeBidding
 		// The static constaint "IsReverseBid" simply checks if the call is a reverse bid.  The IsReverse also shows the shape of the reverse bid.
 		private static StaticConstraint IsReverseBid = new SimpleStaticConstraint((call, ps) => ps.IsReverse(call), description: "reverse");
 		public static Constraint Reverse = And(IsReverseBid, new ShowsReverseShape());
-		public static StaticConstraint NotReverse = Not(IsReverseBid);
+		public static StaticConstraint IsNotReverse = Not(IsReverseBid);
 		public static StaticConstraint ForcedToBid = new SimpleStaticConstraint((call, ps) => ps.ForcedToBid);
 
 
@@ -210,10 +223,8 @@ namespace BridgeBidding
 			return new SimpleStaticConstraint((call, ps) => ps.IsValidNextCall(new Bid(level, suit)));
 	 	}
 
-		public static StaticConstraint OppsContract()
-		{ 
-			return new SimpleStaticConstraint((call, ps) => ps.IsOpponentsContract, description: "opps contract"); 
-		}
+		public static readonly StaticConstraint IsOppsContract = new SimpleStaticConstraint((call, ps) => ps.IsOpponentsContract, description: "opps contract"); 
+	
 
 
 		public static StaticConstraint IsAgreedStrain = new AgreedStrain();
@@ -359,8 +370,8 @@ namespace BridgeBidding
 
 		public static HandConstraint LongerOrEqual(Suit longer, Suit shorter) { return new ShowsBetterSuit(longer, shorter, longer, true); }
 
-		public static HandConstraint LongestSuit = IsLongestSuit(null);
-		public static HandConstraint IsLongestSuit(Suit? suit)
+		public static HandConstraint LongestSuit = ShowsLongestSuit(null);
+		public static HandConstraint ShowsLongestSuit(Suit? suit)
 		{
 			return new ShowsLongestSuit(suit);
 		}
@@ -379,7 +390,7 @@ namespace BridgeBidding
 
 
 
-
+/*
 		public static Constraint ShowsTrump = new ShowsTrump(null);
 
 		public static Constraint AgreeOnStrain(Strain trumpStrain)
@@ -392,7 +403,7 @@ namespace BridgeBidding
 			return (trumpSuit is Suit s) ? AgreeOnStrain(s.ToStrain()) : ShowsTrump;
 		}
 
-
+*/
 		public static Constraint AgreedAnySuit =  AgreedStrain(Strain.Clubs, Strain.Diamonds, Strain.Hearts, Strain.Spades);
 
 
@@ -429,16 +440,19 @@ namespace BridgeBidding
 		// Perhaps rename this.  Perhaps move this to takeout...
 		public static Constraint TakeoutSuit(Suit? suit = null)
 		{
-			return And(new TakeoutSuit(suit), NotCueBid);
+			return And(new TakeoutSuit(suit), IsNotCueBid);
 		}
 
 
 
-		public static Constraint Fit(int count = 8, Suit? suit = null, bool desiredValue = true)
+		public static HandConstraint Fit(int count = 8, Suit? suit = null, bool desiredValue = true)
 		{
 			return new PairShowsMinShape(suit, count, desiredValue);
 			//return And(HasShownSuit(suit, eitherPartner: true), new PairShowsMinShape(suit, count, desiredValue));
 		}
+
+		public static readonly HandConstraint Fit8Plus = Fit(8);
+		public static readonly HandConstraint Fit9Plus = Fit(9);
 
 		public static Constraint Fit(Suit suit, bool desiredValue = true)
 		{
@@ -457,6 +471,7 @@ namespace BridgeBidding
 			return PairPoints(null, range);
 		}
 
+		public static HandConstraint PairPoints(int min, int max) => PairPoints((min, max));
 		public static HandConstraint PairPoints(Suit? suit, (int Min, int Max) range)
 		{
 			return new PairShowsPoints(suit, range.Min, range.Max);
@@ -506,7 +521,7 @@ namespace BridgeBidding
 		// THE FOLLOWING CONSTRAINTS ARE GROUPS OF CONSTRAINTS
         public static Constraint RaisePartner(Suit? suit = null, int jump = 0, int fit = 8)
         {
-            return And(Partner(HasShownSuit(suit)), Fit(fit, suit), Jump(jump), ShowsTrumpSuit(suit));
+            return And(Partner(HasShownSuit(suit)), Fit(fit, suit), IsJump(jump));
         }
    
 

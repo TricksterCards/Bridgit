@@ -9,38 +9,34 @@ namespace BridgeBidding
 
         public static PositionCalls ResponderChangedSuits(PositionState ps)
 		{
-			if (ps.Partner.Bid.Level == 2 && !ps.Partner.IsPassedHand)
-			{
-				return TwoOverOneRebid(ps);
-			}
 			var choices = new PositionCalls(ps);
 			choices.AddRules(
 				PartnerBids(RespondBid2.SecondBid),
 
 				// Responder bid a major suits and we have a fit.  Support at appropriate level.
 				// RaisePartner() requires a known 8+ card fit.  If the selected, the rule shows trump
-				Nonforcing(Bid._2H, RaisePartner(), DummyMinimum),
-				Nonforcing(Bid._2S, RaisePartner(), DummyMinimum),
-				Nonforcing(Bid._3H, RaisePartner(jump: 1), DummyMedium),
-				Nonforcing(Bid._3S, RaisePartner(jump: 1), DummyMedium),
-                Nonforcing(Bid._4H, RaisePartner(jump: 2), DummyMaximum),
-				Nonforcing(Bid._4S, RaisePartner(jump: 2), DummyMaximum),
+				Shows(Bid._2H, RaisePartner(), DummyMinimum),
+				Shows(Bid._2S, RaisePartner(), DummyMinimum),
+				Shows(Bid._3H, RaisePartner(jump: 1), DummyMedium),
+				Shows(Bid._3S, RaisePartner(jump: 1), DummyMedium),
+                Shows(Bid._4H, RaisePartner(jump: 2), DummyMaximum),
+				Shows(Bid._4S, RaisePartner(jump: 2), DummyMaximum),
 
 				// TODO: There is the possibility that slam will push us beyond
 				// "maximum" - need to handle in Blackwood...
 
 				// We can't raise partner's suit.  
 				// TODO: Here is where welsh bidding would happen...  1NT or 2NT
-				Nonforcing(Bid._1H, Shape(4, 6)),
-				Nonforcing(Bid._1S, Shape(4, 6)),
+				Shows(Bid._1H, Shape(4, 6)),
+				Shows(Bid._1S, Shape(4, 6)),
 
 				// TODO: These need to be lower priority...
-				Nonforcing(Bid._2D, RaisePartner(), Minimum),
-				Nonforcing(Bid._3D, RaisePartner(jump: 1), Medium),
+				Shows(Bid._2D, RaisePartner(), Minimum),
+				Shows(Bid._3D, RaisePartner(jump: 1), Medium),
 
 				// If we have a 19 point balanced hand then better to show this with a rebid of 2NT
 				// than a forcing jump shift or reverse.
-				Nonforcing(Bid._2NT, Balanced, Points(Rebid2NT)),
+				Shows(Bid._2NT, Balanced, Points(Rebid2NT)),
 
 				// With a big hand we need to make a forcing bid.  Reverse if possible.
 				Forcing(Bid._2D, Reverse, MediumOrBetter),
@@ -52,101 +48,102 @@ namespace BridgeBidding
 		//		Forcing(3, Strain.Spades, NonJump, Reverse(), Maximum),
 
 				// TODO: What about minors.  This is bad. Think we want to fall through to 3NT...
-                //Nonforcing(4, Strain.Clubs, DefaultPriority + 10, Fit(), ShowsTrump, Points(MediumOpener)),
-                //Nonforcing(4, Strain.Diamonds, DefaultPriority + 10, Fit(), ShowsTrump, Points(MediumOpener)),
+                //Shows(4, Strain.Clubs, DefaultPriority + 10, Fit(), ShowsTrump, Points(MediumOpener)),
+                //Shows(4, Strain.Diamonds, DefaultPriority + 10, Fit(), ShowsTrump, Points(MediumOpener)),
 
 				// Show a new suit at an appropriate level...
-	//			Nonforcing(Bid._2C, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
-    //            Nonforcing(Bid._2C, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
-                Nonforcing(Bid._2H, NewSuit, NotReverse, NotBalanced, Minimum, Shape(4, 6)),
-                Nonforcing(Bid._2C, NewSuit, NotBalanced, CantJumpShift, Shape(4, 6)),
-                Nonforcing(Bid._2D, NewSuit, NotReverse, NotBalanced, CantJumpShift, Shape(4, 6)),
+	//			Shows(Bid._2C, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
+    //            Shows(Bid._2C, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
+                Shows(Bid._2H, IsNewSuit, IsNotReverse, NotBalanced, Minimum, Shape(4, 6)),
+                Shows(Bid._2C, IsNewSuit, NotBalanced, CantJumpShift, Shape(4, 6)),
+                Shows(Bid._2D, IsNewSuit, IsNotReverse, NotBalanced, CantJumpShift, Shape(4, 6)),
         
 				// Rebid a 6 card suit
-				Nonforcing(Bid._2C, Rebid, Shape(6, 11), Minimum),
-				Nonforcing(Bid._2D, Rebid, Shape(6, 11), Minimum),
-				Nonforcing(Bid._2H, Rebid, Shape(6, 11), Minimum),
-				Nonforcing(Bid._2S, Rebid, Shape(6, 11), Minimum),
+				Shows(Bid._2C, IsRebid, Shape(6, 11), Minimum),
+				Shows(Bid._2D, IsRebid, Shape(6, 11), Minimum),
+				Shows(Bid._2H, IsRebid, Shape(6, 11), Minimum),
+				Shows(Bid._2S, IsRebid, Shape(6, 11), Minimum),
 
-				Nonforcing(Bid._3C, Rebid, Shape(6, 11), Medium),
-				Nonforcing(Bid._3D, Rebid, Shape(6, 11), Medium),
-				Nonforcing(Bid._3H, Rebid, Shape(6, 11), Medium),
-				Nonforcing(Bid._3S, Rebid, Shape(6, 11), Medium),
+				Shows(Bid._3C, IsRebid, Shape(6, 11), Medium),
+				Shows(Bid._3D, IsRebid, Shape(6, 11), Medium),
+				Shows(Bid._3H, IsRebid, Shape(6, 11), Medium),
+				Shows(Bid._3S, IsRebid, Shape(6, 11), Medium),
 
 	
 
-				Nonforcing(Bid._2H, LastBid(Bid._1S), Shape(4, 6), Points(LessThanJumpShift)),
-				Nonforcing(Bid._3H, LastBid(Bid._1S), Shape(4, 5), Points(JumpShift)),
+				Shows(Bid._2H, IsLastBid(Bid._1S), Shape(4, 6), Points(LessThanJumpShift)),
+				Shows(Bid._3H, IsLastBid(Bid._1S), Shape(4, 5), Points(JumpShift)),
 
 				// TODO: Need to jump-shift only if this is the 2nd longest suit.  Perhaps this is good enough.  
-				Forcing(Bid._2H, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._2S, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3C, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3D, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3H, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3S, SingleJump, NewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._2H, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._2S, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3C, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3D, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3H, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
+				Forcing(Bid._3S, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
 
 				// We have tried every possible way to show a strong hand by reversing or jump shifting.  If we get here
 				// and have not found a bid but we are very strong then we just need to bid 3 or 4 of our suit.
-				Nonforcing(Bid._4H, Rebid, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
-				Nonforcing(Bid._3H, Rebid, Shape(6, 11), Points(JumpShift)),
-				Nonforcing(Bid._4S, Rebid, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
-				Nonforcing(Bid._3S, Rebid, Shape(6, 11), Points(JumpShift)),
+				Shows(Bid._4H, IsRebid, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
+				Shows(Bid._3H, IsRebid, Shape(6, 11), Points(JumpShift)),
+				Shows(Bid._4S, IsRebid, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
+				Shows(Bid._3S, IsRebid, Shape(6, 11), Points(JumpShift)),
 				// TODO: Need to implement minors here too.  Long, strong minors need a backup if no reverse available.
 				// 
 
 				// TODO: Need to implement 3NT bid if long running minor.  Suits stopped????
 
 				// Lowest priority if nothing else fits is bid NT
-				Nonforcing(Bid._1NT, Balanced, Points(Rebid1NT))
+				Shows(Bid._1NT, Balanced, Points(Rebid1NT))
             );
 		// REMOVED THIS CRUTCH ---	choices.AddRules(Compete.CompBids(ps));
 			return choices;
 		}
 
-		private static PositionCalls TwoOverOneRebid(PositionState ps)
+		public static PositionCalls TwoOverOne(PositionState ps)
 		{
 			var choices = new PositionCalls(ps);
 			var partnerSuit = (Suit)ps.Partner.Bid.Suit;
 			choices.AddRules(
 				// TODO: Need better responses for 2nd bid. PartnerBids(RespondBid2.SecondBid2Over1),
-				Forcing(new Bid(3, partnerSuit), Fit(), ShowsTrump),
+				Forcing(new Bid(3, partnerSuit), Fit()),
 
 				Forcing(Bid._2NT, Balanced),
 
-				Forcing(Bid._2D, Shape(6, 10), LongestSuit),
-				Forcing(Bid._2H, Shape(6, 10), LongestSuit),
-				Forcing(Bid._2S, Shape(6, 10), LongestSuit),
-				Forcing(Bid._3C, Shape(6, 10), LongestSuit),
+				Forcing(Bid._2D, IsRebid, Shape(6, 10), LongestSuit),
+				Forcing(Bid._2H, IsRebid, Shape(6, 10), LongestSuit),
+				Forcing(Bid._2S, IsRebid, Shape(6, 10), LongestSuit),
+				Forcing(Bid._3C, IsRebid, Shape(6, 10), LongestSuit),
 
-				Forcing(Bid._2D, NewSuit, Shape(4, 6)),
-				Forcing(Bid._2H, NewSuit, Shape(4, 6)),
-				Forcing(Bid._2S, NewSuit, Shape(4, 6)),
-				Forcing(Bid._3C, NewSuit, Shape(4, 6)),
-				Forcing(Bid._3D, NewSuit, Shape(4, 6))
+				Forcing(Bid._2D, IsNewSuit, Shape(4, 6)),
+				Forcing(Bid._2H, IsNewSuit, Shape(4, 6)),
+				Forcing(Bid._2S, IsNewSuit, Shape(4, 6)),
+				Forcing(Bid._3C, IsNewSuit, Shape(4, 6)),
+				Forcing(Bid._3D, IsNewSuit, Shape(4, 6))
 			);
 			return choices;
 		}
 
-		public static IEnumerable<CallFeature> ResponderPassedInCompetition(PositionState ps)
+		public static PositionCalls ResponderPassedInCompetition(PositionState ps)
 		{
-			return new CallFeature[]
-			{
+			var choices = new PositionCalls(ps);
+			choices.AddRules(
 				// TODO: This is way not finished.  Also I think that perhaps min-medium
 				// would just rebid at the cheapest level??? Competition...
 				// Rebid a 6 card suit
-				Nonforcing(Bid._2C, Rebid, Shape(6, 11), Minimum),
-				Nonforcing(Bid._2D, Rebid, Shape(6, 11), Minimum),
-				Nonforcing(Bid._2H, Rebid, Shape(6, 11), Minimum),
-				Nonforcing(Bid._2S, Rebid, Shape(6, 11), Minimum),
+				Shows(Bid._2C, IsRebid, Shape(6, 11), Minimum),
+				Shows(Bid._2D, IsRebid, Shape(6, 11), Minimum),
+				Shows(Bid._2H, IsRebid, Shape(6, 11), Minimum),
+				Shows(Bid._2S, IsRebid, Shape(6, 11), Minimum),
 
-				Nonforcing(Bid._3C, Rebid, Shape(6, 11), MediumOrBetter),
-				Nonforcing(Bid._3D, Rebid, Shape(6, 11), MediumOrBetter),
-				Nonforcing(Bid._3H, Rebid, Shape(6, 11), MediumOrBetter),
-				Nonforcing(Bid._3S, Rebid, Shape(6, 11), MediumOrBetter),
+				Shows(Bid._3C, IsRebid, Shape(6, 11), MediumOrBetter),
+				Shows(Bid._3D, IsRebid, Shape(6, 11), MediumOrBetter),
+				Shows(Bid._3H, IsRebid, Shape(6, 11), MediumOrBetter),
+				Shows(Bid._3S, IsRebid, Shape(6, 11), MediumOrBetter),
 
-				Nonforcing(Call.Pass)
-			};
+				Shows(Call.Pass)
+			);
+			return choices;
 		}
 
 
@@ -156,18 +153,18 @@ namespace BridgeBidding
 			// TODO: Check for interferrence...  Bid or X.
 			var choices = new PositionCalls(ps);
 			choices.AddRules(
-				Signoff(Call.Pass, Balanced, Points(12, 13)),
+				Shows(Call.Pass, Balanced, Points(12, 13)),
 
-				Nonforcing(Bid._2NT, Balanced, Points(Rebid2NT)),
+				Shows(Bid._2NT, Balanced, Points(Rebid2NT)),
 
-				Nonforcing(Bid._2C, NewSuit, Shape(4, 6), Points(12, 16)),
-				Nonforcing(Bid._2D, NewSuit, Shape(4, 6), Points(12, 16)),
-				Nonforcing(Bid._2H, NewSuit, Shape(4, 6), Points(12, 16)),
+				Shows(Bid._2C, IsNewSuit, Shape(4, 6), Points(12, 16)),
+				Shows(Bid._2D, IsNewSuit, Shape(4, 6), Points(12, 16)),
+				Shows(Bid._2H, IsNewSuit, Shape(4, 6), Points(12, 16)),
 
-				Nonforcing(Bid._2C, Rebid, Shape(6, 11), Points(12, 16)),
-				Nonforcing(Bid._2D, Rebid, Shape(6, 11), Points(12, 16)),
-				Nonforcing(Bid._2H, Rebid, Shape(6, 11), Points(12, 16)),
-				Nonforcing(Bid._2S, Rebid, Shape(6, 11), Points(12, 16))
+				Shows(Bid._2C, IsRebid, Shape(6, 11), Points(12, 16)),
+				Shows(Bid._2D, IsRebid, Shape(6, 11), Points(12, 16)),
+				Shows(Bid._2H, IsRebid, Shape(6, 11), Points(12, 16)),
+				Shows(Bid._2S, IsRebid, Shape(6, 11), Points(12, 16))
 
 			);
 			return choices;
@@ -200,33 +197,34 @@ namespace BridgeBidding
 			return ps.PairState.BiddingSystem.GetPositionCalls(ps);
 		}
 
-		public static IEnumerable<CallFeature> ResponderRaisedMinor(PositionState ps)
+		public static PositionCalls ResponderRaisedMinor(PositionState ps)
 		{
 			// TODO: More to do here...
-			return Compete.CompBids(ps);
+			var choices = new PositionCalls(ps);
+			choices.AddRules(Compete.CompBids(ps));
+			return choices;
 		}
 
-		public static IEnumerable<CallFeature> ResponderRaisedMajor(PositionState ps)
+		public static PositionCalls ResponderRaisedMajor(PositionState ps)
 		{
-			// TODO: Help suit raises?
-			var bids = new List<CallFeature>()
-			{
+			var choices = new PositionCalls(ps);
+			choices.AddRules(Blackwood.InitiateConvention);
+			choices.AddRules(
 				// TODO: These are not reall game invitations...
 				PartnerBids(Bid._3H, RespondBid2.OpenerInvitedGame),
 				PartnerBids(Bid._3S, RespondBid2.OpenerInvitedGame),
 
 				// TODO: Game invitation shoudl always be help suit...  At least if that convention
 				// is in use.  
-				Nonforcing(Bid._3H, Fit(), ShowsTrump, PairPoints(PairGameInvite)),
-				Nonforcing(Bid._3S, Fit(), ShowsTrump, PairPoints(PairGameInvite)),
+				Rule(Bid._3H, Fit(), PairPoints(PairGameInvite)),
+				Rule(Bid._3S, Fit(), PairPoints(PairGameInvite)),
 
-                Nonforcing(Bid._4H, Fit(), ShowsTrump, PairPoints(PairGame)),
-				Nonforcing(Bid._4S, Fit(), ShowsTrump, PairPoints(PairGame)),
-
-            };
+                Rule(Bid._4H, Fit(), PairPoints(PairGame)),
+				Rule(Bid._4S, Fit(), PairPoints(PairGame))
+			);
 			// Competative bids include Blackwood...
-			bids.AddRange(Compete.CompBids(ps));
-			return bids;
+
+			return choices;
 		}
 	
 

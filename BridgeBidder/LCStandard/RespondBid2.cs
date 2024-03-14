@@ -18,35 +18,35 @@ namespace BridgeBidding
                 PartnerBids(OpenBid3.ThirdBid),
 
                 // Opener could have bid 1S.  Support at the right level...
-                Nonforcing(Bid._2S, RaisePartner(), Points(MinimumHand)),
-                Nonforcing(Bid._3S, RaisePartner(jump: 1), Points(MediumHand)),
-                Signoff(Bid._4S, RaisePartner(jump: 1), Points(RaiseTo4M)),
+                Shows(Bid._2S, RaisePartner(), Points(MinimumHand)),
+                Shows(Bid._3S, RaisePartner(jump: 1), Points(MediumHand)),
+                Shows(Bid._4S, RaisePartner(jump: 1), Points(RaiseTo4M)),
 
-                Nonforcing(Bid._2C, Rebid, Shape(6, 11), Points(MinimumHand)),
-                Nonforcing(Bid._2D, Rebid, Shape(6, 11), Points(MinimumHand)),
-                Nonforcing(Bid._2H, Rebid, Shape(6, 11), Points(MinimumHand)),
-                Nonforcing(Bid._2S, Rebid, Shape(6, 11), Points(MinimumHand)),
+                Shows(Bid._2C, IsRebid, Shape(6, 11), Points(MinimumHand)),
+                Shows(Bid._2D, IsRebid, Shape(6, 11), Points(MinimumHand)),
+                Shows(Bid._2H, IsRebid, Shape(6, 11), Points(MinimumHand)),
+                Shows(Bid._2S, IsRebid, Shape(6, 11), Points(MinimumHand)),
 
 
 				// TODO: Make these dependent on pair points.
-                Invitational(Bid._3C, Rebid, Shape(6, 11), Points(MediumHand)),
-                Invitational(Bid._3D, Rebid, Shape(6, 11), Points(MediumHand)),
-                Invitational(Bid._3H, Rebid, Shape(6, 11), Points(MediumHand)),
-                Invitational(Bid._3S, Rebid, Shape(6, 11), Points(MediumHand)),
+                Shows(Bid._3C, IsRebid, Shape(6, 11), Points(MediumHand)),
+                Shows(Bid._3D, IsRebid, Shape(6, 11), Points(MediumHand)),
+                Shows(Bid._3H, IsRebid, Shape(6, 11), Points(MediumHand)),
+                Shows(Bid._3S, IsRebid, Shape(6, 11), Points(MediumHand)),
 
 
-                Nonforcing(Bid._1NT, Points(MinimumHand)),
+                Shows(Bid._1NT, Points(MinimumHand)),
                 
-             /// TODO: MORE PASSING MORE OFTEN...   Signoff(Call.Pass, Points(MinimumHand), ForcedToBid(false), )
-                Signoff(Bid._2C, Fit(), NotRebid, ForcedToBid, Points(MinimumHand), ShowsTrump),
-                Signoff(Bid._2D, Fit(), NotRebid, ForcedToBid, Points(MinimumHand), ShowsTrump),
-                Signoff(Bid._2H, Fit(), NotRebid, ForcedToBid, Points(MinimumHand), ShowsTrump),
-                Signoff(Bid._2S, Fit(), NotRebid, ForcedToBid, Points(MinimumHand), ShowsTrump),
+             /// TODO: MORE PASSING MORE OFTEN...   Shows(Call.Pass, Points(MinimumHand), ForcedToBid(false), )
+                Shows(Bid._2C, Fit(), IsNotRebid, ForcedToBid, Points(MinimumHand)),
+                Shows(Bid._2D, Fit(), IsNotRebid, ForcedToBid, Points(MinimumHand)),
+                Shows(Bid._2H, Fit(), IsNotRebid, ForcedToBid, Points(MinimumHand)),
+                Shows(Bid._2S, Fit(), IsNotRebid, ForcedToBid, Points(MinimumHand)),
 
-                Signoff(Bid._3C, Fit(), NotRebid, NonJump, ForcedToBid, Points(MinimumHand), ShowsTrump),
-                Signoff(Bid._3D, Fit(), NotRebid, NonJump, ForcedToBid, Points(MinimumHand), ShowsTrump),
-                Signoff(Bid._3H, Fit(), NotRebid, NonJump, ForcedToBid, Points(MinimumHand), ShowsTrump),
-                Signoff(Bid._3S, Fit(), NotRebid, NonJump, ForcedToBid, Points(MinimumHand), ShowsTrump)
+                Shows(Bid._3C, Fit(), IsNotRebid, IsNonJump, ForcedToBid, Points(MinimumHand)),
+                Shows(Bid._3D, Fit(), IsNotRebid, IsNonJump, ForcedToBid, Points(MinimumHand)),
+                Shows(Bid._3H, Fit(), IsNotRebid, IsNonJump, ForcedToBid, Points(MinimumHand)),
+                Shows(Bid._3S, Fit(), IsNotRebid, IsNonJump, ForcedToBid, Points(MinimumHand))
 
 
             };
@@ -58,9 +58,9 @@ namespace BridgeBidding
         {
             var bids = new List<CallFeature>()
             {
-                Signoff(Bid._4H, Fit(), PairPoints(PairGame)),
-                Signoff(Bid._4S, Fit(), PairPoints(PairGame)),
-                Signoff(Call.Pass)
+                Shows(Bid._4H, Fit(), PairPoints(PairGame)),
+                Shows(Bid._4S, Fit(), PairPoints(PairGame)),
+                Shows(Call.Pass)
             };
             // TODO: Competative bids here too?  Seems silly since restricted raise
             return bids;

@@ -90,12 +90,13 @@ namespace BridgeBidding
             CallerSourceLineNumber = sourceLineNumber;
         }
 
-        public void AddRules(CallFeaturesFactory factory)
+        public PositionCalls AddRules(CallFeaturesFactory factory)
         {
-            AddRules(factory(PositionState));
+            return AddRules(factory(PositionState));
         }
 
-        public void AddRules(IEnumerable<CallFeature> rules)
+        // This function returns "this" so that it can be used as return new PositionCalls(ps).AddRules(...)
+        public PositionCalls AddRules(IEnumerable<CallFeature> rules)
         {
             var group = CallGroup.Create(this, rules);
             foreach (var c in group)
@@ -106,22 +107,23 @@ namespace BridgeBidding
             {
                 BestCall = group.BestCall;
             }
+            return this;
         }
 
-        public void AddRules(params CallFeature[] rules)
+        public PositionCalls AddRules(params CallFeature[] rules)
         {
-            AddRules(rules.AsEnumerable());
+            return AddRules(rules.AsEnumerable());
         }
 
         // Method for adding a stand-alone pass rule.
-        public void AddPassRule(params Constraint[] constraints)
+        public PositionCalls AddPassRule(params Constraint[] constraints)
         {
-            AddRules(new CallFeature[] { Bidder.Nonforcing(Call.Pass, constraints) });
+            return AddRules(new CallFeature[] { Bidder.Shows(Call.Pass, constraints) });
         }
 
         public void CreatePlaceholderCall(Call call)
         {
-            AddRules(new CallFeature[] { Bidder.Nonforcing(call) });
+            AddRules(new CallFeature[] { Bidder.Shows(call) });
         }
 
 

@@ -22,7 +22,7 @@ namespace BridgeBidding
 			{
                 // TODO: Systems on/off through here --- just like 1NT.....
                 PartnerBids(Bid._3NT, Respond),
-				Nonforcing(Bid._3NT, OpenPoints, Balanced)
+				Shows(Bid._3NT, OpenPoints, Balanced)
 			};
 		}
 
@@ -52,10 +52,10 @@ namespace BridgeBidding
 			return new CallFeature[]
 			{
 			     // TODO: Perhaps bid BestSuit() of all the signoff suits... 
-             	Signoff(Bid._4H, NTB.RespondNoSlam, Shape(5, 11)),
-				Signoff(Bid._4S, NTB.RespondNoSlam, Shape(5, 11)),
+             	Shows(Bid._4H, NTB.RespondNoSlam, Shape(5, 11)),
+				Shows(Bid._4S, NTB.RespondNoSlam, Shape(5, 11)),
 
-				Signoff(Bid.Pass, NTB.RespondNoSlam),
+				Shows(Bid.Pass, NTB.RespondNoSlam),
 			};
 		}
 	}

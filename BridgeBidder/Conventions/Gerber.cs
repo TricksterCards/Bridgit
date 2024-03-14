@@ -43,9 +43,9 @@ namespace BridgeBidding
 			// TODO: Need to ask about kings..... 
 			return new CallFeature[]
 			{
-				Signoff(Bid._7NT, PairPoints(GrandSlam), PairAces(4)),
-				Signoff(Bid._6NT, PairAces(3, 4)),
-				Signoff(Bid._4NT, PairAces(0, 1, 2))
+				Shows(Bid._7NT, PairPoints(GrandSlam), PairAces(4)),
+				Shows(Bid._6NT, PairAces(3, 4)),
+				Shows(Bid._4NT, PairAces(0, 1, 2))
 			};
 		}
 

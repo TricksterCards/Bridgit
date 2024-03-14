@@ -16,7 +16,7 @@ namespace BridgeBidding
 
         public PositionState PositionState => PositionCalls.PositionState;
 
-        public PartnerCalls PartnerCalls  { get; private set; }
+        public CallProperties PartnerCalls  { get; private set; }
         public List<CallAnnotation> Annotations { get; }
         public CallDetails BestCall = null;
 
@@ -36,16 +36,41 @@ namespace BridgeBidding
             Annotations = new List<CallAnnotation>();
         }
        
-        // Add only calls that are not already defined in the PositionCalls
         private void AddRules(IEnumerable<CallFeature> features)
+        {
+            RecurseAddRules(features);
+            var calls = Keys.ToList();  // We are going to modify keys inside the loop so initialize enumerator ourside of loop
+            foreach (var call in calls)
+            {
+                if (!this[call].HasRules)
+                {
+                    Debug.Assert(BestCall == null || !call.Equals(BestCall.Call));
+                    this.Remove(call);
+                }
+                else
+                {
+                    this[call].Annotations.AddRange(this.Annotations);
+                }
+            }
+        }
+
+        // Add only calls that are not already defined in the PositionCalls
+        private void RecurseAddRules(IEnumerable<CallFeature> features)
         {
             foreach (var feature in features)
             {
-                if (feature.Call == null)
+                if (feature is CallFeatureGroup group)
+                {
+                    if (group.SatisifiesStaticConstraints(PositionState))
+                    {
+                        RecurseAddRules(group.Features);
+                    }
+                }
+                else if (feature.Call == null)
                 {
                     if (feature.SatisifiesStaticConstraints(PositionState))
                     {
-                        if (feature is PartnerCalls partnerCalls)
+                        if (feature is CallProperties partnerCalls)
                         {
                             Debug.Assert(PartnerCalls == null);
                             PartnerCalls = partnerCalls;
@@ -87,25 +112,7 @@ namespace BridgeBidding
                     }
                 }
             }
-            var calls = Keys.ToList();  // We are going to modify keys inside the loop so initialize enumerator ourside of loop
-            foreach (var call in calls)
-            {
-                if (!this[call].HasRules)
-                {
-                    Debug.Assert(BestCall == null || !call.Equals(BestCall.Call));
-                    this.Remove(call);
-                }
-                else
-                {
-                    // Add any group annotations to every call
-                    this[call].Annotations.AddRange(this.Annotations);
-                    // TODO: This debug code is slow but necessary for finding bugs.
-                    // Perhaps put it under IFDEF DEBUG or something
-        // TODO: Put this validation in!!!            this[call].Validate();
-                }
-            }
+
         }
-
-
     }
 }

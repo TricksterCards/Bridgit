@@ -131,13 +131,9 @@ namespace BridgeBidding
 		{
 			get
 			{		
-				return ((PairState.Agreements.ForcingToGame || 
-						(Partner._bids.Count > 0 &&
-						Partner._bids.Last().BidForce == BidForce.Forcing1Round)) &&
-						!RightHandOpponent._bids.Last().Equals(Call.Pass));
-	
+				// TODO: This only returns true IFF we have to bid because of a forcing 1 round bid. NOT is we are forced to game.
+				return (PairState.Agreements.IsForcedToBid(this) && !RightHandOpponent._bids.Last().Equals(Call.Pass));
 			}
-		
 		}
 		
 		public PositionCalls GetPositionCalls()
@@ -173,7 +169,7 @@ namespace BridgeBidding
 			// TODO: Should this happen here?  
 			//var showAgreements = new PairAgreements.ShowState(PairState.Agreements);
 			//showAgreements.Combine(callDetails.ShowAgreements(), State.CombineRule.Merge);
-			PairState.Agreements = callDetails.ShowAgreements();
+			// TODO:  NEED TO SHOW AGREEMENTS!!! PairState.Agreements = callDetails.ShowAgreements();
 
 		///	if (callDetails.BidForce == BidForce.ForcingToGame)
 		//	{

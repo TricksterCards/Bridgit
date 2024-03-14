@@ -28,58 +28,58 @@ namespace BridgeBidding
 
                                         // Weak jumps to game are highter priority than simple raises.
                     // Fill this out better but for now just go on law of total trump, jumping if weak.  
-                    Nonforcing(Bid._4C, Jump(1, 2), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump),
-                    Nonforcing(Bid._4D, Break(true, "4D Weak"), Jump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump),
-                    Nonforcing(Bid._4H, Jump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump),
-                    Nonforcing(Bid._4S, Jump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise), ShowsTrump),
+                    Shows(Bid._4C, IsJump(1, 2), Fit(10), DummyPoints(WeakJumpRaise)),
+                    Shows(Bid._4D, IsJump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise)),
+                    Shows(Bid._4H, IsJump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise)),
+                    Shows(Bid._4S, IsJump(1, 2, 3), Fit(10), DummyPoints(WeakJumpRaise)),
 
 
                     // If we have support for partner
-                    Nonforcing(Bid._2D, RaisePartner(), DummyPoints(Raise), ShowsTrump),
-                    Nonforcing(Bid._2H, RaisePartner(), DummyPoints(Raise), ShowsTrump),
-                    Nonforcing(Bid._2S, RaisePartner(), DummyPoints(Raise), ShowsTrump),
+                    Shows(Bid._2D, RaisePartner(), DummyPoints(Raise)),
+                    Shows(Bid._2H, RaisePartner(), DummyPoints(Raise)),
+                    Shows(Bid._2S, RaisePartner(), DummyPoints(Raise)),
 
 
-                    Nonforcing(Bid._1H, Points(AdvanceNewSuit1Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._1H, Points(AdvanceNewSuit1Level), Shape(6, 11)),
+                    Shows(Bid._1H, Points(AdvanceNewSuit1Level), Shape(5), GoodPlusSuit),
+                    Shows(Bid._1H, Points(AdvanceNewSuit1Level), Shape(6, 11)),
 
-                    Nonforcing(Bid._1S, Points(AdvanceNewSuit1Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._1S, Points(AdvanceNewSuit1Level), Shape(6, 11)),
+                    Shows(Bid._1S, Points(AdvanceNewSuit1Level), Shape(5), GoodPlusSuit),
+                    Shows(Bid._1S, Points(AdvanceNewSuit1Level), Shape(6, 11)),
 
                
                     // TODO: Should these be prioirty - 5 - support should be higher priorty.  Seems reasonable
-                    Nonforcing(Bid._2C, NewSuit, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2C, NewSuit, Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid._2D, NewSuit, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2D, NewSuit, Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid._2H, NewSuit, NonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2H, NewSuit, NonJump, Points(NewSuit2Level), Shape(6, 11)),
-                    Nonforcing(Bid._2S, NewSuit, NonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
-                    Nonforcing(Bid._2S, NewSuit, NonJump, Points(NewSuit2Level), Shape(6, 11)),
+                    Shows(Bid._2C, IsNewSuit, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Shows(Bid._2C, IsNewSuit, Points(NewSuit2Level), Shape(6, 11)),
+                    Shows(Bid._2D, IsNewSuit, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Shows(Bid._2D, IsNewSuit, Points(NewSuit2Level), Shape(6, 11)),
+                    Shows(Bid._2H, IsNewSuit, IsNonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Shows(Bid._2H, IsNewSuit, IsNonJump, Points(NewSuit2Level), Shape(6, 11)),
+                    Shows(Bid._2S, IsNewSuit, IsNonJump, Points(NewSuit2Level), Shape(5), GoodPlusSuit),
+                    Shows(Bid._2S, IsNewSuit, IsNonJump, Points(NewSuit2Level), Shape(6, 11)),
 
 
 
                     // TODO: Make a special CallFeature here to handle rebid after cuebid...
-                    Forcing(Bid._2C, CueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
-                    Forcing(Bid._2D, CueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
-                    Forcing(Bid._2H, CueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
-                    Forcing(Bid._2S, CueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid), ShowsTrumpSuit(partnerSuit)),
+                    Forcing(Bid._2C, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
+                    Forcing(Bid._2D, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
+                    Forcing(Bid._2H, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
+                    Forcing(Bid._2S, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
 
  
 
-                    Nonforcing(Bid._3C, SingleJump, Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
-                    Nonforcing(Bid._3D, SingleJump, Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
-                    Nonforcing(Bid._3H, SingleJump, Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
-                    Nonforcing(Bid._3S, SingleJump, Fit(9), DummyPoints(WeakJumpRaise), ShowsTrump),
+                    Shows(Bid._3C, IsSingleJump, Fit(9), DummyPoints(WeakJumpRaise)),
+                    Shows(Bid._3D, IsSingleJump, Fit(9), DummyPoints(WeakJumpRaise)),
+                    Shows(Bid._3H, IsSingleJump, Fit(9), DummyPoints(WeakJumpRaise)),
+                    Shows(Bid._3S, IsSingleJump, Fit(9), DummyPoints(WeakJumpRaise)),
 
 
                     // Need to differentiate between weak and strong overcalls and advance properly.
                     // Perhaps depend more on PairPoints(). 
 
                     // Lowest priority is to bid some level of NT - all fit() bids should be higher priority.
-                    Nonforcing(Bid._1NT, OppsStopped(), Points(AdvanceTo1NT)),
-                    Nonforcing(Bid._2NT, OppsStopped(), PairPoints(PairAdvanceTo2NT)),
-					Nonforcing(Bid._3NT, OppsStopped(), PairPoints(PairAdvanceTo3NT))
+                    Shows(Bid._1NT, OppsStopped(), Points(AdvanceTo1NT)),
+                    Shows(Bid._2NT, OppsStopped(), PairPoints(PairAdvanceTo2NT)),
+					Shows(Bid._3NT, OppsStopped(), PairPoints(PairAdvanceTo3NT))
 
 
                     // TODO: Any specification of PASS?>>
@@ -101,12 +101,12 @@ namespace BridgeBidding
         {
             return new CallFeature[] { 
                 // TODO: ONly bid these if they are necessary.  Minors don't need to go the 4-level unless forced there...
-                Signoff(Bid._4C, Fit(), PairPoints((26, 28)), ShowsTrump),
-                Signoff(Bid._4D, Fit(), PairPoints((26, 28)), ShowsTrump),
-                Signoff(Bid._4H, Fit(), PairPoints((26, 31)), ShowsTrump),
-                Signoff(Bid._4S, Fit(), PairPoints((26, 31)), ShowsTrump),
+                Shows(Bid._4C, Fit(), PairPoints((26, 28))),
+                Shows(Bid._4D, Fit(), PairPoints((26, 28))),
+                Shows(Bid._4H, Fit(), PairPoints((26, 31))),
+                Shows(Bid._4S, Fit(), PairPoints((26, 31))),
 
-                Signoff(Call.Pass),
+                Shows(Call.Pass),
             };
         }
 
