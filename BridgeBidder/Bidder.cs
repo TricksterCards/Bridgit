@@ -46,7 +46,7 @@ namespace BridgeBidding
 
 		public static CallFeature Forcing(Call call, params Constraint[] constraints)
 		{
-			return Rule(call, constraints);
+			return Shows(call, constraints);
 		}
 
 
@@ -55,7 +55,7 @@ namespace BridgeBidding
 
 
 
-		public static BidRule Rule(Call call, params Constraint[] constraints)
+		public static BidRule Shows(Call call, params Constraint[] constraints)
 		{
 			return new BidRule(call, constraints);
 		}
@@ -83,8 +83,8 @@ namespace BridgeBidding
 				 	string alert = null, string announce = null, string convention = null, 
 					StaticConstraint onlyIf = null)
 		{
-			var group = new CallFeatureGroup(onlyIf);
-			group.Features.Add(new CallProperties(call, partnerBids, forcing1Round, forcingToGame));
+			var group = new CallFeatureGroup();
+			group.Features.Add(new CallProperties(call, partnerBids, forcing1Round, forcingToGame, onlyIf));
 			if (alert != null)
 			{
 				group.Features.Add(Alert(call, alert, onlyIf));
@@ -104,7 +104,7 @@ namespace BridgeBidding
 				    string alert = null, string announce = null, string convention = null, 
 					StaticConstraint onlyIf = null)
 		{
-			var group = new CallFeatureGroup(null, onlyIf);
+			var group = new CallFeatureGroup();
 			foreach (Call call in calls)
 			{
 				group.Features.Add(Properties(call, partnerBids, forcing1Round, forcingToGame, alert, announce, convention, onlyIf));
@@ -112,10 +112,6 @@ namespace BridgeBidding
 			return group;			
 		}
 
-		public static CallFeature Shows(Call call, params Constraint[] constraints)
-		{
-			return Rule(call, constraints);
-		}
 
 		// ************************************************************ STATIC CONSTRAINTS ***
 
@@ -189,10 +185,10 @@ namespace BridgeBidding
 
 	
 		// The static constaint "IsReverseBid" simply checks if the call is a reverse bid.  The IsReverse also shows the shape of the reverse bid.
-		private static StaticConstraint IsReverseBid = new SimpleStaticConstraint((call, ps) => ps.IsReverse(call), description: "reverse");
-		public static Constraint Reverse = And(IsReverseBid, new ShowsReverseShape());
+		public static StaticConstraint IsReverseBid = new SimpleStaticConstraint((call, ps) => ps.IsReverse(call), description: "reverse");
+	
 		public static StaticConstraint IsNotReverse = Not(IsReverseBid);
-		public static StaticConstraint ForcedToBid = new SimpleStaticConstraint((call, ps) => ps.ForcedToBid);
+		public static StaticConstraint IsForcedToBid = new SimpleStaticConstraint((call, ps) => ps.ForcedToBid);
 
 
 		public static StaticConstraint Not(StaticConstraint c)
@@ -218,7 +214,7 @@ namespace BridgeBidding
 			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.Contract.PassEndsAuction, description: "pass ends auction");
 		}
 
-		public static StaticConstraint BidAvailable(int level, Suit suit)
+		public static StaticConstraint IsBidAvailable(int level, Suit suit)
 		{ 
 			return new SimpleStaticConstraint((call, ps) => ps.IsValidNextCall(new Bid(level, suit)));
 	 	}
@@ -226,24 +222,19 @@ namespace BridgeBidding
 		public static readonly StaticConstraint IsOppsContract = new SimpleStaticConstraint((call, ps) => ps.IsOpponentsContract, description: "opps contract"); 
 	
 
-
-		public static StaticConstraint IsAgreedStrain = new AgreedStrain();
-		public static StaticConstraint AgreedStrain(params Strain[] strains)
-		{
-			return new AgreedStrain(strains);
-		}
-
 		public static StaticConstraint ContractIsAgreedStrain = 
 				new SimpleStaticConstraint((call, ps) =>  
 					(ps.BiddingState.Contract.Bid is Bid contractBid &&
                     ps.BiddingState.Contract.IsOurs(ps.Direction) && 
-                    contractBid.Strain == ps.PairState.Agreements.AgreedStrain));
+                    contractBid.Suit == ps.PairState.LastShownSuit));
 
 
 		public static StaticConstraint HasShownSuit(Suit? suit = null, bool eitherPartner = false)
 		{
 			return new HasShownSuit(suit, eitherPartner);
 		}
+
+		public static readonly StaticConstraint IsJumpShift = new ConstraintGroup(IsSingleJump, IsNewSuit);
 		
 		// ************************************  DYNAMIC CONSTRAINTS ***
 		public static HandConstraint PassIn4thSeat()
@@ -320,6 +311,9 @@ namespace BridgeBidding
 		{
 			return new HasShape(null, min, max);
 		}
+
+		public static readonly HandConstraint ReverseShape = new HasReverseShape();
+
 
 		public static HandConstraint Quality(SuitQuality min, SuitQuality max) {
 			return new ShowsQuality(null, min, max);
@@ -403,9 +397,9 @@ namespace BridgeBidding
 			return (trumpSuit is Suit s) ? AgreeOnStrain(s.ToStrain()) : ShowsTrump;
 		}
 
-*/
-		public static Constraint AgreedAnySuit =  AgreedStrain(Strain.Clubs, Strain.Diamonds, Strain.Hearts, Strain.Spades);
 
+		public static Constraint AgreedAnySuit =  AgreedStrain(Strain.Clubs, Strain.Diamonds, Strain.Hearts, Strain.Spades);
+*/
 
 		public static Constraint KeyCards(Suit suit, int a, int b, bool? hasQueen = null)
 		{

@@ -21,11 +21,10 @@ namespace BridgeBidding
 
         {
             return new CallFeature[] {
-                Convention(Bid._2C, UserText.Strong),
-                PartnerBids(Bid._2C, Respond),
+                Properties(Bid._2C, Respond, forcing1Round: true, convention: UserText.Strong),
 
                 // TODO: Other reasons for 2-club opening...
-                Forcing(Bid._2C, Points(StrongOpenRange))
+                Shows(Bid._2C, Points(StrongOpenRange))
             };
     
         }
@@ -162,12 +161,12 @@ namespace BridgeBidding
 			// TODO: Perhaps gerber too???  Not sure...
 			bids.AddRange(new CallFeature[]
 			{
-				Rule(Bid._4H, IsRebid, Points(GameInHand)),
-				Rule(Bid._4S, IsRebid, Points(GameInHand)),
-                Rule(Bid._5C, IsRebid, Shape(7, 11), Points(GameInHand)),
-                Rule(Bid._5D, IsRebid, Shape(7, 11), Points(GameInHand)),
+				Shows(Bid._4H, IsRebid, Points(GameInHand)),
+				Shows(Bid._4S, IsRebid, Points(GameInHand)),
+                Shows(Bid._5C, IsRebid, Shape(7, 11), Points(GameInHand)),
+                Shows(Bid._5D, IsRebid, Shape(7, 11), Points(GameInHand)),
 
-                Rule(Bid._3NT, Points(GameInHand)),
+                Shows(Bid._3NT, Points(GameInHand)),
 
                 // Bust partner so return to or original suit...
                 Shows(Bid._3H, IsRebid),

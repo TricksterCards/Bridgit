@@ -39,17 +39,15 @@ namespace BridgeBidding
 				Shows(Bid._2NT, Balanced, Points(Rebid2NT)),
 
 				// With a big hand we need to make a forcing bid.  Reverse if possible.
-				Forcing(Bid._2D, Reverse, MediumOrBetter),
-				Forcing(Bid._2H, Reverse, MediumOrBetter),
-				Forcing(Bid._2S, Reverse, MediumOrBetter),
+				Properties(new Bid[] { Bid._2D, Bid._2H, Bid._2S }, forcing1Round: true, onlyIf: IsReverseBid),
+				Shows(Bid._2D, IsReverseBid, ReverseShape, MediumOrBetter),
+				Shows(Bid._2H, IsReverseBid, ReverseShape, MediumOrBetter),
+				Shows(Bid._2S, IsReverseBid, ReverseShape, MediumOrBetter),
 
-		//		Forcing(3, Strain.Diamonds, NonJump, Reverse(), Maximum),
-		//		Forcing(3, Strain.Hearts, NonJump, Reverse(), Maximum),
-		//		Forcing(3, Strain.Spades, NonJump, Reverse(), Maximum),
 
 				// TODO: What about minors.  This is bad. Think we want to fall through to 3NT...
-                //Shows(4, Strain.Clubs, DefaultPriority + 10, Fit(), ShowsTrump, Points(MediumOpener)),
-                //Shows(4, Strain.Diamonds, DefaultPriority + 10, Fit(), ShowsTrump, Points(MediumOpener)),
+                //Shows(4, Strain.Clubs, DefaultPriority + 10, Fit8Plus, ShowsTrump, Points(MediumOpener)),
+                //Shows(4, Strain.Diamonds, DefaultPriority + 10, Fit8Plus, ShowsTrump, Points(MediumOpener)),
 
 				// Show a new suit at an appropriate level...
 	//			Shows(Bid._2C, Balanced(false), Points(MinimumOpener), LongestUnbidSuit()),
@@ -69,25 +67,24 @@ namespace BridgeBidding
 				Shows(Bid._3H, IsRebid, Shape(6, 11), Medium),
 				Shows(Bid._3S, IsRebid, Shape(6, 11), Medium),
 
-	
-
 				Shows(Bid._2H, IsLastBid(Bid._1S), Shape(4, 6), Points(LessThanJumpShift)),
 				Shows(Bid._3H, IsLastBid(Bid._1S), Shape(4, 5), Points(JumpShift)),
 
+				Properties(new Bid[] { Bid._2H, Bid._2S, Bid._3C, Bid._3D, Bid._3H, Bid._3S }, forcingToGame: true, onlyIf: IsJumpShift),
 				// TODO: Need to jump-shift only if this is the 2nd longest suit.  Perhaps this is good enough.  
-				Forcing(Bid._2H, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._2S, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3C, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3D, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3H, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
-				Forcing(Bid._3S, IsSingleJump, IsNewSuit, Shape(4, 6), Points(JumpShift)),
+				Shows(Bid._2H, IsJumpShift, Shape(4, 6), Points(JumpShift)),
+				Shows(Bid._2S, IsJumpShift, Shape(4, 6), Points(JumpShift)),
+				Shows(Bid._3C, IsJumpShift, Shape(4, 6), Points(JumpShift)),
+				Shows(Bid._3D, IsJumpShift, Shape(4, 6), Points(JumpShift)),
+				Shows(Bid._3H, IsJumpShift, Shape(4, 6), Points(JumpShift)),
+				Shows(Bid._3S, IsJumpShift, Shape(4, 6), Points(JumpShift)),
 
 				// We have tried every possible way to show a strong hand by reversing or jump shifting.  If we get here
 				// and have not found a bid but we are very strong then we just need to bid 3 or 4 of our suit.
 				Shows(Bid._4H, IsRebid, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
-				Shows(Bid._3H, IsRebid, Shape(6, 11), Points(JumpShift)),
+				Shows(Bid._3H, IsRebid, Shape(6, 11), Points(17, 19)),
 				Shows(Bid._4S, IsRebid, ExcellentPlusSuit, Shape(7, 11), Points(20, 21)),
-				Shows(Bid._3S, IsRebid, Shape(6, 11), Points(JumpShift)),
+				Shows(Bid._3S, IsRebid, Shape(6, 11), Points(17, 19)),
 				// TODO: Need to implement minors here too.  Long, strong minors need a backup if no reverse available.
 				// 
 
@@ -106,20 +103,20 @@ namespace BridgeBidding
 			var partnerSuit = (Suit)ps.Partner.Bid.Suit;
 			choices.AddRules(
 				// TODO: Need better responses for 2nd bid. PartnerBids(RespondBid2.SecondBid2Over1),
-				Forcing(new Bid(3, partnerSuit), Fit()),
+				Shows(new Bid(3, partnerSuit), Fit8Plus),
 
-				Forcing(Bid._2NT, Balanced),
+				Shows(Bid._2NT, Balanced),
 
-				Forcing(Bid._2D, IsRebid, Shape(6, 10), LongestSuit),
-				Forcing(Bid._2H, IsRebid, Shape(6, 10), LongestSuit),
-				Forcing(Bid._2S, IsRebid, Shape(6, 10), LongestSuit),
-				Forcing(Bid._3C, IsRebid, Shape(6, 10), LongestSuit),
+				Shows(Bid._2D, IsRebid, Shape(6, 10), LongestSuit),
+				Shows(Bid._2H, IsRebid, Shape(6, 10), LongestSuit),
+				Shows(Bid._2S, IsRebid, Shape(6, 10), LongestSuit),
+				Shows(Bid._3C, IsRebid, Shape(6, 10), LongestSuit),
 
-				Forcing(Bid._2D, IsNewSuit, Shape(4, 6)),
-				Forcing(Bid._2H, IsNewSuit, Shape(4, 6)),
-				Forcing(Bid._2S, IsNewSuit, Shape(4, 6)),
-				Forcing(Bid._3C, IsNewSuit, Shape(4, 6)),
-				Forcing(Bid._3D, IsNewSuit, Shape(4, 6))
+				Shows(Bid._2D, IsNewSuit, Shape(4, 6)),
+				Shows(Bid._2H, IsNewSuit, Shape(4, 6)),
+				Shows(Bid._2S, IsNewSuit, Shape(4, 6)),
+				Shows(Bid._3C, IsNewSuit, Shape(4, 6)),
+				Shows(Bid._3D, IsNewSuit, Shape(4, 6))
 			);
 			return choices;
 		}
@@ -216,11 +213,11 @@ namespace BridgeBidding
 
 				// TODO: Game invitation shoudl always be help suit...  At least if that convention
 				// is in use.  
-				Rule(Bid._3H, Fit(), PairPoints(PairGameInvite)),
-				Rule(Bid._3S, Fit(), PairPoints(PairGameInvite)),
+				Shows(Bid._3H, Fit8Plus, PairPoints(PairGameInvite)),
+				Shows(Bid._3S, Fit8Plus, PairPoints(PairGameInvite)),
 
-                Rule(Bid._4H, Fit(), PairPoints(PairGame)),
-				Rule(Bid._4S, Fit(), PairPoints(PairGame))
+                Shows(Bid._4H, Fit8Plus, PairPoints(PairGame)),
+				Shows(Bid._4S, Fit8Plus, PairPoints(PairGame))
 			);
 			// Competative bids include Blackwood...
 

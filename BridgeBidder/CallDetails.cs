@@ -13,7 +13,7 @@ namespace BridgeBidding
 
 		public List<CallAnnotation> Annotations = new List<CallAnnotation>();
 
-		private CallProperties _properties = null;
+		public CallProperties Properties = null;
 
 
         private List<BidRule> _rules = new List<BidRule>();
@@ -42,9 +42,9 @@ namespace BridgeBidding
 			}
 			else if (feature is CallProperties callProperties)
 			{
-				Debug.Assert(_properties == null);
+				Debug.Assert(Properties == null);
 
-				_properties = callProperties;
+				Properties = callProperties;
 			}
 			else if (feature is CallAnnotation annotation)
 			{
@@ -69,9 +69,9 @@ namespace BridgeBidding
 
 		public PositionCallsFactory GetBidsFactory()
 		{
-			if (_properties != null && _properties.PartnerBids != null)
+			if (Properties?.PartnerBids != null)
 			{
-				return _properties.PartnerBids;
+				return Properties.PartnerBids;
 			}
 			if (!this.Call.Equals(Call.Pass) && Group.PartnerCalls != null)
 			{

@@ -26,6 +26,8 @@ namespace BridgeBidding
 
 		public PairState PairState { get; private set; }
 
+		public PairState OppsPairState => RHO.PairState;
+
 		public BiddingState BiddingState { get; }
 
 		public PositionRole Role { get; internal set; }
@@ -132,7 +134,7 @@ namespace BridgeBidding
 			get
 			{		
 				// TODO: This only returns true IFF we have to bid because of a forcing 1 round bid. NOT is we are forced to game.
-				return (PairState.Agreements.IsForcedToBid(this) && !RightHandOpponent._bids.Last().Equals(Call.Pass));
+				return (PairState.IsForcedToBid(this) && !RightHandOpponent._bids.Last().Equals(Call.Pass));
 			}
 		}
 		
@@ -163,6 +165,10 @@ namespace BridgeBidding
 				}
 			}
 			_bids.Add(callDetails);
+			PairState.UpdatePairProperties(callDetails);
+	
+			// TODO: FIX! HACK!
+
 
 			// Now show any state changes to the PairAgreements.  This only happens once per call
 			// and does not update dynamically like the PublicHandSummary.
@@ -181,6 +187,8 @@ namespace BridgeBidding
 			{
 				BiddingState.UpdateStateFromFirstBid();
 			}
+			// TODO: Seems ugly to do this again, but whatever...
+			PairState.UpdateLastShownSuit(callDetails.Call, this, callDetails.ShowHand());	
 		}
 
 		private void AssignRole(PositionRole role)
@@ -248,8 +256,10 @@ namespace BridgeBidding
 				{
 					if (callDetails.Call is Bid lastBid)
 					{
-						return (lastBid.Level < bid.Level && lastBid.Suit != null && lastBid.Suit < bidSuit &&
-							PairState.FirstToShow(bidSuit) == null);
+						return (lastBid.Level == bid.Level - 1 &&
+							    lastBid.Suit.HasValue && lastBid.Suit.Value < bidSuit &&
+								BiddingState.Contract.IsJump(bid) == 0 &&
+							    PairState.FirstToShow(bidSuit) == null);
 					}
 				}
 			}

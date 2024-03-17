@@ -37,7 +37,7 @@ namespace BridgeBidding
         {
             if (_useAgreedStrain)
             {
-                return ps.PairState.Agreements.TrumpSuit;
+                return ps.PairState.LastShownSuit;
             }
             return Constraint.GetSuit(suit, call);
         }

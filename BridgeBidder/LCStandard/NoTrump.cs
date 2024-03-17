@@ -160,7 +160,7 @@ namespace BridgeBidding
                   //  PartnerBids(Bid._1NT, ConventionalResponses),
                   //  Shows(Bid._1NT, NTD.OR.Open, Balanced)
                     Properties(Bid._1NT, partnerBids: ConventionalResponses, announce: UserText.OneNoTrumpRange),
-                    Rule(Bid._1NT, NTD.OR.Open, Balanced)   
+                    Shows(Bid._1NT, NTD.OR.Open, Balanced)   
                 };
             }
             if (ps.Role == PositionRole.Overcaller && ps.RoleRound == 1)
@@ -171,7 +171,7 @@ namespace BridgeBidding
                     {
                         PartnerBids(Bid._1NT, ConventionalResponses),
                         // TODO: Perhaps more rules here for balancing but for now this is fine -- Balanced is not necessary
-                        Rule(Bid._1NT, NTD.OR.Open, PassEndsAuction())
+                        Shows(Bid._1NT, NTD.OR.Open, PassEndsAuction())
                     };
 				}
                 else if (NTD.OpenType == "Overcall1NT")
@@ -179,7 +179,7 @@ namespace BridgeBidding
                     return new CallFeature[]
                     {
                         PartnerBids(Bid._1NT, ConventionalResponses),
-                        Rule(Bid._1NT, NTD.OR.Open, Balanced, OppsStopped(), Not(PassEndsAuction()))
+                        Shows(Bid._1NT, NTD.OR.Open, Balanced, OppsStopped(), Not(PassEndsAuction()))
                     };
                 }
 			}
@@ -298,7 +298,7 @@ namespace BridgeBidding
 
                 Shows(Bid._3NT, NTD.OR.AcceptInvite, Partner(IsLastBid(Bid._2NT))),
                 Shows(Bid._3NT, Partner(IsLastBid(Bid._3H)), Shape(Suit.Hearts, 0, 2)),
-                Shows(Bid._3NT, Partner(IsLastBid(3, Suit.Spades)), Shape(Suit.Spades, 0, 2)),
+                Shows(Bid._3NT, Partner(IsLastBid(Bid._3S)), Shape(Suit.Spades, 0, 2)),
 
                 Shows(Bid._4H, Partner(IsLastBid(Bid._3H)), Shape(3, 5)),
                 Shows(Bid._4S, Partner(IsLastBid(Bid._3S)), Shape(3, 5))

@@ -41,7 +41,7 @@ namespace BridgeBidding
 		{
 			foreach (var constraint in Constraints)
 			{
-				if (constraint is StaticConstraint sc && !sc.Conforms(Call, ps)) return false;
+				if (constraint is StaticConstraint sc && !sc.Conforms(this.Call, ps)) return false;
 			}
 			return true;
 		}
@@ -65,7 +65,7 @@ namespace BridgeBidding
 	{
 		public List<CallFeature> Features = new List<CallFeature>();
 
-		public CallFeatureGroup(params StaticConstraint[] constraints) : base(null, constraints)
+		public CallFeatureGroup() : base(null, new Constraint[0])
 		{
 		}
 	}

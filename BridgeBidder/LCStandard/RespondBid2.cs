@@ -38,15 +38,15 @@ namespace BridgeBidding
                 Shows(Bid._1NT, Points(MinimumHand)),
                 
              /// TODO: MORE PASSING MORE OFTEN...   Shows(Call.Pass, Points(MinimumHand), ForcedToBid(false), )
-                Shows(Bid._2C, Fit(), IsNotRebid, ForcedToBid, Points(MinimumHand)),
-                Shows(Bid._2D, Fit(), IsNotRebid, ForcedToBid, Points(MinimumHand)),
-                Shows(Bid._2H, Fit(), IsNotRebid, ForcedToBid, Points(MinimumHand)),
-                Shows(Bid._2S, Fit(), IsNotRebid, ForcedToBid, Points(MinimumHand)),
+                Shows(Bid._2C, Fit8Plus, IsNotRebid, IsForcedToBid, Points(MinimumHand)),
+                Shows(Bid._2D, Fit8Plus, IsNotRebid, IsForcedToBid, Points(MinimumHand)),
+                Shows(Bid._2H, Fit8Plus, IsNotRebid, IsForcedToBid, Points(MinimumHand)),
+                Shows(Bid._2S, Fit8Plus, IsNotRebid, IsForcedToBid, Points(MinimumHand)),
 
-                Shows(Bid._3C, Fit(), IsNotRebid, IsNonJump, ForcedToBid, Points(MinimumHand)),
-                Shows(Bid._3D, Fit(), IsNotRebid, IsNonJump, ForcedToBid, Points(MinimumHand)),
-                Shows(Bid._3H, Fit(), IsNotRebid, IsNonJump, ForcedToBid, Points(MinimumHand)),
-                Shows(Bid._3S, Fit(), IsNotRebid, IsNonJump, ForcedToBid, Points(MinimumHand))
+                Shows(Bid._3C, Fit8Plus, IsNotRebid, IsNonJump, IsForcedToBid, Points(MinimumHand)),
+                Shows(Bid._3D, Fit8Plus, IsNotRebid, IsNonJump, IsForcedToBid, Points(MinimumHand)),
+                Shows(Bid._3H, Fit8Plus, IsNotRebid, IsNonJump, IsForcedToBid, Points(MinimumHand)),
+                Shows(Bid._3S, Fit8Plus, IsNotRebid, IsNonJump, IsForcedToBid, Points(MinimumHand))
 
 
             };
@@ -58,8 +58,8 @@ namespace BridgeBidding
         {
             var bids = new List<CallFeature>()
             {
-                Shows(Bid._4H, Fit(), PairPoints(PairGame)),
-                Shows(Bid._4S, Fit(), PairPoints(PairGame)),
+                Shows(Bid._4H, Fit8Plus, PairPoints(PairGame)),
+                Shows(Bid._4S, Fit8Plus, PairPoints(PairGame)),
                 Shows(Call.Pass)
             };
             // TODO: Competative bids here too?  Seems silly since restricted raise

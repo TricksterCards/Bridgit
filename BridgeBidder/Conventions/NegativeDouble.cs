@@ -29,22 +29,22 @@ namespace BridgeBidding
                 if (overcallSuit == Suit.Diamonds)
                 {
                     Debug.Assert(openSuit == Suit.Clubs);
-                    bids.Add(Forcing(Call.Double, Points(Respond1Level), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)));
+                    bids.Add(Shows(Call.Double, Points(Respond1Level), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)));
                 }
                 else if (overcallSuit == Suit.Hearts)
                 {
-                    bids.Add(Forcing(Call.Double, Points(Respond1Level), Shape(Suit.Spades, 4)));
-                    bids.Add(Forcing(Bid._1S, Points(Respond1Level), Shape(5, 11)));
+                    bids.Add(Shows(Call.Double, Points(Respond1Level), Shape(Suit.Spades, 4)));
+                    bids.Add(Shows(Bid._1S, Points(Respond1Level), Shape(5, 11)));
                 }
                 else if (openSuit == Suit.Hearts)   // If this is the case we opened 1H and 1S overcall
                 {
-                    bids.Add(Forcing(Call.Double, Points(NewSuit2Level), Shape(Suit.Clubs, 4, 9), Shape(Suit.Diamonds, 4, 9)));
+                    bids.Add(Shows(Call.Double, Points(NewSuit2Level), Shape(Suit.Clubs, 4, 9), Shape(Suit.Diamonds, 4, 9)));
                 }
                 else // 1 minor / 1S overcall.  Now figure out X
                 {
-                    bids.Add(Forcing(Call.Double, Points(Respond1Level), Shape(Suit.Hearts, 4)));
+                    bids.Add(Shows(Call.Double, Points(Respond1Level), Shape(Suit.Hearts, 4)));
                     // TODO: Raise1 Point range name is lame.  Clean this up - shows 6-19 points...
-                    bids.Add(Forcing(Call.Double, Points((6, 10)), Shape(Suit.Hearts, 5, 11)));
+                    bids.Add(Shows(Call.Double, Points((6, 10)), Shape(Suit.Hearts, 5, 11)));
                 }
             }
             return bids;

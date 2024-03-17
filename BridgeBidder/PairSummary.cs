@@ -101,7 +101,7 @@ namespace BridgeBidding
             foreach (Suit suit in Card.Suits)
             {
                 Suits[suit] = new SuitSummary(hs1.Suits[suit], hs2.Suits[suit]);
-                if (ps.PairState.FirstToShow(suit) != null)
+                if (ps.PairState.HaveShownSuit(suit))
                 {   
                     ShownSuits.Add(suit);
                 }

@@ -34,12 +34,12 @@ namespace BridgeBidding
                 Convention(call, UserText.Stayman),
                 Properties(call, Answer, forcing1Round: true),
 
-                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), Flat(false)),
-                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Spades, 4), Shape(Suit.Hearts, 0, 4), Flat(false)),
-                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
-                Forcing(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4)),
+                Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), Flat(false)),
+                Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Spades, 4), Shape(Suit.Hearts, 0, 4), Flat(false)),
+                Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
+                Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4)),
                 
-                Forcing(call, NTD.RR.LessThanInvite, Shape(Suit.Diamonds, 4, 5), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)),
+                Shows(call, NTD.RR.LessThanInvite, Shape(Suit.Diamonds, 4, 5), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)),
             };
             // TODO: Need to add rules for garbage stayman if that is on, and for 4-way transfers if that is on...
 		}
@@ -119,8 +119,8 @@ namespace BridgeBidding
                 Shows(Call.Pass, NTD.RR.LessThanInvite),   // Garbage stayman always passes...
 
                 // If we have a 5 card suit and want to go to game then show that suit.
-                Forcing(Bid._3S, NTD.RR.GameOrBetter, Shape(5), Partner(IsLastBid(Bid._2D))),
-                Forcing(Bid._3H, NTD.RR.GameOrBetter, Shape(5), Partner(IsLastBid(Bid._2D))),
+                Shows(Bid._3S, NTD.RR.GameOrBetter, Shape(5), Partner(IsLastBid(Bid._2D))),
+                Shows(Bid._3H, NTD.RR.GameOrBetter, Shape(5), Partner(IsLastBid(Bid._2D))),
 
 
 				// These show invitational 5/4
@@ -273,12 +273,12 @@ namespace BridgeBidding
             Call call = ps.RightHandOpponent.GetBidHistory(0).Equals(bidStayman) ? Bid.Double : bidStayman;
             return new CallFeature[] {
                 Properties(call, Answer, forcing1Round: true),
-                Forcing(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Flat(false)),
-                Forcing(call, NTB.RespondGame, Shape(Suit.Spades, 4), Flat(false)),
-                Forcing(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
-                Forcing(call, NTB.RespondGame, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4))
+                Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Flat(false)),
+                Shows(call, NTB.RespondGame, Shape(Suit.Spades, 4), Flat(false)),
+                Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
+                Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4))
                 // TODO: The following rule is "Garbage Stayman"
-                //Forcing(Bid._2C, Points(NTLessThanInvite), Shape(Suit.Diamonds, 4, 5), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)),
+                //Shows(Bid._2C, Points(NTLessThanInvite), Shape(Suit.Diamonds, 4, 5), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)),
             };
         }
         public PositionCalls Answer(PositionState ps)
@@ -287,7 +287,7 @@ namespace BridgeBidding
             choices.AddRules(
                 PartnerBids(ResponderRebid),
 
-                Forcing(Bid._3D, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
+                Shows(Bid._3D, Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
 
                 // If we are 4-4 then hearts bid before spades.  Can't be 5-5 or wouldn't be balanced.
                 Shows(Bid._3H, Shape(4, 5), LongerOrEqualTo(Suit.Spades)),

@@ -37,11 +37,11 @@ namespace BridgeBidding
 			};
 
 
-			var rule = Shows(Bid.Double, Points(TakeoutRange), BidAvailable(4, Suit.Clubs));
-			var oppsSummary = PairSummary.Opponents(ps);
+			var rule = Shows(Bid.Double, Points(TakeoutRange), IsBidAvailable(4, Suit.Clubs));
+
 			foreach (Suit s in Card.Suits)
 			{
-                if (oppsSummary.ShownSuits.Contains(s))
+                if (ps.OppsPairState.HaveShownSuit(s))
                 {
                     rule.AddConstraint(Shape(s, 0, 4));
                 }

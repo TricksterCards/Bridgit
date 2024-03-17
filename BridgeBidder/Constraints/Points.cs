@@ -51,7 +51,7 @@ namespace BridgeBidding
             {
                 points = hs.Points;
             }
-            return points == null ? (0, 100) : ((int, int))points;
+            return points.HasValue ? points.Value : (0, 100);
         }
 
 

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Data;
+using System.Diagnostics;
+using System.Linq;
 
 namespace BridgeBidding
 {
@@ -14,8 +16,8 @@ namespace BridgeBidding
         public override bool Conforms(Call call, PositionState ps, HandSummary hs)
         {
 
-            var oppsSummary = PairSummary.Opponents(ps);
-            foreach (var suit in oppsSummary.ShownSuits)
+           // var oppsSummary = PairSummary.Opponents(ps);
+            foreach (var suit in ps.OppsPairState.ShownSuits)
             {
                 // These variables can be true, false, or null, so look for specific values.
                 var thisStop = hs.Suits[suit].Stopped;
@@ -42,8 +44,7 @@ namespace BridgeBidding
         {
             if (_desiredValue)
             {
-                var oppsSummary = PairSummary.Opponents(ps);
-                foreach (var suit in oppsSummary.ShownSuits)
+                foreach (var suit in ps.OppsPairState.ShownSuits)
                 {
                     // These variables can be true, false, or null, so look for specific values.
                     var partnerStop = ps.Partner.PublicHandSummary.Suits[suit].Stopped;
@@ -58,13 +59,12 @@ namespace BridgeBidding
 
         string IDescribeConstraint.Describe(Call call, PositionState ps)
         {
-            var oppsSummary = PairSummary.Opponents(ps);
-            int oppsSuits = oppsSummary.ShownSuits.Count;
-            if (oppsSuits > 0) 
+            var numOppsSuits = ps.OppsPairState.ShownSuits.Count();
+            if (numOppsSuits > 0) 
             {
                 if (_desiredValue)
                 {
-                    return oppsSuits == 1 ? "opponents suit stopped" : "opponents suits stopped";
+                    return numOppsSuits == 1 ? "opponents suit stopped" : "opponents suits stopped";
                 }
                 else 
                 {

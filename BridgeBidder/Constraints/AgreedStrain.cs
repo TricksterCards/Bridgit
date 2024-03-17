@@ -24,9 +24,10 @@ namespace BridgeBidding
                     return false;
                 }
             }
-            foreach (var s in strains)
+            // TODO: This does not seem to be right for "NT".  Perhaps it is ok...
+            foreach (var s in Card.Suits)
             {
-                if (ps.PairState.Agreements.AgreedStrain == s) return true;
+                if (ps.PairState.LastShownSuit == s) return true;
             }
             return false;
         }

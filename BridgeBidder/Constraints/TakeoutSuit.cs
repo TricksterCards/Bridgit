@@ -38,11 +38,10 @@ namespace BridgeBidding
         {
             if (GetSuit(_suit, call) is Suit suit)
             {
-                var oppsSuits = PairSummary.Opponents(ps).ShownSuits;
-                if (oppsSuits.Contains(suit)) { return false; }
+                if (ps.OppsPairState.HaveShownSuit(suit)) { return false; }
                 foreach (Suit other in Enum.GetValues(typeof(Suit)))
                 {
-                    if (other != suit && !oppsSuits.Contains(other))
+                    if (other != suit && !ps.OppsPairState.HaveShownSuit(other))
                     {
                         // TODO: This may not be ideal but we always will prefer the higher ranking
                         // suit if all other things are equal.  Perhaps if low point range we would

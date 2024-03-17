@@ -9,6 +9,7 @@ namespace BridgeBidding
     public class PairAgreements: State, IEquatable<PairAgreements>
     {
 
+/*
         public class ShowState
         {
             public PairAgreements PairAgreements { get; protected set; }
@@ -25,10 +26,10 @@ namespace BridgeBidding
             }
 
             // TODO: This name not the best...
-            public void ShowAgreedStrain(Strain trumpStrain)
-            {
-                PairAgreements.AgreedStrain = trumpStrain;  
-            }
+      //      public void ShowAgreedStrain(Strain trumpStrain)
+      //      {
+      //          PairAgreements.AgreedStrain = trumpStrain;  
+      //      }
 
             public void ShowForcing1Round(PositionState ps)
             {
@@ -111,7 +112,7 @@ namespace BridgeBidding
             }
 */
         
-        public Strain? AgreedStrain { get; private set; } = null;
+    //    public Strain? AgreedStrain { get; private set; } = null;
 
         // TODO: This is ugly an not combined properly.  Review all uses of this
       //  public Strain? LastShownStrain { get; private set; } = null;
@@ -123,7 +124,7 @@ namespace BridgeBidding
 
         public bool IsForcedToBid(PositionState ps) => (ps == _forcedPosition && ps.BidRound <= _forcedThroughRound);
 
-        public Suit? TrumpSuit => AgreedStrain?.ToSuit();
+      //  public Suit? TrumpSuit => AgreedStrain?.ToSuit();
  
 
        // public Dictionary<Strain, SuitAgreements> Strains { get; }
@@ -133,7 +134,7 @@ namespace BridgeBidding
         {
             if (other != null)
             {
-                this.AgreedStrain = other.AgreedStrain;
+          //      this.AgreedStrain = other.AgreedStrain;
          //       this.LastShownStrain = other.LastShownStrain;
                 this.ForcingToGame = other.ForcingToGame;
                 this._forcedPosition = other._forcedPosition;
@@ -180,7 +181,7 @@ namespace BridgeBidding
    
         public bool Equals(PairAgreements other)
         {
-            if (this.AgreedStrain != other.AgreedStrain ||
+            if (//this.AgreedStrain != other.AgreedStrain ||
                 this._forcedPosition != other._forcedPosition ||
                 this._forcedThroughRound != other._forcedThroughRound ||
                 this.ForcingToGame != other.ForcingToGame)

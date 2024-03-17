@@ -21,21 +21,17 @@ namespace BridgeBidding
             {
                 return new CallFeature[]
                 {
-                    Convention(Bid._2NT, UserText.Jacoby2NT),
-                    Alert(Bid._2NT, UserText.Jacoby2NTDescription),
+                    Properties(Bid._2NT, OpenerRebid, forcingToGame: true, alert: UserText.Jacoby2NTDescription, convention: UserText.Jacoby2NT),
 
-                    PartnerBids(Bid._2NT, OpenerRebid),
-
-                    Forcing(Bid._2NT, Fit(suit), Shape(suit, 4, 10), DummyPoints(suit, RespondPoints)),
+                    Shows(Bid._2NT, Fit(suit), Shape(suit, 4, 10), DummyPoints(suit, RespondPoints)),
                 };
             }
             return new CallFeature[0];
 		}
 
-        public static IEnumerable<CallFeature> OpenerRebid(PositionState ps)
+        public static PositionCalls OpenerRebid(PositionState ps)
         {
-            return new CallFeature[]
-            {                
+            return new PositionCalls(ps).AddRules(
                 PartnerBids(PlaceContract),
 
                 Properties(Bid._3C, alert: UserText.ShowsVoidOrSingleton),
@@ -44,19 +40,20 @@ namespace BridgeBidding
                 Properties(Bid._3S, alert: UserText.ShowsVoidOrSingleton, onlyIf: IsOpeningBid(Bid._1H)),
 
                 // TODO: Any other alerts?  3NT?
-                Forcing(Bid._3C, Shape(0, 1)),
-                Forcing(Bid._3D, Shape(0, 1)),
-                Forcing(Bid._3H, IsOpeningBid(Bid._1S), Shape(0, 1)),
-                Forcing(Bid._3S, IsOpeningBid(Bid._1H), Shape(0, 1)),
+                Shows(Bid._3C, Shape(0, 1)),
+                Shows(Bid._3D, Shape(0, 1)),
+                Shows(Bid._3H, IsOpeningBid(Bid._1S), Shape(0, 1)),
+                Shows(Bid._3S, IsOpeningBid(Bid._1H), Shape(0, 1)),
 
-                Forcing(Bid._3H, IsOpeningBid(Bid._1H), Points(OpenerPointsMax)),
-                Forcing(Bid._3S, IsOpeningBid(Bid._1S), Points(OpenerPointsMax)),
+                Shows(Bid._3H, IsOpeningBid(Bid._1H), Points(OpenerPointsMax)),
+                Shows(Bid._3S, IsOpeningBid(Bid._1S), Points(OpenerPointsMax)),
 
-                Forcing(Bid._3NT, Points(OpenerPointsMedium)),
+                // TODO: Should this be points in the bid suit?  Pair Points()?  Same with 3M bids...
+                Shows(Bid._3NT, Points(OpenerPointsMedium)),
 
                 Shows(Bid._4H, IsOpeningBid(Bid._1H), Points(OpenerPointsMin)),
-                Shows(Bid._4S, IsOpeningBid(Bid._1S), Points(OpenerPointsMin)),
-            };
+                Shows(Bid._4S, IsOpeningBid(Bid._1S), Points(OpenerPointsMin))
+            );
         }
 
         public static PositionCalls PlaceContract(PositionState ps)

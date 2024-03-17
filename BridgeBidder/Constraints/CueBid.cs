@@ -23,8 +23,7 @@ namespace BridgeBidding
                 return false;
             }
 
-            var pairSummary = PairSummary.Opponents(ps);
-            return pairSummary.ShownSuits.Contains((Suit)suit);
+            return ps.OppsPairState.HaveShownSuit(suit.Value);
         }
     }
 }

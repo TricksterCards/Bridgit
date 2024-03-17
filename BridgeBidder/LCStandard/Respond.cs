@@ -419,14 +419,14 @@ namespace BridgeBidding
             choices.AddRules(WeakJumpShift(openSuit));
 
             var raisePartner = ps.BiddingState.Contract.NextAvailableBid(openSuit);
-            var limitRaise = new Bid(rhoBidLevel + 1, rhoBidSuit);
+            var cueBidRaise = new Bid(rhoBidLevel + 1, rhoBidSuit);
             var weakRaise = new Bid(raisePartner.Level + 1, openSuit);
             PositionCallsFactory raiseHandler =  OpenBid2.ResponderRaisedMajor;
             if (openSuit.IsMinor())
             {
                 raiseHandler = OpenBid2.ResponderRaisedMinor;
             }
-            List<Suit> suits = new List<Suit> { Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades };
+            List<Suit> suits = new List<Suit>(Card.Suits);
             suits.Remove(openSuit);
             suits.Remove(rhoBidSuit);
             var lowerUnbid = suits.First();
@@ -438,31 +438,34 @@ namespace BridgeBidding
             choices.AddRules(
                 // TODO: Perhaps ResponderChangedSuitsInComp is better here?
                 PartnerBids(OpenBid2.ResponderChangedSuits),
-                PartnerBids(raisePartner, raiseHandler),
-                PartnerBids(limitRaise, raiseHandler),
-                PartnerBids(weakRaise, raiseHandler),
+               
                 PartnerBids(Bid._1NT, OpenBid2.ResponderBidNT),
                 PartnerBids(Bid._2NT, OpenBid2.ResponderBidNT),
                 PartnerBids(Bid._3NT, OpenBid2.ResponderBidNT),
 
                 // Negative double may have made these bids irrelevant
-                Forcing(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
-                Forcing(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
+                Properties(Bid._1H, OpenBid2.ResponderChangedSuits, forcing1Round: true),
+                Shows(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
+                Shows(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
 
-                Forcing(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
-                Forcing(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
-                
+                Properties(Bid._1S, OpenBid2.ResponderChangedSuits, forcing1Round: true),
+                Shows(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
+                Shows(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
+
+                Properties(new Bid[] { raisePartner, weakRaise }, raiseHandler),
+                Properties(cueBidRaise, raiseHandler, forcing1Round: true), 
                 Shows(raisePartner, Fit8Plus, DummyPoints(Raise1)),
-                Shows(limitRaise, Fit(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Shows(cueBidRaise, Fit(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
                 Shows(weakRaise, Fit9Plus, DummyPoints(WeakJumpRaise)),
             
                 Shows(Bid._1NT, OppsStopped(), Points(Raise1)),
                 Shows(Bid._2NT, OppsStopped(), Points(11, 12)),
                 // TODO: Still lots more...  3NT.  Bid majors first if they must be bid at 2-level etc.
 
-                Forcing(bidNew1, Shape(4), Shape(higherUnbid, 0, 4), Points(NewSuit2Level)),
-                Forcing(bidNew2, Shape(5, 10), LongerThan(higherUnbid), Points(NewSuit2Level)),
-                Forcing(bidNew2, Shape(4, 10), Shape(lowerUnbid, 0, 3), Points(NewSuit2Level)),
+                Properties(new Bid[] { bidNew1, bidNew2 }, OpenBid2.ResponderChangedSuits, forcing1Round: true),
+                Shows(bidNew1, Shape(4), Shape(higherUnbid, 0, 4), Points(NewSuit2Level)),
+                Shows(bidNew2, Shape(5, 10), LongerThan(higherUnbid), Points(NewSuit2Level)),
+                Shows(bidNew2, Shape(4, 10), Shape(lowerUnbid, 0, 3), Points(NewSuit2Level)),
 
                 PartnerBids(Call.Pass, OpenBid2.ResponderPassedInCompetition),
                 Shows(Bid.Pass)  // May have enought points to respond but no good call, so can't specify points
@@ -473,11 +476,11 @@ namespace BridgeBidding
                 PartnerBids(OpenBid2.ResponderBidInCompetition),
 
                 // Negative double may have made these bids irrelevant
-                Forcing(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
-                Forcing(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
+                Shows(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
+                Shows(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
 
-                Forcing(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
-                Forcing(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
+                Shows(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
+                Shows(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
         {
             var choices = new PositionCalls(ps);
             choices.AddRules(SolidSuit.Bids);
@@ -492,20 +495,20 @@ namespace BridgeBidding
                 PartnerBids(OpenBid2.ResponderBidInCompetition),
 
                 // Negative double may have made these bids irrelevant
-                Forcing(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
-                Forcing(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
+                Shows(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
+                Shows(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
 
-                Forcing(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
-                Forcing(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
+                Shows(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
+                Shows(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
 
       
                 // TODO: Perhaps show new 5+ card suit forcing here?  Only if not passed.
 
 				// Now cuebid raises are next in priority - RaisePartner calls ShowTrump()
-                Forcing(Bid._2D, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
-                Forcing(Bid._2H, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
-                Forcing(Bid._2S, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
-                Forcing(Bid._3C, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Shows(Bid._2D, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Shows(Bid._2H, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Shows(Bid._2S, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
+                Shows(Bid._3C, CueBid, RaisePartner(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
 
                 // TODO: Weak jumps here take precedence over simple raise
                
@@ -553,7 +556,9 @@ namespace BridgeBidding
           // TODO: Maybe we want this???  choices.AddRules(WeakJumpShift(openSuit));
             choices.AddRules(new CallFeature[] 
             {
-                Forcing(Call.Redouble, Points(RespondRedouble)),
+                // TODO: Need partner bids here.  Not finished at all.
+                Properties(Call.Redouble, forcing1Round: true),
+                Shows(Call.Redouble, Points(RespondRedouble)),
 				// TODO: Here we need to make all bids reflect that they are less than 10 points...
 
 				Shows(Bid._1H, Points(RespondX1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),

@@ -60,10 +60,11 @@ namespace BridgeBidding
 
 
                     // TODO: Make a special CallFeature here to handle rebid after cuebid...
-                    Forcing(Bid._2C, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
-                    Forcing(Bid._2D, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
-                    Forcing(Bid._2H, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
-                    Forcing(Bid._2S, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
+                    Properties(new Bid[] { Bid._2C, Bid._2D, Bid._2H, Bid._2S }, forcing1Round: true, onlyIf: IsCueBid),
+                    Shows(Bid._2C, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
+                    Shows(Bid._2D, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
+                    Shows(Bid._2H, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
+                    Shows(Bid._2S, IsCueBid, Fit(partnerSuit), DummyPoints(AdvanceCuebid)),
 
  
 
