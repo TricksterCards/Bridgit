@@ -444,11 +444,11 @@ namespace BridgeBidding
                 PartnerBids(Bid._3NT, OpenBid2.ResponderBidNT),
 
                 // Negative double may have made these bids irrelevant
-                Properties(Bid._1H, OpenBid2.ResponderChangedSuits, forcing1Round: true),
+           // TODO: Duplicates new1 and new2     Properties(Bid._1H, OpenBid2.ResponderChangedSuits, forcing1Round: true),
                 Shows(Bid._1H, Points(Respond1Level), Shape(4), LongerOrEqualTo(Suit.Spades)),
                 Shows(Bid._1H, Points(Respond1Level), Shape(5, 11), LongerThan(Suit.Spades)),
 
-                Properties(Bid._1S, OpenBid2.ResponderChangedSuits, forcing1Round: true),
+          // TODO: New1 and New2 do this...  Redundant logic      Properties(Bid._1S, OpenBid2.ResponderChangedSuits, forcing1Round: true),
                 Shows(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
                 Shows(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
 
