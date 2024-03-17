@@ -190,6 +190,8 @@ namespace BridgeBidding
 		public static StaticConstraint IsNotReverse = Not(IsReverseBid);
 		public static StaticConstraint IsForcedToBid = new SimpleStaticConstraint((call, ps) => ps.ForcedToBid);
 
+		public static StaticConstraint IsForcedToGame = new SimpleStaticConstraint((call, ps) => ps.PairState.ForcedToGame);
+
 
 		public static StaticConstraint Not(StaticConstraint c)
 		{
