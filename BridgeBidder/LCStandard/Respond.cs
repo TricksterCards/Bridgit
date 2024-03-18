@@ -238,7 +238,7 @@ namespace BridgeBidding
                     Shows(Bid._1NT, Points(Respond1NTOverMajor), Shape(Suit.Hearts, 0, 3), Shape(Suit.Spades, 0, 3)),
                     
                     // TODO: Any follow-up to this?  Slam? - or just use compete logic?  
-                    Shows(Bid._3NT, Flat(), Points(RaiseTo3NT))
+                    Shows(Bid._3NT, Flat, Points(RaiseTo3NT))
                 );
                 choices.AddRules(WeakJumpShift(Suit.Hearts));
             }
@@ -315,7 +315,7 @@ namespace BridgeBidding
                     Shows(Bid._1NT, Points(Respond1NTOverMajor), Shape(Suit.Spades, 0, 3)),
 
                     // TODO: Partner bids for this- slam or show 4M
-                    Shows(Bid._3NT, Flat(), Points(RaiseTo3NT))
+                    Shows(Bid._3NT, Flat, Points(RaiseTo3NT))
                 );
             }
             // Weak jump shift for passed and unpassed hands

@@ -44,14 +44,6 @@ namespace BridgeBidding
 			return new CallProperties(call, choicesFactory, false, false, constraints);
 		}
 
-		public static CallFeature Forcing(Call call, params Constraint[] constraints)
-		{
-			return Shows(call, constraints);
-		}
-
-
-
-
 
 
 
@@ -211,10 +203,14 @@ namespace BridgeBidding
 			return new PositionProxy(PositionProxy.RelativePosition.Partner, constraint);
 		}
 
-		public static StaticConstraint PassEndsAuction()
+		public static StaticConstraint RHO(Constraint constraint)
 		{
-			return new SimpleStaticConstraint((call, ps) => ps.BiddingState.Contract.PassEndsAuction, description: "pass ends auction");
+			return new PositionProxy(PositionProxy.RelativePosition.RHO, constraint);
 		}
+
+		public static readonly StaticConstraint IsFinalCall = new SimpleStaticConstraint((call, ps) => ps.BiddingState.Contract.PassEndsAuction, description: "pass ends auction");
+
+		public static readonly StaticConstraint IsNotFinalCall = Not(IsFinalCall);
 
 		public static StaticConstraint IsBidAvailable(int level, Suit suit)
 		{ 
@@ -266,32 +262,30 @@ namespace BridgeBidding
 			// TODO: Rename this??? SuitPoints???  
 			return new ShowsPoints(null, min, max, HasPoints.PointType.Dummy);
 		}
-		public static Constraint DummyPoints((int min, int max) range)
+		public static HandConstraint DummyPoints((int min, int max) range)
 		{
 			return DummyPoints(range.min, range.max); 
 		}
 
-		public static Constraint DummyPoints(Suit? trumpSuit, (int min, int max) range)
+		public static HandConstraint DummyPoints(Suit? trumpSuit, (int min, int max) range)
 		{
 			// TODO: Rename this too????  SuitPoints
 			return new ShowsPoints(trumpSuit, range.min, range.max, HasPoints.PointType.Dummy);
 		}
 
-		public static Constraint Shape(int min) { return new ShowsShape(null, min, min); }
-		public static Constraint Shape(Suit suit, int count) { return new ShowsShape(suit, count, count); }
-		public static Constraint Shape(int min, int max) { return new ShowsShape(null, min, max); }
-		public static Constraint Shape(Suit suit, int min, int max) { return new ShowsShape(suit, min, max); }
-		public static HandConstraint Balanced = new ShowsBalanced(true);
-		public static HandConstraint NotBalanced = new ShowsBalanced(false);
+		public static HandConstraint Shape(int min) { return new ShowsShape(null, min, min); }
+		public static HandConstraint Shape(Suit suit, int count) { return new ShowsShape(suit, count, count); }
+		public static HandConstraint Shape(int min, int max) { return new ShowsShape(null, min, max); }
+		public static HandConstraint Shape(Suit suit, int min, int max) { return new ShowsShape(suit, min, max); }
+		public static readonly HandConstraint Balanced = new ShowsBalanced(true);
+		public static readonly HandConstraint NotBalanced = new ShowsBalanced(false);
 
-		public static Constraint Flat(bool desired = true) { return new ShowsFlat(desired); }
+		public static readonly HandConstraint Flat = new ShowsFlat(true);
+
+		public static readonly HandConstraint NotFlat = new ShowsFlat(false);
 
 
 
-		public static StaticConstraint RHO(Constraint constraint)
-		{
-			return new PositionProxy(PositionProxy.RelativePosition.RHO, constraint);
-		}
 
 		public static HandConstraint HasShape(int count)
 		{

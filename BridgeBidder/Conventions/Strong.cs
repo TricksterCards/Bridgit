@@ -33,18 +33,19 @@ namespace BridgeBidding
         {
             var choices = new PositionCalls(ps);
             if (ps.RHO.Passed) {
-                choices.AddRules(new CallFeature[] {
-                    PartnerBids(OpenerRebidPositiveResponse),
-                    PartnerBids(Bid._2D, OpenerRebidWaiting), 
+                choices.AddRules(
+                    Properties(new[] { Bid._2H, Bid._2S, Bid._2NT, Bid._3C, Bid._3D }, 
+                               partnerBids: OpenerRebidPositiveResponse, forcingToGame: true),
+         
+                    Shows(Bid._2H,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
+                    Shows(Bid._2S,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
+                    Shows(Bid._2NT, Points(PositiveResponse), Balanced),
+                    Shows(Bid._3C,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
+                    Shows(Bid._3D,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
 
-                    Forcing(Bid._2H,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
-                    Forcing(Bid._2S,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
-                    Forcing(Bid._2NT, Points(PositiveResponse), Balanced),
-                    Forcing(Bid._3C,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
-                    Forcing(Bid._3D,  Points(PositiveResponse), Shape(5, 11), GoodPlusSuit),
-
-                    Forcing(Bid._2D,  Points(Waiting)),
-                });
+                    Properties(Bid._2D, OpenerRebidWaiting, forcing1Round: true), 
+                    Shows(Bid._2D,  Points(Waiting))
+                );
             }
             else if (ps.RHO.Doubled)
             {
@@ -59,22 +60,22 @@ namespace BridgeBidding
             return choices;
         }
 
-        private static IEnumerable<CallFeature> OpenerRebidWaiting(PositionState ps)
+        private static PositionCalls OpenerRebidWaiting(PositionState ps)
         {
-            
-            var bids = new List<CallFeature>();
-            bids.AddRange(TwoNoTrump.After2COpen.Bids(ps));
-            bids.AddRange(ThreeNoTrump.After2COpen.Bids(ps));
-            bids.AddRange(new CallFeature[]
-            {
-                PartnerBids(Responder2ndBid),
+            // TODO: Interferrence...
+            var choices = new PositionCalls(ps);
+            choices.AddRules(TwoNoTrump.After2COpen.Bids(ps));
+            // TODO: There should probably never be a 3NT bid after 2C.  This is AG stuff...
+            choices.AddRules(ThreeNoTrump.After2COpen.Bids(ps));
+            choices.AddRules(
+                Properties(new[] { Bid._2H, Bid._2S, Bid._3C, Bid._3D }, Responder2ndBid, forcing1Round: true),
 
-                Forcing(Bid._2H, Shape(5, 11)),
-                Forcing(Bid._2S, Shape(5, 11)),
-                Forcing(Bid._3C, Shape(5, 11)),
-                Forcing(Bid._3D, Shape(5, 11))
-            });
-            return bids;
+                Shows(Bid._2H, Shape(5, 11)),
+                Shows(Bid._2S, Shape(5, 11)),
+                Shows(Bid._3C, Shape(5, 11)),
+                Shows(Bid._3D, Shape(5, 11))
+            );
+            return choices;
             // TODO: Next state, more bids, et.....
         }
 
@@ -87,22 +88,22 @@ namespace BridgeBidding
                 // Highest priority is to support responder's suit...
                 PartnerBids(Responder2ndBid),
 
-                Forcing(Bid._3H, Fit()),
-                Forcing(Bid._3S, Fit()),
-                Forcing(Bid._4C, Fit()),
-                Forcing(Bid._4D, Fit()),
+                Shows(Bid._3H, Fit8Plus),
+                Shows(Bid._3S, Fit8Plus),
+                Shows(Bid._4C, Fit8Plus),
+                Shows(Bid._4D, Fit8Plus),
 
-				Forcing(Bid._2S, Shape(5, 11)),
-	// TODO: What about 2NT??			Forcing(Bid.TwoUnknown, Balanced, Points(Rebid2NT)),
-				Forcing(Bid._3C, Shape(5, 11)),
-                Forcing(Bid._3D, Shape(5, 11)),
-                Forcing(Bid._3H, Shape(5, 11)),
-                Forcing(Bid._3S, IsNonJump, Shape(5, 11)),
+				Shows(Bid._2S, Shape(5, 11)),
+	// TODO: What about 2NT??			Shows(Bid.TwoUnknown, Balanced, Points(Rebid2NT)),
+				Shows(Bid._3C, Shape(5, 11)),
+                Shows(Bid._3D, Shape(5, 11)),
+                Shows(Bid._3H, Shape(5, 11)),
+                Shows(Bid._3S, IsNonJump, Shape(5, 11)),
 
                 Shows(Bid._3NT, Balanced),
 
-              // TODO: 3 NT>>>  Forcing(Bid.ThreeUnknown, NonJump),
-                Forcing(Bid._4C, Shape(5, 11), IsNonJump)
+              // TODO: 3 NT>>>  Shows(Bid.ThreeUnknown, NonJump),
+                Shows(Bid._4C, Shape(5, 11), IsNonJump)
 
 			);
             return choices;
@@ -116,20 +117,24 @@ namespace BridgeBidding
             choices.AddRules(new CallFeature[]
             {
                 PartnerBids(OpenerPlaceContract),
-                Forcing(Bid._3H, Fit()),
-                Forcing(Bid._3S, Fit()),
-                Forcing(Bid._4C, Fit()),
-                Forcing(Bid._4D, Fit()),
+
+                Shows(Bid._3H, Fit8Plus),
+                Shows(Bid._3S, Fit8Plus),
+                Shows(Bid._4C, Fit8Plus),
+                Shows(Bid._4D, Fit8Plus),
 
                 // Now show a bust hand by bidding cheapest minor with less 0-4 points
-                PartnerBids(Bid._3C, PartnerIsBust),
-                PartnerBids(Bid._3D, PartnerIsBust, Partner(IsLastBid(Bid._3C))),
-                Forcing(Bid._3C, Points(RespondBust)),
-                Forcing(Bid._3D, Partner(IsLastBid(Bid._3C)), Points(RespondBust)),
+                Properties(Bid._3C, PartnerIsBust, forcing1Round: true),
+                Properties(Bid._3D, PartnerIsBust, forcing1Round: true, onlyIf: Partner(IsLastBid(Bid._3C))),
+                Shows(Bid._3C, Points(RespondBust)),
+                Shows(Bid._3D, Partner(IsLastBid(Bid._3C)), Points(RespondBust)),
 
                 // Show a 5 card major if we have one.
-                Forcing(Bid._3H, Shape(5, 11), Points(RespondSuitNotBust)),
-                Forcing(Bid._3S, Shape(5, 11), Points(RespondSuitNotBust)),
+                Shows(Bid._2S, Shape(5, 11), Points(RespondSuitNotBust)),
+                Shows(Bid._3H, Shape(5, 11), Points(RespondSuitNotBust)),
+                Shows(Bid._3S, IsNonJump, Shape(5, 11), Points(RespondSuitNotBust)),
+
+                // TODO: What about minors?  3D could be natural if opener doesn't bid 3C...
 
                 // Final bid if we're 
                 Shows(Bid._3NT, Points(RespondNTNotBust)) 
@@ -145,22 +150,22 @@ namespace BridgeBidding
             // TODO: Perhaps gerber too???  Not sure...
             bids.AddRange( new CallFeature[] 
             {
-				Shows(Bid._4H, Fit()),  // TODO: Limit points...???
-				Shows(Bid._4S, Fit()),
-				Forcing(Bid._4C, Fit()),
-				Forcing(Bid._4D, Fit()),
+				Shows(Bid._4H, Fit8Plus),  // TODO: Limit points...???
+				Shows(Bid._4S, Fit8Plus),
+				Shows(Bid._4C, Fit8Plus),
+				Shows(Bid._4D, Fit8Plus),
                 Shows(Bid._3NT),
                 Shows(Call.Pass)  // If we get here then we are already in game...
 			});
             return bids;
         }
-		private static IEnumerable<CallFeature> PartnerIsBust(PositionState ps)
+		private static PositionCalls PartnerIsBust(PositionState ps)
 		{
-			var bids = new List<CallFeature>();
-			bids.AddRange(Blackwood.InitiateConvention(ps));
+			var choices = new PositionCalls(ps);
+			// Bust does not need this -> bids.AddRange(Blackwood.InitiateConvention(ps));
 			// TODO: Perhaps gerber too???  Not sure...
-			bids.AddRange(new CallFeature[]
-			{
+			choices.AddRules(
+			
 				Shows(Bid._4H, IsRebid, Points(GameInHand)),
 				Shows(Bid._4S, IsRebid, Points(GameInHand)),
                 Shows(Bid._5C, IsRebid, Shape(7, 11), Points(GameInHand)),
@@ -173,8 +178,8 @@ namespace BridgeBidding
                 Shows(Bid._3S, IsRebid),
                 Shows(Bid._4C, IsRebid),
                 Shows(Bid._4D, IsRebid)
-			});
-			return bids;
+			);
+			return choices;
 		}
 
 	}

@@ -34,8 +34,8 @@ namespace BridgeBidding
                 Convention(call, UserText.Stayman),
                 Properties(call, Answer, forcing1Round: true),
 
-                Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), Flat(false)),
-                Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Spades, 4), Shape(Suit.Hearts, 0, 4), Flat(false)),
+                Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 0, 4), NotFlat),
+                Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Spades, 4), Shape(Suit.Hearts, 0, 4), NotFlat),
                 Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
                 Shows(call, NTD.RR.InviteOrBetter, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4)),
                 
@@ -273,8 +273,8 @@ namespace BridgeBidding
             Call call = ps.RightHandOpponent.GetBidHistory(0).Equals(bidStayman) ? Bid.Double : bidStayman;
             return new CallFeature[] {
                 Properties(call, Answer, forcing1Round: true),
-                Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Flat(false)),
-                Shows(call, NTB.RespondGame, Shape(Suit.Spades, 4), Flat(false)),
+                Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 4), NotFlat),
+                Shows(call, NTB.RespondGame, Shape(Suit.Spades, 4), NotFlat),
                 Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
                 Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4))
                 // TODO: The following rule is "Garbage Stayman"

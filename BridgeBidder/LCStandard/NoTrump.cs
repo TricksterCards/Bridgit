@@ -171,7 +171,7 @@ namespace BridgeBidding
                     {
                         PartnerBids(Bid._1NT, ConventionalResponses),
                         // TODO: Perhaps more rules here for balancing but for now this is fine -- Balanced is not necessary
-                        Shows(Bid._1NT, NTD.OR.Open, PassEndsAuction())
+                        Shows(Bid._1NT, NTD.OR.Open, IsFinalCall)
                     };
 				}
                 else if (NTD.OpenType == "Overcall1NT")
@@ -179,7 +179,7 @@ namespace BridgeBidding
                     return new CallFeature[]
                     {
                         PartnerBids(Bid._1NT, ConventionalResponses),
-                        Shows(Bid._1NT, NTD.OR.Open, Balanced, OppsStopped(), Not(PassEndsAuction()))
+                        Shows(Bid._1NT, NTD.OR.Open, Balanced, OppsStopped(), IsNotFinalCall)
                     };
                 }
 			}
@@ -265,13 +265,17 @@ namespace BridgeBidding
 
                 Shows(Bid._2NT, NTD.RR.InviteGame, LongestMajor(4)),
                 // TODO: These natural bids are not exactly right....
-                Forcing(Bid._3H, NTD.RR.GameOrBetter, Shape(5, 11)),
-                Forcing(Bid._3S, NTD.RR.GameOrBetter, Shape(5, 11)),
+
+                Properties(Bid._3H, forcing1Round: true),
+                Properties(Bid._3S, forcing1Round: true),
+                Shows(Bid._3H, NTD.RR.GameOrBetter, Shape(5, 11)),
+                Shows(Bid._3S, NTD.RR.GameOrBetter, Shape(5, 11)),
+
                 Shows(Bid._3NT, NTD.RR.Game, LongestMajor(4)),
 
                 Shows(Bid._4NT, NTD.RR.InviteSlam), // TODO: Any shape stuff here???
 
-                Shows(Bid._6NT, Flat(), NTD.RR.SmallSlam),
+                Shows(Bid._6NT, Flat, NTD.RR.SmallSlam),
                 Shows(Bid._6NT, Balanced, Shape(Suit.Hearts, 2, 3), Shape(Suit.Spades, 2, 3), NTD.RR.SmallSlam),
 
                 Shows(Bid.Pass, NTD.RR.LessThanInvite),
@@ -292,9 +296,11 @@ namespace BridgeBidding
                 Shows(Call.Pass, Partner(IsLastBid(Bid._2D))),
                 Shows(Call.Pass, Partner(IsLastBid(Bid._2H))),
                 Shows(Call.Pass, Partner(IsLastBid(Bid._2S))),
-
-                Forcing(Bid._3H, Partner(IsLastBid(Bid._2NT)), NTD.OR.AcceptInvite, Shape(5)),
-                Forcing(Bid._3S, Partner(IsLastBid(Bid._2NT)), NTD.OR.AcceptInvite, Shape(5)),
+                
+                Properties(Bid._3H, forcing1Round: true),
+                Properties(Bid._3S, forcing1Round: true),
+                Shows(Bid._3H, Partner(IsLastBid(Bid._2NT)), NTD.OR.AcceptInvite, Shape(5)),
+                Shows(Bid._3S, Partner(IsLastBid(Bid._2NT)), NTD.OR.AcceptInvite, Shape(5)),
 
                 Shows(Bid._3NT, NTD.OR.AcceptInvite, Partner(IsLastBid(Bid._2NT))),
                 Shows(Bid._3NT, Partner(IsLastBid(Bid._3H)), Shape(Suit.Hearts, 0, 2)),
