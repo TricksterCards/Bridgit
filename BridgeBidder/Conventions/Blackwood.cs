@@ -61,6 +61,7 @@ namespace BridgeBidding
 				return new PositionCalls(ps).AddRules(
 					Properties(Bid._5NT, RespondKings, forcing1Round: true),
 					Shows(Bid._5NT, PairKeyCards(suit, true, 5), PairPoints(GrandSlam)),
+					Shows(Bid._5NT, PairKeyCards(suit, true, 5), PairPoints(SlamOrBetter), Fit(9, suit)),
 
 					Shows(new Bid(6, suit), PairPoints(SlamOrBetter), PairKeyCards(suit, null, 4, 5)),
 
