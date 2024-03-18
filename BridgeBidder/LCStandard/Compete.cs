@@ -30,6 +30,12 @@ namespace BridgeBidding
                 Shows(Bid._4H, Fit8Plus, CompeteTo4),
                 Shows(Bid._4S, Fit8Plus, CompeteTo4),
 
+                Shows(Bid._4H, IsForcedToGame, Fit8Plus, CompeteTo3),
+                Shows(Bid._4S, IsForcedToGame, Fit8Plus, CompeteTo3),
+
+                Shows(Bid._4H, Fit8Plus, CompeteTo5),
+                Shows(Bid._4S, Fit8Plus, CompeteTo5),
+
                 Shows(Bid._2C, Fit8Plus, CompeteTo2),
                 Shows(Bid._2D, Fit8Plus, CompeteTo2),
                 Shows(Bid._2H, Fit8Plus, CompeteTo2),
