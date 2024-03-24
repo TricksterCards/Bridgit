@@ -30,6 +30,8 @@ namespace BridgeBidding
 
             public Constraint GameAsDummy;
             public Constraint InviteAsDummy;
+            public Constraint SmallSlamAsDummy;
+            public Constraint GrandSlamAsDummy;
         }
 
         public String OpenType;
@@ -64,8 +66,10 @@ namespace BridgeBidding
             RR.GrandSlam = Points(20, 40);
 
             // TODO: This dummy stuff seems poorly thought out.  Perhaps just plain old points...
-            RR.GameAsDummy = DummyPoints(10, 15);
             RR.InviteAsDummy = DummyPoints(8, 9);
+            RR.GameAsDummy = DummyPoints(10, 16);
+            RR.SmallSlamAsDummy = DummyPoints(17, 20);
+            RR.GrandSlamAsDummy = DummyPoints(21, 40);
         }
     }
 
@@ -92,8 +96,10 @@ namespace BridgeBidding
 			RR.SmallSlam =          Points(18, 19);
 			RR.GrandSlam =          Points(20, 40);
 
-			RR.GameAsDummy = DummyPoints(10, 15);
 			RR.InviteAsDummy = DummyPoints(8, 9);
+            RR.GameAsDummy = DummyPoints(10, 16);
+            RR.SmallSlamAsDummy = DummyPoints(17, 20);
+            RR.GrandSlamAsDummy = DummyPoints(21, 40);
 
 		}
 	}
@@ -130,7 +136,8 @@ namespace BridgeBidding
 
 			RR.GameAsDummy = DummyPoints(13, 15);
 			RR.InviteAsDummy = DummyPoints(11, 12);
-
+            RR.SmallSlamAsDummy = DummyPoints(40, 40);
+            RR.GrandSlamAsDummy = DummyPoints(40, 40);
 		}
 	}
 
@@ -179,7 +186,7 @@ namespace BridgeBidding
                     return new CallFeature[]
                     {
                         PartnerBids(Bid._1NT, ConventionalResponses),
-                        Shows(Bid._1NT, NTD.OR.Open, Balanced, OppsStopped(), IsNotFinalCall)
+                        Shows(Bid._1NT, NTD.OR.Open, Balanced, OppsStopped, IsNotFinalCall)
                     };
                 }
 			}

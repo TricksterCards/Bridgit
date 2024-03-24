@@ -78,12 +78,7 @@ namespace BridgeBidding
                 choices.AddRules(new CallFeature[]
                 {
                     PartnerBids(OpenBid2.ResponderChangedSuits),
-                    PartnerBids(Bid._2C, OpenBid2.ResponderRaisedMinor),
-                    PartnerBids(Bid._3C, OpenBid2.ResponderRaisedMinor),
-                    PartnerBids(Bid._4C, OpenBid2.ResponderRaisedMinor),
-                    PartnerBids(Bid._5C, OpenBid2.ResponderRaisedMinor),
 
-                
                     Shows(Bid._1D, Points(Respond1Level), Shape(5, 10), LongestMajor(3)),
 
                     Shows(Bid._1H, Points(Respond1Level), Shape(4), Shape(Suit.Spades, 0, 4)),
@@ -91,6 +86,8 @@ namespace BridgeBidding
 
                     Shows(Bid._1S, Points(Respond1Level), Shape(4, 10), LongerOrEqualTo(Suit.Hearts)),
 
+                    Properties(new[] { Bid._2C, Bid._3C, Bid._4C, Bid._5C }, OpenBid2.ResponderRaisedMinor, 
+                                agreeTrump: true),
                     // TODO: Inverted minors...
                     Shows(Bid._2C, Points(Raise1), Shape(5), LongestMajor(3)),
                     Shows(Bid._3C, Points(LimitRaise), Shape(5), LongestMajor(3)),                
@@ -101,11 +98,9 @@ namespace BridgeBidding
             else
             {
                 choices.AddRules(SolidSuit.Bids);
-                Bid[] newSuits = { Bid._1D, Bid._1H, Bid._1S };
-                Bid[] raises = { Bid._2C, Bid._3C, Bid._4C, Bid._5C };
                 choices.AddRules(new CallFeature[]
                 {
-                    Properties(newSuits, OpenBid2.ResponderChangedSuits, forcing1Round: true),
+                    Properties(new[] { Bid._1D, Bid._1H, Bid._1S }, OpenBid2.ResponderChangedSuits, forcing1Round: true),
 
                     Shows(Bid._1D, Points(Respond1Level), Shape(5, 10), LongestMajor(3)),
                     // TODO: Should we bid "up the line" with 11+ points?
@@ -117,7 +112,7 @@ namespace BridgeBidding
                     Shows(Bid._1S, Points(Respond1Level), Shape(4, 10), LongerOrEqualTo(Suit.Hearts)),
 
                     // TODO: Inverted minors.  Need alerts for this.
-                    Properties(raises, OpenBid2.ResponderRaisedMinor),
+                    Properties(new[] { Bid._2C, Bid._3C, Bid._4C, Bid._5C }, OpenBid2.ResponderRaisedMinor, agreeTrump: true),
                     Shows(Bid._2C, Points(Raise1), Shape(5), LongestMajor(3)),
                     Shows(Bid._3C, Points(LimitRaise), Shape(5), LongestMajor(3)),                
                     Shows(Bid._5C, Points(Weak5Level), Shape(7, 10)),
@@ -146,7 +141,7 @@ namespace BridgeBidding
             Bid[] forcingBids = { Bid._1H, Bid._1S };
             choices.AddRules(new CallFeature[]
             {
-				Properties(raises, OpenBid2.ResponderRaisedMinor),
+				Properties(raises, OpenBid2.ResponderRaisedMinor, agreeTrump: true),
                 Properties(Bid._2C, OpenBid2.TwoOverOne, forcingToGame: true),
                 Properties(forcingBids, OpenBid2.ResponderChangedSuits, forcing1Round: true),
 
@@ -187,7 +182,7 @@ namespace BridgeBidding
                     // TODO: Is this OK
                     PartnerBids(OpenBid2.ResponderChangedSuits),
 
-                    Properties(raises , OpenBid2.ResponderRaisedMajor),
+                    Properties(raises , OpenBid2.ResponderRaisedMajor, agreeTrump: true),
                     
                     Shows(Bid._2H, DummyPoints(Raise1), Shape(3, 5)),
                     Shows(Bid._3H, DummyPoints(MediumHand), Shape(3, 5)),
@@ -225,7 +220,7 @@ namespace BridgeBidding
                     Shows(Bid._2D, DummyPoints(Suit.Hearts, GameOrBetter), LongerOrEqualTo(Suit.Clubs), Shape(Suit.Spades, 0, 4)),
 
 
-                    Properties(raises, OpenBid2.ResponderRaisedMajor),
+                    Properties(raises, OpenBid2.ResponderRaisedMajor, agreeTrump: true),
                     
                     Shows(Bid._2H, DummyPoints(Raise1), Shape(3, 5)),
                     Shows(Bid._3H, DummyPoints(MediumHand), Shape(4, 5)),
@@ -263,7 +258,7 @@ namespace BridgeBidding
                     // TODO: Is this OK
                     PartnerBids(OpenBid2.ResponderChangedSuits),
    
-                    Properties(raises, OpenBid2.ResponderRaisedMajor),
+                    Properties(raises, OpenBid2.ResponderRaisedMajor, agreeTrump: true),
 
                     Shows(Bid._2S, DummyPoints(6, 10),  Shape(3, 5)),
                     Shows(Bid._3S, DummyPoints(11, 12), Shape(3, 5)),
@@ -305,7 +300,7 @@ namespace BridgeBidding
 
                     Shows(Bid._2H, Shape(5, 10), Points(GameOrBetter)),
 
-                    Properties(raises, OpenBid2.ResponderRaisedMajor),
+                    Properties(raises, OpenBid2.ResponderRaisedMajor, agreeTrump: true),
 
                     Shows(Bid._2S, DummyPoints(Raise1), Shape(3, 5)),
                     Shows(Bid._3S, DummyPoints(MediumHand), Shape(4, 5)),
@@ -421,7 +416,8 @@ namespace BridgeBidding
             var raisePartner = ps.BiddingState.Contract.NextAvailableBid(openSuit);
             var cueBidRaise = new Bid(rhoBidLevel + 1, rhoBidSuit);
             var weakRaise = new Bid(raisePartner.Level + 1, openSuit);
-            PositionCallsFactory raiseHandler =  OpenBid2.ResponderRaisedMajor;
+            var weakFit = openSuit.IsMinor() ? Fit8Plus : Fit9Plus;
+            PositionCallsFactory raiseHandler = OpenBid2.ResponderRaisedMajor;
             if (openSuit.IsMinor())
             {
                 raiseHandler = OpenBid2.ResponderRaisedMinor;
@@ -433,15 +429,13 @@ namespace BridgeBidding
             var higherUnbid = suits.Last();
             var bidNew1 = ps.BiddingState.Contract.NextAvailableBid(lowerUnbid);
             var bidNew2 = ps.BiddingState.Contract.NextAvailableBid(higherUnbid);
-
+            bool newSuitForcing = !ps.IsPassedHand;
 
             choices.AddRules(
                 // TODO: Perhaps ResponderChangedSuitsInComp is better here?
                 PartnerBids(OpenBid2.ResponderChangedSuits),
                
-                PartnerBids(Bid._1NT, OpenBid2.ResponderBidNT),
-                PartnerBids(Bid._2NT, OpenBid2.ResponderBidNT),
-                PartnerBids(Bid._3NT, OpenBid2.ResponderBidNT),
+                Properties(new[] { Bid._1NT, Bid._2NT, Bid._3NT }, OpenBid2.ResponderBidNT),
 
                 // Negative double may have made these bids irrelevant
            // TODO: Duplicates new1 and new2     Properties(Bid._1H, OpenBid2.ResponderChangedSuits, forcing1Round: true),
@@ -452,17 +446,17 @@ namespace BridgeBidding
                 Shows(Bid._1S, Points(Respond1Level), Shape(4), Shape(Suit.Hearts, 0, 3)),
                 Shows(Bid._1S, Points(Respond1Level), Shape(5, 11), LongerOrEqualTo(Suit.Hearts)),
 
-                Properties(new Bid[] { raisePartner, weakRaise }, raiseHandler),
-                Properties(cueBidRaise, raiseHandler, forcing1Round: true), 
+                Properties(new Bid[] { raisePartner, weakRaise }, raiseHandler, trump: openSuit),
+                Properties(cueBidRaise, raiseHandler, forcing1Round: true, trump: openSuit), 
                 Shows(raisePartner, Fit8Plus, DummyPoints(Raise1)),
                 Shows(cueBidRaise, Fit(openSuit), DummyPoints(openSuit, LimitRaiseOrBetter)),
-                Shows(weakRaise, Fit9Plus, DummyPoints(WeakJumpRaise)),
+                Shows(weakRaise, weakFit, DummyPoints(WeakJumpRaise)),
             
-                Shows(Bid._1NT, OppsStopped(), Points(Raise1)),
-                Shows(Bid._2NT, OppsStopped(), Points(11, 12)),
+                Shows(Bid._1NT, OppsStopped, Points(Raise1)),
+                Shows(Bid._2NT, OppsStopped, Points(11, 12)),
                 // TODO: Still lots more...  3NT.  Bid majors first if they must be bid at 2-level etc.
 
-                Properties(new Bid[] { bidNew1, bidNew2 }, OpenBid2.ResponderChangedSuits, forcing1Round: true),
+                Properties(new Bid[] { bidNew1, bidNew2 }, OpenBid2.ResponderChangedSuits, forcing1Round: newSuitForcing),
                 Shows(bidNew1, Shape(4), Shape(higherUnbid, 0, 4), Points(NewSuit2Level)),
                 Shows(bidNew2, Shape(5, 10), LongerThan(higherUnbid), Points(NewSuit2Level)),
                 Shows(bidNew2, Shape(4, 10), Shape(lowerUnbid, 0, 3), Points(NewSuit2Level)),
@@ -533,8 +527,8 @@ namespace BridgeBidding
 				Shows(Bid._4H, RaisePartner(raise: 3, fit: 10), DummyPoints(Weak4Level)),
                 Shows(Bid._4S, RaisePartner(raise: 3, fit: 10), DummyPoints(Weak4Level)),
 
-                Shows(Bid._1NT, OppsStopped(), Points(Raise1)),
-                Shows(Bid._2NT, OppsStopped(), Points(LimitRaise)),
+                Shows(Bid._1NT, OppsStopped, Points(Raise1)),
+                Shows(Bid._2NT, OppsStopped, Points(LimitRaise)),
 
                 PartnerBids(Call.Pass, OpenBid2.ResponderPassedInCompetition),
                 Shows(Bid.Pass),  // May have enought points to respond but no good call, so can't specify points.

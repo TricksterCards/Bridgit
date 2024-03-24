@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Tracing;
+using System.Drawing;
 using System.Globalization;
 using System.Threading;
 using System.Xml.Serialization;
@@ -64,6 +66,38 @@ namespace BridgeBidding
             };
             // TODO: Competative bids here too?  Seems silly since restricted raise
             return bids;
+        }
+
+        public static PositionCalls SecondBid2Over1(PositionState ps)
+        {
+            var choices = new PositionCalls(ps);
+            if (ps.PairState.TrumpSuit is Suit trump)
+            {
+                Debug.Assert(trump.IsMajor());  // For the 2nd bid we only expect major suits for trump.
+                // We have agreed on a trump suit.  We go quickly to game with a minimum hand.
+                // Bid controls with a better hand.
+                choices.AddRules(
+                    Shows(new Bid(4, trump), PairPoints(25, 27))
+                );
+            }
+            else
+            {
+                // It is possible that we artificially bid 2/1 with support for opener's major suit
+                // If that is the case show support now.
+                choices.AddRules(
+                    Properties(new[] {Bid._2H, Bid._2S, Bid._3H, Bid._3S, Bid._4H, Bid._4S }, agreeTrump: true, onlyIf: IsPartnersSuit),
+                    Shows(Bid._4H, IsPartnersSuit, Fit8Plus, DummyPoints(12, 13)),
+                    Shows(Bid._4S, IsPartnersSuit, Fit8Plus, DummyPoints(12, 13)),
+                    Shows(Bid._2H, IsPartnersSuit, Fit8Plus, DummyPoints(14, 40)),
+                    Shows(Bid._2S, IsPartnersSuit, Fit8Plus, DummyPoints(14, 40)),
+                    Shows(Bid._3H, IsPartnersSuit, IsNonJump, Fit8Plus, DummyPoints(14, 40)),
+                    Shows(Bid._3S, IsPartnersSuit, IsNonJump, Fit8Plus, DummyPoints(14, 40))
+                );
+
+            }
+            // We want to do blackwood LAST since strong control showing bids take prioirity.
+            choices.AddRules(Blackwood.InitiateConvention);
+            return choices;
         }
     }
 

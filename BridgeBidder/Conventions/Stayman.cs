@@ -97,6 +97,9 @@ namespace BridgeBidding
             return new PositionCalls(ps).AddRules(
                 Shows(Call.Pass, NTD.RR.LessThanInvite),
 
+                Shows(new Bid(7, major), Shape(4, 5), NTD.RR.GrandSlamAsDummy),
+                Shows(new Bid(6, major), Shape(4, 5), NTD.RR.SmallSlamAsDummy),
+                // TODO: Should there be some invitational level in here?  Probably...
                 Shows(new Bid(4, major), Shape(4, 5), NTD.RR.GameAsDummy),
 
                 Properties(new Bid(3, major), p => PlaceContractMajorInvite(p, major)),

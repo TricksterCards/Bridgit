@@ -85,7 +85,7 @@ namespace BridgeBidding
                 Shows(Bid._1S, TakeoutSuit(), Points(MinLevel)),
 
 
-                Shows(Bid._1NT, Balanced, OppsStopped(), Points(NoTrump1)),
+                Shows(Bid._1NT, Balanced, OppsStopped, Points(NoTrump1)),
 
                 Shows(Bid._2C, TakeoutSuit(), Points(MinLevel)),
                 Shows(Bid._2D, TakeoutSuit(), IsNonJump,    Points(MinLevel)),
@@ -96,13 +96,13 @@ namespace BridgeBidding
                 Shows(Bid._2S, TakeoutSuit(), IsSingleJump,   Points(InviteLevel)),
 
 
-                Shows(Bid._2NT, Balanced, OppsStopped(), Points(NoTrump2)),
+                Shows(Bid._2NT, Balanced, OppsStopped, Points(NoTrump2)),
 
                 // TODO: Game bids
                 Shows(Bid._4H, TakeoutSuit(), Points(GameLevel)),
                 Shows(Bid._4S, TakeoutSuit(), Points(GameLevel)),
 
-                Shows(Bid._3NT, Balanced, OppsStopped(), Points(Game3NT)),
+                Shows(Bid._3NT, Balanced, OppsStopped, Points(Game3NT)),
 
                 Shows(Call.Pass, Not(RHO(IsLastBid(Call.Pass))))
             }) ;

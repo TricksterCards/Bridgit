@@ -142,6 +142,14 @@ namespace BridgeBidding
 				{
 					_suitSummary.RuleOf9Points = CombineInt(_suitSummary.RuleOf9Points, points, CombineRule.Show);
 				}
+				public void ShowFirstRoundControl(bool control)
+				{
+					_suitSummary.FirstRoundControl = CombineBool(_suitSummary.FirstRoundControl, control, CombineRule.Show);
+				}
+				public void ShowSecondRoundControl(bool control)
+				{
+					_suitSummary.SecondRoundControl = CombineBool(_suitSummary.SecondRoundControl, control, CombineRule.Show);
+				}
             }
 
             internal (int Min, int Max)? _quality;
@@ -205,9 +213,12 @@ namespace BridgeBidding
                 get; protected set;
             }
 
-            public bool? HaveQueen { get; protected set; }
+            public bool? HaveQueen { get; protected set; } = null;
 
-			public bool? Stopped { get; protected set; }
+			public bool? Stopped { get; protected set; } = null;
+
+			public bool? FirstRoundControl { get; protected set; } = null;
+			public bool? SecondRoundControl { get; protected set; } = null;
 
             public SuitSummary()
             {
@@ -217,8 +228,6 @@ namespace BridgeBidding
                 this._quality = null;
 				this.Losers = null;
                 this.KeyCards = null;
-				this.HaveQueen = null;
-				this.Stopped = null;
 				this.RuleOf9Points = null;
             }
             // TODO: There are other properties like "Stopped", "Has Ace", that can go here...
@@ -234,6 +243,8 @@ namespace BridgeBidding
 				this.HaveQueen= other.HaveQueen;
 				this.Stopped = other.Stopped;
 				this.RuleOf9Points= other.RuleOf9Points;
+				this.FirstRoundControl = other.FirstRoundControl;
+				this.SecondRoundControl = other.SecondRoundControl;
             }
 		
             internal void Combine(SuitSummary other, CombineRule cr)
@@ -247,6 +258,8 @@ namespace BridgeBidding
 				this.Stopped = CombineBool(this.Stopped, other.Stopped, cr);
 				this.KeyCards = CombineIntSet(this.KeyCards, other.KeyCards, cr);
 				this.RuleOf9Points = CombineInt(this.RuleOf9Points, other.RuleOf9Points, cr);
+				this.FirstRoundControl = CombineBool(this.FirstRoundControl, other.FirstRoundControl, cr);
+				this.SecondRoundControl = CombineBool(this.SecondRoundControl, other.SecondRoundControl, cr);
             }
 
 
@@ -260,7 +273,9 @@ namespace BridgeBidding
 						this.HaveQueen == other.HaveQueen &&
 						this.Stopped == other.Stopped &&
 						EqualIntSet(this.KeyCards, other.KeyCards) &&
-						this.RuleOf9Points == other.RuleOf9Points);
+						this.RuleOf9Points == other.RuleOf9Points) &&
+						this.FirstRoundControl == other.FirstRoundControl &&
+						this.SecondRoundControl == other.SecondRoundControl;
             }
         }
 

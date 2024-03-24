@@ -32,6 +32,8 @@ namespace BridgeBidding
 
         public IEnumerable<Suit> ShownSuits => _firstToShow.Keys;
 
+        public Suit? TrumpSuit { get; private set; } = null; 
+
         public PairState(BiddingState biddingState, Pair pair, IBiddingSystem biddingSystem, Vulnerable vulnerable)
         {
             this.BiddingState = biddingState;
@@ -96,8 +98,14 @@ namespace BridgeBidding
                     _forcedPosition = callDetails.PositionState.Partner;
                     _forcedThroughRound = callDetails.PositionState.Partner.BidRound;
                 }
+                if (callDetails.Properties.TrumpSuit.HasValue)
+                {
+                    TrumpSuit = callDetails.Properties.TrumpSuit;
+                }
             }
         }
+
+
 /*
         // TODO: Probably update this after MakeCall() instead of this silly search...
         // TODO: For transfers and michales/unusual 2NT this does not show the strain of the bid.  This is a problem.

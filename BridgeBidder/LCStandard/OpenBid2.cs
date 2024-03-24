@@ -100,23 +100,47 @@ namespace BridgeBidding
 		public static PositionCalls TwoOverOne(PositionState ps)
 		{
 			var choices = new PositionCalls(ps);
-			var partnerSuit = (Suit)ps.Partner.Bid.Suit;
+			var partnerSuit = ps.Partner.Bid.Suit.Value;
 			choices.AddRules(
-				// TODO: Need better responses for 2nd bid. PartnerBids(RespondBid2.SecondBid2Over1),
+				PartnerBids(RespondBid2.SecondBid2Over1),
+
+				// These show a trump suit.  Responder must play in this.
+				// TODO: Should the idea of a "forced" trump suit be remembered in the bidding system?
+				// This would allow competative bids to use this information to place the contract...
+				// TODO: What is the length requirements and quality requirements for these bids?
+				Properties(Bid._3H, agreeTrump: true, onlyIf: IsRebid),
+				Properties(Bid._3S, agreeTrump: true, onlyIf: IsRebid),
+				Shows(Bid._3H, IsRebid, Shape(7), ExcellentPlusSuit),
+				Shows(Bid._3H, IsRebid, Shape(8), GoodPlusSuit),
+				Shows(Bid._3H, IsRebid, Shape(9, 11)),
+				Shows(Bid._3S, IsRebid, Shape(7), ExcellentPlusSuit),
+				Shows(Bid._3S, IsRebid, Shape(8), GoodPlusSuit),
+				Shows(Bid._3S, IsRebid, Shape(9, 11)),
+
+				// If partner has shown hearts after we bid spades then agree on that suit.
+				Properties(new[] {Bid._3H, Bid._4H }, agreeTrump: true, onlyIf: IsPartnersSuit),
+				Shows(Bid._3H, IsPartnersSuit, Shape(3, 7), Points(14, 40)),
+				Shows(Bid._4H, IsPartnersSuit, Shape(3, 7), Points(12, 13)),
+
+				// Need to show any 4+ card major that is a new suit.  Reverses don't exist
+				Shows(Bid._2H, IsNewSuit, Shape(4, 6)),
+				Shows(Bid._2S, IsNewSuit, Shape(4, 6)),
+
+				// TODO: If partner shows a minor then do we want to raise?  Or bid NT?  Or bid a new major if
+				// we have one?  One D/2C/ Now shouldn't we show majors?  Or bid NT?
+				// TODO:  If it was 1S/2H and we have 3+H then raise to 3 or 4 hearts...  Only special case.
 				Shows(new Bid(3, partnerSuit), Fit8Plus),
 
 				Shows(Bid._2NT, Balanced),
 
-				Shows(Bid._2D, IsRebid, Shape(6, 10), LongestSuit),
-				Shows(Bid._2H, IsRebid, Shape(6, 10), LongestSuit),
-				Shows(Bid._2S, IsRebid, Shape(6, 10), LongestSuit),
-				Shows(Bid._3C, IsRebid, Shape(6, 10), LongestSuit),
+				Shows(Bid._2D, IsRebid, Shape(6, 11), LongestSuit),
+				Shows(Bid._2H, IsRebid, Shape(6, 8), LongestSuit),
+				Shows(Bid._2S, IsRebid, Shape(6, 8), LongestSuit),
+				Shows(Bid._3C, IsRebid, Shape(6, 11), LongestSuit),
 
 				Shows(Bid._2D, IsNewSuit, Shape(4, 6)),
-				Shows(Bid._2H, IsNewSuit, Shape(4, 6)),
-				Shows(Bid._2S, IsNewSuit, Shape(4, 6)),
 				Shows(Bid._3C, IsNewSuit, Shape(4, 6)),
-				Shows(Bid._3D, IsNewSuit, Shape(4, 6))
+				Shows(Bid._3D, IsNewSuit, IsNonJump, Shape(4, 6))
 			);
 			return choices;
 		}
@@ -152,7 +176,7 @@ namespace BridgeBidding
 			choices.AddRules(
 				Shows(Call.Pass, Balanced, Points(12, 13)),
 
-				Shows(Bid._2NT, Balanced, Points(Rebid2NT)),
+				Shows(Bid._2NT, Balanced, HighCardPoints(18, 19), Points(19, 20)),
 
 				Shows(Bid._2C, IsNewSuit, Shape(4, 6), Points(12, 16)),
 				Shows(Bid._2D, IsNewSuit, Shape(4, 6), Points(12, 16)),
@@ -219,7 +243,6 @@ namespace BridgeBidding
                 Shows(Bid._4H, Fit8Plus, PairPoints(PairGame)),
 				Shows(Bid._4S, Fit8Plus, PairPoints(PairGame))
 			);
-			// Competative bids include Blackwood...
 
 			return choices;
 		}

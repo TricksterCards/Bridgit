@@ -91,13 +91,13 @@ namespace BridgeBidding
 			return new CallFeature[] {
 				PartnerBids(OpenerRebid),
 
-				Shows(new Bid(4, suit), NTD.RR.GameOrBetter, OppsStopped(false)),
+				Shows(new Bid(4, suit), NTD.RR.GameOrBetter, OppsNotStopped),
 				Shows(new Bid(4, suit), Shape(6, 10), NTD.RR.GameOrBetter),
-				Shows(Bid._3NT, NTD.RR.GameOrBetter, OppsStopped()),
+				Shows(Bid._3NT, NTD.RR.GameOrBetter, OppsStopped),
 
-				Shows(new Bid(3, suit), NTD.RR.InviteGame, OppsStopped(false)),
+				Shows(new Bid(3, suit), NTD.RR.InviteGame, OppsNotStopped),
 				Shows(new Bid(3, suit), Shape(6, 10), NTD.RR.InviteGame),
-				Shows(Bid._2NT, NTD.RR.InviteGame, OppsStopped()),
+				Shows(Bid._2NT, NTD.RR.InviteGame, OppsStopped),
 
 				Shows(new Bid(2, suit))
 

@@ -107,7 +107,8 @@ namespace BridgeBidding
 					}
 				}
 				hs.Suits[suit].ShowRuleOf9Points(rule9);
-
+				hs.Suits[suit].ShowFirstRoundControl(c == 0 || hand.Contains(new Card(Rank.Ace, suit)));
+				hs.Suits[suit].ShowSecondRoundControl(c <= 1 || hand.Contains(new Card(Rank.King, suit)));
 			}
 		}
 	}

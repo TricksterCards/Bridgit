@@ -9,9 +9,9 @@ namespace BridgeBidding
 	{
 
         private static (int, int) RespondPoints = (13, 40);
-        private static (int, int) OpenerPointsMin = (12, 13);
-        private static (int, int) OpenerPointsMedium = (13, 14);
-        private static (int, int) OpenerPointsMax = (15, 40);
+        private static (int, int) OpenerPointsMin = (12, 13);   // TODO: What are these ranges???
+        private static (int, int) OpenerPointsMedium = (14, 15);
+        private static (int, int) OpenerPointsMax = (16, 40);
 
 
 		public static IEnumerable<CallFeature> InitiateConvention(PositionState ps)
@@ -21,7 +21,7 @@ namespace BridgeBidding
             {
                 return new CallFeature[]
                 {
-                    Properties(Bid._2NT, OpenerRebid, forcingToGame: true, alert: UserText.Jacoby2NTDescription, convention: UserText.Jacoby2NT),
+                    Properties(Bid._2NT, OpenerRebid, forcingToGame: true, trump: suit, alert: UserText.Jacoby2NTDescription, convention: UserText.Jacoby2NT),
 
                     Shows(Bid._2NT, Fit(suit), Shape(suit, 4, 10), DummyPoints(suit, RespondPoints)),
                 };
@@ -60,15 +60,14 @@ namespace BridgeBidding
         {
             var choices = new PositionCalls(ps);
             choices.AddRules(Blackwood.InitiateConvention);
-            choices.AddRules(new CallFeature[]
-            {
+            choices.AddRules(
                 // TODO: IMPLEMENT RESPONSES!!!
                 // TOOD: What is the thing to do here??  Perhaps bid controls.  
                 Shows(Bid._4H, IsOpeningBid(Bid._1H)),
                 Shows(Bid._4S, IsOpeningBid(Bid._1S)),
 
                 Shows(Bid.Pass)
-            });     
+            );     
             return choices;       
         }
     }

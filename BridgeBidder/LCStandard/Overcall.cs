@@ -87,7 +87,7 @@ namespace BridgeBidding
                 // TODO: Rebid 6+ card suit if appropriate
                 // TODO: Bid some level of NT if appropriate...
 
-                Shows(Bid._3NT, OppsStopped(), PairPoints((25, 30))),
+                Shows(Bid._3NT, OppsStopped, PairPoints((25, 30))),
                 Shows(Call.Pass)
             };
         }

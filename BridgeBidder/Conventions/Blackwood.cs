@@ -24,6 +24,11 @@ namespace BridgeBidding
 
 		private static bool TryGetAgreedSuit(PositionState ps, out Suit suit)
 		{
+			if (ps.PairState.TrumpSuit.HasValue)
+			{
+				suit = ps.PairState.TrumpSuit.Value;
+				return true;
+			}
 			if (ps.PairState.LastShownSuit.HasValue)
 			{
 				suit = ps.PairState.LastShownSuit.Value;

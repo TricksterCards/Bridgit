@@ -46,9 +46,9 @@ namespace BridgeBidding
                 Shows(Bid._3H, Fit8Plus, CompeteTo3),
                 Shows(Bid._3S, Fit8Plus, CompeteTo3),
 
-                Shows(Bid._3NT, OppsStopped(), CompeteTo3NT),
+                Shows(Bid._3NT, OppsStopped, CompeteTo3NT),
 
-                Shows(Bid._2NT, IsOppsContract, OppsStopped(), CompeteTo2NT),
+                Shows(Bid._2NT, IsOppsContract, OppsStopped, CompeteTo2NT),
 
 
                 Shows(Bid._4C, Not(Gerber.Applies), Fit8Plus, CompeteTo4),

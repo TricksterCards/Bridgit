@@ -78,9 +78,9 @@ namespace BridgeBidding
                     // Perhaps depend more on PairPoints(). 
 
                     // Lowest priority is to bid some level of NT - all fit() bids should be higher priority.
-                    Shows(Bid._1NT, OppsStopped(), Points(AdvanceTo1NT)),
-                    Shows(Bid._2NT, OppsStopped(), PairPoints(PairAdvanceTo2NT)),
-					Shows(Bid._3NT, OppsStopped(), PairPoints(PairAdvanceTo3NT))
+                    Shows(Bid._1NT, OppsStopped, Points(AdvanceTo1NT)),
+                    Shows(Bid._2NT, OppsStopped, PairPoints(PairAdvanceTo2NT)),
+					Shows(Bid._3NT, OppsStopped, PairPoints(PairAdvanceTo3NT))
 
 
                     // TODO: Any specification of PASS?>>

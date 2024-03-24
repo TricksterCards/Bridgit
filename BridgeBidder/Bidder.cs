@@ -41,7 +41,7 @@ namespace BridgeBidding
 											PositionCallsFactory choicesFactory, 
 											params StaticConstraint[] constraints)
 		{
-			return new CallProperties(call, choicesFactory, false, false, constraints);
+			return new CallProperties(call, choicesFactory, false, false, false, null, constraints);
 		}
 
 
@@ -71,12 +71,12 @@ namespace BridgeBidding
 			return new CallAnnotation(null, CallAnnotation.AnnotationType.Convention, text, constraints);
 		}
 		
-		public static CallFeatureGroup Properties(Call call, PositionCallsFactory partnerBids = null, bool forcing1Round = false, bool forcingToGame = false,
+		public static CallFeatureGroup Properties(Call call, PositionCallsFactory partnerBids = null, bool forcing1Round = false, bool forcingToGame = false, bool agreeTrump = false, Suit? trump = null, 
 				 	string alert = null, string announce = null, string convention = null, 
 					StaticConstraint onlyIf = null)
 		{
 			var group = new CallFeatureGroup();
-			group.Features.Add(new CallProperties(call, partnerBids, forcing1Round, forcingToGame, onlyIf));
+			group.Features.Add(new CallProperties(call, partnerBids, forcing1Round, forcingToGame, agreeTrump, trump, onlyIf));
 			if (alert != null)
 			{
 				group.Features.Add(Alert(call, alert, onlyIf));
@@ -92,14 +92,14 @@ namespace BridgeBidding
 			return group;
 		}	
 
-		public static CallFeatureGroup Properties(IEnumerable<Call> calls, PositionCallsFactory partnerBids = null, bool forcing1Round = false, bool forcingToGame = false,
+		public static CallFeatureGroup Properties(IEnumerable<Call> calls, PositionCallsFactory partnerBids = null, bool forcing1Round = false, bool forcingToGame = false, bool agreeTrump = false, Suit? trump = null, 
 				    string alert = null, string announce = null, string convention = null, 
 					StaticConstraint onlyIf = null)
 		{
 			var group = new CallFeatureGroup();
 			foreach (Call call in calls)
 			{
-				group.Features.Add(Properties(call, partnerBids, forcing1Round, forcingToGame, alert, announce, convention, onlyIf));
+				group.Features.Add(Properties(call, partnerBids, forcing1Round, forcingToGame, agreeTrump, trump, alert, announce, convention, onlyIf));
 			}
 			return group;			
 		}
@@ -233,7 +233,9 @@ namespace BridgeBidding
 		}
 
 		public static readonly StaticConstraint IsJumpShift = new ConstraintGroup(IsSingleJump, IsNewSuit);
-		
+
+		public static readonly StaticConstraint IsPartnersSuit = Partner(HasShownSuit(eitherPartner: false));
+	
 		// ************************************  DYNAMIC CONSTRAINTS ***
 		public static HandConstraint PassIn4thSeat()
 		{
@@ -473,10 +475,8 @@ namespace BridgeBidding
 		}
 
 
-		public static Constraint OppsStopped(bool desired = true)
-		{
-			return new ShowsOppsStopped(desired);
-		}
+		public static HandConstraint OppsStopped = new ShowsOppsStopped(true);
+		public static HandConstraint OppsNotStopped = new ShowsOppsStopped(false);
 
 
 
