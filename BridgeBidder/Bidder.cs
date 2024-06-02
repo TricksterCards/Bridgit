@@ -325,20 +325,20 @@ namespace BridgeBidding
 		}
 
 
-		public static HandConstraint ExcellentPlusSuit = IsExcellentPlusSuit(null);
-        public static HandConstraint IsExcellentPlusSuit(Suit? suit = null)
+		public static readonly HandConstraint ExcellentPlusSuit = ShowsExcellentPlusSuit(null);
+        public static HandConstraint ShowsExcellentPlusSuit(Suit? suit = null)
         { return new ShowsQuality(suit, SuitQuality.Excellent, SuitQuality.Solid); }
 
-		public static HandConstraint BadSuit = IsBadSuit(null);
-		public static HandConstraint IsBadSuit(Suit? suit)
+		public static HandConstraint BadSuit = ShowsBadSuit(null);
+		public static HandConstraint ShowsBadSuit(Suit? suit)
 		{ return new ShowsQuality(suit, SuitQuality.Poor, SuitQuality.Poor);
 		}
-        public static HandConstraint GoodPlusSuit = IsGoodPlusSuit(null);
-		public static HandConstraint IsGoodPlusSuit(Suit? suit)
+        public static HandConstraint GoodPlusSuit = ShowsGoodPlusSuit(null);
+		public static HandConstraint ShowsGoodPlusSuit(Suit? suit)
 		{ return new ShowsQuality(suit, SuitQuality.Good, SuitQuality.Solid); }
 
-		public static HandConstraint DecentPlusSuit = IsDecentPlusSuit(null);
-		public static HandConstraint IsDecentPlusSuit(Suit? suit)
+		public static HandConstraint DecentPlusSuit = ShowsDecentPlusSuit(null);
+		public static HandConstraint ShowsDecentPlusSuit(Suit? suit)
 		{ return new ShowsQuality(suit, SuitQuality.Decent, SuitQuality.Solid); }
 
 		public static HandConstraint SuitLosers(int min, int max, Suit? suit = null)
@@ -399,12 +399,12 @@ namespace BridgeBidding
 		public static Constraint AgreedAnySuit =  AgreedStrain(Strain.Clubs, Strain.Diamonds, Strain.Hearts, Strain.Spades);
 */
 
-		public static Constraint KeyCards(Suit suit, int a, int b, bool? hasQueen = null)
+		public static HandConstraint KeyCards(Suit suit, int a, int b, bool? hasQueen = null)
 		{
 			return new KeyCards(suit, hasQueen, a, b);
 		}
 
-		public static Constraint PairKeyCards(Suit suit, bool? hasQueen, params int[] count)
+		public static HandConstraint PairKeyCards(Suit suit, bool? hasQueen, params int[] count)
 		{
 			return new PairKeyCards(suit, hasQueen, count);
 		}
@@ -475,8 +475,8 @@ namespace BridgeBidding
 		}
 
 
-		public static HandConstraint OppsStopped = new ShowsOppsStopped(true);
-		public static HandConstraint OppsNotStopped = new ShowsOppsStopped(false);
+		public static readonly HandConstraint OppsStopped = new ShowsOppsStopped(true);
+		public static readonly HandConstraint OppsNotStopped = new ShowsOppsStopped(false);
 
 
 

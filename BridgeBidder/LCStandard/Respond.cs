@@ -182,7 +182,7 @@ namespace BridgeBidding
                     // TODO: Is this OK
                     PartnerBids(OpenBid2.ResponderChangedSuits),
 
-                    Properties(raises , OpenBid2.ResponderRaisedMajor, agreeTrump: true),
+                    Properties(raises, OpenBid2.ResponderRaisedMajor, agreeTrump: true),
                     
                     Shows(Bid._2H, DummyPoints(Raise1), Shape(3, 5)),
                     Shows(Bid._3H, DummyPoints(MediumHand), Shape(3, 5)),

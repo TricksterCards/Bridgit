@@ -243,7 +243,7 @@ namespace BridgeBidding
 			}
 			else 
 			{
-				rules.Add(Shows(bid, constraint, Shape(Suit.Hearts, 4, 5), IsBadSuit(Suit.Hearts)));
+				rules.Add(Shows(bid, constraint, Shape(Suit.Hearts, 4, 5), ShowsBadSuit(Suit.Hearts)));
 			}
 			if (bid.Suit == Suit.Spades)
 			{
@@ -251,7 +251,7 @@ namespace BridgeBidding
 			}
 			else 
 			{
-				rules.Add(Shows(bid, constraint, Shape(Suit.Spades, 4, 5), IsBadSuit(Suit.Spades)));
+				rules.Add(Shows(bid, constraint, Shape(Suit.Spades, 4, 5), ShowsBadSuit(Suit.Spades)));
 			}
 		}
 	}
