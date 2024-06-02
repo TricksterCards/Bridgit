@@ -41,4 +41,4 @@ After installing the requirements and cloning this repository, open the cloned f
 
 ### Testing
 
-Unit testing is done using the TestBridgeBidder project. These are the tests that will run automatically against any pull requests. You can use the Testing tab (with a beaker icon) in Visual Studio Code to run the full suite or individual tests on your own machine. Tests are automatically generated from PBN files under the TestBridgeBidder/SAYC folder. Simply add new PBN content to an existing `*.pbn` file or add new `*.pbn` files to add new tests. Test names are derived from the file name and `[Event]` tag in the PBN.
+Unit testing is done using the TestBridgeBidder project. These are the tests that will run automatically against any pull requests. You can use the Testing tab (with a beaker icon) in Visual Studio Code to run the full suite or individual tests on your own machine. Tests are automatically generated from PBN files under the TestBridgeBidder/TwoOverOneGameForce folder. Simply add new PBN content to an existing `*.pbn` file or add new `*.pbn` files to add new tests. Test names are derived from the file name and `[Event]` tag in the PBN.
