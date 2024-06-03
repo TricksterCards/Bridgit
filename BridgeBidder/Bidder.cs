@@ -275,6 +275,11 @@ namespace BridgeBidding
 			return new ShowsPoints(trumpSuit, range.min, range.max, HasPoints.PointType.Dummy);
 		}
 
+		public static HandConstraint DummyPoints(Suit? trumpSuit, int min, int max)
+		{
+			return new ShowsPoints(trumpSuit, min, max, HasPoints.PointType.Dummy);
+		}
+
 		public static HandConstraint Shape(int min) { return new ShowsShape(null, min, min); }
 		public static HandConstraint Shape(Suit suit, int count) { return new ShowsShape(suit, count, count); }
 		public static HandConstraint Shape(int min, int max) { return new ShowsShape(null, min, max); }
