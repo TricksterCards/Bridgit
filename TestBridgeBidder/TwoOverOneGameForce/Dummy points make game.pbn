@@ -6,5 +6,6 @@
 [Contract "4H"]
 [Auction "N"]
 Pass 1H Pass 2D
-Pass 2H Pass 4H
-Pass Pass Pass
+Pass 2H Pass 3H
+Pass 4H Pass Pass
+Pass
