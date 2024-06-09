@@ -313,7 +313,7 @@ namespace BridgeBidding
                 // TODO: Is this OK
                 PartnerBids(OpenBid2.ResponderChangedSuits),
 
-                Properties(new Bid[] { Bid._2S, Bid._2S, Bid._4S} , OpenBid2.ResponderRaisedMajor, agreeTrump: true),
+                Properties(new Bid[] { Bid._2S, Bid._3S, Bid._4S} , OpenBid2.ResponderRaisedMajor, agreeTrump: true),
 
                 Shows(Bid._2S, DummyPoints(6, 10),  Shape(3, 5)),
                 Shows(Bid._3S, DummyPoints(11, 11), Shape(3, 5)),
