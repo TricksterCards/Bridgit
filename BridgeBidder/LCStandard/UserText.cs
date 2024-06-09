@@ -24,5 +24,10 @@ namespace BridgeBidding
         public static string TakeoutDouble = "Takeout Double";
         public static string SemiForcing = "semi-forcing";
 
+        public static string InvertedMinorStrong = "strong, 10+ points";
+        public static string InvertedMinorWeak = "weak, 0-7 points";
+
+        public static string Drury = "Drury";
+
     }
 }

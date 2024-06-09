@@ -190,10 +190,24 @@ namespace BridgeBidding
 			);
 			return choices;
 		}
-		public static PositionCalls OneNTOverMajorOpen(PositionState ps)
+		public static PositionCalls PassedHandResponded1NT(PositionState ps)
 		{
-			return ResponderChangedSuits(ps);
-			// TODO: Do something more here
+			var choices = new PositionCalls(ps);
+			choices.AddRules(
+				Shows(Call.Pass, Balanced, Points(12, 14)),
+
+				Shows(Bid._2NT, Balanced, HighCardPoints(18, 19), Points(19, 20)),
+
+				Shows(Bid._2C, IsNewSuit, Shape(4, 6), Points(12, 16)),
+				Shows(Bid._2D, IsNewSuit, Shape(4, 6), Points(12, 16)),
+				Shows(Bid._2H, IsNewSuit, Shape(4, 6), Points(12, 16)),
+
+				Shows(Bid._2C, IsRebid, Shape(6, 11), Points(12, 16)),
+				Shows(Bid._2D, IsRebid, Shape(6, 11), Points(12, 16)),
+				Shows(Bid._2H, IsRebid, Shape(6, 11), Points(12, 16)),
+				Shows(Bid._2S, IsRebid, Shape(6, 11), Points(12, 16))
+			);
+			return choices;
 		}
 
 
