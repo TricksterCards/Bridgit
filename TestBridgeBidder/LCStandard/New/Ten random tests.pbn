@@ -177,7 +177,8 @@ Pass
 [Result ""]
 [Auction "N"]
 Pass 1H Pass 1S
-Pass 2H Pass 3NT
+Pass 2H Pass 3C
+Pass 3H Pass 3S
 Pass 4H Pass Pass
 Pass
 
@@ -197,9 +198,8 @@ Pass
 [Contract "4H"]
 [Result ""]
 [Auction "E"]
-Pass 1S Pass 1NT =1=
+Pass 1S Pass 1NT
 Pass 2H Pass 2NT
 Pass 3H Pass 4H
 Pass Pass Pass
-[Note "1:Announce: semi-forcing"]
 
