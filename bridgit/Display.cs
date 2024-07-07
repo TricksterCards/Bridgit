@@ -117,19 +117,43 @@ static class Display
             col += 1;
             direction = direction.LeftHandOpponent();
         }
-        foreach (var call in game.Auction.Calls)
+        foreach (var annotatedCall in game.Auction)
         {
             if (invalidBids != null && invalidBids.Contains(bidIndex))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
+            } 
+            else if (annotatedCall.HasNote)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
             }
-            Console.Write(showBidNumbers? $"{bidIndex, 2}:{call, -6}" : $"{call, -6}");
+            Console.Write(showBidNumbers? $"{bidIndex, 2}:{annotatedCall.Call, -6}" : $"{annotatedCall.Call, -6}");
             Console.ResetColor();
             col ++;
             bidIndex ++;
             if (col % 4 == 0) Console.WriteLine();
         }
         if (col % 4 != 0) Console.WriteLine();
+        if (game.Auction.Any(annotatedCall => annotatedCall.HasNote))
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Blue;
+            CallAnnotations(game);
+            Console.ResetColor();
+        }
+    }
+
+    public static void CallAnnotations(Game game)
+    {
+        var bidIndex = 1;
+        foreach (var annotatedCall in game.Auction)
+        {
+            if (annotatedCall.HasNote)
+            {
+                Console.WriteLine($"{bidIndex, 2}: {annotatedCall.Note}");
+            }
+            bidIndex++;
+        }
     }
 
     public static void AuctionTitles(Vulnerable vul, bool showBidNumbers)
