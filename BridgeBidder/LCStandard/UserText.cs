@@ -29,5 +29,8 @@ namespace BridgeBidding
 
         public static string Drury = "Drury";
 
+        public static string Splinter = "Splinter";
+        public static string SplinterDescription = "4+ card support for opener's major with game-going values. singleton or void in bid suit";
+
     }
 }

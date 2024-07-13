@@ -194,6 +194,8 @@ namespace BridgeBidding
             else
             {
                 choices.AddRules(SolidSuit.Bids);
+                // Splinters should come before Jacoby 2NT.  They are limited in point range.
+                choices.AddRules(Splinter.InitiateConvention(ps, openSuit));
                 choices.AddRules(Jacoby2NT.InitiateConvention);
                 choices.AddRules(unpassedCalls);
             }
