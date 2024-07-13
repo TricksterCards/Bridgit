@@ -26,11 +26,14 @@ namespace BridgeBidding
 
         public static PositionCalls OpenerRebid(PositionState ps)
         {
-            // TODO: Need to add blakkwood and other conventions here...
-            return new PositionCalls(ps).AddRules(
+            PositionCalls calls = new PositionCalls(ps);
+            calls.AddRules(Blackwood.InitiateConvention);
+            // TODO: Need to add contorl bids here for slam tries...
+            calls.AddRules(
                 Shows(Bid._4H, Fit()),
                 Shows(Bid._4S, Fit())
             );
+            return calls;
         }
     }
 }
