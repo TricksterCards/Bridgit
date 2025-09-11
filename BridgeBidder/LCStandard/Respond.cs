@@ -147,7 +147,7 @@ namespace BridgeBidding
 
                 // 2/1 game force is the highet priority if we can make it.  It is OK to bid this
                 // with game going values even if we have a 4 card major.
-                Shows(Bid._2C, Points(GameOrBetter), Shape(4, 10), LongestMajor(4)),
+                Shows(Bid._2C, Points(GameOrBetter), LongestMajor(4)),
 
                 Shows(Bid._1H, Points(Respond1Level), Shape(4), Shape(Suit.Spades, 0, 4)),
                 Shows(Bid._1H, Points(Respond1Level), Shape(5, 10), LongerThan(Suit.Spades)),
