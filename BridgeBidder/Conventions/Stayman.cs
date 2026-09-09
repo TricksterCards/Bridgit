@@ -276,10 +276,10 @@ namespace BridgeBidding
             Call call = ps.RightHandOpponent.GetBidHistory(0).Equals(bidStayman) ? Bid.Double : bidStayman;
             return new CallFeature[] {
                 Properties(call, Answer, forcing1Round: true),
-                Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 4), NotFlat),
-                Shows(call, NTB.RespondGame, Shape(Suit.Spades, 4), NotFlat),
-                Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
-                Shows(call, NTB.RespondGame, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4))
+                Shows(call, NTB.RespondGameOrBetter, Shape(Suit.Hearts, 4), NotFlat),
+                Shows(call, NTB.RespondGameOrBetter, Shape(Suit.Spades, 4), NotFlat),
+                Shows(call, NTB.RespondGameOrBetter, Shape(Suit.Hearts, 4), Shape(Suit.Spades, 5)),
+                Shows(call, NTB.RespondGameOrBetter, Shape(Suit.Hearts, 5), Shape(Suit.Spades, 4))
                 // TODO: The following rule is "Garbage Stayman"
                 //Shows(Bid._2C, Points(NTLessThanInvite), Shape(Suit.Diamonds, 4, 5), Shape(Suit.Hearts, 4), Shape(Suit.Spades, 4)),
             };
