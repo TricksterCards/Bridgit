@@ -8,7 +8,7 @@ namespace BridgeBidding
 		public Constraint OpenPoints { get; private set; }
 		public Constraint RespondNoGame { get; private set; }
 		public Constraint RespondGame { get; private set; }
-		//    public static Constraint RespondGameOrBetter = Points(5, 40);
+		public Constraint RespondGameOrBetter { get; private set; }
 
 		public static TwoNoTrump Open = new TwoNoTrump(20, 21);
 		public static TwoNoTrump After2COpen = new TwoNoTrump(22, 24);
@@ -18,6 +18,7 @@ namespace BridgeBidding
 			OpenPoints = And(HighCardPoints(min, max), Points(min, max + 1));
 			RespondNoGame = Points(0, Math.Max(0, 25 - min - 1));
 			RespondGame = Points(Math.Max(0, 25 - min), 31 - min);
+			RespondGameOrBetter = Points(Math.Max(0, 25 - min), 40);
 			// TODO: More 
 
 		}

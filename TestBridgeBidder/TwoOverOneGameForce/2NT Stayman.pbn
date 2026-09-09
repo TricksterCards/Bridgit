@@ -21,3 +21,11 @@ Pass Pass 2NT Pass
 Pass Pass 2NT Pass
 3C Pass 3D Pass
 3NT Pass Pass Pass
+
+
+[Event "Stayman over 2NT with 4-card major"]
+[Dealer "E"]
+[Vulnerable "None"]
+[Deal "E:- AQ.KJ5.AK75.KT86 - KJ86.A64.QJ92.A9"]
+[Auction "E"]
+Pass 2NT Pass 3C
