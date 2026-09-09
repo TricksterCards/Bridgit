@@ -5,3 +5,12 @@
 [Auction "S"]
 1C Pass 1S Pass
 1NT Pass 3NT
+
+[Event "1S-2D-2NT-3NT (Game forcing rebid 3NT)"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "W:JT32.QT65.A42.75 AK876.AJ4.T6.Q96 54.83.KQ98.JT843 Q9.K972.J753.AK2"]
+[Auction "W"]
+Pass 1S Pass 2D
+Pass 2NT Pass 3NT
+Pass Pass Pass

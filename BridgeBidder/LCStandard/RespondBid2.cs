@@ -91,7 +91,9 @@ namespace BridgeBidding
                     Shows(Bid._2H, IsPartnersSuit, Fit8Plus, DummyPoints(14, 40)),
                     Shows(Bid._2S, IsPartnersSuit, Fit8Plus, DummyPoints(14, 40)),
                     Shows(Bid._3H, IsPartnersSuit, IsNonJump, Fit8Plus, DummyPoints(14, 40)),
-                    Shows(Bid._3S, IsPartnersSuit, IsNonJump, Fit8Plus, DummyPoints(14, 40))
+                    Shows(Bid._3S, IsPartnersSuit, IsNonJump, Fit8Plus, DummyPoints(14, 40)),
+
+                    Shows(Bid._3NT, PairPoints(PairGame))
                 );
 
             }
